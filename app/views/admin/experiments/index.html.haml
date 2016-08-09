@@ -1,0 +1,24 @@
+.row
+  .small-12.columns
+    = link_to 'Make new', new_admin_experiment_path, class: [:button]
+.row
+  .small-12.columns
+    %h4 All experiments
+    
+    %table
+      %thead
+        %th db id#
+        %th biathlon experiment #
+        %th name
+        %th when?
+        %th &nbsp;
+      %tbody
+        - @experiments.each do |exp|
+          %tr
+            %td= exp.id.to_s
+            %td= exp.sequence
+            %td= exp.name
+            %td= date_range(exp.start_at, exp.end_at)
+            %td
+              - if can? :delete, exp
+                = link_to 'Delete', [:admin, exp], method: :delete, data: {confirm: 'Are you sure?'}, class: [:button, :alert, :tiny]

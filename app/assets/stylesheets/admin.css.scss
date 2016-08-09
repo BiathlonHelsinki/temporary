@@ -1,0 +1,73 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_self
+ *= require foundation_and_overrides
+ *= require variables
+ *= require forms
+ *= require _settings
+ *= require froala_editor.min.css
+ *= require froala_style.min.css
+ *= require font-awesome
+
+ */
+@import 'foundation-datetimepicker';
+
+header.admin {
+  
+  nav#nav-menu {
+
+    .logo-wrapper {
+      width: 100%;
+      clear: right;
+      float: left;
+      .logo {
+        float: left;
+      }
+      .status_bar {
+        float: right;
+        div{  
+          float: left;
+          padding: 0.4rem;
+          margin: 0 0.4rem;
+          &.unreachable {
+            background-color: red;
+            color: white;
+          }
+          &.ok {
+            background-color: green;
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}
+
+form {
+  label.label {
+    padding: 0.3333rem 0.5rem 0.3333rem 0;
+    font-size: 1rem;
+  }
+  input.datetimepicker {
+    width: inherit;
+    position: relative;
+  }
+  textarea {
+    height: 250px;
+  }
+  p.inline-hints {
+    font-size: 0.74rem;
+    color: #666;
+    font-weight: italic;
+  }
+}

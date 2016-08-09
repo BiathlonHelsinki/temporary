@@ -1,0 +1,39 @@
+.row
+  .medium-8.small-10.columns.small-centered
+    %h2 Your profile
+    
+    = semantic_form_for @user, html: {multipart: true} do |f|
+      .row
+        .small-12.columns= f.input :email
+      .row
+        .small-12.columns= f.input :name, label: 'Your name:'
+      .row
+        .small-12.columns= f.input :username
+        
+      .row
+        .small-12.columns
+          %h4 ID cards:
+          - if @user.nfcs.empty?
+            %em No ID cards yet
+          - else
+            - @user.nfcs.each do |card|
+              .row
+                .small-12.columns
+                  = card.tag_address
+      .row
+        .small-12.columns
+          %h4 Biathlon accounts
+          - if @user.accounts.empty?
+            %em No Biathlon activity yet
+          - else
+            - @user.accounts.each do |account|
+              .row
+                .small-8.columns
+                  = account.address
+                .small-4.columns
+                  Balance:
+                  = account.balance
+      
+      .row
+        .small-12.columns= f.submit 'Save', class: [:button, :small]
+      

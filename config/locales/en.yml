@@ -1,0 +1,40 @@
+# Files in the config/locales directory are used for internationalization
+# and are automatically loaded by Rails. If you want to use locales other
+# than English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t 'hello'
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t('hello') %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# To learn more, please read the Rails Internationalization guide
+# available at http://guides.rubyonrails.org/i18n.html.
+
+en:
+  locale_name: 'English'
+  date_range:
+    long:
+      same_day: "%{from_day} %{from_month} %{year} %{start_time} %{sep} %{end_time}"
+      same_day_start_time: "%{from_day} %{from_month} %{year} %{start_time}"
+      same_day_no_time: "%{from_day} %{from_month} %{year}"
+      different_months_same_year: "%{from_day} %{from_month} %{sep} %{until_day} %{until_month} %{year}"
+      different_years: "%{from_month} %{from_day}, %{from_year} %{sep} %{until_month} %{until_day}, %{until_year}"
+      same_month: "%{from_day} %{month} %{start_time} %{sep} %{until_day} %{month} %{end_time} %{year}"
+      same_month_no_time: "%{from_day} %{sep} %{until_day} %{month}  %{year}"
+    short:
+      same_day: "%{from_day} %{from_month} %{year} %{start_time} %{sep} %{end_time}"
+      same_day_start_time: "%{from_day} %{from_month} %{year} %{start_time}"
+      same_day_no_time: "%{from_day} %{from_month} %{year}"
+      different_months_same_year: "%{from_day} %{from_month} %{sep} %{until_day} %{until_month} %{year}"
+      different_years: "%{from_day} %{from_month} %{from_year} %{sep} %{until_day} %{until_month} %{until_year}"
+      same_month: "%{from_day} %{sep} %{until_day} %{month} %{year}"  
+      same_month_no_time: "%{from_day} %{sep} %{until_day} %{month} %{year}"

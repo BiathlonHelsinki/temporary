@@ -1,0 +1,15 @@
+// formtastic overrides
+
+form {
+  li {
+    list-style-type: none;
+  }
+  input[type=submit] {
+    margin-top: 2rem;
+  }
+}
+label.label {
+  background-color: transparent;
+  color: black;
+}
+

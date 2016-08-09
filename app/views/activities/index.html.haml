@@ -1,0 +1,16 @@
+- if params[:user_id]
+  .row
+    .small-8.columns.small-centered
+      %h3
+        Showing all activity for user
+        = @user.username
+.row
+  .small-10.columns.small-centered
+    - @activities.each do |activity|
+      .row
+        .small-8.columns.text-right
+          %em= l activity.created_at, format: :long
+          = activity.sentence.html_safe
+        - unless activity.ethtransaction.nil?
+          .small-2.columns.end
+            %small= link_to activity.ethtransaction.txaddress, "https://testnet.etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank

@@ -1,0 +1,18 @@
+!!!
+%html{:lang => "en"}
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %meta{:charset => "utf-8"}/
+    %meta{:content => "width=device-width, initial-scale=1.0", :name => "viewport"}/
+    %title= content_for?(:title) ? yield(:title) : "Temporary"
+    = stylesheet_link_tag   "application" 
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+  %body
+    - if flash
+      - flash.each do |key, value|
+        .alert.text-center{ :class => "alert-#{key}" }
+          %strong= raw value
+    %header= render partial: 'layouts/top_bar'
+    %section.main_container= yield 
+  

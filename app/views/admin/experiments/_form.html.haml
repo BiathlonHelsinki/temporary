@@ -1,0 +1,56 @@
+- unless @experiment.errors.empty?
+  .row
+    .small-10.medium-4.columns.errors
+      = @experiment.errors.full_messages.join('! ')
+= semantic_form_for [:admin, @experiment], html: {:"data-abide" => true, multipart: true} do |f|
+  .row
+    .small-10.medium-4.columns= f.input :place, input_html: {required: ''}
+  .row
+    .small-10.medium-4.columns= f.input :parent
+  .row
+    .small-10.medium-4.columns= f.input :cost_euros
+  .row
+    .small-10.medium-4.columns= f.input :cost_bb, label: "Number of &#359; received for attending", input_html: {required: ''}
+  .row
+    .small-10.medium-6.columns= f.input :start_at, :as => :string,  :input_html => {required: '', class: 'datetimepicker', value: f.object.new_record? ? '' : (f.object.date.nil? ? '' : f.object.date.strftime('%Y-%m-%d %H:%M'))}, label: 'Starting date and time '
+  .row
+    .small-10.medium-6.columns= f.input :end_at, :as => :string, :input_html => {:class => 'datetimepicker', value: f.object.new_record? ? '' : (f.object.enddate.nil? ? '' : f.object.enddate.strftime('%Y-%m-%d %H:%M'))}, :label => "Ending date and time of last event, if known. You will add individual intances later, if necessary.", :hint => 'if events run past midnight, put them as 23:59 '
+  .row
+    .small-10.medium-4.columns= f.input :sequence, label: 'Temporary experiment #' 
+  .row
+    .small-10.medium-8.columns
+      %dl.tabs{"data-tab" => ""}
+        - I18n.available_locales.each_with_index do |locale, i|
+          %dd{:class => (i == 0 ? :active : false)}
+            = link_to t(:locale_name, :locale => locale), "##{locale}"
+      .tabs-content
+        - I18n.available_locales.each_with_index do |locale, i|
+          .content{:class => (i == 0 ? :active : false), :id => "#{locale}"}
+            = f.globalize_fields_for locale do |en|
+              .row
+                .small-12.columns
+                  %b= "Name of experiment in #{t :locale_name, :locale => locale}"
+                  = en.text_field :name, :required => (locale == :en ? '' : false)
+                  - if locale == :en
+                    %small.error You must enter an English name for the experiment.
+              .row
+                .small-12.columns
+                  %b= "Description of event in #{t :locale_name, :locale => locale}"
+                  = en.text_area :description
+
+  .row
+    .small-10.medium-4.columns= f.input :primary_sponsor, input_html: {required: ''}
+  .row
+    .small-10.medium-4.columns= f.input :image, input_html: {required: ''}
+  .row
+    .small-10.medium-4.columns= f.input :published
+  .row
+    .small-10.medium-4.columns= f.submit 'Save', class: [:button]
+    
+  
+
+= content_for :jquery do
+  :plain
+    $('textarea').froalaEditor({
+     height: 300});
+    $('.datetimepicker').fdatetimepicker()

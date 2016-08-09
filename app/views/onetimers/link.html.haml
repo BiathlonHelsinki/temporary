@@ -1,0 +1,7 @@
+.row
+  .small-12.columns
+    %h3 Enter the code on your temporary entry tag:
+    = form_tag  link_tag_onetimers_url, method: :post  do 
+      Code:
+      = text_field_tag :code
+      = submit_tag 'Link!', class:[:button, :small]      

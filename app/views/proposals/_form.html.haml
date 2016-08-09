@@ -1,0 +1,15 @@
+= semantic_form_for @proposal, html: {multipart: true} do |f|
+  = f.input :user_id, data: {value: current_user.id}, as: :hidden
+  .row
+    .small-10.medium-6.columns= f.input :name
+  .row
+    .small-10.medium-6.columns= f.input :short_description
+  .row
+    .small-10.medium-6.columns= f.input :timeframe
+  .row
+    .small-10.medium-6.columns= f.input :goals
+  .row
+    .small-10.medium-6.columns= f.input :intended_participants
+  .row
+    .small-10.medium-6.columns= f.submit 'Propose!', class: [:button, :small]              
+    

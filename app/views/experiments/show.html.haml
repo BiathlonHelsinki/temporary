@@ -1,0 +1,19 @@
+.row
+  .medium-8.columns.small-10.small-centered.experiment
+    %h1= @experiment.name
+    %h3= date_range(@experiment.start_at, @experiment.end_at)
+    - if @experiment.image?
+      = image_tag @experiment.image.url
+
+    %p= @experiment.description
+    
+- unless @experiment.users.empty? && @experiment.onetimers.empty?
+  .row
+    .medium-8.columns.small-10.small-centered.experiment_users
+      %h3 Attended:
+      %ul
+        - @experiment.users.each do |attended|
+          %li= link_to attended.name, attended
+        - @experiment.onetimers.unclaimed.each do |onetimer|
+          %li= "Anonymous person who entered at #{onetimer.created_at.strftime('%H:%M')}"
+        

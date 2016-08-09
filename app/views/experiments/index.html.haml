@@ -1,0 +1,10 @@
+.row
+  .medium-8.columns.small-10.small-centered
+    - @experiments.each do |exp|
+      .experiment
+        %h1= link_to exp.name, exp
+        %h3= date_range(exp.start_at, exp.end_at)
+        %h4= link_to pluralize(exp.users.size + exp.onetimers.unclaimed.size, 'person') + " participated", exp
+
+    
+        %p= exp.description
