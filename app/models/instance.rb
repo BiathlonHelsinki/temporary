@@ -7,6 +7,7 @@ class Instance < ApplicationRecord
   friendly_id :name_en , :use => [ :slugged, :finders ] # :history]
   mount_uploader :image, ImageUploader
   validates_presence_of :place_id, :start_at
+  validates_uniqueness_of :sequence
   #validate :name_present_in_at_least_one_locale
   private
   

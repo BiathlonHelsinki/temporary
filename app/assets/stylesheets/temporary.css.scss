@@ -13,7 +13,19 @@ body {
     }
   }
 }
+tbody tr:nth-child(even) {
+  background-color: initial;
+}
+tr.even {
+  background-color: #efefef !important;
+}
 
+table {
+  td.small {
+    max-width: 200px;
+    font-size: 0.75rem;
+  }
+}
 section.main_container {
   padding: 4rem 0;
   border-top: 5px solid black;
@@ -32,6 +44,17 @@ section.main_container {
 .title-bar-title {
   position: relative;
   top: 10px;
+}
+
+
+/* Proposals */
+.proposals_index {
+  table {
+    .occluded {
+      display: none;
+      font-size: 0.875rem;
+    }
+  }
 }
 
 /* Medium-Up Navigation */
@@ -77,4 +100,14 @@ section.main_container {
 .experiment {
   border-top: 4px solid black;
   padding: 1rem 0 3rem 0;
+}
+
+
+// proposals
+#comments_list {
+  margin: 4rem 0;
+  .entry {
+    padding: 2.5rem;
+    border-bottom: 1px dotted #555;
+  }
 }

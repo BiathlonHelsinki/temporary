@@ -180,6 +180,7 @@ GEM
     multi_json (1.12.1)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
+    nested_form (0.3.2)
     net-ping (1.7.8)
     nio4r (1.2.1)
     nokogiri (1.6.8)
@@ -304,6 +305,7 @@ DEPENDENCIES
   carrierwave-aws
   devise
   figaro
+  font-awesome-rails
   formtastic
   foundation-datetimepicker-rails
   foundation-rails
@@ -317,6 +319,7 @@ DEPENDENCIES
   listen (~> 3.0.5)
   migration_data
   mini_magick
+  nested_form
   net-ping
   omniauth
   omniauth-facebook

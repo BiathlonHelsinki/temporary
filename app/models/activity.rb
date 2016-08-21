@@ -4,7 +4,7 @@ class Activity < ApplicationRecord
   belongs_to :ethtransaction
   belongs_to :item, polymorphic: true
   
-  validates_presence_of :item_id, :item_name
+  validates_presence_of :item_id, :item_type
   
   scope :by_user, ->(user_id) { where(user_id: user_id) }
   
@@ -16,7 +16,13 @@ class Activity < ApplicationRecord
     else
       usertext = "#{user.name} (<a href='/users/#{user.slug}/activities'>#{user.username}</a>)"
     end
-    "#{usertext} #{description} the #{item_type.downcase} <a href='/experiments/#{item.slug}'>#{item.name}</a> and received #{item.cost_bb}#{ENV['currency_symbol']}"    
+    if item.class == Proposal
+      "#{usertext} #{description} <a href='/proposals/#{item.id}'>#{item.name}</a>"
+    elsif item.class == User
+      "#{usertext} #{description} <a href='users/#{item.slug}'>#{item.name}</a> #{extra_info}"
+    else
+      "#{usertext} #{description} the #{item_type.downcase} <a href='/experiments/#{item.slug}'>#{item.name}</a> and received #{item.cost_bb}#{ENV['currency_symbol']}"    
+    end
   end
   
 end

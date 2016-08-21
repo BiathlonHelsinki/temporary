@@ -16,9 +16,39 @@
         - @experiments.each do |exp|
           %tr
             %td= exp.id.to_s
-            %td= exp.sequence
+            %td
+              = exp.sequence
+              %br/
+              = link_to 'Edit master experiment', edit_admin_experiment_path(exp), class: [:button, :tiny]
             %td= exp.name
             %td= date_range(exp.start_at, exp.end_at)
             %td
               - if can? :delete, exp
                 = link_to 'Delete', [:admin, exp], method: :delete, data: {confirm: 'Are you sure?'}, class: [:button, :alert, :tiny]
+
+          %tr
+            %td &nbsp;
+            %td{colspan: 3 }
+              %table
+                %thead
+                  %th Instance id#
+                  %th biathlon experiment #
+                  %th Name
+                  %th When?
+                  %th &nbsp;
+                %tbody
+                  - exp.instances.sort_by(&:start_at).each do |instance|
+                    %tr
+                      %td= instance.id.to_s
+                      %td
+                        = instance.sequence
+                        %br/
+                        = link_to 'Edit instance', edit_admin_experiment_instance_path(exp, instance), class: [:button, :tiny, :secondary]
+                      %td= instance.name
+                      %td= date_range(instance.start_at, instance.end_at)
+                      %td
+                        - if can? :delete, instance
+                          = link_to 'Delete', [:admin, exp, instance], method: :delete, data: {confirm: 'Are you sure?'}, class: [:button, :alert, :tiny]
+                        
+                  %tr
+                    %td{colspan: 4}= link_to 'Add new instance', new_admin_experiment_instance_path(exp), class: [:button, :small]

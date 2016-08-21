@@ -16,5 +16,7 @@
  *= require variables
  *= require forms
  *= require _settings
+
  */
 
+@import "font-awesome";

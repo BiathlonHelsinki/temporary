@@ -17,6 +17,10 @@ class Admin::ExperimentsController < Admin::BaseController
     redirect_to admin_experiments_path
   end
   
+  def edit
+    @experiment = Experiment.friendly.find(params[:id])
+  end
+  
   def index
     @experiments = Experiment.all.order(start_at: :desc)
   end
@@ -24,6 +28,17 @@ class Admin::ExperimentsController < Admin::BaseController
   def new
     @experiment = Experiment.new
   end
+  
+  def update
+    @experiment = Experiment.friendly.find(params[:id])
+    if @experiment.update_attributes(experiment_params)
+      flash[:notice] = 'Experiment details updated.'
+      redirect_to admin_experiments_controller
+    else
+      flash[:error] = 'Error updating experiment'
+    end
+  end
+    
   
   protected
   

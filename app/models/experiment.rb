@@ -23,6 +23,7 @@ class Experiment < ApplicationRecord
   has_many :pledges, as: :item,  dependent: :destroy, source_type: 'Event'
   before_validation :make_first_instance
   validate :at_least_one_instance
+  validates_uniqueness_of :sequence
   
   def future?
     self.start_at >= Date.parse(Time.now.strftime('%Y/%m/%d'))
@@ -32,7 +33,7 @@ class Experiment < ApplicationRecord
 
     if instances.empty?
       
-      instances << Instance.new(cost_bb: cost_bb, cost_euros: cost_euros, start_at: start_at, end_at: end_at,
+      instances << Instance.new(cost_bb: cost_bb, sequence: sequence, cost_euros: cost_euros, start_at: start_at, end_at: end_at,
                                    place_id: place_id, published: published, translations_attributes: [{locale: 'en', name: name(:en), description: description(:en)}])
 
     end                          

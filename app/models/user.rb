@@ -21,8 +21,16 @@ class User < ActiveRecord::Base
   scope :untagged, -> () { includes(:nfcs).where( nfcs: {user_id: nil}) }
   has_many :event_users
   has_many :experiments, through: :events_users, foreign_key: 'event_id'
+  has_many :pledges
+  has_many :proposals
+  # has_many :activities, as: :item
+  
   def email_required?
     false
+  end
+  
+  def all_activities
+    [activities, Activity.where(item: self)].flatten.compact
   end
   
   def update_balance_from_blockchain
@@ -101,6 +109,13 @@ class User < ActiveRecord::Base
      self.email && self.email !~ TEMP_EMAIL_REGEX
    end
    
+   def has_pledged?(proposal)
+     pledges.where(item: proposal).any?
+   end
+     
+   def pending_pledges
+     pledges.to_a.delete_if{|x| x.converted == 1}
+   end
    
   def apply_omniauth(omniauth)
     if omniauth['provider'] == 'twitter'

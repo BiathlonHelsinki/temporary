@@ -11,12 +11,13 @@
       = image_tag 'temporary_logo.png'
     .status_bar
       .api{class: @api_status == false ? 'unreachable' : 'ok' } Biathlon API
-      .dapp{class: @dapp_status == false ? 'unreachable' : 'ok'} Node/Etherum Dapp
+      .dapp{class: @dapp_status == false ? 'unreachable' : 'ok'} Node/Ethereum Dapp
       .geth{class: @geth_status == false ? 'unreachable' : 'ok'} Geth
   / Left Nav Section
   .top-bar-left
     %ul.vertical.medium-horizontal.menu
       %li= link_to 'Experiments', admin_experiments_path
+      %li= link_to 'Proposals', admin_proposals_path
       -#%li= link_to 'Activity', activities_path
   / Right Nav Section
   .top-bar-right
@@ -34,7 +35,7 @@
           = link_to current_user.name, '#'
           %ul.submenu.menu.vertical{"data-submenu" => ""}
             - if current_user.has_role? :admin
-              %li= link_to 'Admin', '#'
+              %li= link_to 'Admin', '/admin'
             %li= link_to 'Your account', edit_user_path(current_user)
             %li= link_to 'Sign out',  destroy_user_session_path, :method => :delete
         - else

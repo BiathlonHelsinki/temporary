@@ -5,7 +5,10 @@ Rails.application.routes.draw do
   
   namespace :admin do
     root to: 'base#home'
-    resources :experiments
+    resources :experiments do
+      resources :instances
+    end
+    resources :proposals
     resources :users
   end
   
@@ -24,12 +27,22 @@ Rails.application.routes.draw do
     end
   end
   
+
   resources :proposals do
-    
+    resources :comments
+    resources :pledges
   end
+  
+
   
   resources :users do
     resources :activities
+    resources :transfers  do
+      collection do
+        get :send_temps
+        post :post_temps
+      end
+    end
   end
   
   match '/link_temporary' => 'onetimers#link', via: :get

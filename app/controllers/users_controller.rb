@@ -10,6 +10,10 @@ class UsersController < ApplicationController
     end
   end
   
+  def show
+    @user = User.friendly.find(params[:id])
+  end
+  
   def update
     @user = User.friendly.find(params[:id])
     if can? :update, @user

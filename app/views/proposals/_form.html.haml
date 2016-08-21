@@ -1,5 +1,5 @@
-= semantic_form_for @proposal, html: {multipart: true} do |f|
-  = f.input :user_id, data: {value: current_user.id}, as: :hidden
+= semantic_nested_form_for @proposal, html: {multipart: true} do |f|
+  = f.input :user_id, data: {value: current_user.id}, as: :hidden 
   .row
     .small-10.medium-6.columns= f.input :name
   .row
@@ -11,5 +11,15 @@
   .row
     .small-10.medium-6.columns= f.input :intended_participants
   .row
+    .small-10.medium-6.columns
+      %table#images
+        = f.fields_for :images, wrapper: false do |image_form|
+          %tr.fields
+            %td= image_form.input :image
+            %td= image_form.link_to_remove 'Remove this image', class: [:button, :tiny]
+            
+  .row
+    .small-10.medium-6.columns= f.link_to_add 'Add an image to this proposal', :images, data: {target: '#images'}
+  .row
     .small-10.medium-6.columns= f.submit 'Propose!', class: [:button, :small]              
-    
+  
