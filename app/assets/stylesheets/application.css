@@ -13,10 +13,11 @@
  *= require_self
  *= require foundation_and_overrides
  *= require temporary
+ *= require home
  *= require variables
  *= require forms
  *= require _settings
-
+ 
  */
 
 @import "font-awesome";

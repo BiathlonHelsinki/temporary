@@ -8,16 +8,17 @@ class Experiment < ApplicationRecord
   belongs_to :place  
   has_many :activities, as: :item,  dependent: :destroy, source_type: 'Event'
   resourcify
-  has_many :events_users, foreign_key: 'event_id'
-  has_many :users,  through: :events_users
+
   extend FriendlyId
   friendly_id :name_en , :use => [ :slugged, :finders ] # :history]
   mount_uploader :image, ImageUploader
   validates_presence_of :place_id, :start_at, :primary_sponsor_id, :sequence
   validate :name_present_in_at_least_one_locale
   before_save :update_image_attributes
-  has_many :onetimers, foreign_key: 'event_id', dependent: :destroy
-  scope :published, -> () { where(published: true) }
+
+  
+
+  
   acts_as_nested_set
   has_many :instances, foreign_key: 'event_id', dependent: :destroy
   has_many :pledges, as: :item,  dependent: :destroy, source_type: 'Event'
@@ -25,6 +26,8 @@ class Experiment < ApplicationRecord
   validate :at_least_one_instance
   validates_uniqueness_of :sequence
   
+  scope :published, -> () { where(published: true) }
+  scope :has_events_on, -> (*args) { where(['published is true and (date(start_at) = ? OR (end_at is not null AND (date(start_at) <= ? AND date(end_at) >= ?)))', args.first, args.first, args.first] )}
   def future?
     self.start_at >= Date.parse(Time.now.strftime('%Y/%m/%d'))
   end

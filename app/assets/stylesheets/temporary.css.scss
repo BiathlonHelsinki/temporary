@@ -1,6 +1,15 @@
 @import 'variables';
-body {
+html, body {
+
+  margin:0;
+  padding:0;
+  height:100%;
+}
+
+#outer_container {
   background-color: $yellow;
+  min-height:100%;
+  position:relative;
 }
 .top-bar {
   background-color: $yellow;
@@ -27,8 +36,8 @@ table {
   }
 }
 section.main_container {
-  padding: 4rem 0;
-  border-top: 5px solid black;
+//  padding: 4rem 0;
+//  border-top: 5px solid black;
   background-color: $yellow;
   color: black;
 }
@@ -109,5 +118,42 @@ section.main_container {
   .entry {
     padding: 2.5rem;
     border-bottom: 1px dotted #555;
+  }
+}
+
+
+// top bar
+.top-bar {
+  padding-top: 0;
+  ul {
+    li {
+      font-family: $inconsolata;
+      font-size: 1.133em;
+      font-weight: bold;
+    }
+  }
+}
+
+// footer
+footer {
+  background-color: $black;
+  color: $yellow;
+  padding: 2.5rem 0;
+  position:absolute;
+  bottom:0;
+  width:100%;
+  height: 7.5em;
+  .text {
+    font-size: 1.133em;
+    font-family: $ptsans;
+    font-weight: bold;
+    float: left;
+    padding-top: 0.4rem;
+  }
+  .logos {
+    float: left;
+    a {
+      padding: 0 2rem;
+    }
   }
 }

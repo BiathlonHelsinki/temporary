@@ -8,6 +8,9 @@ class Instance < ApplicationRecord
   mount_uploader :image, ImageUploader
   validates_presence_of :place_id, :start_at
   validates_uniqueness_of :sequence
+  has_many :instances_users
+  has_many :users, through: :instances_users
+  has_many :onetimers, dependent: :destroy
   #validate :name_present_in_at_least_one_locale
   private
   

@@ -1,0 +1,55 @@
+.row
+  .small-12.columns
+    %h3
+      Profile for
+      = @user.username
+    
+    
+.row
+  .small-12.columns
+    = "user since #{l @user.created_at.to_date, format: :long}"
+    = " (#{time_ago_in_words(@user.created_at)})"
+.row
+  .small-12.columns
+    %strong Balance:
+    = "#{@user.latest_balance}#{ENV['currency_symbol']}"
+    - if user_signed_in?
+      - if current_user != @user && current_user.latest_balance > 0
+        %br/
+        = link_to "Send #{ENV['currency_symbol']} to #{@user.username}", send_temps_user_transfers_path(@user), class: [:button]
+- unless @user.proposals.empty?
+  .row
+    .small-10.medium-7.columns
+      %h4 Proposals
+  .row
+    .small-10.medium-7.columns
+      %ul
+        - @user.proposals.order(created_at: :desc).each do |proposal|
+          %li= link_to proposal.name, proposal
+          
+- unless @user.pledges.empty?
+  .row
+    .small-10.medium-7.columns
+      %h4 Pledges
+  .row
+    .small-10.medium-7.columns
+      %ul
+        - @user.pledges.order(created_at: :desc).each do |pledge|
+          %li
+            = link_to pledge.item.name, pledge.item
+            = "(#{pledge.pledge.to_s}#{ENV['currency_symbol']})"
+            
+- unless @user.all_activities.empty?
+  .row
+    .small-10.medium-7.columns
+      %h4 Activity
+  .row
+    .small-10.medium-7.columns
+      - @user.all_activities.sort_by(&:created_at).reverse.each do |activity|
+        .row
+          .small-8.columns.text-right
+            %em= l activity.created_at, format: :long
+            = activity.sentence.html_safe
+          - unless activity.ethtransaction.nil?
+            .small-2.columns.end
+              %small= link_to activity.ethtransaction.txaddress, "https://testnet.etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank

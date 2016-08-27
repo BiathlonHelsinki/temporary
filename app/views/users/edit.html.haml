@@ -2,7 +2,7 @@
   .medium-8.small-10.columns.small-centered
     %h2 Your profile
     
-    = semantic_form_for @user, html: {multipart: true} do |f|
+    = semantic_nested_form_for @user, html: {multipart: true} do |f|
       .row
         .small-12.columns= f.input :email
       .row
@@ -28,12 +28,24 @@
           - else
             - @user.accounts.each do |account|
               .row
-                .small-8.columns
+                .small-6.columns
                   = account.address
                 .small-4.columns
                   Balance:
                   = account.balance
-      
+                .small-2.columns
+                  %strong
+                    - if account.primary_account == true
+                      primary
+                    - else
+                      = link_to 'Set as primary', set_as_primary_user_account_path(@user, account), class: [:button, :tiny, :secondary]
+
+          = f.fields_for :accounts do |ff|
+            - next unless ff.object.new_record?
+            .row
+              .small-6.columns= ff.input :address, label: 'Your Ethereum account #', hint: '(Should start with 0x!)'
+            = ff.input :external, as: :hidden, input_html: {value: 1}
+          = f.link_to_add 'Add new account', :accounts
       .row
         .small-12.columns= f.submit 'Save', class: [:button, :small]
       

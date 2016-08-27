@@ -6,20 +6,14 @@
     %meta{:content => "width=device-width, initial-scale=1.0", :name => "viewport"}/
     %title= content_for?(:title) ? yield(:title) : "Temporary"
     %link{:href => "https://fonts.googleapis.com/css?family=Inconsolata|PT+Sans", :rel => "stylesheet"}/
-    = stylesheet_link_tag 'admin'
+    = stylesheet_link_tag   "application" 
     = javascript_include_tag "application"
-    = javascript_include_tag "admin"
     = csrf_meta_tags
   %body
     - if flash
       - flash.each do |key, value|
         .alert.text-center{ :class => "alert-#{key}" }
           %strong= raw value
-    %header.admin= render partial: 'layouts/adminbar'
+    %header= yield :header
     %section.main_container= yield 
-  
-  
-  :javascript
-    $(document).ready(function() {
-      #{yield :jquery}
-    });
+    %footer= render partial: 'layouts/footer'

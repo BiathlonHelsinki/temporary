@@ -1,0 +1,13 @@
+.row
+  .small-12.columns
+    = form_tag post_temps_user_transfers_path(@recipient), method: :post do
+      %label.label
+        How many 
+        = ENV['currency_symbol']
+        to send to
+        = @recipient.username
+        ?
+      = text_field_tag :temps_to_send
+      %label.label Enter a reason for why you are sending them? (option)
+      = text_field_tag :reason
+      = submit_tag 'Send', class: [:button]

@@ -1,0 +1,108 @@
+.row
+  .small-12.columns
+    %h2
+      Proposal:
+      %em= @proposal.name
+
+.row
+  .small-12.columns
+    %h4
+      Proposed by:
+      = link_to @proposal.user.name, @proposal.user
+.row
+  .small-12.columns
+    = simple_format @proposal.short_description
+    %br/
+    %strong Goals:
+    = simple_format @proposal.goals
+    %br/
+    %strong Timeframe
+    = simple_format @proposal.timeframe
+    %br/
+    %strong Intended participants:
+    = simple_format @proposal.intended_participants
+    
+#pledges
+  .row    
+    .small-10.columns
+      %h4 Currently pledged:
+      %big
+        = @proposal.pledged.to_s + ENV['currency_symbol']
+      %br/
+      Pledged by:
+      %small= @proposal.pledges.map(&:user).map(&:username).join(', ')
+      %br/
+      remaining needed to schedule:
+      = "#{70 - @proposal.pledged}#{ENV['currency_symbol']}"
+  .row    
+    .small-10.columns
+      - if current_user.has_pledged?(@proposal)
+        = "You pledged #{current_user.pledges.find_by(item: @proposal).pledge}#{ENV['currency_symbol']}"
+        %br/
+        = link_to 'Edit pledge', edit_proposal_pledge_path(@proposal, current_user.pledges.find_by(item: @proposal) ), class: [:button, :tiny]
+      - else
+        = link_to "Pledge #{ENV['currency_symbol']}!", new_proposal_pledge_path(@proposal), class: [:button, :tiny]
+        
+- unless @proposal.comments.empty?
+
+
+  
+  .row#comments_list
+    .small-12.columns
+      %a{:name => :comments}
+      %h2{:"data-magellan-destination" => "comments"}= t :discussion
+    .small-12.columns.medium-7.end
+      - @proposal.discussion.sort_by(&:created_at).each do |comment|
+        .row.entry{class: comment.class.to_s.downcase}
+          .small-3.columns
+            - if comment.class == Pledge
+              %p
+                %strong A user has pledged to support this proposal!
+            - else
+              %p
+                %strong= t(:user_says, :user => comment.user.username)
+          
+          .small-9.columns
+            - if comment.class == Pledge
+              %p
+                %em= t(:has_pledged, user: comment.user.username, amount: comment.pledge.to_s + ENV['currency_symbol'])
+              - if comment.user == current_user
+                = link_to 'Edit your pledge', edit_proposal_pledge_path(@proposal, comment), class: [:button, :tiny]
+            .comment
+              - if comment.respond_to?(:systemflag)
+                - if comment.systemflag == true
+                  .system
+                    %em= comment.content
+                - else
+                  = simple_format(comment.content)
+              - else
+                = simple_format(comment.content)
+            - if comment.image?
+              = image_tag comment.image.url(:small)
+            - if comment.attachment?
+              .row
+                .small-12.columns
+                  %p= link_to t(:download) + ' ' + File.basename(URI.parse(comment.attachment.url).path), comment.attachment.url, class: [:button, :round, :tiny]
+                    
+                    
+- if can? :create, Comment        
+  .row#comments
+    .small-12.columns
+      %h3= t :what_do_you_think_about_this
+
+  .row#comment_form
+    .small-8.columns
+      .row
+        .small-3.columns
+          -#= image_tag current_user.avatar.url(:thumb)
+        
+          %p= link_to t(:edit_profile), edit_admin_user_path(current_user), class: [:button, :tiny, :secondary, :round]
+          %p
+            %strong= t(:user_says, :user => current_user.name)
+        .small-9.columns
+          = semantic_form_for [ @proposal,  @comment = @proposal.comments.build(user: current_user)], html: {multipart: true, :"data-abide" => '' } do |f|
+            = f.input :user_id, as: :hidden, data: {value: current_user.id}
+            = f.input :content, :label => t(:your_comment),input_html: { :required => ''}
+            = f.input :image, :label => t(:attach_image_to_comment)
+            = f.input :attachment, :label => t(:attach_attachment_to_comment)
+            = f.submit t(:save), :class => [:button, :round]      

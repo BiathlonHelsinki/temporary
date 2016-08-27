@@ -1,7 +1,10 @@
-$yellow: #fded59;
+$yellow: #fded57;
+$black: #000000;
 // Adjust width accordingly (use even #'s)
 $logo-width: 118px;
 // Reduce px value to increase space between logo and menu text
 $logo-padding: $logo-width - 32px; 
 // Leave alone
 $logo-margin: - ($logo-width / 2);
+$ptsans: 'PT Sans', sans-serif;
+$inconsolata: 'Inconsolata', monospace;

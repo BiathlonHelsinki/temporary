@@ -5,6 +5,7 @@
     %meta{:charset => "utf-8"}/
     %meta{:content => "width=device-width, initial-scale=1.0", :name => "viewport"}/
     %title= content_for?(:title) ? yield(:title) : "Temporary"
+    %link{:href => "https://fonts.googleapis.com/css?family=Inconsolata|PT+Sans", :rel => "stylesheet"}/
     = stylesheet_link_tag   "application" 
     = javascript_include_tag "application"
     = csrf_meta_tags
@@ -13,6 +14,8 @@
       - flash.each do |key, value|
         .alert.text-center{ :class => "alert-#{key}" }
           %strong= raw value
-    %header= render partial: 'layouts/top_bar'
-    %section.main_container= yield 
+    #outer_container      
+      %header= render partial: 'layouts/top_bar'
+      %section.main_container= yield 
+      %footer= render partial: 'layouts/footer'
   

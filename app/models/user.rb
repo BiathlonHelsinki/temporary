@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
   has_many :accounts
   has_many :authentications, :dependent => :destroy
   # accepts_nested_attributes_for :authentications, :reject_if => proc { |attr| attr['username'].blank? }
+  accepts_nested_attributes_for :accounts, reject_if: proc {|attr| attr['address'].blank? }
   # acts_as_token_authenticatable
   validates_format_of :email, :without => TEMP_EMAIL_REGEX, on: :update
   extend FriendlyId
@@ -23,6 +24,8 @@ class User < ActiveRecord::Base
   has_many :experiments, through: :events_users, foreign_key: 'event_id'
   has_many :pledges
   has_many :proposals
+  has_many :instances_users
+  has_many :instances, through: :instances_users
   # has_many :activities, as: :item
   
   def email_required?

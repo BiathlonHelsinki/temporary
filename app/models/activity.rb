@@ -21,7 +21,7 @@ class Activity < ApplicationRecord
     elsif item.class == User
       "#{usertext} #{description} <a href='users/#{item.slug}'>#{item.name}</a> #{extra_info}"
     else
-      "#{usertext} #{description} the #{item_type.downcase} <a href='/experiments/#{item.slug}'>#{item.name}</a> and received #{item.cost_bb}#{ENV['currency_symbol']}"    
+      "#{usertext} #{description} <a href='/experiments/#{item.experiment.slug}/#{item.slug}'>#{item.name}</a> and received #{item.cost_bb}#{ENV['currency_symbol']}"    
     end
   end
   

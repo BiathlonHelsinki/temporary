@@ -21,6 +21,9 @@ class UsersController < ApplicationController
         flash[:error] = ''
         flash[:notice] = 'Profile info saved.'
         redirect_to edit_user_path(@user)
+      else
+        flash[:error] = @user.errors.full_messages
+        render template: 'users/edit'
       end
     else
       flash[:error] = 'You cannot edit another user profile'
@@ -31,6 +34,6 @@ class UsersController < ApplicationController
   protected
   
   def user_params
-    params.require(:user).permit(:email, :name, :username)
+    params.require(:user).permit(:email, :name, :username, accounts_attributes: [:address, :primary_account, :external])
   end
 end

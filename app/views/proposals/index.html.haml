@@ -1,0 +1,54 @@
+.proposals_index
+  - if user_signed_in?
+    - if current_user.latest_balance > 70
+      .row
+        .small-4.columns
+          = link_to 'Propose experiment!', new_proposal_path, class: [:button, :small]
+  .row
+    .small-12.columns
+    
+      %table
+        %thead
+          %th Name
+          %th Proposed by
+          %th Pledged 
+          %th Status
+        %tbody
+          - @proposals.each do |proposal|
+            - rowclass = cycle('odd', 'even')
+            %tr{class: rowclass}
+              %td
+                = link_to proposal.name, proposal
+                = link_to fa_icon('chevron-down'), '#', onclick: "javascript:$('#proposal_#{proposal.id}').slideToggle();$(this).next('i').removeClass('chevron-down');$(this).next('i').addClass('chevron-up');return false;"
+                = link_to 'Details', proposal, class: [:button, :secondary, :tiny]
+              %td= link_to proposal.user.name, proposal.user
+              %td
+                = proposal.pledged
+                %br/
+                - if user_signed_in?
+                  - if current_user.has_pledged?(proposal)
+                    = "You pledged #{current_user.pledges.find_by(item:proposal).pledge}#{ENV['currency_symbol']}"
+                    %br/
+                    = link_to 'Edit pledge', edit_proposal_pledge_path(proposal,current_user.pledges.find_by(item:proposal) ), class: [:button, :tiny]
+                  - else
+                    = link_to "Pledge #{ENV['currency_symbol']}!", new_proposal_pledge_path(proposal), class: [:button, :tiny]
+              %td.small
+                - unless proposal.comments.empty?
+                  last commented on by 
+                  = proposal.comments.sort_by(&:created_at).last.user.name
+                  = time_ago_in_words(proposal.comments.sort_by(&:created_at).last.created_at) + " ago"
+            %tr{class: rowclass}
+              %td{colspan: 4}
+                %div.occluded[proposal]
+                  %strong Description:
+                  = simple_format proposal.short_description
+                  %br/
+                  %strong Goals:
+                  = simple_format proposal.goals
+                  %br/
+                  %strong Timeframe
+                  = simple_format proposal.timeframe
+                  %br/
+                  %strong Intended participants:
+                  = simple_format proposal.intended_participants
+  
