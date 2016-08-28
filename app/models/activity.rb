@@ -20,6 +20,11 @@ class Activity < ApplicationRecord
       "#{usertext} #{description} <a href='/proposals/#{item.id}'>#{item.name}</a>"
     elsif item.class == User
       "#{usertext} #{description} <a href='users/#{item.slug}'>#{item.name}</a> #{extra_info}"
+    elsif item.class == Credit
+      "#{usertext} #{description} <a href='credits/#{item.id}'>#{item.description}</a> and received  #{item.ethtransaction.value}#{ENV['currency_symbol']}"
+    elsif item.class == NilClass
+      dead_item = item_type.constantize.with_deleted.find(item_id) rescue 'something is not right here'
+      "#{usertext} #{description} #{dead_item.description} and #{ethtransaction.value}#{ENV['currency_symbol']} were returned to the blockchain"
     else
       "#{usertext} #{description} <a href='/experiments/#{item.experiment.slug}/#{item.slug}'>#{item.name}</a> and received #{item.cost_bb}#{ENV['currency_symbol']}"    
     end

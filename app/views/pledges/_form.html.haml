@@ -3,8 +3,22 @@
     .small-10.medium-6.columns
       %p 
         You have
-        = "#{current_user.latest_balance}#{ENV['currency_symbol']}"
+        = "#{current_user.available_balance + @pledge.pledge.to_i}#{ENV['currency_symbol']}"
         available to pledge to this.
+      %p
+        Currently,
+        = @current_rate.to_s + ENV['currency_symbol']
+        are needed before an experiment can be reviewed for scheduling. This proposal
+        - if @item.has_enough?
+          has enough and will be reviewed at the next organisational activity,
+          = link_to Instance.next_meeting.name, Instance.next_meeting
+          = "."
+        - else
+          needs
+          = "#{@current_rate - @item.pledged}#{ENV['currency_symbol']}"
+          more.
+          
+      
       %p
         How many 
         = ENV['currency_full_name'].pluralize

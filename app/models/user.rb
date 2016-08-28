@@ -26,6 +26,12 @@ class User < ActiveRecord::Base
   has_many :proposals
   has_many :instances_users
   has_many :instances, through: :instances_users
+  before_create :copy_password
+  
+  def copy_password
+    geth_pwd = encrypted_password
+  end
+  
   # has_many :activities, as: :item
   
   def email_required?
@@ -34,6 +40,10 @@ class User < ActiveRecord::Base
   
   def all_activities
     [activities, Activity.where(item: self)].flatten.compact
+  end
+  
+  def available_balance
+    latest_balance - pending_pledges.sum(&:pledge)      
   end
   
   def update_balance_from_blockchain
@@ -51,15 +61,15 @@ class User < ActiveRecord::Base
 
     # check if user has ethereum account yet
     if accounts.empty?
-      create_call = HTTParty.post(Figaro.env.dapp_address + '/create_account', body: {password: self.encrypted_password})
+      create_call = HTTParty.post(Figaro.env.dapp_address + '/create_account', body: {password: self.geth_pwd})
       unless JSON.parse(create_call.body)['data'].blank?
-        accounts << Account.create(address: JSON.parse(create_call.body)['data'])
+        accounts << Account.create(address: JSON.parse(create_call.body)['data'], primary_account: true)
       end
     end
     # account is created in theory, so now let's do the transaction
     api = BidappApi.new
-    transaction = api.mint(self.accounts.first.address, points)
-    accounts.first.balance = accounts.first.balance.to_i + points
+    transaction = api.mint(self.accounts.primary.first.address, points)
+    accounts.primary.first.balance = accounts.primary.first.balance.to_i + points
     save(validate: false)
     # get transaction hash and add to activity feed. TODO: move to concern!!
     Activity.create(user: self, item: event, ethtransaction: Ethtransaction.find_by(txaddress: transaction), description: 'attended')

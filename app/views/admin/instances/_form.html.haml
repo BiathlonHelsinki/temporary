@@ -12,6 +12,8 @@
   .row
     .small-10.medium-6.columns= f.input :place, as: :select
   .row
+    .small-10.medium-6.columns= f.input :proposal, as: :select, collection: Proposal.schedulable
+  .row
     .small-10.medium-4.columns= f.input :cost_euros
   .row
     .small-10.medium-4.columns= f.input :cost_bb, label: "Number of " + ENV['currency_symbol'] + " received for attending", input_html: {required: ''}
@@ -45,6 +47,8 @@
         = image_tag f.object.image.url(:box)
       = f.input :image, label: (f.object.image? ? 'Change image' : 'Image')
   .row
+    .small-10.medium-4.columns= f.input :is_meeting, label: 'Is a Temporary meeting?', hint: 'Tick this if this will also be a weekly-ish meeting for scheduling and other business.'
+  .row
     .small-10.medium-4.columns= f.input :published
   .row
     .small-10.medium-4.columns= f.submit 'Save', class: [:button]
@@ -55,4 +59,4 @@
   :plain
     $('textarea').froalaEditor({
      height: 300});
-    $('.datetimepicker').fdatetimepicker()
+    $('.datetimepicker').fdatetimepicker();

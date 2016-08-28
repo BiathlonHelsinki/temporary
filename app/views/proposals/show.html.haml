@@ -33,15 +33,16 @@
       %small= @proposal.pledges.map(&:user).map(&:username).join(', ')
       %br/
       remaining needed to schedule:
-      = "#{70 - @proposal.pledged}#{ENV['currency_symbol']}"
+      = "#{@current_rate - @proposal.pledged}#{ENV['currency_symbol']}"
   .row    
     .small-10.columns
-      - if current_user.has_pledged?(@proposal)
-        = "You pledged #{current_user.pledges.find_by(item: @proposal).pledge}#{ENV['currency_symbol']}"
-        %br/
-        = link_to 'Edit pledge', edit_proposal_pledge_path(@proposal, current_user.pledges.find_by(item: @proposal) ), class: [:button, :tiny]
-      - else
-        = link_to "Pledge #{ENV['currency_symbol']}!", new_proposal_pledge_path(@proposal), class: [:button, :tiny]
+      - if user_signed_in?
+        - if current_user.has_pledged?(@proposal)
+          = "You pledged #{current_user.pledges.find_by(item: @proposal).pledge}#{ENV['currency_symbol']}"
+          %br/
+          = link_to 'Edit pledge', edit_proposal_pledge_path(@proposal, current_user.pledges.find_by(item: @proposal) ), class: [:button, :tiny]
+        - else
+          = link_to "Pledge #{ENV['currency_symbol']}!", new_proposal_pledge_path(@proposal), class: [:button, :tiny]
         
 - unless @proposal.comments.empty?
 

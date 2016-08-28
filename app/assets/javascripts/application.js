@@ -14,5 +14,9 @@
 //= require jquery_ujs
 //= require foundation
 //= require jquery_nested_form
+//= require moment 
+//= require fullcalendar
 
-$(function(){ $(document).foundation(); });
+$(function(){ $(document).foundation();
+
+ });

@@ -8,11 +8,44 @@ class Instance < ApplicationRecord
   mount_uploader :image, ImageUploader
   validates_presence_of :place_id, :start_at
   validates_uniqueness_of :sequence
+  belongs_to :proposal
   has_many :instances_users
   has_many :users, through: :instances_users
   has_many :onetimers, dependent: :destroy
   #validate :name_present_in_at_least_one_locale
+  scope :between, -> (start_time, end_time) { 
+    where( [ "(start_at >= ?  AND  end_at <= ?) OR ( start_at >= ? AND end_at <= ? ) OR (start_at >= ? AND start_at <= ?)  OR (start_at < ? AND end_at > ? )",
+    start_time, end_time, start_time, end_time, start_time, end_time, start_time, end_time])
+  }
+  scope :published, -> () { where(published: true) }
+  scope :meetings, -> () {where(is_meeting: true)}
+  scope :future, -> () {where(["start_at >=  ?", Time.now.strftime('%Y/%m/%d %H:%M')]) }
+  
+  def as_json(options = {})
+    {
+      :id => self.id,
+      :title => self.name,
+      :description => self.description || "",
+      :start => start_at.strftime('%Y-%m-%d %H:%M:00'),
+      :end => end_at.nil? ? start_at.strftime('%Y-%m-%d %H:%M:00') : end_at.strftime('%Y-%m-%d %H:%M:00'),
+      :allDay => false, 
+      :recurring => false,
+      :url => Rails.application.routes.url_helpers.instance_path(slug),
+      #:color => "red"
+    }
+
+  end
+  
+  def children
+    []
+  end
+  
+  def self.next_meeting
+    self.future.meetings.first
+  end
+  
   private
+  
   
   def should_generate_new_friendly_id?
     changed?

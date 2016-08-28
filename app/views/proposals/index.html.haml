@@ -1,12 +1,15 @@
 .proposals_index
   - if user_signed_in?
-    - if current_user.latest_balance > 70
-      .row
-        .small-4.columns
-          = link_to 'Propose experiment!', new_proposal_path, class: [:button, :small]
+    .row
+      .small-4.columns= link_to 'Propose experiment!', new_proposal_path, class: [:button, :small]
   .row
     .small-12.columns
-    
+      %h1 Proposals
+      
+      %p
+        Currently needed for an experiment to happen:
+        = @current_rate.to_s + ENV['currency_symbol']
+        %small= link_to "(why?)", '#'
       %table
         %thead
           %th Name
@@ -23,7 +26,7 @@
                 = link_to 'Details', proposal, class: [:button, :secondary, :tiny]
               %td= link_to proposal.user.name, proposal.user
               %td
-                = proposal.pledged
+                = proposal.pledged.to_s + ENV['currency_symbol']
                 %br/
                 - if user_signed_in?
                   - if current_user.has_pledged?(proposal)
@@ -32,11 +35,17 @@
                     = link_to 'Edit pledge', edit_proposal_pledge_path(proposal,current_user.pledges.find_by(item:proposal) ), class: [:button, :tiny]
                   - else
                     = link_to "Pledge #{ENV['currency_symbol']}!", new_proposal_pledge_path(proposal), class: [:button, :tiny]
-              %td.small
-                - unless proposal.comments.empty?
-                  last commented on by 
-                  = proposal.comments.sort_by(&:created_at).last.user.name
-                  = time_ago_in_words(proposal.comments.sort_by(&:created_at).last.created_at) + " ago"
+              %td
+                - if proposal.has_enough?
+                  %strong Will be reviewed at next organisation meeting:
+                  = link_to @next_meeting.name, @next_meeting, target: :_blank
+                - else
+                  = "#{@current_rate - proposal.pledged} more #{ENV['currency_symbol']} needed before it can be scheduled"
+                .small
+                  - unless proposal.comments.empty?
+                    last commented on by 
+                    = proposal.comments.sort_by(&:created_at).last.user.name
+                    = time_ago_in_words(proposal.comments.sort_by(&:created_at).last.created_at) + " ago"
             %tr{class: rowclass}
               %td{colspan: 4}
                 %div.occluded[proposal]

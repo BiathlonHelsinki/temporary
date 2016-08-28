@@ -21,7 +21,10 @@ class Admin::InstancesController < Admin::BaseController
   def new
     @experiment = Experiment.friendly.find(params[:experiment_id])
     @instance = Instance.new(experiment: @experiment, cost_bb: @experiment.cost_bb, 
-                              sequence: @experiment.sequence, cost_euros: @experiment.cost_euros, 
+                              sequence: @experiment.instances.blank? ? @experiment.sequence + ".1" :
+                              @experiment.instances.sort_by(&:sequence).last.sequence.rpartition(/\./).first + "." + (@experiment.instances.sort_by(&:sequence).last.sequence.rpartition(/\./).last.to_i + 1).to_s,
+                              
+                               cost_euros: @experiment.cost_euros, 
                               start_at: @experiment.start_at, end_at: @experiment.end_at,
                               place_id: @experiment.place_id, published: @experiment.published, 
                               translations_attributes: [{locale: 'en', name: @experiment.name(:en), 
@@ -45,7 +48,7 @@ class Admin::InstancesController < Admin::BaseController
   protected
   
   def instance_params
-    params.require(:instance).permit(:published, :event_id, :place_id, :primary_sponsor_id, 
+    params.require(:instance).permit(:published, :event_id, :place_id, :primary_sponsor_id, :is_meeting, :proposal_id,
     :secondary_sponsor_id, :cost_euros, :cost_bb, :sequence, :start_at, :end_at, :sequence, 
     :parent_id, :image, translations_attributes: [:name, :description, :locale, :id]
     )

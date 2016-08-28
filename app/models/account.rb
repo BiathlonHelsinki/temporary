@@ -4,7 +4,7 @@ class Account < ApplicationRecord
   
   scope :primary, -> () {  where(primary_account: true) }
 
-  
+
   def only_one_primary
     if primary_account == true
       matches = Account.where(user_id: user_id).primary

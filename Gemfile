@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 ruby '2.3.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.0.0'
+gem 'rails', '~> 5.0.0.1'
 gem 'pg'
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
@@ -27,6 +27,7 @@ end
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'letter_opener'
   gem 'listen', '~> 3.0.5'
   gem 'ruby_parser', '>= 3.0.1'
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
@@ -45,26 +46,33 @@ gem 'devise'
 gem 'figaro'
 gem 'font-awesome-rails'
 gem 'friendly_id', '~> 5.1.0'
+gem 'fullcalendar-rails'
 gem 'geocoder'
 gem 'globalize', github: 'globalize/globalize', branch: 'master'
 gem 'httparty'
+gem 'httmultiparty'
 gem 'migration_data'
+gem 'mimemagic'
 gem 'mini_magick'
+gem 'momentjs-rails'
+gem 'multipart-post'
 gem 'nested_form'
 gem 'net-ping'
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
+gem "paranoia", github: "rubysherpas/paranoia", branch: "rails5"
 gem "rails-observers", github: 'rails/rails-observers'
 gem 'rolify'
 gem 'textacular', github: 'textacular/textacular', branch: 'master'
+gem 'truncate_html'
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem "wysiwyg-rails"
 
 #  front-end specific stuff
 gem 'formtastic'
 gem 'foundation-rails'
-gem 'foundation-datetimepicker-rails'
+gem 'foundation-datetimepicker-rails', '0.2.4'
 gem "haml-rails", "~> 0.9"
 gem 'jquery-rails'
 # Use SCSS for stylesheets

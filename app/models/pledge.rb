@@ -5,6 +5,7 @@ class Pledge < ApplicationRecord
   after_save :update_activity_feed
   before_destroy :withdraw_activity
   validate :check_balance
+  after_save :notify_if_enough
   
   def check_balance
     user.update_balance_from_blockchain
@@ -15,6 +16,24 @@ class Pledge < ApplicationRecord
   
   def content
     comment
+  end
+  
+
+  def notify_if_enough
+    
+    if (item.pledged + pledge ) >= Rate.get_current.experiment_cost
+      if item.notified != true
+        
+        begin
+          ProposalMailer.proposal_for_review(self.item).deliver 
+          item.notified = true
+          item.save
+        rescue
+          item.notified = false
+          item.save
+        end
+      end
+    end
   end
   
   def image?

@@ -28,8 +28,37 @@ class Experiment < ApplicationRecord
   
   scope :published, -> () { where(published: true) }
   scope :has_events_on, -> (*args) { where(['published is true and (date(start_at) = ? OR (end_at is not null AND (date(start_at) <= ? AND date(end_at) >= ?)))', args.first, args.first, args.first] )}
+  scope :between, -> (start_time, end_time) { 
+    where( [ "(start_at >= ?  AND  end_at <= ?) OR ( start_at >= ? AND end_at <= ? ) OR (start_at >= ? AND start_at <= ?)  OR (start_at < ? AND end_at > ? )",
+    start_time, end_time, start_time, end_time, start_time, end_time, start_time, end_time])
+  }
+  
+  def end_date
+    self.end_at.nil? ? (instances.sort_by(&:start_at).last.end_at.nil? ? start_at : instances.sort_by(&:start_at).last.end_at) : self.end_at
+  end
+  
   def future?
     self.start_at >= Date.parse(Time.now.strftime('%Y/%m/%d'))
+  end
+  
+  def self.collection_to_json(collection = roots)
+    collection.inject([]) do |arr, model|
+      if model.children.empty?
+        if model.class == Instance
+          arr << { name:  model.sequence + " : " + model.name }
+        else
+          if model.instances.size == 1
+            arr << { name:  model.sequence + " : " + model.name }
+          else
+            arr << { name:   model.sequence + " : " + model.name, children: collection_to_json(model.instances) }
+          end
+        end
+      else
+        
+        arr << { name: model.sequence + " : " + model.name, children: collection_to_json(model.instances) +
+           collection_to_json(model.children) }
+      end
+    end
   end
   
   def make_first_instance

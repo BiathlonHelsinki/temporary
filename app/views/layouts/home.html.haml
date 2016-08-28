@@ -10,10 +10,11 @@
     = javascript_include_tag "application"
     = csrf_meta_tags
   %body
-    - if flash
-      - flash.each do |key, value|
-        .alert.text-center{ :class => "alert-#{key}" }
-          %strong= raw value
-    %header= yield :header
-    %section.main_container= yield 
-    %footer= render partial: 'layouts/footer'
+    #outer_container
+      - if flash
+        - flash.each do |key, value|
+          .alert.text-center{ :class => "alert-#{key}" }
+            %strong= raw value
+      %header= yield :header
+      %section.main_container= yield 
+      %footer= render partial: 'layouts/footer'

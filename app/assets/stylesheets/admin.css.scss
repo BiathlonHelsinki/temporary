@@ -20,8 +20,8 @@
  *= require font-awesome
 
  */
-@import 'foundation-datetimepicker';
 
+@import 'foundation-datetimepicker';
 header.admin {
   
   nav#nav-menu {
@@ -52,12 +52,32 @@ header.admin {
     }
   }
 }
-
+.datetimepicker .switch, .datetimepicker th i {
+  color: black !important;
+}
+.datetimepicker {
+  i.fi-arrow-left, i.fi-arrow-right {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+  }
+  i.fi-arrow-left:before {
+   content: "\f060";
+  }
+  i.fi-arrow-right:before {
+    content: "\f061";
+  }
+}
 form {
   label.label {
     padding: 0.3333rem 0.5rem 0.3333rem 0;
     font-size: 1rem;
   }
+  
+
+  
   input.datetimepicker {
     width: inherit;
     position: relative;

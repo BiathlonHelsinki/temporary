@@ -18,6 +18,8 @@
     %ul.vertical.medium-horizontal.menu
       %li= link_to 'Experiments', admin_experiments_path
       %li= link_to 'Proposals', admin_proposals_path
+      - if can? :manage, Credit
+        %li= link_to 'Credits', admin_credits_path
       -#%li= link_to 'Activity', activities_path
   / Right Nav Section
   .top-bar-right

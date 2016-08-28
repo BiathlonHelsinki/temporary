@@ -1,4 +1,4 @@
-require 'httparty'
+require 'httmultiparty'
 
 class BiathlonApi
   API_URL = Figaro.env.biathlon_api_address
@@ -24,6 +24,21 @@ class BiathlonApi
     end
   end
   
+  def api_delete(url, options)
+    begin
+      response = HTTParty.delete(API_URL + url, body: options)
+      if JSON.parse(response.body)['error']
+        JSON.parse(response.body)
+      else
+        JSON.parse(response.body)['data']
+      end
+    rescue HTTParty::Error => e
+      JSON.parse({error: "Error from #{API_URL + url}: #{e}"}.to_json)
+    rescue StandardError => e
+      JSON.parse({error: "Error contacting #{API_URL}: #{e}"}.to_json)
+    end
+  end
+    
 
   
 end

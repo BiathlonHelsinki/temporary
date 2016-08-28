@@ -4,35 +4,32 @@ class ProposalsController < ApplicationController
 
   def create
     current_user.update_balance_from_blockchain
-    if current_user.latest_balance < 70
-      flash[:error] = 'You do not have enough Temporary credits to propose an experiment.'
-      redirect_to '/'
+    @proposal = Proposal.new(proposal_params)
+    if @proposal.save
+      flash[:notice] = 'Your proposal has been submitted!'
+      redirect_to proposals_path
     else
-      @proposal = Proposal.new(proposal_params)
-      if @proposal.save
-        flash[:notice] = 'Your proposal has been submitted!'
-        redirect_to proposals_path
-      else
-        flash[:error] = 'There was an error saving your proposal'
-      end
+      flash[:error] = 'There was an error saving your proposal'
     end
+
   end
   
   def index
+    @next_meeting = Instance.next_meeting
+    @current_rate = Rate.get_current.experiment_cost
     @proposals = Proposal.all
   end
 
   def new
+    
     current_user.update_balance_from_blockchain
-    if current_user.latest_balance < 70
-      flash[:error] = 'You do not have enough Temporary credits to propose an experiment.'
-      redirect_to '/'
-    else
-      @proposal = Proposal.new(user: current_user)
-    end
+    @current_rate = Rate.get_current.experiment_cost
+    @proposal = Proposal.new(user: current_user)
+
   end
   
   def show
+    @current_rate = Rate.get_current.experiment_cost
     @proposal = Proposal.find(params[:id])
   end
   

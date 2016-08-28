@@ -1,0 +1,37 @@
+
+%h1 Good news!
+
+%p Hi!
+%p
+  You have proposed or pledged to the Temporary experiment proposal:
+  
+  = @proposal.name
+  
+%p
+  The proposal has reached or exceeded the necessary amount of Temporaries needed.
+  
+%p
+  The following people pledged support to this experiment:
+  = @proposal.pledges.map {|pledge| pledge.user.username + "(#{pledge.pledge.to_s}#{ENV['currency_symbol']})"}.join(', ')
+    
+%p
+  This proposal will be reviewed and possibly scheduled at the next organisational meeting,
+  = link_to @next_meeting.name, @next_meeting
+  , most likely during the last hour of the event. Please come to discuss any details that may be needed.
+
+%p
+  Please be advised that it is possible that some of the people who pledged support may withdraw their pledges before the meeting.
+  
+%p 
+  If you cannot attend the meeting, please leave your comments on the
+  = link_to 'discussion thread', @proposal
+  for this proposal.
+  
+  
+%p
+  Thank you for your interest in Temporary/Biathlon!
+  
+%p
+  Sincerely,
+%p &nbsp;
+%p Temporary stakeholders

@@ -1,0 +1,18 @@
+= semantic_form_for [:admin, @credit], html: {multipart: true} do |f|
+  .row
+    .small-10.medium-5.columns
+      = f.input :user, input_html: {:required => ''}
+  .row
+    .small-10.medium-5.columns= f.input :awarder, label: 'Awarded by:', input_html: {:required => '', value: current_user.id }
+  .row
+    .small-10.medium-5.columns= f.input :value, label: 'Amount of ' + ENV['currency_symbol']
+  .row
+    .small-10.medium-5.columns= f.input :rate, include_blank: false, input_html: {value: Rate.get_current.id }
+  .row
+    .small-10.medium-5.columns= f.input :description
+  .row
+    .small-10.medium-5.columns= f.input :attachment, label: 'Upload receipt or other proof'
+  .row
+    .small-10.medium-5.columns= f.input :notes
+  .row
+    .small-10.medium-5.columns= f.submit 'Save'   

@@ -44,7 +44,11 @@
                         = instance.sequence
                         %br/
                         = link_to 'Edit instance', edit_admin_experiment_instance_path(exp, instance), class: [:button, :tiny, :secondary]
-                      %td= instance.name
+                      %td
+                        = instance.name
+                        - if instance.is_meeting?
+                          %br/
+                          %strong Meeting
                       %td= date_range(instance.start_at, instance.end_at)
                       %td
                         - if can? :delete, instance

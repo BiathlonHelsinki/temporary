@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   
   namespace :admin do
     root to: 'base#home'
+    resources :credits
     resources :experiments do
       resources :instances
     end
@@ -14,6 +15,12 @@ Rails.application.routes.draw do
   end
   
   resources :experiments do
+    collection do
+      get :tree
+      get :radial
+      get :hierarchy
+      get :calendar
+    end
     member do
       resources :instances
     end

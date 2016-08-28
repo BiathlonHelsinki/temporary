@@ -1,27 +1,57 @@
 @import 'variables';
 html, body {
-
   margin:0;
   padding:0;
   height:100%;
 }
-
-#outer_container {
-  background-color: $yellow;
-  min-height:100%;
-  position:relative;
-}
-.top-bar {
-  background-color: $yellow;
-  ul {
-    li {
+header {
+  margin: 0.938rem 0.938rem 0 0.938rem;
+  // top bar
+  .top-bar {
+    padding: 0;
+    background-color: $yellow;
+    ul {
       background-color: $yellow;
-      a {
-        color: black;
+      li {
+        background-color: $yellow;
+        font-family: $inconsolata;
+        font-size: 1.133em;
+        font-weight: bold;
+        text-align: left;
+        &.first {
+          a {
+            padding: 0.7rem 1rem 0.7rem 0;
+          }
+        }
       }
     }
   }
 }
+
+body {
+  background-color: $yellow;
+}
+h1 {
+  font-family: $heebo;
+  font-size: 3.438em;
+  font-weight: 900;
+}
+
+a {
+  color: $black;
+
+  &:hover {
+    text-decoration: underline;
+    color: $grey;
+  }
+}
+#outer_container {
+  background-color: $yellow;
+  min-height:100%;
+  padding-bottom: 7.5rem;
+  position:relative;
+}
+
 tbody tr:nth-child(even) {
   background-color: initial;
 }
@@ -38,8 +68,9 @@ table {
 section.main_container {
 //  padding: 4rem 0;
 //  border-top: 5px solid black;
-  background-color: $yellow;
+  background-color: white;
   color: black;
+  padding-bottom: 7.5rem;
 }
 /* Small Navigation */
 .logo-small {
@@ -55,7 +86,100 @@ section.main_container {
   top: 10px;
 }
 
+/* Experiments */
+.experiments_index {
+  background-color: white;
+  h1 {
+    padding: 0;margin: 0;
+    text-transform: uppercase;
+  }
+  .experiment {
+    border: none;
+   
+    padding:  0.9375rem;
+    .content {
+      background-color: $grey;
+      
+      padding: 0.563em;
+      .meta {
+        margin: 0.2em 0;
+        border-top: 9px solid black;
+        font-family: $inconsolata;
+        text-transform: uppercase;
+        font-weight: bold;
+        color: $yellow;
+        span {
+          color: $black;
+        }
+      }
+      .dates {
+        font-family: $heebo;
+        font-weight: 900;
+        .month {
+          color: white;
+          
+          font-size: 1.875em
+        }
+        .days {
+          color: $yellow;
+          .times {
+            color: $white;
+            font-size: 1.438em;
+          }
+          .day {
+            font-size: 9.500rem;
+            line-height: 0.9em;
+          }
+          .range_day {
+            font-size: 5.313rem;
+            line-height: 6rem;
+          }
+          .divider {
+            font-size: 2.375rem;
+            line-height: 2.375rem;
+            line-height: 4px;
+            i {
+              line-height: 0;
+            }
+          }
+        }
+      }
+      .title {
+        font-family: $inconsolata;
+        text-transform: uppercase;
+        font-size: 1.259em
+      }
+      .body {
+        font-family: $ptsans;
+        font-size: 0.813rem;
+      }
 
+    }
+  }
+}
+
+
+// Tree view
+
+.experiments_tree {
+  background-color: $grey;
+  .node circle {
+    fill: #fff;
+    stroke: $black;
+    stroke-width: 1.5px;
+  }
+
+  .node {
+    font: 10px sans-serif;
+  }
+
+  .link {
+    fill: none;
+    stroke: $yellow;
+    stroke-width: 1.5px;
+  }
+  
+}
 /* Proposals */
 .proposals_index {
   table {
@@ -105,6 +229,58 @@ section.main_container {
 }
 
 
+// Calendar
+#calendar {
+  width: 92%;
+  padding-top: 4rem;
+  .fc-time {
+    color: $grey;
+  }
+  .fc-title {
+    color: $black;
+  }
+  span.fc-title {
+      padding: 5px !important;
+      text-overflow: ellipsis;
+      white-space: pre-line;
+  }
+  .fc-event-container .fc-event {
+    background-color: $yellow;
+    font-family: $ptsans;
+  }
+  .fc-day-grid-event .fc-content {
+    white-space: inherit;
+  }
+  .fc-toolbar {
+    margin-bottom: 0.2rem;
+    .fc-left, .fc-left .fc-button-group, .fc-right .fc-button-group {
+      button {
+        box-sizing: border-box;
+        margin: 0;
+        height: 1.4rem;
+        padding: 0 .3rem;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+    }
+    
+    h2 {
+      font-size: 1.2rem;
+      font-family: $heebo;
+    
+    }
+    .fc-center {
+
+    }
+  }
+  .fc-row {
+    th {
+      font-family: $inconsolata;
+    }
+  }
+}
+
 // temporary shit
 .experiment {
   border-top: 4px solid black;
@@ -122,17 +298,7 @@ section.main_container {
 }
 
 
-// top bar
-.top-bar {
-  padding-top: 0;
-  ul {
-    li {
-      font-family: $inconsolata;
-      font-size: 1.133em;
-      font-weight: bold;
-    }
-  }
-}
+
 
 // footer
 footer {
@@ -142,7 +308,7 @@ footer {
   position:absolute;
   bottom:0;
   width:100%;
-  height: 7.5em;
+  min-height: 7.5em;
   .text {
     font-size: 1.133em;
     font-family: $ptsans;

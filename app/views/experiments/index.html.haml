@@ -1,10 +1,48 @@
-.row
-  .medium-8.columns.small-10.small-centered
+.experiments_index
+  .row.expanded
+    .small-12.columns
+      %h1
+        = t :experiments
+        = link_to fa_icon('calendar'), calendar_experiments_path
+  .row.expanded#expandme.small-up-1.medium-up-2.large-up-4.xlarge-up-5{:"data-equalizer" => '', :"data-equalize-by-row" => "true"}
     - @experiments.each do |exp|
-      .experiment
-        %h1= link_to exp.name, exp
-        %h3= date_range(exp.start_at, exp.end_at)
-        %h4= link_to pluralize(exp.instances.map(&:users).flatten.size + exp.instances.map(&:onetimers).flatten.size, 'person') + " participated", exp
+      .experiment.column
+        .content{:"data-equalizer-watch" => ''}
+          .meta
+            %span.date= exp.start_at.year.to_s
+            = "/"
+            %span
+              - if exp.instances.size > 1
+                = exp.name
+              - else
+                = "Experiment "
+              = "##{exp.sequence}"
+            = "/"
+          .dates.text-center
+            .month= l exp.start_at, format: "%B"
+            .days
+              - if exp.instances.size == 1
+                - if exp.start_at.to_date == exp.end_date.to_date
+                  .day= exp.start_at.day
+                  .times= exp.start_at.strftime("%H:%M") + " - " + exp.end_date.strftime("%H:%M")
+                - else
+                  
+                  .range_day= exp.start_at.day
+                  .divider= fa_icon('angle-down')
+                  .range_day= exp.end_date.day
+              - else
+                - if exp.start_at.to_date == exp.end_date.to_date
+                  .day= exp.start_at.day
+                  .times= exp.start_at.strftime("%H:%M") + " - " + exp.end_date.strftime("%H:%M")
+                - else
+                  .range_day= exp.start_at.day.to_s
+                  .divider= fa_icon('angle-down')
+                  - if exp.start_at.month != exp.end_date.month
+                    .month= l exp.end_date, format: "%B"
+                  .range_day= exp.end_date.day
+          .title.text-center= link_to exp.name, exp
+          .body.text-center= truncate_html(exp.description, length: 110)
+
+          %small= link_to pluralize(exp.instances.map(&:users).flatten.size + exp.instances.map(&:onetimers).flatten.size, 'person') + " participated", exp
 
     
-        %p= raw exp.description

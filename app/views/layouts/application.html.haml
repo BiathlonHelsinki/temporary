@@ -5,7 +5,7 @@
     %meta{:charset => "utf-8"}/
     %meta{:content => "width=device-width, initial-scale=1.0", :name => "viewport"}/
     %title= content_for?(:title) ? yield(:title) : "Temporary"
-    %link{:href => "https://fonts.googleapis.com/css?family=Inconsolata|PT+Sans", :rel => "stylesheet"}/
+    %link{:href => "https://fonts.googleapis.com/css?family=Inconsolata|Heebo|PT+Sans", :rel => "stylesheet"}/
     = stylesheet_link_tag   "application" 
     = javascript_include_tag "application"
     = csrf_meta_tags
@@ -18,4 +18,6 @@
       %header= render partial: 'layouts/top_bar'
       %section.main_container= yield 
       %footer= render partial: 'layouts/footer'
+    :javascript
+      $(document).ready(function() { #{yield :jquery} });
   
