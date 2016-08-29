@@ -34,6 +34,6 @@ class UsersController < ApplicationController
   protected
   
   def user_params
-    params.require(:user).permit(:email, :name, :username, accounts_attributes: [:address, :primary_account, :external])
+    params.require(:user).permit(:email, :name, :username, :show_name,  :avatar,  accounts_attributes: [:address, :primary_account, :external])
   end
 end

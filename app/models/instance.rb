@@ -12,6 +12,8 @@ class Instance < ApplicationRecord
   has_many :instances_users
   has_many :users, through: :instances_users
   has_many :onetimers, dependent: :destroy
+
+  
   #validate :name_present_in_at_least_one_locale
   scope :between, -> (start_time, end_time) { 
     where( [ "(start_at >= ?  AND  end_at <= ?) OR ( start_at >= ? AND end_at <= ? ) OR (start_at >= ? AND start_at <= ?)  OR (start_at < ? AND end_at > ? )",
@@ -43,6 +45,8 @@ class Instance < ApplicationRecord
   def self.next_meeting
     self.future.meetings.first
   end
+  
+  
   
   private
   

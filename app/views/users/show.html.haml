@@ -17,6 +17,10 @@
       - if current_user != @user && current_user.latest_balance > 0
         %br/
         = link_to "Send #{ENV['currency_symbol']} to #{@user.username}", send_temps_user_transfers_path(@user), class: [:button]
+    - @user.accounts.each do |account|
+      .row
+        .small-6.columns
+          = account.address 
 - unless @user.proposals.empty?
   .row
     .small-10.medium-7.columns

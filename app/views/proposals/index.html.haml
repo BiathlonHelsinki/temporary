@@ -1,63 +1,70 @@
 .proposals_index
-  - if user_signed_in?
-    .row
-      .small-4.columns= link_to 'Propose experiment!', new_proposal_path, class: [:button, :small]
-  .row
+
+  .row.expanded
     .small-12.columns
       %h1 Proposals
-      
+  - if user_signed_in?
+    .row.expanded
+      .small-8.columns= link_to 'Propose experiment!', new_proposal_path, class: [:button, :large]      
       %p
         Currently needed for an experiment to happen:
         = @current_rate.to_s + ENV['currency_symbol']
         %small= link_to "(why?)", '#'
-      %table
+      %table.proposals
         %thead
           %th Name
           %th Proposed by
-          %th Pledged 
+          %th
+            Pledged 
+            %small
+              out of 
+              = @current_rate.to_s
           %th Status
         %tbody
           - @proposals.each do |proposal|
-            - rowclass = cycle('odd', 'even')
-            %tr{class: rowclass}
-              %td
+
+            %tr
+              %td.name
                 = link_to proposal.name, proposal
-                = link_to fa_icon('chevron-down'), '#', onclick: "javascript:$('#proposal_#{proposal.id}').slideToggle();$(this).next('i').removeClass('chevron-down');$(this).next('i').addClass('chevron-up');return false;"
-                = link_to 'Details', proposal, class: [:button, :secondary, :tiny]
+                = link_to fa_icon('caret-down'), '#', onclick: "javascript:$('#proposal_#{proposal.id}').slideToggle();$(this).next('i').removeClass('chevron-down');$(this).next('i').addClass('chevron-up');return false;"
+
               %td= link_to proposal.user.name, proposal.user
               %td
                 = proposal.pledged.to_s + ENV['currency_symbol']
-                %br/
+
                 - if user_signed_in?
                   - if current_user.has_pledged?(proposal)
-                    = "You pledged #{current_user.pledges.find_by(item:proposal).pledge}#{ENV['currency_symbol']}"
-                    %br/
-                    = link_to 'Edit pledge', edit_proposal_pledge_path(proposal,current_user.pledges.find_by(item:proposal) ), class: [:button, :tiny]
+                    = link_to 'Edit pledge', edit_proposal_pledge_path(proposal,current_user.pledges.find_by(item:proposal) ), class: [:button, :small]
                   - else
-                    = link_to "Pledge #{ENV['currency_symbol']}!", new_proposal_pledge_path(proposal), class: [:button, :tiny]
+                    = link_to "Pledge #{ENV['currency_symbol']}!", new_proposal_pledge_path(proposal), class: [:button, :small]
+                  - if current_user.has_pledged?(proposal)
+                    .my_pledge
+                      = "You pledged #{current_user.pledges.find_by(item:proposal).pledge}#{ENV['currency_symbol']}"
+
               %td
                 - if proposal.has_enough?
                   %strong Will be reviewed at next organisation meeting:
                   = link_to @next_meeting.name, @next_meeting, target: :_blank
                 - else
                   = "#{@current_rate - proposal.pledged} more #{ENV['currency_symbol']} needed before it can be scheduled"
-                .small
-                  - unless proposal.comments.empty?
-                    last commented on by 
-                    = proposal.comments.sort_by(&:created_at).last.user.name
-                    = time_ago_in_words(proposal.comments.sort_by(&:created_at).last.created_at) + " ago"
-            %tr{class: rowclass}
+                - unless proposal.comments.empty?
+                  .comment_status
+                    %em
+                      last commented on by 
+                      = link_to proposal.comments.sort_by(&:created_at).last.user.display_name, proposal.comments.sort_by(&:created_at).last.user, target: :_blank
+                      = time_ago_in_words(proposal.comments.sort_by(&:created_at).last.created_at) + " ago"
+            %tr.occluded_row
               %td{colspan: 4}
                 %div.occluded[proposal]
-                  %strong Description:
-                  = simple_format proposal.short_description
-                  %br/
-                  %strong Goals:
-                  = simple_format proposal.goals
-                  %br/
-                  %strong Timeframe
-                  = simple_format proposal.timeframe
-                  %br/
-                  %strong Intended participants:
-                  = simple_format proposal.intended_participants
+                  .title Description:
+                  .answer= simple_format proposal.short_description
+                 
+                  .title Goals:
+                  .answer= simple_format proposal.goals
+                 
+                  .title Timeframe
+                  .answer= simple_format proposal.timeframe
+                  
+                  .title Intended participants:
+                  .answer= simple_format proposal.intended_participants
   

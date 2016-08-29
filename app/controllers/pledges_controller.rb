@@ -35,6 +35,7 @@ class PledgesController < ApplicationController
   end
   
   def edit
+    @next_meeting = Instance.next_meeting
     @current_rate = Rate.get_current.experiment_cost
     @item = Proposal.find(params[:proposal_id])
     @pledge = @item.pledges.find(params[:id])
@@ -42,6 +43,7 @@ class PledgesController < ApplicationController
   end
   
   def new
+    @next_meeting = Instance.next_meeting
     @current_rate = Rate.get_current.experiment_cost
     @item = Proposal.find(params[:proposal_id])
     @pledge = @item.pledges.build

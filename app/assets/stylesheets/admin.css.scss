@@ -91,3 +91,24 @@ form {
     font-weight: italic;
   }
 }
+
+table.experiments {
+  tr {
+    border-top: 3px solid black;
+  }
+  tr.instance {
+    border: none;
+    table {
+      thead {
+        font-size: 0.8em;
+      }
+      tr{
+        border: none;
+      }
+    }
+    td {
+      padding: 0;
+      font-size: 0.9em;
+    }
+  }
+}

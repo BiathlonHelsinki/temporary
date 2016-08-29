@@ -1,17 +1,32 @@
 class Admin::InstancesController < Admin::BaseController
   
-  
   def create
-    @experiment = Experiment.friendly.find(params[:experiment_id])
-    @experiment.instances <<  Instance.new(instance_params)
-    if @experiment.save
-      flash[:notice] = 'Instance saved.'
-      redirect_to admin_experiments_path
-    else
-      flash[:error] = "Error saving instance!"
-      render template: 'admin/instances/new'
+    api = BiathlonApi.new
+
+    if params[:instance] && params[:instance][:image]
+      # data = StringIO.new(Base64.decode64(File.new(params[:instance][:attachment].tempfile)))
+      # data.class.class_eval { attr_accessor :original_filename, :content_type }
+      # data.original_filename = params[:instance][:attachment][:filename]
+      # data.content_type = params[:instance][:attachment][:content_type]
+      params[:instance][:image] = Base64.encode64(params[:instance][:image].tempfile.read)
     end
+
+    success = api.api_post("/instances", {user_email: current_user.email, 
+                            user_token: current_user.authentication_token, instance: params[:instance].to_hash})
+    if success['error']
+      logger.warn('error is ' + success['error'].inspect)
+      flash[:error] = success['error']
+      
+      @experiment = Experiment.friendly.find(params[:experiment_id])
+      @instance = Instance.new(instance_params)
+      @instance.experiment = @experiment
+      render template: 'admin/instances/new'
+    else                           
+      flash[:notice] = 'Your instance was accepted, thank you!'
+      redirect_to admin_experiments_path
+    end                        
   end
+
 
   def edit
     @instance = Instance.friendly.find(params[:id])
@@ -33,19 +48,50 @@ class Admin::InstancesController < Admin::BaseController
 
   end
   
-  def update
-    @instance = Instance.friendly.find(params[:id])
-    if @instance.update_attributes(instance_params)
-      flash[:notice] = 'Instance details updated.'
-      redirect_to admin_experiments_path
-    else
-      flash[:error] = 'Error updating instance'
+  def destroy
+    api = BiathlonApi.new
+    success = api.api_delete("/instances/#{params[:id]}", {user_email: current_user.email, 
+                            user_token: current_user.authentication_token}) 
+    if success['error']
+      flash[:error] = success['error']
+    else                           
+      flash[:notice] = 'The instance was deleted, thank you!'
     end
+    redirect_to admin_experiments_path
+
+  end                            
+
+
+  def update
+    api = BiathlonApi.new
+
+    if params[:instance] && params[:instance][:image]
+      # data = StringIO.new(Base64.decode64(File.new(params[:instance][:attachment].tempfile)))
+      # data.class.class_eval { attr_accessor :original_filename, :content_type }
+      # data.original_filename = params[:instance][:attachment][:filename]
+      # data.content_type = params[:instance][:attachment][:content_type]
+      params[:instance][:image] = Base64.encode64(params[:instance][:image].tempfile.read)
+    end
+
+    success = api.api_put("/instances/#{params[:id]}", {user_email: current_user.email, 
+                            user_token: current_user.authentication_token, instance: params[:instance].to_hash})
+    if success['error']
+      logger.warn('error is ' + success['error'].inspect)
+      flash[:error] = success['error']
+      
+      @experiment = Experiment.friendly.find(params[:experiment_id])
+      @instance = Instance.new(instance_params)
+      @instance.experiment = @experiment
+      render template: 'admin/instances/edit'
+    else                           
+      flash[:notice] = 'Your instance was accepted, thank you!'
+      redirect_to admin_experiments_path
+    end                        
   end
     
   
   
-  protected
+  private
   
   def instance_params
     params.require(:instance).permit(:published, :event_id, :place_id, :primary_sponsor_id, :is_meeting, :proposal_id,

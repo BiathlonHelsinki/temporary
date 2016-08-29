@@ -16,6 +16,25 @@ class Proposal < ApplicationRecord
     pledged >= Rate.get_current.experiment_cost
   end
   
+  def maximum_pledgeable(user)
+    if pledges.map(&:user).include?(user)  # user has already pledged
+      if has_enough?
+        user.available_balance + pledges.where(user: user).pledge
+      elsif pledges.map(&:user).size == 1
+        Rate.get_current.experiment_cost - 1
+      else
+        user.available_balance
+      end
+    else    # user has not yet pledged
+      if has_enough?
+        user.available_balance   # no limit 
+      elsif pledges.to_a.delete_if(&:new_record?).empty?
+        Rate.get_current.experiment_cost - 1
+      else
+        user.available_balance
+      end
+    end
+  end
   
   def pledged
     pledges.sum(&:pledge)

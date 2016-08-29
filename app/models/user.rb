@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :accounts, reject_if: proc {|attr| attr['address'].blank? }
   # acts_as_token_authenticatable
   validates_format_of :email, :without => TEMP_EMAIL_REGEX, on: :update
+  validates_uniqueness_of :username
   extend FriendlyId
   friendly_id :username , :use => [ :slugged, :finders ] # :history]
   has_many :activities
@@ -27,12 +28,22 @@ class User < ActiveRecord::Base
   has_many :instances_users
   has_many :instances, through: :instances_users
   before_create :copy_password
+  mount_uploader :avatar, ImageUploader
+  before_save :update_avatar_attributes
   
   def copy_password
     geth_pwd = encrypted_password
   end
   
   # has_many :activities, as: :item
+  
+  def display_name
+    if show_name == true
+      "#{name} (#{username})"
+    else
+      username
+    end
+  end
   
   def email_required?
     false
@@ -163,5 +174,14 @@ class User < ActiveRecord::Base
     authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'], :username => identifier)
   end
   
+  def update_avatar_attributes
+    if avatar.present? && avatar_changed?
+      if avatar.file.exists?
+        self.avatar = avatar.file.content_type
+        self.avatar_size = avatar.file.size
+        self.avatar_width, self.avatar_height = `identify -format "%wx%h" #{avatar.file.path}`.split(/x/)
+      end
+    end
+  end
   
 end

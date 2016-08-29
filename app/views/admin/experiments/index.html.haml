@@ -5,7 +5,7 @@
   .small-12.columns
     %h4 All experiments
     
-    %table
+    %table.experiments
       %thead
         %th db id#
         %th biathlon experiment #
@@ -26,7 +26,7 @@
               - if can? :delete, exp
                 = link_to 'Delete', [:admin, exp], method: :delete, data: {confirm: 'Are you sure?'}, class: [:button, :alert, :tiny]
 
-          %tr
+          %tr.instance
             %td &nbsp;
             %td{colspan: 3 }
               %table
@@ -49,6 +49,13 @@
                         - if instance.is_meeting?
                           %br/
                           %strong Meeting
+                        - if instance.proposal
+                          - if instance.proposal.scheduled
+                            %br/
+                            %strong
+                              %em
+                                Scheduled from proposal
+                                = link_to instance.proposal.name, instance.proposal, target: :_blank
                       %td= date_range(instance.start_at, instance.end_at)
                       %td
                         - if can? :delete, instance

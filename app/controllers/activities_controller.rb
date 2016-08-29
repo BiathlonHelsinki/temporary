@@ -5,7 +5,7 @@ class ActivitiesController < ApplicationController
       @user = User.friendly.find(params[:user_id])
       @activities = Activity.by_user(@user.id).order(created_at: :desc)
     else
-      @activities = Activity.order(created_at: :desc)
+      @activities = Activity.all.order(created_at: :desc)
     end
   end
   

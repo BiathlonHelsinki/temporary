@@ -30,6 +30,10 @@ class Credit < ApplicationRecord
   #   return true
   # end
   
+  def name
+    description
+  end
+  
   private
   
   def update_attachment_metadata

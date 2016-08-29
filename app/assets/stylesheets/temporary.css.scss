@@ -11,6 +11,7 @@ header {
     padding: 0;
     background-color: $yellow;
     ul {
+      padding: 0.4rem 0;
       background-color: $yellow;
       li {
         background-color: $yellow;
@@ -18,6 +19,13 @@ header {
         font-size: 1.133em;
         font-weight: bold;
         text-align: left;
+        &.active {
+          border: 1px solid black;
+          a {
+            background: none;
+            color: black;
+          }
+        }
         &.first {
           a {
             padding: 0.7rem 1rem 0.7rem 0;
@@ -45,6 +53,14 @@ a {
     color: $grey;
   }
 }
+
+.button {
+  color: black;
+  font-family: $inconsolata;
+  font-weight: bold;
+
+}
+
 #outer_container {
   background-color: $yellow;
   min-height:100%;
@@ -103,7 +119,7 @@ section.main_container {
       padding: 0.563em;
       .meta {
         margin: 0.2em 0;
-        border-top: 9px solid black;
+        border-top: 8px solid black;
         font-family: $inconsolata;
         text-transform: uppercase;
         font-weight: bold;
@@ -182,14 +198,126 @@ section.main_container {
 }
 /* Proposals */
 .proposals_index {
-  table {
-    .occluded {
-      display: none;
-      font-size: 0.875rem;
+  h1 {
+    text-transform: uppercase;
+  }
+
+  table.proposals {
+    border-collapse: separate;
+    border-spacing: 1rem;
+
+    thead {
+      th {
+        font-family: $heebo;
+        font-size: 1.875rem;
+        background-color: white;
+        border-bottom: 8px solid black;
+        small {
+          font-family: $inconsolata;
+          font-size: 0.8rem;
+        }
+      }
+    }
+    tbody {
+      tr {
+        &.occluded_row {
+          border: none;
+          td {
+            border-bottom: 1px solid $yellow;
+          }
+        }
+        td {
+          border: none;
+          font-family: $ptsans;
+          font-size: 1rem;
+          vertical-align: top;
+          .occluded {
+            display: none;
+            font-size: 0.875rem;
+            border: 1px solid $yellow;
+            padding: 1rem;
+            .title {
+              font-family: $heebo;
+              font-weight: 900;
+              font-size: 1.250rem;
+              float: left;
+              border-bottom: 5px solid black;
+              margin-bottom: 0.4rem;
+            }
+            .answer {
+              clear: left;
+            }
+          }
+          
+          a.button {
+            font-size: 1rem;
+            float: right;
+            clear: both;
+          }
+          .my_pledge {
+            clear: both;
+            font-size: 0.875rem;
+          }
+          .comment_status {
+            font-size: 0.875rem;
+            margin-top: 1rem;
+          }
+          &.name {
+            
+            font-weight: bold;
+            a {
+              vertical-align: top;
+              text-decoration: underline;
+            }
+            i {
+              font-size: 2rem;
+              padding-top: 0.4rem;
+            }
+
+          }
+        }
+      }
     }
   }
 }
 
+.proposal_form {
+  h1 {
+    text-transform: uppercase;
+     font-weight: 900;
+  }
+  form {
+    label {
+      &.label {
+        font-family: $heebo;
+        font-size: 1.875rem;
+        font-weight: 900;
+        padding: 0.688rem 0;
+        margin: 0.9rem 0;
+        border-bottom: 8px solid black;
+      }
+    }
+    a.add_nested_fields {
+      font-family: $heebo;
+      font-size: 1.875rem;
+      font-weight: 900;
+      padding: 0.688rem 0;
+      margin: 0.9rem 0;
+      border-bottom: 8px solid black;
+    }
+    .row {
+      .columns {
+        padding-left: 0;
+      }
+    }
+    input, textarea {
+      border: 2px solid $yellow;
+      &:focus {
+        outline: 1px solid $yellow;
+      }
+    }
+  }
+}
 /* Medium-Up Navigation */
 @media only screen and (min-width: 40rem) { 
 
@@ -299,6 +427,37 @@ section.main_container {
 
 
 
+/* Activity feed */
+.activities_index {
+  
+  h1 {
+    text-transform: uppercase;
+    font-family: $heebo;
+    font-weight: 900;
+  }
+  
+  table.activities {
+    border-collapse: separate;
+    border-spacing: 1rem;
+    thead {
+      th {
+        font-family: $heebo;
+        font-size: 1.875rem;
+        background-color: white;
+        border-bottom: 8px solid black;
+      }
+    }
+    tbody {
+      tr {
+        border-bottom: 1px solid $yellow;
+        td {
+          font-family: $ptsans;
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}
 
 // footer
 footer {

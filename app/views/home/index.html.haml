@@ -12,7 +12,7 @@
       %ul.menu.dropdown{:"data-dropdown-menu" => ''}
         %li.has-submenu
           - if user_signed_in?
-            = link_to current_user.username + "'s Biathlon", '#'
+            = link_to current_user.display_name + "'s Biathlon", '#'
             %ul.submenu.menu.vertical{"data-submenu" => ""}
               - if current_user.has_role? :admin
                 %li= link_to 'Admin', '/admin'
@@ -32,9 +32,9 @@
       .post
         .meta
           %span.date= post.published_at.strftime('%d.%m.%Y')
-          = " / "
+          = " // "
           %span.category= post.category_text
-          = " / "
+          = " // "
         .title= link_to post.title, post
         - if post.image?
           = image_tag post.image.url

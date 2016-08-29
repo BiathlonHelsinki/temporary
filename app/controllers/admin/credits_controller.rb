@@ -1,6 +1,7 @@
 class Admin::CreditsController < Admin::BaseController
   skip_load_and_authorize_resource
   load_and_authorize_resource
+  
   def create
     api = BiathlonApi.new
 

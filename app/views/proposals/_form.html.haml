@@ -1,15 +1,15 @@
 = semantic_nested_form_for @proposal, html: {multipart: true} do |f|
   = f.input :user_id, data: {value: current_user.id}, as: :hidden 
   .row
-    .small-10.medium-6.columns= f.input :name
+    .small-10.medium-6.columns= f.input :name, label: 'Name of your experiment'
   .row
     .small-10.medium-6.columns= f.input :short_description
   .row
-    .small-10.medium-6.columns= f.input :timeframe
+    .small-10.medium-6.columns= f.input :timeframe, label: 'Proposed times and duration'
   .row
-    .small-10.medium-6.columns= f.input :goals
+    .small-10.medium-6.columns= f.input :goals, label: 'What are the goals of this experiment?'
   .row
-    .small-10.medium-6.columns= f.input :intended_participants
+    .small-10.medium-6.columns= f.input :intended_participants, label: 'Intended participants'
   .row
     .small-10.medium-6.columns
       %table#images
@@ -19,7 +19,7 @@
             %td= image_form.link_to_remove 'Remove this image', class: [:button, :tiny]
             
   .row
-    .small-10.medium-6.columns= f.link_to_add 'Add an image to this proposal', :images, data: {target: '#images'}
+    .small-10.medium-6.columns= f.link_to_add 'Add an image to this proposal +', :images, data: {target: '#images'}
   .row
-    .small-10.medium-6.columns= f.submit 'Propose!', class: [:button, :small]              
+    .small-10.medium-6.columns= f.submit 'Propose!', class: [:button, :large]              
   

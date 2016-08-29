@@ -4,9 +4,19 @@
     
     = semantic_nested_form_for @user, html: {multipart: true} do |f|
       .row
-        .small-12.columns= f.input :email
+        .small-6.columns
+          .row
+            .small-12.columns= f.input :email
+          .row
+            .small-12.columns= f.input :name, label: 'Your name:'
+        .small-6.columns
+          - if f.object.avatar?
+            = image_tag f.object.avatar.url(:small)
+            = f.input :avatar, label: 'Change image/photo:', hint: 'Keep it decent, please....'
+          - else
+            = f.input :avatar, label: 'Change image/photo:', hint: 'Keep it decent, please....'
       .row
-        .small-12.columns= f.input :name, label: 'Your name:'
+        .small-12.columns= f.input :show_name, label: 'Show your name on site?', hint: 'If this is not ticked, then only your username will be displayed.'
       .row
         .small-12.columns= f.input :username
         

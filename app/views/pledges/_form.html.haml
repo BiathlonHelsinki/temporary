@@ -4,19 +4,30 @@
       %p 
         You have
         = "#{current_user.available_balance + @pledge.pledge.to_i}#{ENV['currency_symbol']}"
-        available to pledge to this.
-      %p
-        Currently,
-        = @current_rate.to_s + ENV['currency_symbol']
-        are needed before an experiment can be reviewed for scheduling. This proposal
-        - if @item.has_enough?
-          has enough and will be reviewed at the next organisational activity,
-          = link_to Instance.next_meeting.name, Instance.next_meeting
-          = "."
-        - else
-          needs
+        available.
+      - if @item.has_enough?
+        %p
+          This proposal already has enough pledges and will be reviewed for scheduling at the next meeting,
+          = link_to(@next_meeting.name, @next_meeting, target: :_blank) + "."
+          You may still pledge additional Temps towards it, however.
+      - else
+        %p
+          This proposal still needs 
           = "#{@current_rate - @item.pledged}#{ENV['currency_symbol']}"
-          more.
+          to be considered for scheduling.
+          
+        %p
+          Currently,
+          = @current_rate.to_s + ENV['currency_symbol']
+          are needed before an experiment can be reviewed for scheduling.
+          You may pledge a maximum of
+          = "#{@item.maximum_pledgeable(current_user)}#{ENV['currency_symbol']}"
+          to this proposal.
+          
+        %p 
+          %em (All proposals require at least two supporters before they can be scheduled).
+
+
           
       
       %p
