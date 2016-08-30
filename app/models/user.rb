@@ -45,6 +45,10 @@ class User < ActiveRecord::Base
     end
   end
   
+  def should_generate_new_friendly_id?
+     username_changed?
+   end
+   
   def email_required?
     false
   end
