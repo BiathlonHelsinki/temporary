@@ -80,6 +80,7 @@ gem "wysiwyg-rails"
 gem 'formtastic'
 gem 'foundation-rails'
 gem 'foundation-datetimepicker-rails', '0.2.4'
+gem 'haml'
 gem "haml-rails", "~> 0.9"
 gem 'jquery-rails'
 # Use SCSS for stylesheets
