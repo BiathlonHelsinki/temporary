@@ -69,3 +69,7 @@ bower.json
 
 # Ignore pow environment settings
 .powenv
+Capfile
+app/views/devise/
+config/deploy.rb
+config/deploy/
