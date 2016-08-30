@@ -62,6 +62,7 @@ gem 'mini_magick'
 gem 'momentjs-rails'
 gem 'multipart-post'
 gem 'nested_form'
+gem "non-stupid-digest-assets"
 gem 'net-ping'
 gem 'omniauth'
 gem 'omniauth-facebook'
