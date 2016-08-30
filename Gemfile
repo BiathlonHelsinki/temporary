@@ -37,6 +37,11 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
+gem 'capistrano'
+gem 'capistrano-rails'#, '1.1.3'
+gem 'rvm-capistrano'
+gem 'capistrano-bundler'#, '1.1.4'
+
 gem "audited", github: 'collectiveidea/audited', branch: :master
 gem 'awesome_nested_set'
 gem 'cancancan'
@@ -64,6 +69,7 @@ gem 'omniauth-twitter'
 gem "paranoia", github: "rubysherpas/paranoia", branch: "rails5"
 gem "rails-observers", github: 'rails/rails-observers'
 gem 'rolify'
+gem 'simple_token_authentication', git: 'https://github.com/gonzalo-bulnes/simple_token_authentication.git', branch: 'master'
 gem 'textacular', github: 'textacular/textacular', branch: 'master'
 gem 'truncate_html'
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

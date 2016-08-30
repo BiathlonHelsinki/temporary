@@ -1,17 +1,25 @@
 class ProposalsController < ApplicationController
   
-  before_filter :authenticate_user!, only: [:new, :create, :update, :destroy]
+  before_filter :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
 
   def create
     current_user.update_balance_from_blockchain
     @proposal = Proposal.new(proposal_params)
     if @proposal.save
-      flash[:notice] = 'Your proposal has been submitted!'
+      flash[:notice] = 'Your proposal has been submitted! Now, you can pledge some of your Temps to it.'
       redirect_to proposals_path
     else
       flash[:error] = 'There was an error saving your proposal'
     end
 
+  end
+  
+  def edit
+    @proposal = Proposal.friendly.find(params[:id])
+    if @proposal.user != current_user && !current_user.has_role?(:admin)
+      flash[:error] = "You cannot edit someone else's proposal."
+      redirect_to @proposal
+    end
   end
   
   def index
@@ -21,11 +29,14 @@ class ProposalsController < ApplicationController
   end
 
   def new
-    
-    current_user.update_balance_from_blockchain
-    @current_rate = Rate.get_current.experiment_cost
-    @proposal = Proposal.new(user: current_user)
-
+    if current_user.email =~ /change@me/
+      flash[:error] = 'You must enter a valid email address in order to propose an experiment.'
+      redirect_to proposals_path
+    else
+      current_user.update_balance_from_blockchain
+      @current_rate = Rate.get_current.experiment_cost
+      @proposal = Proposal.new(user: current_user)
+    end
   end
   
   def show
@@ -35,11 +46,16 @@ class ProposalsController < ApplicationController
   
   def update
     @proposal = Proposal.friendly.find(params[:id])
-    if @proposal.update_attributes(proposal_params)
-      flash[:notice] = 'Your proposal has been edited!'
-      redirect_to proposals_path
+    if @proposal.user != current_user && !current_user.has_role?(:admin)
+      flash[:error] = "You cannot edit someone else's proposal."
+      redirect_to @proposal
     else
-      flash[:error] = 'There was an error saving your edited proposal.'
+      if @proposal.update_attributes(proposal_params)
+        flash[:notice] = 'Your proposal has been edited!'
+        redirect_to proposals_path
+      else
+        flash[:error] = 'There was an error saving your edited proposal.'
+      end
     end
   end
   

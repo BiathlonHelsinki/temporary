@@ -5,7 +5,12 @@
       %h1 Proposals
   - if user_signed_in?
     .row.expanded
-      .small-8.columns= link_to 'Propose experiment!', new_proposal_path, class: [:button, :large]      
+      .small-8.columns
+        - if current_user.email =~ /^change@me/ 
+          %p You must enter a valid email address to propose an experiment.
+        - else
+          = link_to 'Propose experiment!', new_proposal_path, class: [:button, :large]
+        
       %p
         Currently needed for an experiment to happen:
         = @current_rate.to_s + ENV['currency_symbol']

@@ -19,10 +19,11 @@ class UsersController < ApplicationController
     if can? :update, @user
       if @user.update_attributes(user_params)
         flash[:error] = ''
+        flash[:warning] = ''
         flash[:notice] = 'Profile info saved.'
         redirect_to edit_user_path(@user)
       else
-        flash[:error] = @user.errors.full_messages
+        flash[:error] = @user.errors.full_messages.join('. ')
         render template: 'users/edit'
       end
     else

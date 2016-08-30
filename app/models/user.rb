@@ -11,9 +11,9 @@ class User < ActiveRecord::Base
   has_many :authentications, :dependent => :destroy
   # accepts_nested_attributes_for :authentications, :reject_if => proc { |attr| attr['username'].blank? }
   accepts_nested_attributes_for :accounts, reject_if: proc {|attr| attr['address'].blank? }
-  # acts_as_token_authenticatable
+  acts_as_token_authenticatable
   validates_format_of :email, :without => TEMP_EMAIL_REGEX, on: :update
-  validates_uniqueness_of :username
+  validates_uniqueness_of :username, :email
   extend FriendlyId
   friendly_id :username , :use => [ :slugged, :finders ] # :history]
   has_many :activities

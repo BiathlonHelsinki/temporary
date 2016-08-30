@@ -58,6 +58,11 @@ class AuthenticationsController < ApplicationController
             user.authentications.create!(:provider => omniauth['provider'], :uid => omniauth['uid'], :username => (omniauth['info']['nickname'].blank? ? omniauth['info']['email'] : omniauth['info']['nickname']))
           end
         end
+        loop do
+          existing = User.find_by(username: user.username)
+          break if existing.nil?
+          user.username = user.username + "-1"
+        end
         if user.save!
           # render status: 200, json: { email: user.email, authentication_token: user.authentication_token, id: user.id }
           sign_in_and_redirect(:user, user)
