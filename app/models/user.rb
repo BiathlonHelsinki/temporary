@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
   validates_format_of :email, :without => TEMP_EMAIL_REGEX, on: :update
   validates_uniqueness_of :username, :email
   extend FriendlyId
-  friendly_id :username , :use => [ :slugged, :finders ] # :history]
+  friendly_id :username , :use => [ :slugged, :finders, :history]
   has_many :activities
   has_many :onetimers
   has_many :nfcs
