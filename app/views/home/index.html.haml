@@ -1,28 +1,9 @@
 = content_for :header do
   .home_header
-    = image_tag 'temporary_logo.png'
+    = image_tag 'temporary_logo.png'  
   .top-bar
-    .top-bar-left
-      %ul.menu
-        %li.first= link_to 'About', '#'
-        %li= link_to 'News', '#'
-        %li= link_to 'Experiments', experiments_path
-        %li= link_to 'Proposals', proposals_path
-    .top-bar-right
-      %ul.menu.dropdown{:"data-dropdown-menu" => ''}
-        %li.has-submenu
-          - if user_signed_in?
-            = link_to current_user.display_name + "'s Biathlon", '#'
-            %ul.submenu.menu.vertical{"data-submenu" => ""}
-              - if current_user.has_role? :admin
-                %li= link_to 'Admin', '/admin'
-              %li= link_to 'Your account', edit_user_path(current_user)
-              %li= link_to 'Sign out',  destroy_user_session_path, :method => :delete
-          - else
-            %a{:href => "#"} Sign in
-            %ul.submenu.menu.vertical{"data-submenu" => ""}
-              %li= link_to 'via Twitter', '/users/auth/twitter'
-              %li= link_to 'via Facebook', '/users/auth/facebook'
+    = render partial: 'layouts/top_bar'
+
 
 
 

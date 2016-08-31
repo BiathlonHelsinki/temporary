@@ -15,7 +15,19 @@
         .alert.text-center{ :class => "alert-#{key}" }
           %strong= raw value
     #outer_container      
-      %header= render partial: 'layouts/top_bar'
+      %header
+        / Small Navigation
+        .title-bar{"data-hide-for" => "medium", "data-responsive-toggle" => "nav-menu"}
+          %a.logo-small.show-for-small-only{:href => "#"}
+            %img{:src => "http://placehold.it/50x50?text=LOGO"}/
+          %button.menu-icon{"data-toggle" => "", :type => "button"}
+          .title-bar-title Menu
+        / Medium-Up Navigation
+        %nav#nav-menu.top-bar
+          .row.expanded.logo
+            = link_to image_tag('temporary_logo.png'), '/'
+          / Left Nav Section
+          = render partial: 'layouts/top_bar'
       %section.main_container= yield 
       %footer= render partial: 'layouts/footer'
     :javascript

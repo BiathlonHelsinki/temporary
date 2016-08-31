@@ -1,43 +1,33 @@
-/ Small Navigation
-.title-bar{"data-hide-for" => "medium", "data-responsive-toggle" => "nav-menu"}
-  %a.logo-small.show-for-small-only{:href => "#"}
-    %img{:src => "http://placehold.it/50x50?text=LOGO"}/
-  %button.menu-icon{"data-toggle" => "", :type => "button"}
-  .title-bar-title Menu
-/ Medium-Up Navigation
-%nav#nav-menu.top-bar
-  .row.expanded.logo
-    = link_to image_tag('temporary_logo.png'), '/'
-  / Left Nav Section
-  .top-bar-left
-    %ul.vertical.medium-horizontal.menu
-      %li{class: controller.controller_name == 'pages' ? :active : false}= link_to 'About', '#'
-      %li{class: controller.controller_name == 'experiments' ? :active : false}= link_to 'Experiments', experiments_path
-      %li{class: controller.controller_name == 'activities' ? :active : false}= link_to 'Activity', activities_path
-      %li{class: controller.controller_name == 'proposals' ? :active : false}= link_to 'Proposals', proposals_path
-  / Right Nav Section
-  .top-bar-right
-    %ul.vertical.medium-horizontal.menu{"data-responsive-menu" => "drilldown medium-dropdown"}
-      - if user_signed_in?
-        %li.has-submenu
-          = link_to '#' do
-            Balance:
-            = (current_user.available_balance).to_s + ENV['currency_symbol']
-            %small= "(#{current_user.latest_balance.to_s}#{ENV['currency_symbol']})"
-          %ul.submenu.menu.vertical{"data-submenu" => ""}
-            %li= link_to 'Details', user_activities_path(current_user.slug)
-            %li= link_to 'Redeem temporary tag', '/link_temporary'
+
+.top-bar-left
+  %ul.vertical.medium-horizontal.menu
+    %li{class: controller.controller_name == 'pages' ? :active : false}= link_to 'About', '#'
+    %li{class: controller.controller_name == 'experiments' ? :active : false}= link_to 'Experiments', experiments_path
+    %li{class: controller.controller_name == 'activities' ? :active : false}= link_to 'Activity', activities_path
+    %li{class: controller.controller_name == 'proposals' ? :active : false}= link_to 'Proposals', proposals_path
+/ Right Nav Section
+.top-bar-right
+  %ul.vertical.medium-horizontal.menu{"data-responsive-menu" => "drilldown medium-dropdown"}
+    - if user_signed_in?
       %li.has-submenu
-        - if user_signed_in?
-          = link_to current_user.display_name + "'s Biathlon", '#'
-          %ul.submenu.menu.vertical{"data-submenu" => ""}
-            - if current_user.has_role? :admin
-              %li= link_to 'Admin', '/admin'
-            %li= link_to 'Your account', edit_user_path(current_user)
-            %li= link_to 'Sign out',  destroy_user_session_path, :method => :delete
-        - else
-          %a{:href => "#"} Sign in
-          %ul.submenu.menu.vertical{"data-submenu" => ""}
-            %li= link_to 'via Twitter', '/users/auth/twitter'
-            %li= link_to 'via Facebook', '/users/auth/facebook'
+        = link_to '#' do
+          Balance:
+          = (current_user.available_balance).to_s + ENV['currency_symbol']
+          %small= "(#{current_user.latest_balance.to_s}#{ENV['currency_symbol']})"
+        %ul.submenu.menu.vertical{"data-submenu" => ""}
+          %li= link_to 'Details', user_activities_path(current_user.slug)
+          %li= link_to 'Redeem temporary tag', '/link_temporary'
+    %li.has-submenu
+      - if user_signed_in?
+        = link_to current_user.display_name + "'s Biathlon", '#'
+        %ul.submenu.menu.vertical{"data-submenu" => ""}
+          - if current_user.has_role? :admin
+            %li= link_to 'Admin', '/admin'
+          %li= link_to 'Your account', edit_user_path(current_user)
+          %li= link_to 'Sign out',  destroy_user_session_path, :method => :delete
+      - else
+        %a{:href => "#"} Sign in
+        %ul.submenu.menu.vertical{"data-submenu" => ""}
+          %li= link_to 'via Twitter', '/users/auth/twitter'
+          %li= link_to 'via Facebook', '/users/auth/facebook'
 
