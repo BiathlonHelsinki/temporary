@@ -72,3 +72,4 @@ bower.json
 Capfile
 config/deploy.rb
 config/deploy/
+config/puma.rb
