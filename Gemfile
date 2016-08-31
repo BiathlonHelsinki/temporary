@@ -6,7 +6,7 @@ ruby '2.3.1'
 gem 'rails', '5.0.0'
 gem 'pg'
 # Use Puma as the app server
-gem 'puma'
+gem 'unicorn'
 
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
