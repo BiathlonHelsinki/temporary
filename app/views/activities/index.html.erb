@@ -1,40 +1,73 @@
--# encoding: utf-8
-.activities_index
-  .row.expanded
-    .small-12.columns
-      %h1 Activity
-  - if params[:user_id]
-    .row
-      .small-8.columns.small-centered
-        %h3
+<div class="activities_index">
+  <div class="row expanded">
+    <div class="small-12 columns">
+      <h1>Activity</h1>
+    </div>
+  </div>
+  <% if params[:user_id] %>
+    <div class="row">
+      <div class="small-8 columns small-centered">
+        <h3>
           Showing all activity for user
-          = @user.username
-  .row.expanded
-    .small-12.columns
-      %table.activities
-        %thead
-          %th Date
-          %th Who
-          %th Activity
-          %th Subject
-          %th= ENV['currency_symbol']
-          %th Info
-        %tbody
-          - @activities.each do |activity|
-            %tr
-              %td= l activity.created_at, format: :long
-              %td= link_to activity.user.display_name, activity.user, target: :_blank
-              %td= activity.description
-              %td= encoded_raw activity.linked_name
-
-              %td= "#{activity.value}#{ENV['currency_symbol']}"
-              %td
-                - if activity.ethtransaction
-                  = link_to activity.ethtransaction.txaddress[0..5] + "...", "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank
-        / .row
-        /   .small-8.columns.text-right
-        /     %em= l activity.created_at, format: :long
-        /     = activity.sentence.html_safe
-        /   - unless activity.ethtransaction.nil?
-        /     .small-2.columns.end
-        /       %small= link_to activity.ethtransaction.txaddress, "https://testnet.etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank
+          <%= @user.username %>
+        </h3>
+      </div>
+    </div>
+  <% end %>
+  <div class="row expanded">
+    <div class="small-12 columns">
+      <table class="activities">
+        <thead>
+          <th>Date</th>
+          <th>Who</th>
+          <th>Activity</th>
+          <th>Subject</th>
+          <th>
+            <%= ENV['currency_symbol'] %>
+          </th>
+          <th>Info</th>
+        </thead>
+        <tbody>
+          <% @activities.each do |activity| %>
+            <tr>
+              <td>
+                <%= l activity.created_at, format: :long %>
+              </td>
+              <td>
+                <%= link_to activity.user.display_name, activity.user, target: :_blank %>
+              </td>
+              <td>
+                <%= activity.description %>
+              </td>
+              <td>
+                <%= encoded_raw activity.linked_name %>
+              </td>
+              <td>
+                <%= "#{activity.value}#{ENV['currency_symbol']}" %>
+              </td>
+              <td>
+                <% if activity.ethtransaction %>
+                  <%= link_to activity.ethtransaction.txaddress[0..5] + "...", "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+        <!-- .row
+        -->
+        <!--   .small-8.columns.text-right
+        -->
+        <!--     %em= l activity.created_at, format: :long
+        -->
+        <!--     = activity.sentence.html_safe
+        -->
+        <!--   - unless activity.ethtransaction.nil?
+        -->
+        <!--     .small-2.columns.end
+        -->
+        <!--       %small= link_to activity.ethtransaction.txaddress, "https://testnet.etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank
+        -->
+      </table>
+    </div>
+  </div>
+</div>
