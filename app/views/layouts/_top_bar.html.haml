@@ -1,7 +1,7 @@
 
 .top-bar-left
   %ul.vertical.medium-horizontal.menu
-    %li{class: controller.controller_name == 'pages' ? :active : false}= link_to 'About', '#'
+    %li{class: controller.controller_name == 'pages' ? :active : false}= link_to 'About', page_path('what-is-temporary')
     %li{class: controller.controller_name == 'experiments' ? :active : false}= link_to 'Experiments', experiments_path
     %li{class: controller.controller_name == 'activities' ? :active : false}= link_to 'Activity', activities_path
     %li{class: controller.controller_name == 'proposals' ? :active : false}= link_to 'Proposals', proposals_path
