@@ -7,69 +7,77 @@
     .row.expanded
       .small-8.columns
         - if current_user.email =~ /^change@me/ 
-          %p You must enter a valid email address to propose an experiment.
+          %p You must enter a valid email address to propose (or pledge towards) an experiment.
         - else
           = link_to 'Propose experiment!', new_proposal_path, class: [:button, :large]
-        
+  - else
+    .row.expanded
+      .small-10.columns
+        %p Log in (or join!) to propose an experiment.
+    
+  .row.expanded
+    .small-10.columns
       %p
         Currently needed for an experiment to happen:
         = raw (@current_rate.to_s + tsign)
         %small= link_to "(why?)", '#'
-      %table.proposals
-        %thead
-          %th Name
-          %th Proposed by
-          %th
-            Pledged 
-            %small
-              out of 
-              = @current_rate.to_s
-          %th Status
-        %tbody
-          - @proposals.each do |proposal|
+  %table.proposals
+    %thead
+      %th Name
+      %th Proposed by
+      %th
+        Pledged 
+        %small
+          out of 
+          = @current_rate.to_s
+      %th Status
+    %tbody
+      - @proposals.each do |proposal|
 
-            %tr
-              %td.name
-                = link_to proposal.name, proposal
-                = link_to fa_icon('caret-down'), '#', onclick: "javascript:$('#proposal_#{proposal.id}').slideToggle();$(this).next('i').removeClass('chevron-down');$(this).next('i').addClass('chevron-up');return false;"
+        %tr
+          %td.name
+            = link_to proposal.name, proposal
+            = link_to fa_icon('caret-down'), '#', onclick: "javascript:$('#proposal_#{proposal.id}').slideToggle();$(this).next('i').removeClass('chevron-down');$(this).next('i').addClass('chevron-up');return false;"
 
-              %td= link_to proposal.user.name, proposal.user
-              %td
-                = raw(proposal.pledged.to_s + tsign)
+          %td= link_to proposal.user.name, proposal.user
+          %td
+            = raw(proposal.pledged.to_s + tsign)
 
-                - if user_signed_in?
-                  - if current_user.has_pledged?(proposal)
-                    = link_to 'Edit pledge', edit_proposal_pledge_path(proposal,current_user.pledges.find_by(item:proposal) ), class: [:button, :small]
-                  - else
-                    = link_to raw("Pledge #{tsign}!"), new_proposal_pledge_path(proposal), class: [:button, :small]
-                  - if current_user.has_pledged?(proposal)
-                    .my_pledge
-                      = raw "You pledged #{current_user.pledges.find_by(item:proposal).pledge}#{tsign}"
+            - if user_signed_in?
+              - if current_user.has_pledged?(proposal)
+                = link_to 'Edit pledge', edit_proposal_pledge_path(proposal,current_user.pledges.find_by(item:proposal) ), class: [:button, :small]
+              - else
+                = link_to raw("Pledge #{tsign}!"), new_proposal_pledge_path(proposal), class: [:button, :small]
+              - if current_user.has_pledged?(proposal)
+                .my_pledge
+                  = raw "You pledged #{current_user.pledges.find_by(item:proposal).pledge}#{tsign}"
 
-              %td
-                - if proposal.has_enough?
-                  %strong Will be reviewed at next organisation meeting:
-                  = link_to @next_meeting.name, @next_meeting, target: :_blank
-                - else
-                  = raw "#{@current_rate - proposal.pledged} more #{tsign} needed before it can be scheduled"
-                - unless proposal.comments.empty?
-                  .comment_status
-                    %em
-                      last commented on by 
-                      = link_to proposal.comments.sort_by(&:created_at).last.user.display_name, proposal.comments.sort_by(&:created_at).last.user, target: :_blank
-                      = time_ago_in_words(proposal.comments.sort_by(&:created_at).last.created_at) + " ago"
-            %tr.occluded_row
-              %td{colspan: 4}
-                %div.occluded[proposal]
-                  .title Description:
-                  .answer= simple_format proposal.short_description
-                 
-                  .title Goals:
-                  .answer= simple_format proposal.goals
-                 
-                  .title Timeframe
-                  .answer= simple_format proposal.timeframe
-                  
-                  .title Intended participants:
-                  .answer= simple_format proposal.intended_participants
-  
+          %td
+            - if proposal.has_enough?
+              %strong Will be reviewed at next organisation meeting:
+              - if @next_meeting.nil?
+                %em none currently scheduled
+              - else
+                = link_to @next_meeting.name, @next_meeting, target: :_blank
+            - else
+              = raw "#{@current_rate - proposal.pledged} more #{tsign} needed before it can be scheduled"
+            - unless proposal.comments.empty?
+              .comment_status
+                %em
+                  last commented on by 
+                  = link_to proposal.comments.sort_by(&:created_at).last.user.display_name, proposal.comments.sort_by(&:created_at).last.user, target: :_blank
+                  = time_ago_in_words(proposal.comments.sort_by(&:created_at).last.created_at) + " ago"
+        %tr.occluded_row
+          %td{colspan: 4}
+            %div.occluded[proposal]
+              .title Description:
+              .answer= simple_format proposal.short_description
+             
+              .title Goals:
+              .answer= simple_format proposal.goals
+             
+              .title Timeframe
+              .answer= simple_format proposal.timeframe
+              
+              .title Intended participants:
+              .answer= simple_format proposal.intended_participants

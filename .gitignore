@@ -73,3 +73,5 @@ Capfile
 config/deploy.rb
 config/deploy/
 config/puma.rb
+sync_db
+lib/tasks/temporary.rake
