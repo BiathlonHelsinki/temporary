@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
-ruby '2.3.1'
+ruby '2.2.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', github: 'rails/rails', branch: :master
+gem 'rails', '5.0.0.1'
 gem 'pg'
 # Use Puma as the app server
 gem 'puma'
@@ -42,6 +42,7 @@ gem 'capistrano'
 gem 'capistrano-rails'#, '1.1.3'
 gem 'rvm-capistrano'
 gem 'capistrano-bundler'#, '1.1.4'
+gem 'capistrano-puma'
 
 gem "audited", github: 'collectiveidea/audited', branch: :master
 gem 'awesome_nested_set'
