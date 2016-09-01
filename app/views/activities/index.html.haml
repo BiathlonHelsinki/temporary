@@ -1,3 +1,4 @@
+-# encoding: utf-8
 .activities_index
   .row.expanded
     .small-12.columns
@@ -24,7 +25,7 @@
               %td= l activity.created_at, format: :long
               %td= link_to activity.user.display_name, activity.user, target: :_blank
               %td= activity.description
-              %td= raw activity.linked_name
+              %td= encoded_raw activity.linked_name
 
               %td= "#{activity.value}#{ENV['currency_symbol']}"
               %td

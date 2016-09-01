@@ -1,5 +1,9 @@
 module ApplicationHelper
-  
+
+  def encoded_raw(str)
+    raw(str.encode('utf-8', :invalid => :replace, :undef => :replace, :replace => '_'))
+  end
+    
   def date_range(from_date, until_date, options = {})
     if until_date.nil? # || from_date.class == Date
       if from_date.class == Date
