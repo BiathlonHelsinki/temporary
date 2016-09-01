@@ -387,7 +387,6 @@ DEPENDENCIES
   fullcalendar-rails
   geocoder
   globalize!
-  haml
   haml-rails (~> 0.9)
   httmultiparty
   httparty
