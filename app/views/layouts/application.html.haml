@@ -9,6 +9,21 @@
     = stylesheet_link_tag   "application" 
     = javascript_include_tag "application"
     = csrf_meta_tags
+    - unless Rails.env.development?
+      :javascript
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+          var u="//stats.temporary.fi/";
+          _paq.push(['setTrackerUrl', u+'piwik.php']);
+          _paq.push(['setSiteId', '1']);
+          var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+          g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+      %noscript
+        %p
+          %img{:alt => "", :src => "//stats.temporary.fi/piwik.php?idsite=1", :style => "border:0;"}/
   %body
     - if flash
       - flash.each do |key, value|
