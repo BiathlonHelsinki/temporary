@@ -13,7 +13,7 @@
         
       %p
         Currently needed for an experiment to happen:
-        = @current_rate.to_s + ENV['currency_symbol']
+        = raw (@current_rate.to_s + tsign)
         %small= link_to "(why?)", '#'
       %table.proposals
         %thead
@@ -35,23 +35,23 @@
 
               %td= link_to proposal.user.name, proposal.user
               %td
-                = proposal.pledged.to_s + ENV['currency_symbol']
+                = raw(proposal.pledged.to_s + tsign)
 
                 - if user_signed_in?
                   - if current_user.has_pledged?(proposal)
                     = link_to 'Edit pledge', edit_proposal_pledge_path(proposal,current_user.pledges.find_by(item:proposal) ), class: [:button, :small]
                   - else
-                    = link_to "Pledge #{ENV['currency_symbol']}!", new_proposal_pledge_path(proposal), class: [:button, :small]
+                    = link_to raw("Pledge #{tsign}!"), new_proposal_pledge_path(proposal), class: [:button, :small]
                   - if current_user.has_pledged?(proposal)
                     .my_pledge
-                      = "You pledged #{current_user.pledges.find_by(item:proposal).pledge}#{ENV['currency_symbol']}"
+                      = raw "You pledged #{current_user.pledges.find_by(item:proposal).pledge}#{tsign}"
 
               %td
                 - if proposal.has_enough?
                   %strong Will be reviewed at next organisation meeting:
                   = link_to @next_meeting.name, @next_meeting, target: :_blank
                 - else
-                  = "#{@current_rate - proposal.pledged} more #{ENV['currency_symbol']} needed before it can be scheduled"
+                  = raw "#{@current_rate - proposal.pledged} more #{tsign} needed before it can be scheduled"
                 - unless proposal.comments.empty?
                   .comment_status
                     %em

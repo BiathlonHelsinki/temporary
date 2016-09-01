@@ -18,9 +18,9 @@
  *= require forms
  *= require _settings
  *= require fullcalendar
- *= require font-awesome
+ 
  */
 
-
-
+@import "font-awesome";
+@import 'variables';
 

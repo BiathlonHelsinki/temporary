@@ -12,8 +12,9 @@
       %li.has-submenu
         = link_to '#' do
           Balance:
-          = (current_user.available_balance).to_s + ENV['currency_symbol']
-          %small= "(#{current_user.latest_balance.to_s}#{ENV['currency_symbol']})"
+          = raw (current_user.available_balance.to_s + tsign)
+          - unless current_user.available_balance == current_user.latest_balance
+            %small= raw "(#{current_user.latest_balance.to_s}#{tsign})"
         %ul.submenu.menu.vertical{"data-submenu" => ""}
           %li= link_to 'Details', user_activities_path(current_user.slug)
           %li= link_to 'Redeem temporary tag', '/link_temporary'

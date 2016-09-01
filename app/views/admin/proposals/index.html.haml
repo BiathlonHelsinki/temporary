@@ -10,7 +10,7 @@
         %th Initial proposal by
         %th
           Pledged 
-          = ENV['currency_symbol']
+          = raw tsign
         %th &nbsp;    
       %tbody
         - @proposals.each do |proposal|

@@ -3,7 +3,7 @@ class ProposalsController < ApplicationController
   before_filter :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
 
   def create
-    current_user.update_balance_from_blockchain
+    current_user.update_balance_from_blockchain if @api_status
     @proposal = Proposal.new(proposal_params)
     if @proposal.save
       flash[:notice] = 'Your proposal has been submitted! Now, you can pledge some of your Temps to it.'
@@ -33,7 +33,7 @@ class ProposalsController < ApplicationController
       flash[:error] = 'You must enter a valid email address in order to propose an experiment.'
       redirect_to proposals_path
     else
-      current_user.update_balance_from_blockchain
+      current_user.update_balance_from_blockchain if @api_status
       @current_rate = Rate.get_current.experiment_cost
       @proposal = Proposal.new(user: current_user)
     end

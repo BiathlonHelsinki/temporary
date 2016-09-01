@@ -41,7 +41,7 @@ en:
   what_do_you_think_about_this: 'What do you think about this?'
   discussion: 'Discussion:'
   user_says: '%{user} says....'
-  save: 'Save'
+  save: 'Save!'
   your_comment_was_added: 'Your comment was added.'
   your_comment_was_not_added: 'There was an error saving your comment.'
   has_pledged: '%{user} has pledged %{amount} to this proposal.'

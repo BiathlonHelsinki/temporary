@@ -425,6 +425,152 @@ section.main_container {
   }
 }
 
+.proposal_detail {
+  padding: 2.875rem 0;
+  font-weight: bold;
+  h1 {
+    font-weight: 900;
+  }
+  .proposed_by {
+    font-size: 1.875rem;
+    font-family: $heebo;
+    padding-bottom: 0.5rem;
+    border-bottom: 8px solid black;
+    margin-bottom: 3rem;
+    float: left;
+    clear: both;
+  }
+  .pledge_info {
+    .box {
+      font-family: $inconsolata;
+      font-size: 2.822rem;
+      font-weight: bold;
+      padding: 0;
+      text-align: center;
+      .yellow {
+        padding: 2rem 0;
+        background-color: $yellow;
+      }
+      a {
+        text-decoration: none;
+        .grey {
+          padding: 2rem 0;
+          background-color: $grey;
+          .occluded {
+            display: none;
+          }
+          cursor: pointer;
+          &:hover {
+            span {
+              display: none;
+            }
+            content: '';
+            background-color: $yellow;
+          
+            .occluded {
+              color: black;
+             
+              display: block;
+            }
+          }
+        }
+      }
+    }
+  }
+  .pledge_panel {
+    margin-top: 1.5rem;
+    a {
+      font-size: 1.4rem;
+    }
+  }
+  
+  #comments_list {
+    h1 {
+      text-transform: uppercase;
+    }
+    .comment_count {
+      font-size: 1.875rem;
+      font-family: $heebo;
+      padding-bottom: 0.5rem;
+      border-bottom: 8px solid black;
+      margin-bottom: 3rem;
+      float: left;
+      clear: both;
+    }
+    .entry {
+      border-top: 2px solid $yellow;
+      border-left: 2px solid $yellow;
+      border-right: 2px solid $yellow;
+    }
+    
+    .comment_type {
+      font-size: 1.25rem;
+      font-family: $heebo;
+      font-weight: bold;
+      padding-bottom: 0.4rem;
+      margin-bottom: 0.688rem;
+      border-bottom: 5px solid black;
+    }
+    .date {
+      font-family: $ptsans;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 1rem;
+      margin-bottom: 1.563rem;
+    }
+    .comment_content {
+      font-family: $ptsans;
+      font-weight: 400;
+      font-style: normal;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+  }
+  
+
+  #comment_form {
+    padding: 2.5rem;
+    border: 2px solid $yellow;
+    h3 {
+      font-size: 1.25rem;
+      font-family: $heebo;
+      font-weight: bold;
+      padding-bottom: 0.4rem;
+      margin-bottom: 0.688rem;
+    }
+    form {
+      textarea {
+        background-color: $grey;
+      }
+      input[type=submit] {
+        font-family: $inconsolata;
+        font-size: 1rem;
+      }
+    }
+    
+  }
+  .details {
+
+    border: 2px solid $yellow;
+    padding: 1.75rem 1.5rem;
+    
+    .title {
+      font-family: $heebo;
+      margin-bottom: 0.4rem;
+      border-bottom: 5px solid black;
+      margin-bottom: 1rem;
+    }
+    
+    .answer {
+      font-weight: normal;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+  }
+  
+}
+
 
 
 /* Activity feed */

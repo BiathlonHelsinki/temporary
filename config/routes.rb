@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     resources :experiments do
       resources :instances
     end
+    resources :pages
     resources :posts
     resources :proposals
     resources :users
@@ -40,7 +41,7 @@ Rails.application.routes.draw do
     end
   end
   
-
+  resources :pages
   resources :posts
   
   resources :proposals do

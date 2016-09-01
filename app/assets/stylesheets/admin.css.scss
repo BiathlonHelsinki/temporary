@@ -22,10 +22,21 @@
  */
 
 @import 'foundation-datetimepicker';
+
+a.button {
+  background-color: green;
+  &:hover {
+    color: green;
+  }
+}
 header.admin {
   
   nav#nav-menu {
-
+    &.top-bar {
+      ul li a {
+        color: green;
+      }
+    }
     .logo-wrapper {
       width: 100%;
       clear: right;

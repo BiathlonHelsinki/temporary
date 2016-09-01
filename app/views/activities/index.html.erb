@@ -18,15 +18,24 @@
     <div class="small-12 columns">
       <table class="activities">
         <thead>
-          <th>Date</th>
-          <th>Who</th>
-          <th>Activity</th>
-          <th>Subject</th>
-          <th>
-            <%= raw ENV['currency_symbol'] %>
-          </th>
-          <th>Info</th>
+          <tr>
+            <th>Date</th>
+            <th>Who</th>
+            <th>Activity</th>
+            <th>Subject</th>
+            <th>
+              <%= raw tsign %>
+            </th>
+            <th>Info</th>
+          </tr>
         </thead>
+        <tfoot>
+          <tr>
+            <td colspan="4">&nbsp;</td>
+            <td><%= @activities.sum{|x| x.value.to_i} %></td>
+            <td></td>
+          </tr>
+        </tfoot>
         <tbody>
           <% @activities.each do |activity| %>
             <tr>
@@ -43,7 +52,7 @@
                 <%= activity.linked_name %>
               </td>
               <td>
-                <%= raw ("#{activity.value}#{ENV['currency_symbol']}") %>
+                <%= raw ("#{activity.value}#{raw tsign}") %>
               </td>
               <td>
                 <% if activity.ethtransaction %>
@@ -53,6 +62,8 @@
             </tr>
           <% end %>
         </tbody>
+
+            
         <!-- .row
         -->
         <!--   .small-8.columns.text-right
