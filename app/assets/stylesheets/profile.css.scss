@@ -1,0 +1,53 @@
+@import 'variables';
+
+.edit_profile {
+  h1 {
+    text-transform: uppercase;
+    margin-bottom: 2.813rem;
+  }
+  
+  form {
+    label {
+      &.label {
+        font-family: $heebo;
+        font-size: 1.875rem;
+        font-weight: 900;
+        padding: 0 0 0.4rem 0;
+        margin: 0 0 1rem 0;
+        border-bottom: 5px solid black;
+
+      }
+    }
+    input[type=text], input[type=email] {
+      border: 2px solid $yellow;
+      &:focus {
+        outline: 2px solid $grey;
+      }
+    }
+    .subsection {
+      h3 {
+        float: left;
+        font-family: $heebo;
+        font-size: 1.875rem;
+        font-weight: 900;
+        padding: 0 0 0.4rem 0;
+        margin: 0 0 1rem 0;
+        border-bottom: 5px solid black;        
+      }
+      .info {
+        clear: left;
+        margin-bottom: 1.875rem;
+      }
+    }
+    .photo img {
+      margin-bottom: 1rem;
+    }
+    input[type=submit] {
+      font-size: 1.25rem;
+      font-family: $inconsolata;
+      font-weight: bold;
+      color: black; 
+      clear: left;
+    }
+  }
+}
