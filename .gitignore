@@ -75,3 +75,4 @@ config/deploy/
 config/puma.rb
 sync_db
 lib/tasks/temporary.rake
+biathlon.sql

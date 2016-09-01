@@ -30,6 +30,11 @@ class User < ActiveRecord::Base
   before_create :copy_password
   mount_uploader :avatar, ImageUploader
   before_save :update_avatar_attributes
+  after_create :add_to_activity_feed
+  
+  def add_to_activity_feed
+    Activity.create(item: self, description: 'joined!', user: self)
+  end
   
   def copy_password
     geth_pwd = encrypted_password

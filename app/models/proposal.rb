@@ -7,6 +7,16 @@ class Proposal < ApplicationRecord
   validates_presence_of :user_id, :name
   has_many :comments, as: :item, :dependent => :destroy
   has_many :instances
+  after_create :add_to_activity_feed
+  after_update :add_to_activity_feed_edited
+  
+  def add_to_activity_feed
+    Activity.create(user: user, item: self, description: 'proposed')
+  end
+  
+  def add_to_activity_feed_edited
+    Activity.create(user: user, item: self, description: 'edited')
+  end
   
   def self.schedulable
     all.to_a.delete_if{|x| x.pledged < Rate.get_current.experiment_cost }

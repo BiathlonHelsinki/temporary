@@ -52,7 +52,9 @@
                 <%= raw activity.linked_name %>
               </td>
               <td>
-                <%= raw ("#{activity.value}#{raw tsign}") %>
+                <% unless activity.value.nil? %>
+                  <%= raw ("#{activity.value}#{raw tsign}") %>
+                <% end %>
               </td>
               <td>
                 <% if activity.ethtransaction %>

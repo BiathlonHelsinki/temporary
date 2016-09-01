@@ -13,6 +13,8 @@ class Activity < ApplicationRecord
     case item.class.to_s
     when 'Pledge'
       "<a href='/proposals/#{item.item.id}'>#{item.item.name}</a>"
+    when 'Proposal'
+      "<a href='/proposals/#{item.id}'>#{item.name}</a>"
     when 'NilClass'
       item_type.constantize.with_deleted.find(item_id).name
     else

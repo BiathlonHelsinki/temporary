@@ -3,7 +3,7 @@
     .small-10.medium-6.columns
       %p 
         You have
-        = "#{current_user.available_balance + @pledge.pledge.to_i}#{ENV['currency_symbol']}"
+        = raw("#{current_user.available_balance + @pledge.pledge.to_i}#{tsign}")
         available.
       - if @item.has_enough?
         %p
@@ -13,35 +13,38 @@
       - else
         %p
           This proposal still needs 
-          = "#{@current_rate - @item.pledged}#{ENV['currency_symbol']}"
+          = raw "#{@current_rate - @item.pledged}#{tsign}"
           to be considered for scheduling.
           
         %p
           Currently,
-          = @current_rate.to_s + ENV['currency_symbol']
+          = raw @current_rate.to_s + tsign
           are needed before an experiment can be reviewed for scheduling.
           You may pledge a maximum of
-          = "#{@item.maximum_pledgeable(current_user)}#{ENV['currency_symbol']}"
+          = raw "#{@item.maximum_pledgeable(current_user)}#{tsign}"
           to this proposal.
           
         %p 
           %em (All proposals require at least two supporters before they can be scheduled).
 
 
-          
-      
-      %p
-        How many 
-        = ENV['currency_full_name'].pluralize
-        would you like to pledge?
-  .row
-    .small-2.medium-2.columns= f.input :pledge, label: 'Your pledge:'
+      - if @api_status == false
+        %p We're sorry, the Biathlon API is currently offline. Please try again later.
+      - elsif current_user.available_balance < 1
+        %p You do not currently have any Temps available to pledge. 
+      - else
+        %p
+          How many 
+          = ENV['currency_full_name'].pluralize
+          would you like to pledge?
+        .row
+          .small-2.medium-2.columns= f.input :pledge, label: 'Your pledge:'
     
-  .row
-    .small-10.medium-6.columns= f.input :comment, label: 'Any comments on your pledge?'
-  .row
-    .small-10.medium-6.columns
-      = f.submit 'Pledge!', class: [:button, :small]
-      - unless f.object.new_record?
-        = link_to 'Delete your pledge!', [f.object.item, f.object], method: :delete, class: [:button, :small, :alert], data: {confirm: "Are you sure? Your #{ENV['currency_symbol']} will be restored to your full balance."}
+        .row
+          .small-10.medium-6.columns= f.input :comment, label: 'Any comments on your pledge?'
+        .row
+          .small-10.medium-6.columns
+            = f.submit 'Pledge!', class: [:button, :small]
+            - unless f.object.new_record?
+              = link_to 'Delete your pledge!', [f.object.item, f.object], method: :delete, class: [:button, :small, :alert], data: {confirm: "Are you sure? Your #{tsign} will be restored to your full balance."}
   

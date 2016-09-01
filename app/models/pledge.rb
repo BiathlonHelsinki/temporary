@@ -48,9 +48,9 @@ class Pledge < ApplicationRecord
   def update_activity_feed
     if created_at == updated_at
       # assume it's new
-      Activity.create(user: user, item: self, description: "pledged", extra_info: pledge)
+      Activity.create(user: user, item: self, description: "pledged to", extra_info: pledge)
     else
-      Activity.create(user: user, item: self, description: "edited their pledge", extra_info: pledge)
+      Activity.create(user: user, item: self, description: "edited their pledge to", extra_info: pledge)
     end
   end
   
