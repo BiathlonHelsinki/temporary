@@ -2,6 +2,10 @@
   <div class="row expanded">
     <div class="small-12 columns">
       <h1>Activity</h1>
+      <P>internal is <%= Encoding.default_internal.to_s %></p>
+        <p> external is <%= Encoding.default_external.to_s %></p>
+        <p> HAML is <%= Haml::Template.options.to_s %></p>
+      
     </div>
   </div>
   <% if params[:user_id] %>
@@ -40,7 +44,7 @@
                 <%= activity.description %>
               </td>
               <td>
-                <%= encoded_raw activity.linked_name %>
+                <%= activity.linked_name  rescue activity.encoding.to_s %>
               </td>
               <td>
                 <%= "#{activity.value}#{ENV['currency_symbol']}" %>
