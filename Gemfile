@@ -70,6 +70,7 @@ gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem "paranoia", github: "rubysherpas/paranoia", branch: "rails5"
+gem 'rack-utf8_sanitizer'
 gem "rails-observers", github: 'rails/rails-observers'
 gem 'rolify'
 gem 'simple_token_authentication', git: 'https://github.com/gonzalo-bulnes/simple_token_authentication.git', branch: 'master'
