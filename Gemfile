@@ -40,7 +40,7 @@ end
 
 gem 'capistrano'
 gem 'capistrano-rails'#, '1.1.3'
-gem 'rvm-capistrano'
+gem 'capistrano-rvm'
 gem 'capistrano-bundler'#, '1.1.4'
 gem 'capistrano-puma'
 
