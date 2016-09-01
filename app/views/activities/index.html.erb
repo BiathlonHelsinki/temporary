@@ -27,7 +27,7 @@
           <th>Activity</th>
           <th>Subject</th>
           <th>
-            <%= ENV['currency_symbol'] %>
+            <%= raw ENV['currency_symbol'] %>
           </th>
           <th>Info</th>
         </thead>
@@ -44,10 +44,10 @@
                 <%= activity.description %>
               </td>
               <td>
-                <%= activity.linked_name  rescue activity.encoding.to_s %>
+                <%= activity.linked_name %>
               </td>
               <td>
-                <%= "#{activity.value}#{ENV['currency_symbol']}" %>
+                <%= raw ("#{activity.value}#{ENV['currency_symbol']}") %>
               </td>
               <td>
                 <% if activity.ethtransaction %>
