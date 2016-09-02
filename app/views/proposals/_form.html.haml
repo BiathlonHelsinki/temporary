@@ -1,15 +1,15 @@
 = semantic_nested_form_for @proposal, html: {multipart: true} do |f|
   = f.input :user_id, data: {value: current_user.id}, as: :hidden 
   .row
-    .small-10.medium-6.columns= f.input :name, label: 'Name of your experiment'
+    .small-10.medium-6.columns= f.input :name, label: 'Name of your experiment', input_html: {required: ''}
   .row
-    .small-10.medium-6.columns= f.input :short_description
+    .small-10.medium-6.columns= f.input :short_description, input_html: {required: ''}
   .row
-    .small-10.medium-6.columns= f.input :timeframe, label: 'Proposed times and duration'
+    .small-10.medium-6.columns= f.input :timeframe, label: 'Proposed times and duration', input_html: {required: ''}
   .row
-    .small-10.medium-6.columns= f.input :goals, label: 'What are the goals of this experiment?'
+    .small-10.medium-6.columns= f.input :goals, label: 'What are the goals of this experiment?', input_html: {required: ''}
   .row
-    .small-10.medium-6.columns= f.input :intended_participants, label: 'Intended participants'
+    .small-10.medium-6.columns= f.input :intended_participants, label: 'Intended participants', input_html: {required: ''}
   .row
     .small-10.medium-6.columns
       %table#images
