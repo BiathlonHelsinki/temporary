@@ -7,4 +7,10 @@ class InstancesController < ApplicationController
     end
   end
   
+  def index
+    if params[:experiment_id]
+      @experiment = Experiment.friendly.find(params[:experiment_id])
+    end
+  end
+  
 end

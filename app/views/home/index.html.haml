@@ -18,6 +18,24 @@
           = " // "
         .title= link_to post.title, post
         - if post.image?
-          = image_tag post.image.url
+          = image_tag post.image.url.gsub('development', 'production')
         .body= raw post.body
-    
+  - if @open_day
+    %article.open_day{class: cycle('odd', 'even')}
+      .post
+        .meta
+          %span.date= @open_day.start_at.strftime('%d.%m.%Y')
+          = " // "
+          %span.category= link_to 'Experiments', experiments_path
+          = " // "
+        .title= link_to 'Next open day:', experiment_instance_path(@open_day.experiment, @open_day)
+        = link_to experiment_instance_path(@open_day.experiment, @open_day) do
+          .dates.text-center
+            .month= l @open_day.start_at, format: "%B"
+            .days
+              .day= @open_day.start_at.day
+              .times= @open_day.start_at.strftime("%H:%M") + " - " + @open_day.end_at.strftime("%H:%M")
+        .body= raw simple_format(@open_day.description)
+    - if @recent_proposal
+      %article.proposal{class: cycle('odd', 'even')}
+      .post

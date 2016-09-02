@@ -211,14 +211,15 @@ article.instance_single {
       span {
         color: $black;
         text-transform: uppercase;
-        font-size: 1rem;
+        font-size: 1.320rem;
       }
     }
     .title {
       font-family: $inconsolata;
-      font-size: 1.259rem;
+      font-size: 2.373rem;
       font-weight: bold;
       text-transform: uppercase;
+      text-decoration: underline;
       a {
         color: $black;        
       }

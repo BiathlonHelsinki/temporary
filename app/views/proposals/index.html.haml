@@ -39,7 +39,7 @@
             = link_to proposal.name, proposal
             = link_to fa_icon('caret-down'), '#', onclick: "javascript:$('#proposal_#{proposal.id}').slideToggle();$(this).next('i').removeClass('chevron-down');$(this).next('i').addClass('chevron-up');return false;"
 
-          %td= link_to proposal.user.name, proposal.user
+          %td= link_to proposal.user.display_name, proposal.user
           %td
             = raw(proposal.pledged.to_s + tsign)
             - if proposal.scheduled?

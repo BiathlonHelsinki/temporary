@@ -22,12 +22,21 @@ header {
   column-gap: 4em;
   padding: 0.875rem 1rem;
   article {
+    -webkit-column-break-inside:avoid;
+    -moz-column-break-inside:avoid;
+    -o-column-break-inside:avoid;
+    -ms-column-break-inside:avoid;
+    column-break-inside:avoid;
     &.even {
       border: 2px solid $yellow;
       padding: 0.875rem;
       margin-bottom: 3rem;
     }
-    .post {
+    &.open_day {
+      background-color: $grey;
+      
+    }
+    .post, .open_day {
       border-top: 9px solid black;
       padding: 0.875rem 0;
       .meta {
@@ -38,6 +47,30 @@ header {
           color: $black;
           text-transform: uppercase;
           font-size: 1rem;
+        }
+      }
+      .dates {
+        font-family: $heebo;
+        font-weight: 900;
+        .month {
+          color: white;
+          
+          font-size: 1.875em
+        }
+        .days {
+          color: $yellow;
+          .times {
+            color: $white;
+            font-size: 1.438em;
+          }
+          .day {
+            font-size: 9.500rem;
+            line-height: 0.9em;
+          }
+          .range_day {
+            font-size: 5.313rem;
+            line-height: 6rem;
+          }
         }
       }
       .title {

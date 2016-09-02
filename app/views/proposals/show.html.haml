@@ -45,7 +45,9 @@
     
         .title Intended participants:
         .answer= simple_format @proposal.intended_participants
-
+      - if @proposal.images
+        - @proposal.images.each do |image|
+          %p= image_tag image.image.url(:medium)
   #pledges
     .row    
       .small-10.columns
