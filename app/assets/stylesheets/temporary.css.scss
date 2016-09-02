@@ -196,6 +196,46 @@ section.main_container {
   }
   
 }
+
+
+// Single view
+article.instance_single {
+  padding-top: 3.438rem;
+  .post {
+    border-top: 9px solid black;
+    padding: 0.875rem 0;
+    .meta {
+      font-family: $inconsolata;
+      font-weight: bold;
+      color: $yellow;
+      span {
+        color: $black;
+        text-transform: uppercase;
+        font-size: 1rem;
+      }
+    }
+    .title {
+      font-family: $inconsolata;
+      font-size: 1.259rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      a {
+        color: $black;        
+      }
+    }
+    .body {
+      font-family: $ptsans;
+      font-size: 0.881em;
+      p {
+        margin-bottom: 0;
+      }
+    }
+    img {
+      padding: 0.875rem 0;
+    }
+  }
+}
+
 /* Proposals */
 .proposals_index {
   h1 {

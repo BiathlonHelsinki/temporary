@@ -1,3 +1,23 @@
+%article.instance_single
+  .row.expanded
+    .small-10.columns
+      .post
+        .meta
+          %span.date= date_range(@instance.start_at, @instance.end_at)
+          = " // "
+          %span.category 
+            - if @experiment.instances.size > 1
+              = @experiment.name
+            - else
+              = "Experiment "
+          = " // "
+        .title
+          = "Experiment ##{@experiment.sequence}:"
+          = @instance.name
+        - if @instance.image?
+          = image_tag @instance.image.url
+        .body= raw @instance.description
+
 .row
   .medium-8.columns.small-10.small-centered.experiment
     %h1= "#{@experiment.name} : #{@instance.name}"
