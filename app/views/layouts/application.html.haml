@@ -34,12 +34,12 @@
         / Small Navigation
         .title-bar{"data-hide-for" => "medium", "data-responsive-toggle" => "nav-menu"}
           %a.logo-small.show-for-small-only{:href => "#"}
-            %img{:src => "http://placehold.it/50x50?text=LOGO"}/
+            = image_tag('temporary_logo.png')
           %button.menu-icon{"data-toggle" => "", :type => "button"}
           .title-bar-title Menu
         / Medium-Up Navigation
         %nav#nav-menu.top-bar
-          .row.expanded.logo
+          .row.expanded.logo.hide-for-small-only
             = link_to image_tag('temporary_logo.png'), '/'
           / Left Nav Section
           = render partial: 'layouts/top_bar'
