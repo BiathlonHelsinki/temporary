@@ -43,7 +43,7 @@
           %td
             = raw(proposal.pledged.to_s + tsign)
             - if proposal.scheduled?
-              = link_to_unless(proposal.next_instance.nil?, 'Scheduled!', proposal.next_instance, class: [:button, :small]) 
+              = link_to_unless(proposal.next_instance.nil?, 'Scheduled!', experiment_instance_path(proposal.next_instance.experiment, proposal.next_instance), class: [:button, :small]) 
             - else
               - if user_signed_in?
                 - if current_user.has_pledged?(proposal)
@@ -58,7 +58,7 @@
             - if proposal.scheduled?
               - unless proposal.next_instance.nil?
                 %strong Next at:
-                = link_to proposal.next_instance.name, proposal.next_instance
+                = link_to proposal.next_instance.name, experiment_instance_path(proposal.next_instance.experiment, proposal.next_instance)
             - else 
               - if proposal.has_enough?
                 %strong Will be reviewed at next organisation meeting:

@@ -22,9 +22,8 @@ Rails.application.routes.draw do
       get :hierarchy
       get :calendar
     end
-    member do
-      resources :instances
-    end
+    resources :instances, path: ''
+
   end
   
   resources :activities
@@ -67,7 +66,7 @@ Rails.application.routes.draw do
         
   end
   
-  get '/experiments/:experiment_id/:id', to: "instances#show"
+
   match '/link_temporary' => 'onetimers#link', via: :get
   
   match '/users/auth/:provider/callback' => 'authentications#create', :via => :get

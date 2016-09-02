@@ -42,7 +42,7 @@ gem 'capistrano'
 gem 'capistrano-rails'#, '1.1.3'
 gem 'capistrano-rvm'
 gem 'capistrano-bundler'#, '1.1.4'
-gem 'capistrano-puma'
+# gem 'capistrano-puma'
 
 gem "audited", github: 'collectiveidea/audited', branch: :master
 gem 'awesome_nested_set'
