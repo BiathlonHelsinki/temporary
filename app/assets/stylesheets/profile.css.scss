@@ -1,5 +1,62 @@
 @import 'variables';
 
+.user_profile {
+  padding-top: 2.813rem;
+  .name {
+    font-family: $heebo;
+    font-size: 1.875rem;
+    font-weight: 900;
+    padding: 0 0 0.4rem 0;
+    margin: 0 0 1rem 0;
+    border-bottom: 5px solid black;
+    float: left;
+  }
+  img {
+    margin-bottom: 2.5rem;
+  }
+  .title {
+    font-family: $heebo;
+    font-size: 1.65rem;
+    font-weight: 900;
+    padding: 0 0 0.4rem 0;
+    margin: 1.5rem 0;
+    border-bottom: 5px solid black;
+    float: left;
+    clear: right;
+  }
+  ul {
+    clear: left;
+  }
+  .since {
+    clear: both;
+    margin-bottom: 2rem;
+    font-style: italic;
+  }
+  table.activities {
+    border-collapse: separate;
+    border-spacing: 1rem;
+    thead {
+      th {
+        font-family: $heebo;
+        font-size: 1.125rem;
+        background-color: white;
+        border-bottom: 8px solid black;
+      }
+    }
+    tbody {
+      tr {
+        border-bottom: 1px solid $yellow;
+        td {
+          font-family: $ptsans;
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+
+}
+
+
 .edit_profile {
   h1 {
     text-transform: uppercase;

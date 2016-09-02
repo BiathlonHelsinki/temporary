@@ -1,59 +1,95 @@
-.row
-  .small-12.columns
-    %h3
-      Profile for
-      = @user.username
-    
-    
-.row
-  .small-12.columns
-    = "user since #{l @user.created_at.to_date, format: :long}"
-    = " (#{time_ago_in_words(@user.created_at)})"
-.row
-  .small-12.columns
-    %strong Balance:
-    = "#{@user.latest_balance}#{ENV['currency_symbol']}"
-    - if user_signed_in?
-      - if current_user != @user && current_user.latest_balance > 0
-        %br/
-        = link_to "Send #{ENV['currency_symbol']} to #{@user.username}", send_temps_user_transfers_path(@user), class: [:button]
-    - @user.accounts.each do |account|
-      .row
-        .small-6.columns
-          = account.address 
-- unless @user.proposals.empty?
-  .row
-    .small-10.medium-7.columns
-      %h4 Proposals
-  .row
-    .small-10.medium-7.columns
-      %ul
-        - @user.proposals.order(created_at: :desc).each do |proposal|
-          %li= link_to proposal.name, proposal
-          
-- unless @user.pledges.empty?
-  .row
-    .small-10.medium-7.columns
-      %h4 Pledges
-  .row
-    .small-10.medium-7.columns
-      %ul
-        - @user.pledges.order(created_at: :desc).each do |pledge|
-          %li
-            = link_to pledge.item.name, pledge.item
-            = "(#{pledge.pledge.to_s}#{ENV['currency_symbol']})"
-            
-- unless @user.all_activities.empty?
-  .row
-    .small-10.medium-7.columns
-      %h4 Activity
-  .row
-    .small-10.medium-7.columns
-      - @user.all_activities.sort_by(&:created_at).reverse.each do |activity|
-        .row
-          .small-8.columns.text-right
-            %em= l activity.created_at, format: :long
-            = activity.sentence.html_safe
-          - unless activity.ethtransaction.nil?
-            .small-2.columns.end
-              %small= link_to activity.ethtransaction.txaddress, "https://testnet.etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank
+.user_profile
+  .row.expanded
+    .small-12.columns
+      .name= @user.display_name
+      .since
+        = "user since #{l @user.created_at.to_date, format: :long}"
+        = " (#{time_ago_in_words(@user.created_at)})"
+  .row.expanded
+    .small-10.medium-4.columns
+      - if @user.avatar?
+        = image_tag @user.avatar.url(:medium)
+        
+      -else
+        = image_tag 'user_missing_large.png'
+    .small-10.medium-8.columns
+      %strong Balance:
+      = raw "#{@user.latest_balance}#{tsign}"
+      - if user_signed_in?
+        - if current_user != @user && current_user.latest_balance > 0
+          %br/
+          = link_to raw("Send #{tsign} to #{@user.username}"), send_temps_user_transfers_path(@user), class: [:button]
+      - unless @user.accounts.empty?
+        .ethereum
+          %strong Ethereum accounts:
+          - @user.accounts.each do |account|
+            %p= link_to account.address, "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/address/#{account.address}", target: :_blank
+  .row.expanded
+    .small-10.medium-8.large-4.columns
+      - if @user.proposals.empty?
+        %em No proposals made.
+      - else
+        .title Proposals
+        %ul
+          - @user.proposals.order(created_at: :desc).each do |proposal|
+            %li= link_to proposal.name, proposal
+    .small-10.medium-8.large-4.columns
+      - if @user.pledges.empty?
+        %em No pledges made.
+      - else
+        .title Pledges
+        %ul
+          - @user.pledges.order(created_at: :desc).each do |pledge|
+            %li
+              = link_to pledge.item.name, pledge.item
+              = raw "(#{pledge.pledge.to_s}#{tsign})"
+    .small-10.medium-8.large-4.columns
+      - if @user.comments.empty?
+        %em No comments made.
+      - else
+        .title Comments
+        %ul
+          - @user.comments.order(created_at: :desc).each do |comment|
+            %li
+              commented on
+              = link_to comment.item.name, comment.item, target: :_blank
+              .subtext
+                ="'"
+                = truncate_html comment.content, length: 80
+                = "'"
+              
+  - unless @user.all_activities.empty?
+    .row.expanded
+      .small-12.columns
+        .title Activity
+    .row.expanded
+      .small-12.columns
+        %table.activities
+          %thead
+            %tr
+              %th Date
+              %th Who
+              %th Activity
+              %th Subject
+              %th= raw tsign
+              %th Info
+          %tfoot
+            %tr
+              %td{:colspan => "4"}
+              %td= @user.all_activities.sum{|x| x.value.to_i}
+              %td
+          %tbody
+            - @user.all_activities.sort_by(&:created_at).reverse.each do |activity|
+              %tr
+                %td= l activity.created_at, format: :long
+                %td= link_to activity.user.display_name, activity.user, target: :_blank 
+                %td= activity.description
+                %td= raw activity.linked_name
+                %td
+                  - unless activity.value.nil? 
+                    = raw ("#{activity.value}#{raw tsign}")
+
+                %td
+                  - if activity.ethtransaction
+                    = link_to activity.ethtransaction.txaddress[0..5] + "...", "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank
+

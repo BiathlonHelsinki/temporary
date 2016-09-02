@@ -1,5 +1,5 @@
 class Pledge < ApplicationRecord
-  belongs_to :item, polymorphic: true
+  belongs_to :item, polymorphic: true, touch: true
   has_many :activities, as: :item
   belongs_to :user
   after_save :update_activity_feed
@@ -7,6 +7,7 @@ class Pledge < ApplicationRecord
   validate :check_balance
   after_save :notify_if_enough
   validates_numericality_of :pledge, greater_than_or_equal_to: 0
+  acts_as_paranoid
   
   def check_balance
     user.update_balance_from_blockchain

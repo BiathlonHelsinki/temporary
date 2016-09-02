@@ -9,6 +9,7 @@ class Proposal < ApplicationRecord
   has_many :instances
   after_create :add_to_activity_feed
   after_update :add_to_activity_feed_edited
+ 
   
   def add_to_activity_feed
     Activity.create(user: user, item: self, description: 'proposed')
@@ -54,4 +55,20 @@ class Proposal < ApplicationRecord
     [pledges, comments].flatten.compact
   end
   
+  def scheduled?
+    !instances.empty?
+  end
+  
+  def next_instance
+    if scheduled?
+      if instances.future.order(:start_at).empty?
+        nil
+      else
+       instances.future.order(:start_at).first
+        
+      end
+    else
+      nil
+    end
+  end
 end

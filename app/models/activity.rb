@@ -18,7 +18,11 @@ class Activity < ApplicationRecord
     when 'NilClass'
       item_type.constantize.with_deleted.find(item_id).name
     when 'User'
-      ''
+      if !value.nil?
+        "#{item.display_name}#{extra_info}"
+      else
+        ''
+      end
     else
       item.name
     end

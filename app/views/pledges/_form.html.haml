@@ -31,7 +31,9 @@
       - if @api_status == false
         %p We're sorry, the Biathlon API is currently offline. Please try again later.
       - elsif current_user.available_balance < 1
-        %p You do not currently have any Temps available to pledge. 
+        %p You do not currently have any Temps available to pledge.
+        - unless f.object.new_record?
+          = link_to 'Delete your pledge!', [f.object.item, f.object], method: :delete, class: [:button, :small, :alert], data: {confirm: "Are you sure? Your #{tsign} will be restored to your full balance."} 
       - else
         %p
           How many 

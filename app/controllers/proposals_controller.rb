@@ -25,7 +25,7 @@ class ProposalsController < ApplicationController
   def index
     @next_meeting = Instance.next_meeting
     @current_rate = Rate.get_current.experiment_cost
-    @proposals = Proposal.all
+    @proposals = Proposal.all.order(updated_at: :desc)
   end
 
   def new

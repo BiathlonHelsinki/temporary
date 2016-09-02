@@ -605,6 +605,46 @@ section.main_container {
   }
 }
 
+.transfer_dialogue {
+  h1 {
+    text-transform: uppercase;
+  }
+  form {
+    label {
+      &.label {
+        font-family: $heebo;
+        font-size: 1.875rem;
+        font-weight: 900;
+        padding: 0.688rem 0;
+        margin: 0.9rem 0;
+        border-bottom: 8px solid black;
+      }
+    }
+    a.add_nested_fields {
+      font-family: $heebo;
+      font-size: 1.875rem;
+      font-weight: 900;
+      padding: 0.688rem 0;
+      margin: 0.9rem 0;
+      border-bottom: 8px solid black;
+    }
+    .row {
+      .columns {
+        padding-left: 0;
+      }
+    }
+    input, textarea {
+      border: 2px solid $yellow;
+      &:focus {
+        outline: 1px solid $yellow;
+      }
+    }
+    input[type=submit] {
+      font-size: 1.125rem;
+    }
+  }
+}
+
 // footer
 footer {
   background-color: $black;

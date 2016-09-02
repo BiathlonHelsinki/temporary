@@ -27,17 +27,21 @@ class User < ActiveRecord::Base
   has_many :proposals
   has_many :instances_users
   has_many :instances, through: :instances_users
-  before_create :copy_password
+  before_validation :copy_password
   mount_uploader :avatar, ImageUploader
   before_save :update_avatar_attributes
   after_create :add_to_activity_feed
+  has_many :comments
+  validates_presence_of :geth_pwd
   
   def add_to_activity_feed
     Activity.create(item: self, description: 'joined!', user: self)
   end
   
   def copy_password
-    geth_pwd = encrypted_password
+    if geth_pwd.blank?
+      self.geth_pwd = SecureRandom.hex(13)
+    end
   end
   
   # has_many :activities, as: :item

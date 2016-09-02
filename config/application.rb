@@ -14,5 +14,6 @@ module Temporary
     # -- all .rb files in that directory are automatically loaded.
     config.encoding = "utf-8"
     config.middleware.insert 0, Rack::UTF8Sanitizer
+    config.time_zone = 'Helsinki'
   end
 end

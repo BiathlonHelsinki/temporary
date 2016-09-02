@@ -1,13 +1,22 @@
-.row
-  .small-12.columns
-    = form_tag post_temps_user_transfers_path(@recipient), method: :post do
-      %label.label
-        How many 
-        = ENV['currency_symbol']
-        to send to
-        = @recipient.username
-        ?
-      = text_field_tag :temps_to_send
-      %label.label Enter a reason for why you are sending them? (option)
-      = text_field_tag :reason
-      = submit_tag 'Send', class: [:button]
+.transfer_dialogue
+  .row.expanded
+    .small-10.medium-6.columns
+      %h1
+        Transfer 
+        = raw tsign
+        
+      %p
+        You can transfer up to  
+        = raw "#{current_user.available_balance}#{tsign}."
+        
+      = form_tag post_temps_user_transfers_path(@recipient), method: :post do
+        %label.label
+          How many 
+          = raw tsign
+          to send to
+          = @recipient.display_name
+          ?
+        = text_field_tag :temps_to_send
+        %label.label Enter a reason for why you are sending them? (optional)
+        = text_field_tag :reason
+        = submit_tag 'Send !', class: [:button]
