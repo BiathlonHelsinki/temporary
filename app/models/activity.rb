@@ -17,6 +17,8 @@ class Activity < ApplicationRecord
       "<a href='/proposals/#{item.id}'>#{item.name}</a>"
     when 'NilClass'
       item_type.constantize.with_deleted.find(item_id).name
+    when 'User'
+      ''
     else
       item.name
     end

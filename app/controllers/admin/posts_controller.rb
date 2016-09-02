@@ -34,7 +34,7 @@ class Admin::PostsController < Admin::BaseController
     @post = Post.friendly.find(params[:id])
     if @post.update_attributes(post_params)
       flash[:notice] = 'Post details updated.'
-      redirect_to admin_posts_controller
+      redirect_to admin_posts_path
     else
       flash[:error] = 'Error updating post'
     end

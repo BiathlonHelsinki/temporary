@@ -20,5 +20,9 @@
             %td= proposal.name
             %td
               = proposal.user.name
-            %td= proposal.pledges.to_s
-          
+            %td= proposal.pledged.to_s
+            %td
+              - if can? :edit, proposal
+                = link_to 'Edit', edit_admin_proposal_path(proposal), class: [:button, :small]
+              - if can? :destroy, proposal
+                = link_to 'Delete', [:admin, proposal], method: :delete, class: [:button, :small, :alert], data: {confirm: 'Are you sure?'}

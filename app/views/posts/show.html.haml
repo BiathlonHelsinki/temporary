@@ -1,0 +1,13 @@
+%article.post_single
+  .row.expanded
+    .small-10.columns
+      .post
+        .meta
+          %span.date= @post.published_at.strftime('%d.%m.%Y')
+          = " // "
+          %span.category News
+          = " // "
+        .title= @post.title
+        - if @post.image?
+          = image_tag @post.image.url
+        .body= raw @post.body
