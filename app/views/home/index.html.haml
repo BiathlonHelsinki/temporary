@@ -36,6 +36,16 @@
               .day= @open_day.start_at.day
               .times= @open_day.start_at.strftime("%H:%M") + " - " + @open_day.end_at.strftime("%H:%M")
         .body= raw simple_format(@open_day.description)
-    - if @recent_proposal
-      %article.proposal{class: cycle('odd', 'even')}
-      .post
+    - unless @recent_proposals.empty?
+      - @recent_proposals.each do |prop|
+        %article.proposal{class: cycle('odd', 'even')}
+          .post
+            .meta
+              %span.date= prop.created_at.strftime('%d.%m.%Y')
+              = " // "
+              %span.category Proposals
+              = " // "
+            .title= link_to prop.name, prop
+            - unless prop.images.empty?
+              %p= image_tag prop.images.first.image.url(:medium).gsub('development', 'production')
+            .body= truncate_html prop.short_description, length: 300
