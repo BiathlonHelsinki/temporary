@@ -6,6 +6,7 @@
     %meta{:content => "width=device-width, initial-scale=1.0", :name => "viewport"}/
     %title= content_for?(:title) ? yield(:title) : "Temporary"
     %link{:href => "https://fonts.googleapis.com/css?family=Inconsolata|Heebo|PT+Sans", :rel => "stylesheet"}/
+    = render partial: 'layouts/favicon'
     = stylesheet_link_tag   "application" 
     = javascript_include_tag "application"
     = csrf_meta_tags
