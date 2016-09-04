@@ -1,12 +1,13 @@
-.row.expanded
-  .small-12.columns
-    %h1
-      = t :experiments
-      %small= link_to fa_icon('list'), experiments_path
-.row.expanded
-  #calendar.small-centered
+.calendar_view
+  .row.expanded
+    .small-12.columns
+      %h1
+        = t :experiments
+        %small= link_to fa_icon('list'), experiments_path
+  .row.expanded
+    #calendar.small-centered
   
-= content_for :jquery do
-  = render partial: 'calendar', formats: [:js]
+  = content_for :jquery do
+    = render partial: 'calendar', formats: [:js]
 
     

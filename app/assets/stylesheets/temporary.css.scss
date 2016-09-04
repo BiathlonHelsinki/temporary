@@ -446,56 +446,156 @@ article.instance_single {
   }
 }
 
-
-// Calendar
-#calendar {
-  width: 92%;
-  padding-top: 4rem;
-  .fc-time {
-    color: $grey;
+.calendar_view {
+  h1 {
+    text-transform: uppercase;
   }
-  .fc-title {
-    color: $black;
-  }
-  span.fc-title {
-      padding: 5px !important;
-      text-overflow: ellipsis;
-      white-space: pre-line;
-  }
-  .fc-event-container .fc-event {
-    background-color: $yellow;
-    font-family: $ptsans;
-  }
-  .fc-day-grid-event .fc-content {
-    white-space: inherit;
-  }
-  .fc-toolbar {
-    margin-bottom: 0.2rem;
-    .fc-left, .fc-left .fc-button-group, .fc-right .fc-button-group {
+  // Calendar
+  #calendar {
+    width: 92%;
+    padding-top: 4rem;
+    .fc-toolbar {
       button {
-        box-sizing: border-box;
-        margin: 0;
-        height: 1.4rem;
-        padding: 0 .3rem;
-        font-size: 0.75rem;
-        white-space: nowrap;
-        cursor: pointer;
+        &.fc-today-button {
+          display: none;
+        }
+        margin: 0.4rem;
+        height: 3.5rem;
+        background: black;
+        color: white;
+        border: none;
+        box-shadow: none;
+        text-shadow: none;
+        span {
+          font-family: $inconsolata;
+          text-transform: uppercase;
+          font-size: 2.2rem;
+        }
+      }
+      h2 {
+        font-family: $heebo;
+        text-transform: uppercase;
+        font-size: 3.438rem !important;
+      }
+      .fc-left {
+        float: right;
+        .fc-button-group {
+
+        }
+      }
+      .fc-center {
+        float: left;
+      }
+      .fc-right {
+        .fc-button-group {
+          display: none;
+        }
       }
     }
-    
-    h2 {
-      font-size: 1.2rem;
-      font-family: $heebo;
-    
+    .fc-time {
+      color: $black;
     }
-    .fc-center {
+    .fc-title {
+      color: $black;
+    }
 
+    span.fc-title {
+        padding: 5px !important;
+        text-overflow: ellipsis;
+        white-space: pre-line;
+    }
+    .fc-event-container .fc-event {
+      background-color: $grey;
+      font-family: $inconsolata;
+      border: none;
+      padding: 0.3rem;
+      margin: 0 0 0 1.4rem;
+    }
+    .fc-day-grid-event .fc-content {
+      white-space: inherit;
+    }
+    .fc-toolbar {
+      margin-bottom: 0.2rem;
+      .fc-left, .fc-left .fc-button-group, .fc-right .fc-button-group {
+        button {
+          box-sizing: border-box;
+          margin: 0.4rem;
+          height: 3.5rem;
+          padding: 0.3rem;
+          font-size: 0.75rem;
+          white-space: nowrap;
+          cursor: pointer;
+        }
+      }
+    
+      h2 {
+        font-size: 1.2rem;
+        font-family: $heebo;
+    
+      }
+      .fc-center {
+
+      }
+    }
+
+  }
+}
+.fc-basic-view td.fc-day-number {
+  font-family: $heebo;
+  font-size: 3.9rem;
+  line-height: 1.1em;
+  color: $yellow;
+  font-weight: 900;
+  border-top: 8px solid black;
+}
+
+.fc-row {
+
+  &:first-child table {
+    border: none;
+    margin-bottom: 0;
+  }
+  table {
+    border: none;
+    border-collapse: separate;
+    border-spacing: 16px 0px;
+  }
+}
+.fc {
+  td {
+    border: none;
+    min-height: 150px;
+    &.fc-today {
+      border-style: solid;
+      border-left: none;
+      border-right: none;
+      border-bottom: none;
+      
     }
   }
-  .fc-row {
-    th {
-      font-family: $inconsolata;
-    }
+}
+.fc-basic-view .fc-body .fc-row {
+  margin-bottom: 2rem;
+}
+
+.fc-unthemed {
+  thead {
+    background: none;
+    border: none;
+  }
+  .fc-today {
+    background: none;
+  }
+  tbody {
+    border: none;
+  }
+  th.fc-day-header {
+    border: none;
+    font-family: $heebo;
+    font-size: 1.875rem;
+    font-weight: 900;
+    padding-bottom: 0.4rem;
+    text-align: left;
   }
 }
 
