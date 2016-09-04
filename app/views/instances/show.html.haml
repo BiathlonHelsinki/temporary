@@ -16,7 +16,16 @@
           = @instance.name
         - if @instance.image?
           = image_tag @instance.image.url
-        .body= raw @instance.description
+        - elsif @experiment.image?
+          = image_tag @experiment.image.url
+        .body= raw simple_format(@instance.description)
 
-
-        
+  - unless  @instance.users.empty? && @instance.onetimers.empty?
+    .row.expanded
+      .small-10.medium-6.columns
+        .participant_header Participants:
+        %ul
+          - @instance.users.each do |attended|
+            %li= link_to attended.display_name, attended
+          - @instance.onetimers.unclaimed.each do |onetimer|
+            %li= "Anonymous person who entered at #{onetimer.created_at.strftime('%H:%M')}"

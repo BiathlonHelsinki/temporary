@@ -38,6 +38,11 @@ header {
 
 body {
   background-color: $yellow;
+  font-size: 1rem;
+}
+
+p {
+  font-size: 1rem;
 }
 h1 {
   font-family: $heebo;
@@ -109,9 +114,12 @@ section.main_container {
     padding: 0;margin: 0;
     text-transform: uppercase;
   }
-  .experiment {
+  a.experiment {
     border: none;
-   
+    &:hover {
+      color: black;
+      text-decoration: none;
+    }
     padding:  0.9375rem;
     .content {
       background-color: $grey;
@@ -128,6 +136,17 @@ section.main_container {
           color: $black;
         }
       }
+      .earn_line {
+        font-family:$heebo;
+        font-size: 1.188rem;
+        color: $yellow;
+        text-align: center;
+      }
+      .participants {
+        text-align: center;
+        font-size: 0.813rem;
+        margin: 1rem 0;
+      }
       .dates {
         font-family: $heebo;
         font-weight: 900;
@@ -135,6 +154,25 @@ section.main_container {
           color: white;
           
           font-size: 1.875em
+        }
+        .next {
+          font-family:$heebo;
+          font-size: 1.188rem;
+          text-transform: lowercase;
+          color: white;
+          line-height: 1.25rem;
+          
+        }
+        .ongoing {
+          color: $yellow;
+          font-family: $heebo;
+          font-size: 1.875rem;
+          text-transform: uppercase;
+        }
+        .ongoing_month {
+          color: $yellow;
+          font-family: $heebo;
+          font-size: 1.875rem;
         }
         .days {
           color: $yellow;
@@ -200,7 +238,17 @@ section.main_container {
 
 // Single view
 article.instance_single {
-  padding-top: 3.438rem;
+  padding-top: 2.438rem;
+  .participant_header {
+    font-family: $heebo;
+    font-size: 1.275rem;
+    background-color: white;
+    border-bottom: 8px solid black;
+    float: left;
+  }
+  ul {
+    clear: both;
+  }
   .post {
     border-top: 9px solid black;
     padding: 0.875rem 0;
@@ -234,6 +282,7 @@ article.instance_single {
     img {
       padding: 0.875rem 0;
     }
+
   }
 }
 
@@ -616,7 +665,7 @@ article.instance_single {
 
 /* Activity feed */
 .activities_index {
-  
+  padding-top: 2.5rem;
   h1 {
     text-transform: uppercase;
     font-family: $heebo;
@@ -640,6 +689,13 @@ article.instance_single {
         td {
           font-family: $ptsans;
           font-size: 1rem;
+          &.temps {
+            min-width: 120px;
+            word-break: break-all;
+            i {
+              font-size: 0.9rem;
+            }
+          }
         }
       }
     }

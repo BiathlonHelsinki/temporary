@@ -33,7 +33,7 @@ class Admin::ExperimentsController < Admin::BaseController
     @experiment = Experiment.friendly.find(params[:id])
     if @experiment.update_attributes(experiment_params)
       flash[:notice] = 'Experiment details updated.'
-      redirect_to admin_experiments_controller
+      redirect_to admin_experiments_path
     else
       flash[:error] = 'Error updating experiment'
     end

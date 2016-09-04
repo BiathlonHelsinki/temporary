@@ -27,6 +27,7 @@ header {
     -o-column-break-inside:avoid;
     -ms-column-break-inside:avoid;
     column-break-inside:avoid;
+    margin-bottom: 2.5rem;
     &.even {
       border: 2px solid $yellow;
       padding: 0.875rem;
@@ -34,7 +35,7 @@ header {
     }
     &.open_day {
       background-color: $grey;
-      
+      padding: 0.875rem;
     }
     .post, .open_day {
       border-top: 9px solid black;

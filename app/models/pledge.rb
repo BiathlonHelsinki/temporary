@@ -58,15 +58,15 @@ class Pledge < ApplicationRecord
   def update_activity_feed
     if created_at == updated_at
       # assume it's new
-      Activity.create(user: user, item: self, description: "pledged to", extra_info: pledge, addition: 1)
+      Activity.create(user: user, item: self, description: "pledged to", extra_info: pledge, addition: 0)
     else
       Activity.create(user: user, item: self, description: "edited their pledge to", extra_info: pledge, addition: 0)
     end
   end
   
   def withdraw_activity
-    item.comments << Comment.create(user: user, content: "Pledge of #{pledge.to_s}#{ENV['currency_symbol']} withdrawn.", systemflag: true)
-    Activity.create(user: user, item: item, description: "withdrew a pledge", extra_info: "#{pledge.to_s}", addition: -1)
+    item.comments << Comment.create(user: user, content: "Pledge of #{pledge.to_s}#{ENV['currency_symbol']} withdrawn.", addition: 0, systemflag: true)
+    Activity.create(user: user, item: item, description: "withdrew a pledge", extra_info: "#{pledge.to_s}", addition: 0)
   end
   
 end

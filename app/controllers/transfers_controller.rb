@@ -22,7 +22,7 @@ class TransfersController < ApplicationController
       flash[:error] = 'The Biathlon API is currently down. Please try again later.'
       redirect_to @recipient
     else
-      if params[:temps_to_send] !~ /\A[-+]?[0-9]*\.?[0-9]+\Z/ || current_user.available_balance < params[:temps_to_send].to_i
+      if params[:temps_to_send].to_s !~ /\A[-+]?[0-9]*\.?[0-9]+\Z/ || current_user.available_balance < params[:temps_to_send].to_i
         flash[:error] = 'You cannot do that.'
         redirect_to @recipient
       else
@@ -38,7 +38,7 @@ class TransfersController < ApplicationController
           flash[:error] = success['error']
           redirect_to send_temps_user_transfers_path(@recipient)
         else                           
-          flash[:notice] = 'Your token was converted, thank you!'
+          flash[:notice] = 'Your transfer was successful, thank you!'
           redirect_to @recipient
         end   
       end                     

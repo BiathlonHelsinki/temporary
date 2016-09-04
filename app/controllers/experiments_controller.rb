@@ -24,7 +24,8 @@ class ExperimentsController < ApplicationController
   end
   
   def index
-    @experiments = Experiment.published.order(sequence: :asc)
+    @experiments = Instance.future.published.order(sequence: :asc).map(&:experiment).uniq
+    @past = Instance.past.published.order(sequence: :asc)
   end
   
   def radial

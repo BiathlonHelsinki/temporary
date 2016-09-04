@@ -1,15 +1,15 @@
-.experiment.column
+= link_to experiment_instance_path(@experiment, exp), class: [:experiment, :column] do
   .content{:"data-equalizer-watch" => ''}
     .meta
       %span.date= exp.start_at.year.to_s
-      = "/"
+      = "//"
       %span
         - if @experiment.instances.size > 1
           = exp.name
         - else
           = "Experiment "
         = "##{exp.sequence}"
-      = "/"
+      = "//"
     .dates.text-center
       .month= l exp.start_at, format: "%B"
       .days
@@ -32,7 +32,10 @@
             - if exp.start_at.month != exp.end_at.month
               .month= l exp.end_at, format: "%B"
             .range_day= exp.end_at.day
-    .title.text-center= link_to exp.name, [@experiment, exp]
+    .title.text-center=  exp.name
     .body.text-center= truncate_html(exp.description, length: 110)
+
     - unless exp.in_future?
-      %small= link_to pluralize(exp.users.size + exp.onetimers.size, 'person') + " participated", [@experiment, exp]
+      .participants=  pluralize(exp.users.size + exp.onetimers.size, 'person') + " participated"
+    - else
+      .earn_line= raw "Earn #{exp.cost_bb}#{tsign} for participating!"
