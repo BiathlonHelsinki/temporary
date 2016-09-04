@@ -5,6 +5,7 @@ class HomeController < ApplicationController
     @open_day = Experiment.friendly.find('open-days').instances.future.first
     # @next_other = Experiment
     @recent_proposals = Proposal.all.order(created_at: :desc).to_a.delete_if{|x| x.scheduled? }
+    @current_rate = Rate.get_current.experiment_cost
   end
   
 end

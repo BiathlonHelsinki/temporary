@@ -8,19 +8,7 @@
 
 
 .news_container
-  - @news.each do |post|
-    %article{class: cycle('odd', 'even')}
-      .post
-        .meta
-          %span.date= post.published_at.strftime('%d.%m.%Y')
-          = " // "
-          %span.category= post.category_text
-          = " // "
-        .title= link_to post.title, post
-        - if post.image?
-          = image_tag post.image.url.gsub('development', 'production')
-        .body= raw post.body
-  - if @open_day
+  - unless @open_day.nil?
     %article.open_day{class: cycle('odd', 'even')}
       .post
         .meta
@@ -36,16 +24,46 @@
               .day= @open_day.start_at.day
               .times= @open_day.start_at.strftime("%H:%M") + " - " + @open_day.end_at.strftime("%H:%M")
         .body= raw simple_format(@open_day.description)
-    - unless @recent_proposals.empty?
-      - @recent_proposals.each do |prop|
-        %article.proposal{class: cycle('odd', 'even')}
-          .post
-            .meta
-              %span.date= prop.created_at.strftime('%d.%m.%Y')
-              = " // "
-              %span.category Proposals
-              = " // "
-            .title= link_to prop.name, prop
-            - unless prop.images.empty?
-              %p= image_tag prop.images.first.image.url(:medium).gsub('development', 'production')
-            .body= truncate_html prop.short_description, length: 300
+        
+  - @news.each do |post|
+    %article{class: cycle('odd', 'even')}
+      .post
+        .meta
+          %span.date= post.published_at.strftime('%d.%m.%Y')
+          = " // "
+          %span.category= post.category_text
+          = " // "
+        .title= link_to post.title, post
+        - if post.image?
+          = image_tag post.image.url.gsub('development', 'production')
+        .body= raw post.body
+
+  - unless @recent_proposals.empty?
+    - @recent_proposals.each do |prop|
+      %article.proposal{class: cycle('odd', 'even')}
+        .post
+          .meta
+            %span.date= prop.created_at.strftime('%d.%m.%Y')
+            = " // "
+            %span.category Proposals
+            = " // "
+          .title= link_to prop.name, prop
+          - unless prop.images.empty?
+            %p= image_tag prop.images.first.image.url(:medium).gsub('development', 'production')
+          .proposed_by= raw "Proposed by #{link_to prop.user.display_name, prop.user}"
+          .pledge_count
+            = raw "Currently pledged: #{prop.pledged.to_s}#{tsign}"
+          .needed
+            - if prop.has_enough?
+              - if prop.scheduled?
+                = "Scheduled!"
+              - else
+                = "Will be considered at next orgaisational meeting"
+                
+            - else
+              = raw "#{@current_rate - prop.pledged}#{tsign} still needed"
+            
+          .body
+            %big= raw "&ldquo;"
+            = truncate_html prop.short_description, length: 300
+            %big= raw "&rdquo;"
