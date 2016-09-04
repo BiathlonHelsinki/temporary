@@ -8,7 +8,7 @@
       - if @item.has_enough?
         %p
           This proposal already has enough pledges and will be reviewed for scheduling at the next meeting,
-          = link_to(@next_meeting.name, @next_meeting, target: :_blank) + "."
+          = link_to(@next_meeting.name, experiment_instance_path(@next_meeting.experiment, @next_meeting), target: :_blank) + "."
           You may still pledge additional Temps towards it, however.
       - else
         %p

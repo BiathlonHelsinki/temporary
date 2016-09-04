@@ -65,7 +65,7 @@
                 - if @next_meeting.nil?
                   %em none currently scheduled
                 - else
-                  = link_to @next_meeting.name, @next_meeting, target: :_blank
+                  = link_to @next_meeting.name, experiment_instance_path(@next_meeting.experiment, @next_meeting), target: :_blank
               - else
                 = raw "#{@current_rate - proposal.pledged} more #{tsign} needed before it can be scheduled"
               - unless proposal.comments.empty?

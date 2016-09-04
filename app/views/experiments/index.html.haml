@@ -43,6 +43,6 @@
           .title.text-center= link_to exp.name, exp
           .body.text-center= truncate_html(exp.description, length: 110)
 
-          %small= link_to pluralize(exp.instances.map(&:users).flatten.size + exp.instances.map(&:onetimers).flatten.size, 'person') + " participated", exp
+          %small= link_to pluralize(exp.instances.map(&:users).flatten.size + exp.instances.map(&:onetimers).flatten.size, 'person') + " have participated", exp
 
     

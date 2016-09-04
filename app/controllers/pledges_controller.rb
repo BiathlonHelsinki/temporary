@@ -18,7 +18,8 @@ class PledgesController < ApplicationController
       if @pledge.save
         render template: 'pledges/after_pledge'
       else
-        flash[:error] = 'There was an error saving your pledge: ' + @pledge.errors.inspect
+        flash[:error] = 'There was an error saving your pledge: ' + @pledge.errors.messages.values.join('; ')
+        redirect_to @proposal
       end
     end
   end

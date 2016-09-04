@@ -1,25 +1,27 @@
-.row
+.row.expanded
   .small-10.columns.medium-8
-    %h3 Pledge complete!
+    %h1 Pledge complete!
     
-.row
+.row.expanded
   .small-10.columns.medium-8
-    You have pledged
-    = "#{@pledge.pledge}#{ENV['currency_symbol']}"
-    towards
-    %em= link_to @pledge.item.name, @pledge.item
+    %p
+      You have pledged
+      = raw "#{@pledge.pledge}#{tsign}"
+      towards
+      %em= link_to @pledge.item.name, @pledge.item
 
     
-.row
+.row.expanded
   .small-10.columns.medium-8
-    Your
-    = pluralize(@pledge.pledge, ENV['currency_full_name'])
-    are currently held in escrow. They will be officially deducted from your balance when the proposal is actually scheduled, and returned to you if the proposal is cancelled or withdrawn.
+    %p
+      Your
+      = raw pluralize(@pledge.pledge, ENV['currency_full_name'])
+      are currently held in escrow. They will be officially deducted from your balance when the proposal is actually scheduled, and returned to you if the proposal is cancelled or withdrawn.
     
-.row
+.row.expanded
   .small-10.columns.medium-8
-    You may also edit or withdraw your pledge any time until the proposal is scheduled.
+    %p You may also edit or withdraw your pledge any time until the proposal is scheduled.
     
-.row
+.row.expanded
   .small-10.columns.medium-8
-    = link_to 'Return to proposal list', proposals_path
+    = link_to 'Return to proposal list', proposals_path, class: [:button]

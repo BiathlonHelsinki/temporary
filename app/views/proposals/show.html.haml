@@ -23,14 +23,26 @@
 
       - unless @proposal.pledges.empty?
         .pledges
-          Pledged by:
-          %small= @proposal.pledges.map(&:user).map(&:username).join(', ')
+          %p
+            = raw "#{@proposal.pledged.to_s}#{tsign} "
+            pledged by:
+            %small= @proposal.pledges.map(&:user).map(&:username).join(', ')
       .pledge_data
-        %small 
-          Needed to be considered for scheduling:
-          = raw(@current_rate.to_s + tsign)
-          total, from at least two users
-
+        %p
+          - if @proposal.has_enough?
+            This proposal will be reviewed at Temporary's next organisational meeting:
+            - if @next_meeting.nil?
+              %em none currently scheduled
+            - else
+              = link_to @next_meeting.name, experiment_instance_path(@next_meeting.experiment, @next_meeting), target: :_blank
+            
+          - else
+            %small 
+              Needed to be considered for scheduling:
+              = raw(@current_rate.to_s + tsign)
+            total, from at least two users
+        - if @proposal.has_enough?
+          %p You may still pledge over the requirements if you really want to show your support!
   .row.expanded
     .small-12.columns
       .details
@@ -90,7 +102,7 @@
                           = raw "#{link_to comment.user.display_name, comment.user, target: :_blank} pledged in support of this proposal!"
                           
                         - else
-                          = t(:user_says, :user => comment.user.display_name)
+                          = raw t(:user_says, :user => comment.user.display_name)
                       .date= l comment.created_at, format: :long
                       .comment_content
                         - if comment.class == Pledge
@@ -100,7 +112,7 @@
                         - if comment.respond_to?(:systemflag)
                           - if comment.systemflag == true
                             .system
-                              %em= comment.content
+                              %em= raw comment.content
                           - else
                             = simple_format(comment.content)
                         - else
