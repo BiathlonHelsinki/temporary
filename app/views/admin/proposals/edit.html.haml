@@ -1,0 +1,9 @@
+= semantic_form_for [:admin, @proposal], html: {multipart: true} do |f|
+  .row.expanded
+    .small-12.columns
+      = f.input :name
+      = f.input :short_description
+      = f.input :timeframe
+      = f.input :goals
+      = f.input :intended_participants
+      = f.submit 'Save'

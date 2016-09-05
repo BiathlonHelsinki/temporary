@@ -10,6 +10,7 @@ header {
   .top-bar {
     padding: 0;
     background-color: $yellow;
+    
     ul {
       padding: 0.4rem 0;
       background-color: $yellow;
@@ -19,7 +20,7 @@ header {
         font-size: 1.133em;
         font-weight: bold;
         text-align: left;
-        &.active {
+        &.active, a.active {
           border: 1px solid black;
           a {
             background: none;
@@ -837,6 +838,27 @@ article.instance_single {
       }
     }
     input[type=submit] {
+      font-size: 1.125rem;
+    }
+  }
+}
+
+// static pages
+.page {
+  padding: 2.4rem 0;
+  h1 ,h2, h3, h4, h5, h6  {
+    font-family: $heebo;
+    font-weight: 900;
+    padding-bottom: 0.6rem;
+    border-bottom: 5px solid black;
+    margin-bottom: 1rem;
+    float: left;
+  }
+  .body {
+    clear: both;
+    font-size: 1.125rem;
+    p {
+      clear: both;
       font-size: 1.125rem;
     }
   }

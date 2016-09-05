@@ -23,7 +23,7 @@ class Admin::PagesController < Admin::BaseController
     @page = Page.friendly.find(params[:id])
     if @page.update_attributes(page_params)
       flash[:notice] = 'Page details updated.'
-      redirect_to admin_pages_controller
+      redirect_to admin_pages_path
     else
       flash[:error] = 'Error updating page'
     end

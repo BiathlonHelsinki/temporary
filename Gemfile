@@ -69,6 +69,7 @@ gem 'net-ping'
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
+gem "omniauth-google-oauth2"
 gem "paranoia", github: "rubysherpas/paranoia", branch: "rails5"
 gem 'rack-utf8_sanitizer'
 gem "rails-observers", github: 'rails/rails-observers'

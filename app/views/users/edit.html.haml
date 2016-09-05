@@ -1,7 +1,10 @@
 .edit_profile
   .row.expanded
     .medium-8.small-10.columns
-      %h1 Your profile
+      %h1
+        Your profile
+        %small= link_to 'View', @user, class: [:button, :small]
+      
     
   = semantic_nested_form_for @user, html: {multipart: true} do |f|
     .row.expanded

@@ -4,7 +4,7 @@ class Admin::BaseController < ApplicationController
 
   before_action :authenticate_user!
   before_action :authenticate_admin!
-  load_and_authorize_resource except: [:home], find_by: :slug
+  load_and_authorize_resource except: [:home, :proposal], find_by: :slug
   
   def authenticate_admin!
     redirect_to root_path unless current_user.has_role? :admin

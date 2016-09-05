@@ -21,6 +21,7 @@
           %br/
           = link_to raw("Send #{tsign} to #{@user.username}"), send_temps_user_transfers_path(@user), class: [:button]
       - unless @user.accounts.empty?
+        %br/
         .ethereum
           %strong Ethereum accounts:
           - @user.accounts.each do |account|

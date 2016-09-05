@@ -9,10 +9,10 @@
         = link_to '/users/auth/facebook' do
           = fa_icon('facebook')
           %p= t(:connect_via_facebook)
-      / .small-3.columns.text-center.option
-      /   = link_to 'http://pixelache.ac/auth/google_oauth2' do
-      /     = fa_icon('google')
-      /     %p= t(:connect_via_google)
+      .small-3.columns.text-center.option
+        = link_to '/users/auth/google_oauth2' do
+          = fa_icon('google')
+          %p= t(:connect_via_google)
       .small-3.columns.text-center.option
         = link_to '/users/auth/twitter' do
           = fa_icon 'twitter'

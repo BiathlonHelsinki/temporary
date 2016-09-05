@@ -1,7 +1,10 @@
 
 .top-bar-left
-  %ul.vertical.medium-horizontal.menu
-    %li{class: controller.controller_name == 'pages' ? :active : false}= link_to 'About', page_path('what-is-temporary')
+  %ul.vertical.medium-horizontal.menu{"data-responsive-menu" => "drilldown medium-dropdown"}
+    %li.has-submenu
+      = link_to 'About', page_path('what-is-temporary'),class: controller.controller_name == 'pages' ? :active : false
+      %ul.submenu.menu.vertical{"data-submenu" => ""}
+        = link_to raw("What's the #{tsign} mean?"), page_path('what-is-this-t-everywhere')
     %li{class: controller.controller_name == 'experiments' ? :active : false}= link_to 'Experiments', experiments_path
     %li{class: controller.controller_name == 'activities' ? :active : false}= link_to 'Activity', activities_path
     %li{class: controller.controller_name == 'proposals' ? :active : false}= link_to 'Proposals', proposals_path
@@ -27,8 +30,8 @@
           %li= link_to 'Your account', edit_user_path(current_user)
           %li= link_to 'Sign out',  destroy_user_session_path, :method => :delete
       - else
-        %a{:href => "#"} Sign in
+        = link_to 'Log in/Join', new_session_path(:user)
         %ul.submenu.menu.vertical{"data-submenu" => ""}
-          %li= link_to 'via Twitter', '/users/auth/twitter'
-          %li= link_to 'via Facebook', '/users/auth/facebook'
+          %li= link_to 'Sign in', new_session_path(:user)
+          %li= link_to 'Why join?', page_path('why-join')
 
