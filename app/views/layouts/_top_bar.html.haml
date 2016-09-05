@@ -2,8 +2,12 @@
 .top-bar-left
   %ul.vertical.medium-horizontal.menu{"data-responsive-menu" => "drilldown medium-dropdown"}
     %li.has-submenu
-      = link_to 'About', page_path('what-is-temporary'),class: controller.controller_name == 'pages' ? :active : false
+      = link_to 'Questions & Answers', '#',class: controller.controller_name == 'pages' ? :active : false
+      
       %ul.submenu.menu.vertical{"data-submenu" => ""}
+        = link_to 'What is Temporary?', page_path('what-is-temporary')
+        = link_to 'How does it work?', page_path('how-does-it-work')
+        = link_to 'Where is it?', page_path('where-is-it')
         = link_to raw("What's the #{tsign} mean?"), page_path('what-is-this-t-everywhere')
     %li{class: controller.controller_name == 'experiments' ? :active : false}= link_to 'Experiments', experiments_path
     %li{class: controller.controller_name == 'activities' ? :active : false}= link_to 'Activity', activities_path
