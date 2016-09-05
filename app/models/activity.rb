@@ -3,7 +3,7 @@ class Activity < ApplicationRecord
   belongs_to :user
   belongs_to :ethtransaction
   belongs_to :item, polymorphic: true
-  
+  belongs_to :onetimer
   validates_presence_of :item_id, :item_type
   
   scope :by_user, ->(user_id) { where(user_id: user_id) }

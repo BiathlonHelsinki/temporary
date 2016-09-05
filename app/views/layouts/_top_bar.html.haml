@@ -17,7 +17,7 @@
             %small= raw "(#{current_user.latest_balance.to_s}#{tsign})"
         %ul.submenu.menu.vertical{"data-submenu" => ""}
           %li= link_to 'Details', user_activities_path(current_user.slug)
-          %li= link_to 'Redeem temporary tag', '/link_temporary'
+          %li= link_to 'Redeem guest ticket', '/link_temporary'
     %li.has-submenu
       - if user_signed_in?
         = link_to current_user.display_name + "'s Biathlon", '#'

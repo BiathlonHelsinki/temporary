@@ -15,7 +15,7 @@ class OnetimersController < ApplicationController
         flash[:error] = success['error']
         redirect_to('/link_temporary')
       else
-        current_user.latest_balance += tag.experiment.cost_bb
+        current_user.latest_balance += tag.instance.cost_bb
         current_user.save(validate: false)
  
         flash[:notice] = 'Your token was converted, thank you!'

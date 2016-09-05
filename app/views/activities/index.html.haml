@@ -31,7 +31,18 @@
               %td
                 = l activity.created_at, format: :long
               %td
-                = link_to activity.user.display_name, activity.user, target: :_blank
+                - if activity.onetimer
+
+                  - if activity.onetimer.claimed == true
+                    - if activity.onetimer.user.nil?
+                      = activity.onetimer.inspect
+                    - else
+                      
+                      = link_to activity.onetimer.user.display_name, activity.onetimer.user, target: :_blank
+                  - else
+                    anonymous person
+                - else
+                  = link_to activity.user.display_name, activity.user, target: :_blank
               %td
                 = activity.description
               %td
