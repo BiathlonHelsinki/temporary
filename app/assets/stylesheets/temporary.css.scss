@@ -15,6 +15,12 @@ header {
       padding: 0.4rem 0;
       background-color: $yellow;
       li {
+        &.first {
+          a {
+            padding-left: 0.5rem;
+            text-align: left;
+          }
+        }
         background-color: $yellow;
         font-family: $inconsolata;
         font-size: 1.133em;
@@ -861,6 +867,30 @@ article.instance_single {
       clear: both;
       font-size: 1.125rem;
     }
+  }
+}
+
+.devise_new_session {
+  padding: 2rem 0;
+  h1 {
+    text-transform: uppercase;
+    font-weight: 900;
+    margin-bottom: 3rem;
+  }
+  i {
+    font-size: 5.5rem;
+    &.yellow {
+      font-size: 8rem;
+      color: #fded57;
+      margin-left: -26px;
+      margin-top: -44px;
+    }
+  }
+  p {
+    padding-top: 2rem;
+    font-family: $heebo;
+    font-weight: 900;
+    font-size: 1.875rem;
   }
 }
 

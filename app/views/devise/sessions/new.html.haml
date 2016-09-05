@@ -1,22 +1,22 @@
 .devise_new_session
-  .row
+  .row.expanded
     .small.12.columns.text-center
-      %h2 Sign in
+      %h1 Connect via
     
   = semantic_form_for(resource, :url => session_path(resource_name), :html => {:class => 'form-vertical' }) do |f|
-    .row
-      .small-3.columns.text-center.option
+    .row.expanded
+      .small-4.columns.text-center.option
         = link_to '/users/auth/facebook' do
-          = fa_icon('facebook')
-          %p= t(:connect_via_facebook)
-      .small-3.columns.text-center.option
+          = fa_icon 'facebook'
+          %p Facebook
+      .small-4.columns.text-center.option
         = link_to '/users/auth/google_oauth2' do
-          = fa_icon('google')
-          %p= t(:connect_via_google)
-      .small-3.columns.text-center.option
+          = fa_icon 'google'
+          %p Google
+      .small-4.columns.text-center.option
         = link_to '/users/auth/twitter' do
           = fa_icon 'twitter'
-          %p= t(:connect_via_twitter)
+          %p Twitter
       / .small-3.columns.text-center.option
       /   = link_to "#", :onclick => "javascript:$('#local_signin_form').slideToggle();return false" do
       /     %p= t(:sign_in_with_none)
