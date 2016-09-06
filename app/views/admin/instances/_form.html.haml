@@ -46,6 +46,8 @@
       - if f.object.image?
         = image_tag f.object.image.url(:box)
       = f.input :image, label: (f.object.image? ? 'Change image' : 'Image')
+  .row  
+    .small-10.medium-4.columns= f.input :allow_multiple_entry, label: 'Allow multiple entry?', hint: 'For multi-day events. If ticked, users will receive Temps for each day they attend.'
   .row
     .small-10.medium-4.columns= f.input :is_meeting, label: 'Is a Temporary meeting?', hint: 'Tick this if this will also be a weekly-ish meeting for scheduling and other business.'
   .row

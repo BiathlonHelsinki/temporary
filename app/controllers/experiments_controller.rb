@@ -24,7 +24,9 @@ class ExperimentsController < ApplicationController
   end
   
   def index
-    @experiments = Instance.future.published.order(sequence: :asc).map(&:experiment).uniq
+    
+    # @experiments = Instance.future.published.order(sequence: :asc).group_by(&:experiment)
+    @experiments = Instance.current.or(Instance.future).order(:start_at)
     @past = Instance.past.published.order(sequence: :asc)
   end
   

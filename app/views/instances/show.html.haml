@@ -15,9 +15,9 @@
           = "Experiment ##{@instance.sequence}:"
           = @instance.name
         - if @instance.image?
-          = image_tag @instance.image.url
+          = image_tag @instance.image.url.gsub(/development/, 'production')
         - elsif @experiment.image?
-          = image_tag @experiment.image.url
+          = image_tag @experiment.image.url.gsub(/development/, 'production')
         .body= raw simple_format(@instance.description)
 
   - unless  @instance.users.empty? && @instance.onetimers.empty?

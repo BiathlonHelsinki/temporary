@@ -133,6 +133,8 @@ section.main_container {
       
       padding: 0.563em;
       .meta {
+        height: 3.5rem;
+        padding: 0.4rem 0;
         margin: 0.2em 0;
         border-top: 8px solid black;
         font-family: $inconsolata;
@@ -141,6 +143,10 @@ section.main_container {
         color: $yellow;
         span {
           color: $black;
+        }
+        &.open-days {
+          height: initial;
+          margin-bottom: 0;
         }
       }
       .earn_line {
@@ -177,7 +183,7 @@ section.main_container {
           text-transform: uppercase;
         }
         .ongoing_month {
-          color: $yellow;
+          color: white;
           font-family: $heebo;
           font-size: 1.875rem;
         }
@@ -207,7 +213,9 @@ section.main_container {
       }
       .title {
         font-family: $inconsolata;
+        font-weight: bold;
         text-transform: uppercase;
+        margin: 0.8rem 0;
         font-size: 1.259em
       }
       .body {
@@ -511,12 +519,15 @@ article.instance_single {
         text-overflow: ellipsis;
         white-space: pre-line;
     }
-    .fc-event-container .fc-event {
-      background-color: $grey;
-      font-family: $inconsolata;
-      border: none;
-      padding: 0.3rem;
-      margin: 0 0 0 1.4rem;
+    .fc-event-container {
+ 
+      .fc-event {
+        background-color: $grey;
+        font-family: $inconsolata;
+        border: none;
+        padding: 0.3rem;
+        margin: 0 0 0.4rem 1.4rem;
+      }
     }
     .fc-day-grid-event .fc-content {
       white-space: inherit;

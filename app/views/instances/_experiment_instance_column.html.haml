@@ -1,41 +1,61 @@
 = link_to experiment_instance_path(@experiment, exp), class: [:experiment, :column] do
   .content{:"data-equalizer-watch" => ''}
-    .meta
+    .meta{class: exp.experiment.slug}
       %span.date= exp.start_at.year.to_s
-      = "//"
+      = "/"
       %span
-        - if @experiment.instances.size > 1
-          = exp.name
+        - if exp.experiment.instances.size > 1
+          = exp.experiment.name
         - else
           = "Experiment "
         = "##{exp.sequence}"
-      = "//"
+      = "/"
     .dates.text-center
-      .month= l exp.start_at, format: "%B"
-      .days
-        - if @experiment.instances.size == 1
-          - if exp.start_at.to_date == exp.end_at.to_date
-            .day= exp.start_at.day
-            .times= exp.start_at.strftime("%H:%M") + " - " + exp.end_at.strftime("%H:%M")
-          - else
-            
-            .range_day= exp.start_at.day
-            .divider= fa_icon('angle-down')
-            .range_day= exp.end_at.day
+      - if exp.experiment.slug == 'open-days'
+        .ongoing Ongoing
+
+        - n = exp.experiment.instances.current
+        - unless n.empty?
+          - n = n.first
+          .next Happening now!
         - else
-          - if exp.start_at.to_date == exp.end_at.to_date
-            .day= exp.start_at.day
-            .times= exp.start_at.strftime("%H:%M") + " - " + exp.end_at.strftime("%H:%M")
+          - n =  exp.experiment.instances.future.first
+          .next Next at:
+        .ongoing_month= l n.start_at, format: '%B'
+        .days
+          .day= n.start_at.day
+          .times=  n.start_at.strftime("%H:%M") + " - " + n.end_at.strftime("%H:%M")
+      - else
+        .month= l exp.start_at, format: "%B"
+        .days
+          - if exp.experiment.instances.size == 1
+            - if exp.start_at.to_date == exp.end_at.to_date
+              .day= exp.start_at.day
+              .times= exp.start_at.strftime("%H:%M") + " - " + exp.end_at.strftime("%H:%M")
+            - else
+
+              .range_day= exp.start_at.day
+              .divider= fa_icon('angle-down')
+              .range_day= exp.end_at.day
           - else
-            .range_day= exp.start_at.day.to_s
-            .divider= fa_icon('angle-down')
-            - if exp.start_at.month != exp.end_at.month
-              .month= l exp.end_at, format: "%B"
-            .range_day= exp.end_at.day
+            - if exp.start_at.to_date == exp.end_at.to_date
+              .day= exp.start_at.day
+              .times= exp.start_at.strftime("%H:%M") + " - " + exp.end_at.strftime("%H:%M")
+            - else
+              .range_day= exp.start_at.day.to_s
+              .divider= fa_icon('angle-down')
+              - if exp.start_at.month != exp.end_at.month
+                .month= l exp.end_at, format: "%B"
+              .range_day= exp.end_at.day
+
     .title.text-center=  exp.name
     .body.text-center= truncate_html(exp.description, length: 110)
 
     - unless exp.in_future?
       .participants=  pluralize(exp.users.size + exp.onetimers.size, 'person') + " participated"
     - else
-      .earn_line= raw "Earn #{exp.cost_bb}#{tsign} for participating!"
+      .earn_line
+        = raw "Earn #{exp.cost_bb}#{tsign} "
+        - if exp.allow_multiple_entry == true
+          = "per day "
+        = "for participating!"
