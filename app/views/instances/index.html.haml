@@ -6,7 +6,7 @@
         = "##{@experiment.sequence}: #{@experiment.name}"
         -# = link_to fa_icon('calendar'), calendar_experiments_path
   .row.expanded#expandme.small-up-1.medium-up-2.large-up-4.xxlarge-up-5{:"data-equalizer" => '', :"data-equalize-by-row" => "true"}
-    - @experiment.instances.future.order(:start_at).each do |exp|
+    - @experiment.instances.current.or(@experiment.instances.future).order(:start_at).each do |exp|
       = render partial: 'experiment_instance_column', locals: {exp: exp, experiment: @experiment}
 
   - unless @experiment.instances.past.empty?

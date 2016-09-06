@@ -25,6 +25,7 @@ class Instance < ApplicationRecord
   scope :past, -> () {where(["end_at <  ?", Time.now.utc.strftime('%Y/%m/%d %H:%M')]) }
   scope :current, -> () { where(["start_at <=  ? and end_at >= ?", Time.now.utc.strftime('%Y/%m/%d %H:%M'), Time.now.utc.strftime('%Y/%m/%d %H:%M') ]) }
 
+
   def as_json(options = {})
     {
       :id => self.id,
