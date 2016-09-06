@@ -22,8 +22,14 @@
           .dates.text-center
             - if exp.slug == 'open-days'
               .ongoing Ongoing
-              .next Next at:
-              - n =  exp.instances.future.first
+
+              - n = exp.instances.current
+              - unless n.empty?
+                - n = n.first
+                .next Happening now! 
+              - else
+                - n =  exp.instances.future.first
+                .next Next at:
               .ongoing_month= l n.start_at, format: '%B'
               .days
                 .day= n.start_at.day

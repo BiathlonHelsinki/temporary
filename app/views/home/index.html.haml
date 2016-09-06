@@ -16,7 +16,7 @@
           = " // "
           %span.category= link_to 'Experiments', experiments_path
           = " // "
-        .title= link_to 'Next open day:', experiment_instance_path(@open_day.experiment, @open_day)
+        .title= link_to (@open_day.start_at.to_date == Time.now.to_date ? 'Current' : 'Next') + ' open day:', experiment_instance_path(@open_day.experiment, @open_day)
         = link_to experiment_instance_path(@open_day.experiment, @open_day) do
           .dates.text-center
             .month= l @open_day.start_at, format: "%B"

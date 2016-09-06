@@ -21,9 +21,10 @@ class Instance < ApplicationRecord
   }
   scope :published, -> () { where(published: true) }
   scope :meetings, -> () {where(is_meeting: true)}
-  scope :future, -> () {where(["start_at >=  ?", Time.now.strftime('%Y/%m/%d %H:%M')]) }
-  scope :past, -> () {where(["start_at <  ?", Time.now.strftime('%Y/%m/%d %H:%M')]) }
-  
+  scope :future, -> () {where(["start_at >=  ?", Time.now.utc.strftime('%Y/%m/%d %H:%M')]) }
+  scope :past, -> () {where(["end_at <  ?", Time.now.utc.strftime('%Y/%m/%d %H:%M')]) }
+  scope :current, -> () { where(["start_at <=  ? and end_at >= ?", Time.now.utc.strftime('%Y/%m/%d %H:%M'), Time.now.utc.strftime('%Y/%m/%d %H:%M') ]) }
+
   def as_json(options = {})
     {
       :id => self.id,
