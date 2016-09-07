@@ -65,12 +65,15 @@ h1 {
 }
 
 a {
-  color: $black;
+  color: black;
 
   &:hover {
     text-decoration: underline;
     color: $grey;
   }
+}
+p a {
+  color: $blue;
 }
 
 .button {
@@ -290,6 +293,7 @@ article.instance_single {
     .title {
       font-family: $inconsolata;
       font-size: 2.373rem;
+      line-height: 3.2rem;
       font-weight: bold;
       text-transform: uppercase;
       text-decoration: underline;
@@ -298,10 +302,14 @@ article.instance_single {
       }
     }
     .body {
+      margin-top: 1.5rem;
       font-family: $ptsans;
-      font-size: 0.881em;
+      font-size: 1.1rem;
+      line-height: 1.9rem;
       p {
-        margin-bottom: 0;
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+        line-height: 1.9rem;
       }
     }
     img {

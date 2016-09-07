@@ -17,9 +17,9 @@ header {
   -webkit-columns: 5 300px;
   -moz-columns: 5 300px;
   columns: 5 300px;
-  -webkit-column-gap: 4em;
-  -moz-column-gap: 4em;
-  column-gap: 4em;
+  -webkit-column-gap: 2.25em;
+  -moz-column-gap: 2.25em;
+  column-gap: 2.25em;
   padding: 0.875rem 1rem;
   article {
     -webkit-column-break-inside:avoid;
@@ -27,12 +27,14 @@ header {
     -o-column-break-inside:avoid;
     -ms-column-break-inside:avoid;
     column-break-inside:avoid;
-
-    &.even {
+    border: 2px solid white;
+    box-sizing: border-box;
+    padding: 0.875rem;
+    
+    &:hover {
       border: 2px solid $yellow;
-      padding: 0.875rem;
-      margin-bottom: 2rem;
     }
+
     &.open_day {
       background-color: $grey;
       padding: 0.875rem;
