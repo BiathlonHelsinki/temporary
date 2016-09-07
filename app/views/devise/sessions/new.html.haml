@@ -17,6 +17,9 @@
         = link_to '/users/auth/twitter' do
           = fa_icon 'twitter'
           %p Twitter
+    .row.expanded
+      .small-10.medium-6.columns.small-centered
+        %h3 'None of the above' option coming soon....
       / .small-3.columns.text-center.option
       /   = link_to "#", :onclick => "javascript:$('#local_signin_form').slideToggle();return false" do
       /     %p= t(:sign_in_with_none)

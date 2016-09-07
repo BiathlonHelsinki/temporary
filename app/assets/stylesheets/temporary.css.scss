@@ -888,6 +888,11 @@ article.instance_single {
     font-weight: 900;
     margin-bottom: 3rem;
   }
+  h3 {
+    font-family: $heebo;
+    margin: 3rem 0;
+    text-align: center;
+  }
   i {
     font-size: 5.5rem;
     &.yellow {

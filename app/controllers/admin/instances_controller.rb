@@ -80,7 +80,7 @@ class Admin::InstancesController < Admin::BaseController
       flash[:error] = success['error']
       
       @experiment = Experiment.friendly.find(params[:experiment_id])
-      @instance = Instance.new(instance_params)
+      @instance = Instance.friendly.find(params[:id])
       @instance.experiment = @experiment
       render template: 'admin/instances/edit'
     else                           
@@ -96,7 +96,7 @@ class Admin::InstancesController < Admin::BaseController
   def instance_params
     params.require(:instance).permit(:published, :event_id, :place_id, :primary_sponsor_id, :is_meeting, :proposal_id,
     :secondary_sponsor_id, :cost_euros, :cost_bb, :sequence, :start_at, :end_at, :sequence, :allow_multiple_entry,
-    :parent_id, :image, translations_attributes: [:name, :description, :locale, :id]
+    :parent_id, :image, translations_attributes: [:name, :description, :instance_id, :locale, :id]
     )
   end
   

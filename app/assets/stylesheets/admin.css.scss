@@ -15,8 +15,7 @@
  *= require variables
  *= require forms
  *= require _settings
- *= require froala_editor.min.css
- *= require froala_style.min.css
+
  *= require font-awesome
 
  */
@@ -86,8 +85,10 @@ form {
     padding: 0.3333rem 0.5rem 0.3333rem 0;
     font-size: 1rem;
   }
+  a {
+    color: green;
+  }
   
-
   
   input.datetimepicker {
     width: inherit;
@@ -95,11 +96,18 @@ form {
   }
   textarea {
     height: 250px;
+    &.hidden {
+      display: none;
+    }
   }
   p.inline-hints {
     font-size: 0.74rem;
     color: #666;
     font-weight: italic;
+  }
+  input[type=submit] {
+    background-color: green;
+    color: yellow;
   }
 }
 

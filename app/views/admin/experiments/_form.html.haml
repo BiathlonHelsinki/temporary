@@ -36,8 +36,10 @@
               .row
                 .small-12.columns
                   %b= "Description of event in #{t :locale_name, :locale => locale}"
-                  = en.text_area :description
-
+                  = en.text_area :description, class: :hidden
+                  #toolbar
+                  #quilleditor                  
+                  %small= link_to 'toggle html', '#', onclick: "javascript:$('#experiment_translations_attributes_1_description').fadeToggle();return false;"
   .row
     .small-10.medium-4.columns= f.input :primary_sponsor, input_html: {required: ''}
   .row
@@ -54,6 +56,5 @@
 
 = content_for :jquery do
   :plain
-    $('textarea').froalaEditor({
-     height: 300});
+    initQuill('#quilleditor', '#experiment_translations_attributes_1_description');
     $('.datetimepicker').fdatetimepicker()

@@ -39,8 +39,10 @@
               .row
                 .small-12.columns
                   %b= "Description of event in #{t :locale_name, :locale => locale}"
-                  = en.text_area :description, value: @instance.description(:en)
-
+                  = en.text_area :description, value: @instance.description(:en), class: :hidden
+                  #toolbar
+                  #quilleditor
+                  %small= link_to 'toggle html', '#', onclick: "javascript:$('#instance_translations_attributes_1_description').fadeToggle();return false;"
   .row
     .small-10.medium-4.columns
       - if f.object.image?
@@ -59,6 +61,6 @@
 
 = content_for :jquery do
   :plain
-    $('textarea').froalaEditor({
-     height: 300});
+    initQuill('#quilleditor', '#instance_translations_attributes_1_description');
+    
     $('.datetimepicker').fdatetimepicker();

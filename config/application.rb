@@ -15,5 +15,6 @@ module Temporary
     config.encoding = "utf-8"
     config.middleware.insert 0, Rack::UTF8Sanitizer
     config.time_zone = 'Helsinki'
+    
   end
 end

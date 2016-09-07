@@ -18,7 +18,10 @@
             .row
               .small-10.medium-8.columns
                 %b= "Content in #{t :locale_name, :locale => locale}"
-                = en.text_area :body
+                = en.text_area :body, class: :hidden
+                #toolbar
+                #quilleditor
+                %small= link_to 'toggle html', '#', onclick: "javascript:$('#post_translations_attributes_1_body').fadeToggle();return false;"
   .row
     .small-6.columns
       - if f.object.image?
@@ -38,6 +41,7 @@
 
 = content_for :jquery do
   :plain
-    $('textarea').froalaEditor({
-     height: 300});
+    initQuill('#quilleditor', '#post_translations_attributes_1_body');
+    
+    
     $('.datetimepicker').fdatetimepicker()
