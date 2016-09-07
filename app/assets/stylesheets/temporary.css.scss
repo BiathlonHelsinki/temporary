@@ -57,6 +57,9 @@ body {
 
 p {
   font-size: 1rem;
+  a {
+    color: $blue;
+  }
 }
 h1 {
   font-family: $heebo;
@@ -831,6 +834,9 @@ article.instance_single {
         td {
           font-family: $ptsans;
           font-size: 1rem;
+          a {
+            color: $blue;
+          }
           &.temps {
             min-width: 120px;
             word-break: break-all;

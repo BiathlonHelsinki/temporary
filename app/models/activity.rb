@@ -23,6 +23,8 @@ class Activity < ApplicationRecord
       else
         ''
       end
+    when 'Instance'
+      "<a href='/experiments/#{item.experiment.slug}/#{item.slug}'>#{item.name}</a>"
     else
       item.name
     end
