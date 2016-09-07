@@ -73,12 +73,22 @@
               %th Who
               %th Activity
               %th Subject
-              %th= raw tsign
+              %th
+                = raw tsign
+                %small= link_to '?', '#', onclick: "javascript:$('.occluded').slideToggle();return false"
+                .occluded
+                  = fa_icon('plus') + ": created"
+                  %br/
+                  = fa_icon('minus') + ": spent"
+                  %br/
+                  = fa_icon('smile-o') + "/" + fa_icon('frown-o') + ': pledged/withdrawn'
+                  %br/
+                  = fa_icon('arrows-h') + ": transferred"
               %th Info
           %tfoot
             %tr
               %td{:colspan => "4"}
-              %td= @user.all_activities.sum{|x| x.value.to_i}
+              %td= @user.all_activities.select{|x| x.addition == 1}.sum{|x| x.value.to_i} - (@user.all_activities.select{|x| x.addition == -1}.sum{|x| x.value.to_i} + @user.all_activities.select{|x| x.description =~ /received/}.sum{|x| x.value.to_i})
               %td
           %tbody
             - @user.all_activities.sort_by(&:created_at).reverse.each do |activity|
@@ -87,11 +97,36 @@
                 %td= link_to activity.user.display_name, activity.user, target: :_blank 
                 %td= activity.description
                 %td= raw activity.linked_name
-                %td
-                  - unless activity.value.nil? 
+                %td.temps
+                  - unless activity.value.nil?
+                    - if activity.addition == 1
+                      = fa_icon('plus')
+                    - if activity.addition == 0
+                      - if activity.description =~ /received/ 
+                        = fa_icon('arrows-h')
+                      - if activity.description =~ /pledged/
+                        = fa_icon('smile-o')
+                      - if activity.description =~ /withdrew/
+                        = fa_icon('frown-o')
+                    - if activity.addition == -1
+                      = fa_icon('minus')
                     = raw ("#{activity.value}#{raw tsign}")
 
                 %td
                   - if activity.ethtransaction
                     = link_to activity.ethtransaction.txaddress[0..5] + "...", "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank
+                    
 
+    .row.expanded
+      .small-5.columns.right.end
+        = @user.all_activities.select{|x| x.addition == 1}.sum{|x| x.value.to_i} 
+        earned
+        %br/
+        = @user.all_activities.select{|x| x.addition == -1}.sum{|x| x.value.to_i}
+        spent
+        %br/
+        = @user.all_activities.select{|x| x.description =~ /received/}.sum{|x| x.value.to_i}
+        transferred
+        %br/
+        = @user.pending_pledges.sum(&:pledge)
+        pledged

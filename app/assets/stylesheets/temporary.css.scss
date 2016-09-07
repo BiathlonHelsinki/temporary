@@ -823,6 +823,15 @@ article.instance_single {
         font-size: 1.875rem;
         background-color: white;
         border-bottom: 8px solid black;
+        small {
+          font-size: 1rem;
+          a {
+            color: $blue;}
+        }
+        .occluded {
+          display: none;
+          font-size: 0.9rem;
+        }
       }
     }
     tr td:first-child {

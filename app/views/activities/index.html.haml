@@ -19,11 +19,21 @@
             %th Subject
             %th
               = raw tsign
+              %small= link_to '?', '#', onclick: "javascript:$('.occluded').slideToggle();return false"
+              .occluded
+                = fa_icon('plus') + ": created"
+                %br/
+                = fa_icon('minus') + ": spent"
+                %br/
+                = fa_icon('smile-o') + "/" + fa_icon('frown-o') + ': pledged/withdrawn'
+                %br/
+                = fa_icon('arrows-h') + ": transferred"
             %th Info
         %tfoot
           %tr
             %td{:colspan => "4"}  
-            %td= @activities.sum{|x| x.value.to_i}
+            %td
+              = @activities.where(addition: 1).sum{|x| x.value.to_i} - @activities.where(addition: -1).sum{|x| x.value.to_i}
             %td
         %tbody
           - @activities.each do |activity|

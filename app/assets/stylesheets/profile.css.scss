@@ -41,6 +41,15 @@
         font-size: 1.125rem;
         background-color: white;
         border-bottom: 8px solid black;
+        small {
+          font-size: 1rem;
+          a {
+            color: $blue;}
+        }
+        .occluded {
+          display: none;
+          font-size: 0.9rem;
+        }
       }
     }
     tbody {
@@ -49,6 +58,16 @@
         td {
           font-family: $ptsans;
           font-size: 1rem;
+          a {
+            color: $blue;
+          }
+          &.temps {
+            min-width: 120px;
+            word-break: break-all;
+            i {
+              font-size: 0.9rem;
+            }
+          }
         }
       }
     }
