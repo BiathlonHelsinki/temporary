@@ -1,13 +1,13 @@
 %article.instance_single
   .row.expanded
-    .small-10.columns
+    .small-10.medium-10.large-7.columns
       .post
         .meta
           %span.date= date_range(@instance.start_at, @instance.end_at)
           = " // "
           %span.category 
             - if @experiment.instances.size > 1
-              = @experiment.name
+              = link_to @experiment.name, @experiment
             - else
               = "Experiment "
           = " // "

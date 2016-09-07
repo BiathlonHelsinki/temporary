@@ -9,6 +9,8 @@ class Post < ApplicationRecord
   mount_uploader :image, ImageUploader
   
   scope :published, -> () { where(published: true) }
+  scope :sticky, -> () { where(sticky: true) }
+  scope :not_sticky, -> () { where("sticky is not true") }
   
   def title_en
     self.title(:en)

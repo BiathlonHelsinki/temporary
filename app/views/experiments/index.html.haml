@@ -17,53 +17,7 @@
       /   = link_to exp, class: [:experiment, :column] do
       /
       /     .content{:"data-equalizer-watch" => ''}
-      /       .meta
-      /         %span.date= exp.start_at.year.to_s
-      /         = "/"
-      /         %span
-      /           - if exp.instances.size > 1
-      /             = exp.name
-      /           - else
-      /             = "Experiment "
-      /           = "##{exp.sequence}"
-      /         = "/"
-      /       .dates.text-center
-      /         - if exp.slug == 'open-days'
-      /           .ongoing Ongoing
-      /
-      /           - n = exp.instances.current
-      /           - unless n.empty?
-      /             - n = n.first
-      /             .next Happening now!
-      /           - else
-      /             - n =  exp.instances.future.first
-      /             .next Next at:
-      /           .ongoing_month= l n.start_at, format: '%B'
-      /           .days
-      /             .day= n.start_at.day
-      /             .times=  n.start_at.strftime("%H:%M") + " - " + n.end_at.strftime("%H:%M")
-      /         - else
-      /           .month= l exp.start_at, format: "%B"
-      /           .days
-      /             - if exp.instances.size == 1
-      /               - if exp.start_at.to_date == exp.end_date.to_date
-      /                 .day= exp.start_at.day
-      /                 .times= exp.start_at.strftime("%H:%M") + " - " + exp.end_date.strftime("%H:%M")
-      /               - else
-      /
-      /                 .range_day= exp.start_at.day
-      /                 .divider= fa_icon('angle-down')
-      /                 .range_day= exp.end_date.day
-      /             - else
-      /               - if exp.start_at.to_date == exp.end_date.to_date
-      /                 .day= exp.start_at.day
-      /                 .times= exp.start_at.strftime("%H:%M") + " - " + exp.end_date.strftime("%H:%M")
-      /               - else
-      /                 .range_day= exp.start_at.day.to_s
-      /                 .divider= fa_icon('angle-down')
-      /                 - if exp.start_at.month != exp.end_date.month
-      /                   .month= l exp.end_date, format: "%B"
-      /                 .range_day= exp.end_date.day
+
       /       .title.text-center= exp.name
       /       .body.text-center= truncate_html(exp.description, length: 110)
       /       .earn_line

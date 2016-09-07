@@ -7,19 +7,26 @@ html, body {
 header {
   margin: 0.938rem 0.938rem 0 0.938rem;
   // top bar
+  &.home {
+    .top-bar {
+      .top-bar-left {
+        padding: initial;
+      }
+    }
+  }
   .top-bar {
     padding: 0;
     background-color: $yellow;
-    
+    .top-bar-left {
+      padding: 0 2rem;
+    }
     ul {
       padding: 0.4rem 0;
       background-color: $yellow;
       li {
-        &.first {
-          a {
-            padding-left: 0.5rem;
-            text-align: left;
-          }
+        a.first {
+          padding-left: 0.5rem;
+          text-align: left;
         }
         background-color: $yellow;
         font-family: $inconsolata;
@@ -794,12 +801,18 @@ article.instance_single {
     border-collapse: separate;
     border-spacing: 1rem;
     thead {
+      th:first-child { 
+        padding-left: 0;
+      }
       th {
         font-family: $heebo;
         font-size: 1.875rem;
         background-color: white;
         border-bottom: 8px solid black;
       }
+    }
+    tr td:first-child {
+      padding-left: 0;
     }
     tbody {
       tr {

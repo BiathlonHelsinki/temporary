@@ -8,6 +8,33 @@
 
 
 .news_container
+  - unless @sticky.empty?
+    - @sticky.each do |post|
+      %article{class: cycle('odd', 'even')}
+        .post
+          .meta
+            %span.date= post.published_at.strftime('%d.%m.%Y')
+            = " // "
+            %span.category= post.category_text
+            = " // "
+          .title= link_to post.title, post
+          - if post.image?
+            = image_tag post.image.url.gsub('development', 'production')
+          .body= raw post.body
+          
+  %article{class: cycle('odd', 'even')}
+    .post
+      .meta
+        %span.date= Time.now.strftime("%B %Y")
+        = "//"
+        %span
+          = link_to  "Calendar",  calendar_experiments_path
+        = "//"
+      #calendar.small-centered
+      = content_for :jquery do
+        = render partial: 'experiments/calendar', formats: [:js]
+      = link_to 'View full calendar', calendar_experiments_path, class: [:button]
+                
   - unless @open_day.nil?
     %article.open_day{class: cycle('odd', 'even')}
       .post
@@ -24,7 +51,9 @@
               .day= @open_day.start_at.day
               .times= @open_day.start_at.strftime("%H:%M") + " - " + @open_day.end_at.strftime("%H:%M")
         .body= raw simple_format(@open_day.description)
-        
+  
+
+    
   - @news.each do |post|
     %article{class: cycle('odd', 'even')}
       .post
@@ -38,6 +67,28 @@
           = image_tag post.image.url.gsub('development', 'production')
         .body= raw post.body
 
+  - unless @upcoming.empty?
+    - @upcoming.each do |exp|
+      %article.experiment_front{class: cycle('odd', 'even')}
+        .post
+          .meta
+            %span.date= date_range(exp.start_at, exp.end_at)
+            = "//"
+            %span
+              = "Experiment "
+              = "##{exp.sequence}"
+            = "//"
+          
+          .title= link_to exp.name, [exp.experiment, exp]
+          - if exp.image?
+            %p= image_tag exp.image.url(:medium).gsub('development', 'production')
+          - elsif exp.experiment.image?
+            %p= image_tag exp.experiment.image.url(:medium).gsub('development', 'production')
+        
+          .body
+            = truncate_html exp.description, length: 500
+            = link_to 'Read more...', [exp.experiment, exp], class: [:button]
+            
   - unless @recent_proposals.empty?
     - @recent_proposals.each do |prop|
       %article.proposal{class: cycle('odd', 'even')}

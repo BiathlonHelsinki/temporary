@@ -30,6 +30,8 @@
         - flash.each do |key, value|
           .alert.text-center{ :class => "alert-#{key}" }
             %strong= raw value
-      %header= yield :header
+      %header.home= yield :header
       %section.main_container= yield 
       %footer= render partial: 'layouts/footer'
+      :javascript
+        $(document).ready(function() { #{yield :jquery} });

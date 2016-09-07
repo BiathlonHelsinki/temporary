@@ -2,14 +2,14 @@
   .content{:"data-equalizer-watch" => ''}
     .meta{class: exp.experiment.slug}
       %span.date= exp.start_at.year.to_s
-      = "/"
+      = "//"
       %span
         - if exp.experiment.instances.size > 1
           = exp.experiment.name
         - else
           = "Experiment "
         = "##{exp.sequence}"
-      = "/"
+      = "//"
     .dates.text-center
       - if exp.experiment.slug == 'open-days'
         .ongoing Ongoing

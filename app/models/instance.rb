@@ -24,7 +24,7 @@ class Instance < ApplicationRecord
   scope :future, -> () {where(["start_at >=  ?", Time.now.utc.strftime('%Y/%m/%d %H:%M')]) }
   scope :past, -> () {where(["end_at <  ?", Time.now.utc.strftime('%Y/%m/%d %H:%M')]) }
   scope :current, -> () { where(["start_at <=  ? and end_at >= ?", Time.now.utc.strftime('%Y/%m/%d %H:%M'), Time.now.utc.strftime('%Y/%m/%d %H:%M') ]) }
-
+  scope :not_open_day,  -> ()  { where("event_id != 1")}
 
   def as_json(options = {})
     {

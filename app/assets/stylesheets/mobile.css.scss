@@ -29,6 +29,9 @@ $large-only: "#{$screen} and (min-width: #{lower-bound($large-range)}) and (max-
     .home_header {
       height: 200px;
     }
+    .title-bar .menu-icon {
+      float: right;
+    }
     .menu-icon:after {
       background: black;
       box-shadow: 0 7px 0 black, 0 14px 0 black;
