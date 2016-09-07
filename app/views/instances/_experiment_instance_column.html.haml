@@ -17,14 +17,17 @@
         - n = exp.experiment.instances.current
         - unless n.empty?
           - n = n.first
-          .next Happening now!
+          - if exp == n
+            .next Happening now!
+          - else
+            .next Next at:
         - else
-          - n =  exp.experiment.instances.future.first
+          / - n =  exp.experiment.instances.future.first
           .next Next at:
-        .ongoing_month= l n.start_at, format: '%B'
+        .ongoing_month= l exp.start_at, format: '%B'
         .days
-          .day= n.start_at.day
-          .times=  n.start_at.strftime("%H:%M") + " - " + n.end_at.strftime("%H:%M")
+          .day= exp.start_at.day
+          .times=  exp.start_at.strftime("%H:%M") + " - " + exp.end_at.strftime("%H:%M")
       - else
         .month= l exp.start_at, format: "%B"
         .days
