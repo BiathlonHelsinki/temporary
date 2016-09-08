@@ -26,6 +26,13 @@
           %strong Ethereum accounts:
           - @user.accounts.each do |account|
             %p= link_to account.address, "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/address/#{account.address}", target: :_blank
+      - if user_signed_in?
+        - if current_user.has_role? :admin
+          %br/
+          .ethereum
+            %strong Authentications:
+            - @user.authentications.each do |auth|
+              %p= "provider: #{auth.provider}, username: #{auth.username}, uid: #{auth.uid}"
   .row.expanded
     .small-10.medium-8.large-4.columns
       - if @user.proposals.empty?

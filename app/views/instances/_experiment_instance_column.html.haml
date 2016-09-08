@@ -55,7 +55,7 @@
     .body.text-center= truncate_html(strip_tags(exp.description), length: 110)
 
     - unless exp.in_future?
-      .participants=  pluralize(exp.users.size + exp.onetimers.size, 'person') + " participated"
+      .participants=  pluralize(exp.users.size + exp.onetimers.unclaimed.size, 'person') + " participated"
     - else
       .earn_line
         = raw "Earn #{exp.cost_bb}#{tsign} "

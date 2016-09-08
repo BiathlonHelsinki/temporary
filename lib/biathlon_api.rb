@@ -15,7 +15,7 @@ class BiathlonApi
       if JSON.parse(response.body)['error']
         JSON.parse(response.body)
       else
-        JSON.parse(response.body)['data']
+        JSON.parse(response.body)
       end
     rescue HTTParty::Error => e
       JSON.parse({error: "Error from #{API_URL + url}: #{e}"}.to_json)
