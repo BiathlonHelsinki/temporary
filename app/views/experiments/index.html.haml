@@ -12,23 +12,7 @@
         - next if only_one_openday == true
         - only_one_openday = true
       = render partial: 'instances/experiment_instance_column', locals: {exp: e, :"@experiment" =>  e.experiment }
-      / - exp = e.first
-      / - if exp.slug == 'open-days' || e.last.size == 1
-      /   = link_to exp, class: [:experiment, :column] do
-      /
-      /     .content{:"data-equalizer-watch" => ''}
 
-      /       .title.text-center= exp.name
-      /       .body.text-center= truncate_html(exp.description, length: 110)
-      /       .earn_line
-      /         = raw "Earn #{exp.cost_bb}#{tsign} for participating!"
-      /
-      /       .participants
-      /         = pluralize(exp.instances.map(&:users).flatten.size + exp.instances.map(&:onetimers).flatten.size, 'person') + " have participated"
-    
-      / - next if exp.slug == 'open-days'
-      / - exp.instances.current.or(exp.instances.future).sort_by(&:start_at).each do |i|
-      / = render partial: 'instances/experiment_instance_column', locals: {exp: i, :"@experiment" =>  exp }
         
   .row.expanded
     .small-12.columns
