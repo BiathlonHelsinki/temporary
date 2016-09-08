@@ -10,6 +10,9 @@ class Proposal < ApplicationRecord
   after_create :add_to_activity_feed
   after_update :add_to_activity_feed_edited
  
+  def comments_and_pledges
+    [comments, pledges].flatten.sort_by(&:updated_at)
+  end
   
   def add_to_activity_feed
     Activity.create(user: user, item: self, description: 'proposed')
@@ -61,10 +64,10 @@ class Proposal < ApplicationRecord
   
   def next_instance
     if scheduled?
-      if instances.future.order(:start_at).empty?
+      if instances.first.experiment.instances.current.or(instances.first.experiment.instances.future).order(:start_at).empty?
         nil
       else
-       instances.future.order(:start_at).first
+       instances.first.experiment.instances.current.or(instances.first.experiment.instances.future).order(:start_at).first
         
       end
     else

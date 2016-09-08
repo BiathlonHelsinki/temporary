@@ -20,7 +20,7 @@
       %p
         Currently needed for an experiment to happen:
         = raw (@current_rate.to_s + tsign)
-        %small= link_to "(why?)", '#'
+        %small= link_to "(why?)", "/pages/how-does-it-work#number_5", target: :_blank
   %table.proposals
     %thead
       %th Name
@@ -57,8 +57,12 @@
           %td
             - if proposal.scheduled?
               - unless proposal.next_instance.nil?
-                %strong Next at:
-                = link_to proposal.next_instance.name, experiment_instance_path(proposal.next_instance.experiment, proposal.next_instance)
+                %strong Happening next:
+                %ul
+                  - proposal.instances.first.experiment.instances.future.order(:start_at).each do |i|
+                    %li
+                      = link_to i.name, experiment_instance_path(i.experiment, i)
+                      %em= date_range(i.start_at, i.end_at)
             - else 
               - if proposal.has_enough?
                 %strong Will be reviewed at next organisation meeting:
@@ -68,12 +72,14 @@
                   = link_to @next_meeting.name, experiment_instance_path(@next_meeting.experiment, @next_meeting), target: :_blank
               - else
                 = raw "#{@current_rate - proposal.pledged} more #{tsign} needed before it can be scheduled"
-              - unless proposal.comments.empty?
-                .comment_status
-                  %em
-                    last commented on by 
-                    = link_to proposal.comments.sort_by(&:created_at).last.user.display_name, proposal.comments.sort_by(&:created_at).last.user, target: :_blank
-                    = time_ago_in_words(proposal.comments.sort_by(&:created_at).last.created_at) + " ago"
+            - unless proposal.comments_and_pledges.empty? 
+              .comment_status
+                %em
+                  last 
+                  = proposal.comments_and_pledges.last.class.to_s.downcase
+                  by
+                  = link_to proposal.comments_and_pledges.last.user.display_name, proposal.comments_and_pledges.last.user, target: :_blank
+                  = time_ago_in_words(proposal.comments_and_pledges.last.created_at) + " ago"
                   
         %tr.occluded_row
           %td{colspan: 4}

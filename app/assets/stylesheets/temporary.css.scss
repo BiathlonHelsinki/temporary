@@ -1,4 +1,6 @@
 @import 'variables';
+
+
 html, body {
   margin:0;
   padding:0;
@@ -374,9 +376,12 @@ article.instance_single {
               clear: left;
             }
           }
-          
+          a {
+            color: $blue;
+          }
           a.button {
             font-size: 1rem;
+            color: black;
             float: right;
             clear: both;
           }
@@ -392,6 +397,7 @@ article.instance_single {
             
             font-weight: bold;
             a {
+              color: black;
               vertical-align: top;
               text-decoration: underline;
             }
