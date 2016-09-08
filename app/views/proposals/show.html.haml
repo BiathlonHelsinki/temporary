@@ -77,7 +77,7 @@
             - else
               = link_to raw("Pledge #{tsign}!"), new_proposal_pledge_path(@proposal), class: [:button, :tiny]
         
-  - unless @proposal.comments.empty?
+  - unless @proposal.comments.empty? && @proposal.pledges.empty?
 
 
     #comments_list
