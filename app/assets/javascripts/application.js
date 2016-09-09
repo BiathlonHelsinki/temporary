@@ -16,7 +16,7 @@
 //= require jquery_nested_form
 //= require moment 
 //= require fullcalendar
-
+//= require stacktable.min
   
 $(function(){ $(document).foundation();
 

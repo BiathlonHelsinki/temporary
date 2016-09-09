@@ -21,7 +21,15 @@ $medium-portrait-only:"#{$screen} and (orientation: portrait) and (min-width:#{l
 $large-only: "#{$screen} and (min-width: #{lower-bound($large-range)}) and (max-width: #{upper-bound($large-range)})" !default;
 
 @media screen and (max-width: 39.9375em) {
+  .row.expanded {
+    padding: 0;
+  }
+  h1 {
+    text-align: center;
+    font-size: 2.5rem;
+  }
   header {
+    margin: 0.938rem;
     .logo-small {
       max-width: 220px;
       float: left;
@@ -36,5 +44,9 @@ $large-only: "#{$screen} and (min-width: #{lower-bound($large-range)}) and (max-
       background: black;
       box-shadow: 0 7px 0 black, 0 14px 0 black;
     }
+  }
+  
+  .activities_index, .user_profile {
+    padding-top: 0.8rem;
   }
 }

@@ -74,3 +74,8 @@
               %td
                 - if activity.ethtransaction
                   = link_to activity.ethtransaction.txaddress[0..5] + "...", "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank
+
+
+= content_for :jquery do
+  :plain
+    $('table.activities').stacktable()
