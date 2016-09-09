@@ -10,6 +10,11 @@
     margin: 0 0 1rem 0;
     border-bottom: 5px solid black;
     float: left;
+    i {
+      padding: 0 1rem;
+      font-size: 1.2rem;
+      color: $blue;
+    }
   }
   img {
     margin-bottom: 2.5rem;
@@ -84,6 +89,7 @@
   
   form {
     label {
+      font-size: 1rem;
       &.label {
         font-family: $heebo;
         font-size: 1.875rem;
@@ -93,6 +99,9 @@
         border-bottom: 5px solid black;
 
       }
+    }
+    p.inline-hints {
+      font-size: 0.8rem;
     }
     input[type=text], input[type=email] {
       border: 2px solid $yellow;
@@ -107,8 +116,25 @@
         font-size: 1.875rem;
         font-weight: 900;
         padding: 0 0 0.4rem 0;
-        margin: 0 0 1rem 0;
+        margin: 2rem 0 1rem 0;
         border-bottom: 5px solid black;        
+      }
+      .ethereum_container {
+        border-bottom: 1px solid $yellow;
+        margin: 0.5rem 0;
+        padding: 0.5rem 0;
+      }
+      label.label {
+        font-family: $heebo;
+        font-size: 1.275rem;
+        font-weight: 900;
+        padding: 0 0 0.4rem 0;
+        margin: 0 0 1rem 0;
+        border-bottom: 5px solid black;
+
+      }
+      .ethereum_address {
+        font-size: 0.75rem;
       }
       .info {
         clear: left;

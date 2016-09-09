@@ -1,7 +1,16 @@
 .user_profile
   .row.expanded
     .small-12.columns
-      .name= @user.display_name
+      .name
+        = @user.display_name
+        - unless @user.authentications.empty?
+          - unless @user.authentications.select{|x| x.provider == 'facebook' }.empty?
+            - if @user.show_facebook_link
+              = link_to fa_icon('facebook'), "http://facebook.com/#{@user.authentications.select{|x| x.provider == 'facebook'}.first.uid}", target: :_blank
+          - unless @user.authentications.select{|x| x.provider == 'twitter' }.empty?
+            - if @user.show_twitter_link
+              = link_to fa_icon('twitter'), "http://twitter.com/#{@user.authentications.select{|x| x.provider == 'twitter'}.first.username}", target: :_blank
+
       .since
         = "user since #{l @user.created_at.to_date, format: :long}"
         = " (#{time_ago_in_words(@user.created_at)})"
@@ -13,6 +22,12 @@
       -else
         = image_tag 'user_missing_large.png'
     .small-10.medium-8.columns
+      - unless @user.website.blank?
+        %div
+          %strong Website:
+          = link_to @user.website, @user.website, target: :_blank
+          %br/
+          %br/
       %strong Balance:
       = raw "#{@user.latest_balance}#{tsign}"
       %br/
@@ -137,3 +152,7 @@
         %br/
         = @user.pending_pledges.sum(&:pledge)
         pledged
+
+= content_for :jquery do
+  :plain
+    $('table.activities').stacktable()

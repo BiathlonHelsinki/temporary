@@ -13,8 +13,34 @@
         = f.input :username
         = f.input :name, label: ' Your name:'
         = f.input :show_name, label: 'Show your name on site?', hint: 'If this is not ticked, then only your username will be displayed.'
-
-    
+        
+        = f.input :website, label: 'Your website', hint: 'Enter a URL, if you\'d like, to your personal website. This will be shown in your public profile.'
+        - unless f.object.authentications.empty?
+          - unless f.object.authentications.select{|x| x.provider == 'facebook' }.empty?
+            = f.input :show_facebook_link, label: 'Show link to your Facebook page on your public profile?'
+          - unless f.object.authentications.select{|x| x.provider == 'twitter' }.empty?
+            = f.input :show_twitter_link, label: 'Show link to your Twitter feed on your public profile?'            
+          
+        .subsection
+          %h3 Contact details:
+          .info
+            = f.input :opt_in, label: 'Allow Temporary to send you regular emails about our activities', hint: "We won't do this more than once every 1-2 weeks"
+            .row
+              .small-12.columns= f.input :address, label: 'Your postal address', hint: 'Optional! We will never share this with anyone, and will only use it to mail you announcements whenever we can afford it, since the Finnish post is so ridiculously expensive.'
+            .row
+              .small-6.columns= f.input :city
+              .small-2.columns= f.input :postcode
+              .small-4.columns= f.input :country
+            
+                      
+          
+      .small-10.medium-4.columns.photo
+        - if f.object.avatar?
+          = image_tag f.object.avatar.url(:small)
+          = f.input :avatar, label: 'Change image/photo:', hint: 'Keep it decent, please....'
+        - else
+          = image_tag 'user_missing_large.png'
+          = f.input :avatar, label: 'Change image/photo:', hint: 'Keep it decent, please....'
         .subsection
           %h3 ID cards:
           .info
@@ -33,13 +59,13 @@
               %em No Biathlon activity yet
             - else
               - @user.accounts.each do |account|
-                .row
-                  .small-6.columns
-                    = account.address
-                  .small-4.columns
+                .row.ethereum_container
+                  .small-12.columns
+                    .ethereum_address= account.address
+                  .small-8.columns
                     Balance:
                     = account.balance
-                  .small-2.columns
+                  .small-4.columns
                     %strong
                       - if account.primary_account == true
                         primary
@@ -51,17 +77,8 @@
             .row
               .small-6.columns= ff.input :address, label: 'Your Ethereum account #', hint: '(Should start with 0x!)'
             = ff.input :external, as: :hidden, input_html: {value: 1}
-          = f.link_to_add 'Add new account', :accounts
-                      
+          = f.link_to_add 'Add new account', :accounts, class: [:button, :tiny], data: {confirm: 'This allows you to add your own Ethereum address to your Temporary account. If you have your own address, add it here, and then please contact admin@temporary.fi to request your Temporaries balance to be transfered.'}
           
-      .small-10.medium-4.columns.photo
-        - if f.object.avatar?
-          = image_tag f.object.avatar.url(:small)
-          = f.input :avatar, label: 'Change image/photo:', hint: 'Keep it decent, please....'
-        - else
-          = image_tag 'user_missing_large.png'
-          = f.input :avatar, label: 'Change image/photo:', hint: 'Keep it decent, please....'
-
     .row.expanded
       .small-12.columns= f.submit t(:save), class: [:button, :small]
   
