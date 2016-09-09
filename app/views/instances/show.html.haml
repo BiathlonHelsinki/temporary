@@ -29,3 +29,11 @@
             %li= link_to attended.display_name, attended
           - @instance.onetimers.unclaimed.each do |onetimer|
             %li= "Anonymous person who entered at #{onetimer.created_at.strftime('%H:%M')}"
+
+  - unless @instance.experiment.instances.select{|x| x != @instance}.empty?
+    .row.expanded
+      .small-10.medium-10.large-7.columns
+        %h3 Related experiments:
+    .row.expanded#expandme.small-up-1.medium-up-2.large-up-4.xxlarge-up-5{:"data-equalizer" => '', :"data-equalize-by-row" => "true"}
+      - @instance.experiment.instances.select{|x| x != @instance}.sort_by(&:start_at).each do |exp|
+        = render partial: 'instances/experiment_instance_column', locals: {exp: exp, :"@experiment" =>  exp.experiment}
