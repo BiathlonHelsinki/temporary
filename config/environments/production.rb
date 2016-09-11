@@ -60,12 +60,14 @@ Rails.application.configure do
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
 
+
   config.action_mailer.perform_deliveries = true
   config.action_mailer.delivery_method = :sendmail
   config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.default_options = {from: 'admin@temporary.fi' }
+  config.action_mailer.default_options = {from: 'admin@temporary.fi' , host: 'temporary.fi'}
   
-  config.action_mailer.default_url_options = { :host => 'temporary.fi' }
+  config.action_mailer.default_url_options = { :host => 'temporary.fi' , from: 'admin@temporary.fi'}
+  
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
@@ -89,3 +91,12 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 end
+ActionMailer::Base.sendmail_settings = {
+        location: "/usr/sbin/sendmail",
+        arguments: '-i -t'
+}
+
+ActionMailer::Base.delivery_method = :sendmail
+ActionMailer::Base.perform_deliveries = true
+ActionMailer::Base.raise_delivery_errors = true
+ActionMailer::Base.default charset: "utf-8"

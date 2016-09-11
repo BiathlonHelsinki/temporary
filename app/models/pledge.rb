@@ -40,6 +40,7 @@ class Pledge < ApplicationRecord
           item.notified = true
           item.save
         rescue
+
           item.notified = false
           item.save
         end

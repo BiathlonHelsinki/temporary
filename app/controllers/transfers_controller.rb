@@ -37,7 +37,8 @@ class TransfersController < ApplicationController
         if success['error']
           flash[:error] = success['error']
           redirect_to send_temps_user_transfers_path(@recipient)
-        else                           
+        else      
+          TransfersMailer.received_temps(current_user, @recipient, params[:temps_to_send], params[:reason]).deliver                   
           flash[:notice] = 'Your transfer was successful, thank you!'
           redirect_to @recipient
         end   

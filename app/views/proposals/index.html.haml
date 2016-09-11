@@ -43,7 +43,9 @@
           %td
             = raw(proposal.pledged.to_s + tsign)
             - if proposal.scheduled?
-              = link_to_unless(proposal.next_instance.nil?, 'Scheduled!', experiment_instance_path(proposal.next_instance.experiment, proposal.next_instance), class: [:button, :small]) 
+              - unless proposal.next_instance.nil?
+                = link_to_unless(proposal.next_instance.nil?, 'Scheduled!', experiment_instance_path(proposal.next_instance.experiment, proposal.next_instance), class: [:button, :small]) 
+
             - else
               - if user_signed_in?
                 - if current_user.has_pledged?(proposal)
@@ -63,6 +65,9 @@
                     %li
                       = link_to i.name, experiment_instance_path(i.experiment, i)
                       %em= date_range(i.start_at, i.end_at)
+              - unless proposal.instances.empty?
+                = raw "happened at #{link_to proposal.instances.first.name, [proposal.instances.first.experiment, proposal.instances.first]}"
+                %em= date_range proposal.instances.first.start_at, proposal.instances.first.end_at
             - else 
               - if proposal.has_enough?
                 %strong Will be reviewed at next organisation meeting:
