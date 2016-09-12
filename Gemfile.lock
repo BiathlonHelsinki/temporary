@@ -8,6 +8,14 @@ GIT
       rails-observers (~> 0.1.2)
 
 GIT
+  remote: git://github.com/galetahub/ckeditor.git
+  revision: a431c575f1e39647a19c050b60007613ece7870e
+  specs:
+    ckeditor (4.2.0)
+      cocaine
+      orm_adapter (~> 0.5.0)
+
+GIT
   remote: git://github.com/globalize/globalize.git
   revision: 38443bcd07da78b7b8a9433e4c6c32dd51f964a3
   branch: master
@@ -150,6 +158,10 @@ GEM
     carrierwave-aws (1.0.1)
       aws-sdk (~> 2.0)
       carrierwave (~> 0.7)
+    climate_control (0.0.3)
+      activesupport (>= 3.0)
+    cocaine (0.5.8)
+      climate_control (>= 0.0.3, < 1.0)
     coderay (1.1.1)
     concurrent-ruby (1.0.2)
     countries (1.2.5)
@@ -391,6 +403,7 @@ DEPENDENCIES
   capistrano3-puma
   carrierwave
   carrierwave-aws
+  ckeditor!
   country_select
   devise
   figaro

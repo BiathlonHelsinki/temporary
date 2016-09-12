@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  mount Ckeditor::Engine => '/ckeditor'
   devise_for :users, :controllers => { omniauth_callbacks: 'omniauth_callbacks' } do
     get "logout", to: "devise/sessions#destroy"
   end

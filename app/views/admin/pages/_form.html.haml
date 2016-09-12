@@ -15,10 +15,8 @@
             .row
               .small-10.columns
                 %b= "Page content in #{t :locale_name, :locale => locale}"
-                = en.text_area :body, class: :hidden
-                #toolbar
-                #quilleditor
-                %small= link_to 'toggle html', '#', onclick: "javascript:$('#page_translations_attributes_1_body').fadeToggle();return false;"
+                = en.cktext_area :body
+
     .row
       .small-10.medium-8.columns
         - if f.object.image?
@@ -31,9 +29,5 @@
       .small-10.medium-8.columns= f.input :published
 
   .row
-    .small-10.medium-8.columns= f.submit 'Save', :class => [:button, :round]                
+    .small-10.medium-8.columns= f.submit 'Save', :class => [:button, :round]
                 
-= content_for :jquery do
-  :plain
-    initQuill('#quilleditor', '#page_translations_attributes_1_body');
-    $('.datetimepicker').fdatetimepicker({ weekStart: 1 })                
