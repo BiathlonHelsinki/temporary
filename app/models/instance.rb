@@ -46,7 +46,7 @@ class Instance < ApplicationRecord
   end
   
   def self.next_meeting
-    self.future.meetings.first
+    self.current.meetings.or(self.future.meetings).first
   end
   
   
