@@ -70,6 +70,7 @@ gem 'nested_form'
 gem 'net-ping'
 gem 'omniauth'
 gem 'omniauth-facebook'
+gem 'omniauth-github'
 gem 'omniauth-twitter'
 gem "omniauth-google-oauth2"
 gem "paranoia", github: "rubysherpas/paranoia", branch: "rails5"
