@@ -960,6 +960,41 @@ article.instance_single {
     font-family: $heebo;
     font-weight: 900;
     font-size: 1.875rem;
+    &.spiel {
+      font-size: 1.1rem;
+      font-weight: 400;
+      font-family: $ptsans;
+      padding: 0;
+    }
+  }
+  
+  form {
+    label {
+      font-weight: 400;
+    } 
+    p {
+      padding: 0;
+      font-size: 1rem;
+      font-weight: 400;
+      font-family: $ptsans;
+      &.inline-hints {
+        font-size: 0.8rem;
+        font-weight: 400;
+        color: #666;
+        font-style: italic;
+      }
+    }
+   
+  }
+  #manual_login {
+    margin-top: 2.5rem;
+    p {
+      font-size: 1.15rem;
+      
+    }
+    a.forgot {
+      margin: 1rem 0 0 2rem;
+    }
   }
 }
 

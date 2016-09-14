@@ -5,15 +5,18 @@ class User < ActiveRecord::Base
   
   # Include default devise modules.
   devise :database_authenticatable, :registerable,
-          :recoverable, :rememberable, :trackable,
-          :omniauthable #, :confirmable
+          :recoverable, :rememberable, :trackable, :confirmable,
+          :omniauthable, :validatable, :authentication_keys => [:login]
+          
   has_many :accounts
   has_many :authentications, :dependent => :destroy
   # accepts_nested_attributes_for :authentications, :reject_if => proc { |attr| attr['username'].blank? }
   accepts_nested_attributes_for :accounts, reject_if: proc {|attr| attr['address'].blank? }
   acts_as_token_authenticatable
   validates_format_of :email, :without => TEMP_EMAIL_REGEX, on: :update
-  validates_uniqueness_of :username, :email
+  validates_uniqueness_of :email
+  validates :username, :presence => true, :uniqueness => { :case_sensitive => false }
+  validates_format_of :username, with: /^[a-zA-Z0-9_\.]*$/, :multiline => true
   extend FriendlyId
   friendly_id :username , :use => [ :slugged, :finders, :history]
   has_many :activities
@@ -33,6 +36,25 @@ class User < ActiveRecord::Base
   after_create :add_to_activity_feed
   has_many :comments
   validates_presence_of :geth_pwd
+
+
+  def self.find_for_database_authentication(warden_conditions)
+    conditions = warden_conditions.dup
+    if login = conditions.delete(:login)
+      where(conditions.to_h).where(["lower(username) = :value OR lower(email) = :value", { :value => login.downcase }]).first
+    elsif conditions.has_key?(:username) || conditions.has_key?(:email)
+      conditions[:email].downcase! if conditions[:email]
+      where(conditions.to_hash).first
+    end
+  end
+  
+  def login=(login)
+    @login = login
+  end
+
+  def login
+    @login || self.username || self.email
+  end
   
   def add_to_activity_feed
     Activity.create(item: self, description: 'joined!', user: self)

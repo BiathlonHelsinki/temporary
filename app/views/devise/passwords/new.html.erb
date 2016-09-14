@@ -1,0 +1,22 @@
+<div class="row expanded">
+  <div class="small-10 columns medium-9">
+   <div class="devise_new_session">
+<h1>Forgot your password?</h1>
+
+<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post , :"data-abide" => ''}) do |f| %>
+  <%= devise_error_messages! %>
+  <p>If you have signed up with an email and password and have forgotten your password, enter your email address below and a new password will be mailed to you.</p>
+  <p>If you have signed in previously using  <a href="/users/auth/facebook">Facebook</a>, <a href="/users/auth/twitter">Twitter</a>, <a href="/users/auth/github">GitHub</a> or <a href="/users/auth/google_oauth2">Google</a>, then you do not have a password with Temporary and can access your account through one of these services.</p>
+  <div class="field">
+    <%= f.label 'Enter your email address to recover your password ' %><br />
+    <%= f.email_field :email, autofocus: true, required: '' %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Send me reset password instructions", class: [:button]%>
+  </div>
+<% end %>
+
+  </div>
+ </div>
+</div>

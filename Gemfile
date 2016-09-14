@@ -76,6 +76,7 @@ gem "omniauth-google-oauth2"
 gem "paranoia", github: "rubysherpas/paranoia", branch: "rails5"
 gem 'rack-utf8_sanitizer'
 gem "rails-observers", github: 'rails/rails-observers'
+gem "recaptcha", '3.0', require: "recaptcha/rails"
 gem 'rolify'
 gem 'simple_token_authentication', git: 'https://github.com/gonzalo-bulnes/simple_token_authentication.git', branch: 'master'
 gem 'textacular', github: 'textacular/textacular', branch: 'master'

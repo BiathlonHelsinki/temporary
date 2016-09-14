@@ -1,0 +1,43 @@
+<div class="row expanded">
+  <div class="small-10 columns medium-6">
+   <div class="devise_new_session">
+    <h1>Join Temporary!</h1>
+    <p class="spiel">While Temporary encourages independence from corporate Internet overlords, we still encourage you to use your existing accounts with either <a href="/users/auth/facebook">Facebook</a>, <a href="/users/auth/twitter">Twitter</a>, <a href="/users/auth/github">GitHub</a> or <a href="/users/auth/google_oauth2">Google</a> for the simple reason that it makes our lives much easier to outsource your identity verification.</p>
+    <p class="spiel">Yet if you do not use any of the above services - and again, we not only respect that but support it!! - then we offer this means to create an account directly with Temporary below.</p>
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <%= devise_error_messages! %>
+
+
+
+      <div class="field">
+        <%= f.label :username %>
+        <%= f.text_field :username %><br />
+        <%= f.label :email %>
+        <%= f.email_field :email, autofocus: true %>
+      </div>
+
+      <div class="field">
+        <%= f.label :password %>
+        <% if @minimum_password_length %>
+        <p class="inline-hints">(<%= @minimum_password_length %> characters minimum)</p>
+        <% end %>
+        <%= f.password_field :password, autocomplete: "off" %>
+      </div>
+
+      <div class="field">
+        <%= f.label :password_confirmation %>
+        <%= f.password_field :password_confirmation, autocomplete: "off" %>
+      </div>
+      <div class="field">
+        <%= flash[:recaptcha_error] %>
+        <%= recaptcha_tags  %>
+      </div>
+      <div class="actions">
+        <%= f.submit "Sign up", class: [:button] %>
+      </div>
+    <% end %>
+
+    <%-#= render "devise/shared/links" %>
+  </div>
+ </div>
+</div>
