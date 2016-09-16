@@ -1,4 +1,7 @@
-<h2>Change your password</h2>
+<div class="row expanded">
+  <div class="small-10 columns medium-9">
+   <div class="devise_new_session">
+<h1>Change your password</h1>
 
 <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
   <%= devise_error_messages! %>
@@ -22,4 +25,7 @@
   </div>
 <% end %>
 
-<%= render "users/shared/links" %>
+
+  </div>
+ </div>
+</div>
