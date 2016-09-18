@@ -7,7 +7,7 @@ class Proposal < ApplicationRecord
   validates_presence_of :user_id, :name, :short_description, :timeframe, :goals, :intended_participants
   has_many :comments, as: :item, :dependent => :destroy
   has_many :instances
-  has_many :activities, dependent: :destroy
+  has_many :activities, dependent: :destroy, as: :item
   after_create :add_to_activity_feed
   after_update :add_to_activity_feed_edited
  

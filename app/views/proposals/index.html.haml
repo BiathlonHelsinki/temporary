@@ -39,7 +39,12 @@
             = link_to proposal.name, proposal
             = link_to fa_icon('caret-down'), '#', onclick: "javascript:$('#proposal_#{proposal.id}').slideToggle();$(this).next('i').removeClass('chevron-down');$(this).next('i').addClass('chevron-up');return false;"
 
-          %td= link_to proposal.user.display_name, proposal.user
+          %td
+            = link_to proposal.user.display_name, proposal.user
+            - if user_signed_in?
+              - if current_user == proposal.user || current_user.has_role?(:admin)
+                %br/
+                = link_to 'Edit proposal', edit_proposal_path(proposal), class: [:button, :tiny], style: 'float: left; font-size: 0.7em; margin: 0.5rem 0;'
           %td
             = raw(proposal.pledged.to_s + tsign)
             - if proposal.scheduled?
@@ -59,7 +64,9 @@
           %td
             - if proposal.scheduled?
               - unless proposal.next_instance.nil?
-                %strong Happening next:
+                %strong Scheduled!
+                %br/
+                %em Next at:
                 %ul
                   - proposal.instances.first.experiment.instances.future.order(:start_at).each do |i|
                     %li

@@ -25,15 +25,27 @@
       .small-10.medium-6.columns
         .participant_header Participants:
         %ul
-          - @instance.users.each do |attended|
-            %li= link_to attended.display_name, attended
+          - @instance.users.uniq.each do |attended|
+            %li
+              = link_to attended.display_name, attended
+              - if @instance.allow_multiple_entry == true
+                = " (#{pluralize(@instance.users.select{|x| x == attended}.count, 'time')})"
           - @instance.onetimers.unclaimed.each do |onetimer|
-            %li= "Anonymous person who entered at #{onetimer.created_at.strftime('%H:%M')}"
+            %li
+              = "Anonymous person who entered at #{onetimer.created_at.strftime('%H:%M')}"
+              - if @instance.allow_multiple_entry == true
+                = " on #{l onetimer.created_at.to_date, format: :short}"
 
   - unless @instance.experiment.instances.select{|x| x != @instance}.empty?
     .row.expanded
       .small-10.medium-10.large-7.columns
-        %h3 Related experiments:
+        %h3 Related experiments: future
     .row.expanded#expandme.small-up-1.medium-up-2.large-up-4.xxlarge-up-5{:"data-equalizer" => '', :"data-equalize-by-row" => "true"}
-      - @instance.experiment.instances.select{|x| x != @instance}.sort_by(&:start_at).each do |exp|
+      - @instance.experiment.instances.current.or(@instance.experiment.instances.future).select{|x| x != @instance}.sort_by(&:start_at).each do |exp|
         = render partial: 'instances/experiment_instance_column', locals: {exp: exp, :"@experiment" =>  exp.experiment}
+    .row.expanded
+      .small-10.medium-10.large-7.columns
+        %h3 Related experiments: past
+    .row.expanded#expandme.small-up-1.medium-up-2.large-up-4.xxlarge-up-5{:"data-equalizer" => '', :"data-equalize-by-row" => "true"}
+      - @instance.experiment.instances.past.select{|x| x != @instance}.sort_by(&:start_at).each do |exp|
+        = render partial: 'instances/experiment_instance_column', locals: {exp: exp, :"@experiment" =>  exp.experiment}        

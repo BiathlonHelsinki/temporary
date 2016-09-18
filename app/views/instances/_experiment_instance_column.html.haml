@@ -27,7 +27,11 @@
         .ongoing_month= l exp.start_at, format: '%B'
         .days
           .day= exp.start_at.day
-          .times=  exp.start_at.strftime("%H:%M") + " - " + exp.end_at.strftime("%H:%M")
+          .times
+            -if exp.end_at.nil?
+              =  exp.start_at.strftime("%H:%M") 
+            - else
+              =  exp.start_at.strftime("%H:%M") + " - " + exp.end_at.strftime("%H:%M")
       - else
         .month= l exp.start_at, format: "%B"
         .days

@@ -14,8 +14,20 @@ class ProposalsController < ApplicationController
 
   end
   
+  def destroy
+    @proposal = Proposal.find(params[:id])
+    if @proposal.user != current_user && !current_user.has_role?(:admin)
+      flash[:error] = "You cannot delete someone else's proposal."
+      redirect_to @proposal
+    else
+      @proposal.destroy
+      flash[:notice] = 'Your proposal was deleted.'
+      redirect_to proposals_path
+    end
+  end
+      
   def edit
-    @proposal = Proposal.friendly.find(params[:id])
+    @proposal = Proposal.find(params[:id])
     if @proposal.user != current_user && !current_user.has_role?(:admin)
       flash[:error] = "You cannot edit someone else's proposal."
       redirect_to @proposal

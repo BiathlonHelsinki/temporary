@@ -30,11 +30,12 @@
       .pledge_data
         %p
           - if @proposal.has_enough?
-            This proposal will be reviewed at Temporary's next organisational meeting:
-            - if @next_meeting.nil?
-              %em none currently scheduled
-            - else
-              = link_to @next_meeting.name, experiment_instance_path(@next_meeting.experiment, @next_meeting), target: :_blank
+            - if !@proposal.scheduled?
+              This proposal will be reviewed at Temporary's next organisational meeting:
+              - if @next_meeting.nil?
+                %em none currently scheduled
+              - else
+                = link_to @next_meeting.name, experiment_instance_path(@next_meeting.experiment, @next_meeting), target: :_blank
             
           - else
             %small 
@@ -107,6 +108,7 @@
                       .comment_content
                         - if comment.class == Pledge
                           %em= raw t(:has_pledged, user: comment.user.username, amount: comment.pledge.to_s + tsign)
+                          %br/
                           - if comment.user == current_user
                             = link_to 'Edit your pledge', edit_proposal_pledge_path(@proposal, comment), class: [:button, :tiny]
                         - if comment.respond_to?(:systemflag)

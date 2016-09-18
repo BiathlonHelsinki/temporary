@@ -1,0 +1,12 @@
+.proposal_form
+  .row.expanded
+    .small-12.columns
+      %h1 Edit proposal
+  .row.expanded
+    .small-12.columns
+      - if @proposal.pledges.empty?
+        = link_to 'Delete proposal', @proposal, method: :delete, data: {confirm: 'Are you sure you want to delete this proposal?'}, class: [:button, :small, :alert]
+      - else
+        %p You cannot delete a proposal that has been pledged to.
+  .row.expanded
+    .small-12.columns= render partial: 'form'
