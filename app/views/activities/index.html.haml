@@ -10,7 +10,7 @@
           = @user.display_name
   .row.expanded
     .small-12.columns
-      %table.activities
+      %table.activities#activities
         %thead
           %tr
             %th Date
@@ -35,47 +35,12 @@
             %td
               = @activities.where(addition: 1).sum{|x| x.value.to_i} - @activities.where(addition: -1).sum{|x| x.value.to_i}
             %td
-        %tbody
-          - @activities.each do |activity|
-            %tr
-              %td
-                = l activity.created_at, format: :long
-              %td
-                - if activity.onetimer
-
-                  - if activity.onetimer.claimed == true
-                    - if activity.onetimer.user.nil?
-                      = activity.onetimer.inspect
-                    - else
-                      
-                      = link_to activity.onetimer.user.display_name, activity.onetimer.user, target: :_blank
-                  - else
-                    anonymous person
-                - else
-                  = link_to activity.user.display_name, activity.user, target: :_blank
-              %td
-                = activity.description
-              %td
-                = raw activity.linked_name
-              %td.temps
-                - unless activity.value.nil?
-                  - if activity.addition == 1
-                    = fa_icon('plus')
-                  - if activity.addition == 0
-                    - if activity.description =~ /received/ 
-                      = fa_icon('arrows-h')
-                    - if activity.description =~ /pledged/
-                      = fa_icon('smile-o')
-                    - if activity.description =~ /withdrew/
-                      = fa_icon('frown-o')
-                  - if activity.addition == -1
-                    = fa_icon('minus')
-                  = raw ("#{activity.value}#{raw tsign}")
-              %td
-                - if activity.ethtransaction
-                  = link_to activity.ethtransaction.txaddress[0..5] + "...", "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank
-
+        %tbody.page
+          = render @activities
+  .row.expanded
+    .small-12.columns= paginate @activities
 
 = content_for :jquery do
   :plain
-    $('table.activities').stacktable()
+    $('table.activities').stacktable();
+    $("#activities .page").infinitescroll({navSelector: "nav.pagination", nextSelector: "nav.pagination a[rel=next]", itemSelector: "#activities tr.activity",  loading: { msgText: 'Loading the next set of activities....' }});

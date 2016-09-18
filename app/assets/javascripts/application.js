@@ -17,6 +17,7 @@
 //= require moment 
 //= require fullcalendar
 //= require stacktable.min
+//= require jquery.infinitescroll
   
 $(function(){ $(document).foundation();
 

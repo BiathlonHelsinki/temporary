@@ -7,6 +7,7 @@ class Proposal < ApplicationRecord
   validates_presence_of :user_id, :name, :short_description, :timeframe, :goals, :intended_participants
   has_many :comments, as: :item, :dependent => :destroy
   has_many :instances
+  has_many :activities, dependent: :destroy
   after_create :add_to_activity_feed
   after_update :add_to_activity_feed_edited
  
@@ -19,7 +20,7 @@ class Proposal < ApplicationRecord
   end
   
   def add_to_activity_feed_edited
-    Activity.create(user: user, item: self, description: 'edited')
+    Activity.create(user: user, item: self, description: 'edited') if self.changed?
   end
   
   def self.schedulable
