@@ -63,6 +63,7 @@ class AuthenticationsController < ApplicationController
           break if existing.nil?
           user.username = user.username + "-1"
         end
+        user.skip_confirmation! 
         if user.save!
           # render status: 200, json: { email: user.email, authentication_token: user.authentication_token, id: user.id }
           sign_in_and_redirect(:user, user)
