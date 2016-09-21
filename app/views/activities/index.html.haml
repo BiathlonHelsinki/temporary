@@ -3,9 +3,9 @@
     .small-12.columns
       %h1 Activity
   - if params[:user_id]
-    .row
-      .small-8.columns.small-centered
-        %h3
+    .row.expanded
+      .small-8.columns
+        %h4
           Showing all activity for user
           = @user.display_name
   .row.expanded
