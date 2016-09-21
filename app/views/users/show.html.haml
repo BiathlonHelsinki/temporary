@@ -88,7 +88,7 @@
         .title Activity
     .row.expanded
       .small-12.columns
-        %table.activities
+        %table#activities.activities
           %thead
             %tr
               %th Date
@@ -112,44 +112,54 @@
               %td{:colspan => "4"}
               %td= @user.all_activities.select{|x| x.addition == 1}.sum{|x| x.value.to_i} - (@user.all_activities.select{|x| x.addition == -1}.sum{|x| x.value.to_i} + @user.all_activities.select{|x| x.description =~ /received/}.sum{|x| x.value.to_i})
               %td
-          %tbody
-            - @user.all_activities.sort_by(&:created_at).reverse.each do |activity|
-              %tr
-                %td= l activity.created_at, format: :long
-                %td= link_to activity.user.display_name, activity.user, target: :_blank 
-                %td= activity.description
-                %td= raw activity.linked_name
-                %td.temps
-                  - unless activity.value.nil?
-                    - if activity.addition == 1
-                      = fa_icon('plus')
-                    - if activity.addition == 0
-                      - if activity.description =~ /received/ 
-                        = fa_icon('arrows-h')
-                      - if activity.description =~ /pledged/
-                        = fa_icon('smile-o')
-                      - if activity.description =~ /withdrew/
-                        = fa_icon('frown-o')
-                    - if activity.addition == -1
-                      = fa_icon('minus')
-                    = raw ("#{activity.value}#{raw tsign}")
-
-                %td
-                  - if activity.ethtransaction
-                    = link_to activity.ethtransaction.txaddress[0..5] + "...", "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank
-                    
+          %tbody.page
+            = render @user.all_activities.sort_by(&:created_at).reverse
+            / - @user.all_activities.sort_by(&:created_at).reverse.each do |activity|
+            /   %tr
+            /     %td= l activity.created_at, format: :long
+            /     %td= link_to activity.user.display_name, activity.user, target: :_blank
+            /     %td= activity.description
+            /     %td= raw activity.linked_name
+            /     %td.temps
+            /       - unless activity.value.nil?
+            /         - if activity.addition == 1
+            /           = fa_icon('plus')
+            /         - if activity.addition == 0
+            /           - if activity.description =~ /received/
+            /             = fa_icon('arrows-h')
+            /           - if activity.description =~ /pledged/
+            /             = fa_icon('smile-o')
+            /           - if activity.description =~ /withdrew/
+            /             = fa_icon('frown-o')
+            /         - if activity.addition == -1
+            /           = fa_icon('minus')
+            /         = raw ("#{activity.value}#{raw tsign}")
+            /
+            /     %td
+            /       - if activity.ethtransaction
+            /         = link_to activity.ethtransaction.txaddress[0..5] + "...", "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank
+            /
 
     .row.expanded
       .small-5.columns.right.end
+        = fa_icon 'plus'
         = @user.all_activities.select{|x| x.addition == 1}.sum{|x| x.value.to_i} 
         earned
         %br/
+        = fa_icon 'minus'
         = @user.all_activities.select{|x| x.addition == -1}.sum{|x| x.value.to_i}
         spent
         %br/
-        = @user.all_activities.select{|x| x.description =~ /received/}.sum{|x| x.value.to_i}
-        transferred
+        = fa_icon 'plus'
+        = @user.all_activities.select{|x| x.description =~ /received/ && x.user == @user }.sum{|x| x.value.to_i}
+        transferred from other users
         %br/
+        = fa_icon 'minus'
+        = @user.all_activities.select{|x| x.description =~ /received/ && x.item == @user }.sum{|x| x.value.to_i}
+        transferred to other users
+        %hr/
+        
+        = fa_icon 'smile-o'
         = @user.pending_pledges.sum(&:pledge)
         pledged
 

@@ -37,15 +37,17 @@
                 = " on #{l onetimer.created_at.to_date, format: :short}"
 
   - unless @instance.experiment.instances.select{|x| x != @instance}.empty?
-    .row.expanded
-      .small-10.medium-10.large-7.columns
-        %h3 Related experiments: future
-    .row.expanded#expandme.small-up-1.medium-up-2.large-up-4.xxlarge-up-5{:"data-equalizer" => '', :"data-equalize-by-row" => "true"}
-      - @instance.experiment.instances.current.or(@instance.experiment.instances.future).select{|x| x != @instance}.sort_by(&:start_at).each do |exp|
-        = render partial: 'instances/experiment_instance_column', locals: {exp: exp, :"@experiment" =>  exp.experiment}
-    .row.expanded
-      .small-10.medium-10.large-7.columns
-        %h3 Related experiments: past
-    .row.expanded#expandme.small-up-1.medium-up-2.large-up-4.xxlarge-up-5{:"data-equalizer" => '', :"data-equalize-by-row" => "true"}
-      - @instance.experiment.instances.past.select{|x| x != @instance}.sort_by(&:start_at).each do |exp|
-        = render partial: 'instances/experiment_instance_column', locals: {exp: exp, :"@experiment" =>  exp.experiment}        
+    - unless @instance.experiment.instances.current.or(@instance.experiment.instances.future).select{|x| x != @instance}.empty?
+      .row.expanded
+        .small-10.medium-10.large-7.columns
+          %h3 Related experiments: future
+      .row.expanded#expandme.small-up-1.medium-up-2.large-up-4.xxlarge-up-5{:"data-equalizer" => '', :"data-equalize-by-row" => "true"}
+        - @instance.experiment.instances.current.or(@instance.experiment.instances.future).select{|x| x != @instance}.sort_by(&:start_at).each do |exp|
+          = render partial: 'instances/experiment_instance_column', locals: {exp: exp, :"@experiment" =>  exp.experiment}
+    - unless @instance.experiment.instances.past.select{|x| x != @instance}.empty?
+      .row.expanded
+        .small-10.medium-10.large-7.columns
+          %h3 Related experiments: past
+      .row.expanded#expandme.small-up-1.medium-up-2.large-up-4.xxlarge-up-5{:"data-equalizer" => '', :"data-equalize-by-row" => "true"}
+        - @instance.experiment.instances.past.select{|x| x != @instance}.sort_by(&:start_at).each do |exp|
+          = render partial: 'instances/experiment_instance_column', locals: {exp: exp, :"@experiment" =>  exp.experiment}

@@ -20,7 +20,7 @@ class Proposal < ApplicationRecord
   end
   
   def add_to_activity_feed_edited
-    Activity.create(user: user, item: self, description: 'edited') if self.changed?
+    Activity.create(user: user, item: self, description: 'edited') if self.short_description_changed? || self.goals_changed? || self.name_changed? || self.intended_participants_changed?
   end
   
   def self.schedulable

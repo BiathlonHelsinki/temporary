@@ -36,3 +36,7 @@
   %td
     - if activity.ethtransaction
       = link_to activity.ethtransaction.txaddress[0..5] + "...", "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank
+    - if activity.item_type == 'Credit'
+      - if activity.item.attachment?
+        %br/
+        = link_to fa_icon('sticky-note-o'), activity.item.attachment.url, target: :_blank

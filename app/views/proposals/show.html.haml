@@ -109,6 +109,7 @@
                         - if comment.class == Pledge
                           %em= raw t(:has_pledged, user: comment.user.username, amount: comment.pledge.to_s + tsign)
                           %br/
+                          %br/
                           - if comment.user == current_user
                             = link_to 'Edit your pledge', edit_proposal_pledge_path(@proposal, comment), class: [:button, :tiny]
                         - if comment.respond_to?(:systemflag)
@@ -134,7 +135,7 @@
               .row
                 .small-2.columns
                   = image_tag current_user.avatar.url(:box)
-                  %p.small= link_to t(:edit_profile), edit_admin_user_path(current_user), class: [:button, :tiny, :secondary, :round]
+                  %p.small= link_to t(:edit_profile), edit_user_path(current_user), class: [:button, :tiny, :secondary, :round]
                 .small-10.columns
                   %h3= t :what_do_you_think_about_this
                   = semantic_form_for [ @proposal,  @comment = @proposal.comments.build(user: current_user)], html: {multipart: true, :"data-abide" => '' } do |f|

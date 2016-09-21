@@ -39,7 +39,7 @@ class Admin::CreditsController < Admin::BaseController
   end
   
   def edit
-    @credit = Credit.friendly.find(params[:id])
+    @credit = Credit.find(params[:id])
   end
   
   def index
@@ -51,10 +51,10 @@ class Admin::CreditsController < Admin::BaseController
   end
   
   def update
-    @credit = Credit.friendly.find(params[:id])
+    @credit = Credit.find(params[:id])
     if @credit.update_attributes(credit_params)
       flash[:notice] = 'Credit details updated.'
-      redirect_to admin_credits_controller
+      redirect_to admin_credits_path
     else
       flash[:error] = 'Error updating credit'
     end

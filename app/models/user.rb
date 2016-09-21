@@ -86,6 +86,7 @@ class User < ActiveRecord::Base
   
   def all_activities
     [activities, Activity.where(item: self)].flatten.compact.uniq
+    
   end
   
   def available_balance

@@ -16,25 +16,21 @@
 / Right Nav Section
 .top-bar-right
   %ul.vertical.medium-horizontal.menu{"data-responsive-menu" => "drilldown medium-dropdown"}
-    - if user_signed_in?
-      %li.has-submenu
+    %li.has-submenu
+      - if user_signed_in?
         = link_to '#' do
-          Balance:
+          = current_user.display_name + ": "
           = raw (current_user.available_balance.to_s + tsign)
           - unless current_user.available_balance == current_user.latest_balance
             %small= raw "(#{current_user.latest_balance.to_s}#{tsign})"
         %ul.submenu.menu.vertical{"data-submenu" => ""}
-          %li= link_to 'Details', user_activities_path(current_user.slug)
-          %li= link_to 'Redeem guest ticket', '/link_temporary'
-    %li.has-submenu
-      - if user_signed_in?
-        = link_to current_user.display_name + "'s Biathlon", '#'
-        %ul.submenu.menu.vertical{"data-submenu" => ""}
           - if current_user.has_role? :admin
             %li= link_to 'Admin', '/admin'
-          %li= link_to 'Your account', edit_user_path(current_user)
+          %li= link_to 'Details', user_activities_path(current_user.slug)
+          %li= link_to 'Your profile', edit_user_path(current_user)
+          %li= link_to 'Redeem guest ticket', '/link_temporary'
           %li= link_to 'Sign out',  destroy_user_session_path, :method => :delete
-      - else
+      - else 
         = link_to 'Log in/Join', new_session_path(:user)
         %ul.submenu.menu.vertical{"data-submenu" => ""}
           %li= link_to 'Sign in', new_session_path(:user)

@@ -11,7 +11,10 @@
   .row
     .small-10.medium-5.columns= f.input :description
   .row
-    .small-10.medium-5.columns= f.input :attachment, label: 'Upload receipt or other proof'
+    .small-10.medium-5.columns
+      - if f.object.attachment?
+        %small= link_to 'download', f.object.attachment.url
+      = f.input :attachment, label: 'Upload receipt or other proof'
   .row
     .small-10.medium-5.columns= f.input :notes
   .row
