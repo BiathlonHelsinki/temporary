@@ -860,6 +860,9 @@ article.instance_single {
       tr {
         border-bottom: 1px solid $yellow;
         td {
+          span.error {
+            color: red;
+          }
           font-family: $ptsans;
           font-size: 1rem;
           a {

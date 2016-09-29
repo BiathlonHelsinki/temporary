@@ -36,6 +36,12 @@
   %td
     - if activity.ethtransaction
       = link_to activity.ethtransaction.txaddress[0..5] + "...", "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank
+      
+      - if activity.ethtransaction.confirmed != true
+        - if activity.ethtransaction.created_at < 1.hour.ago
+          %span.error= fa_icon 'warning'
+        - else
+          = fa_icon 'clock-o'
     - if activity.item_type == 'Credit'
       - if activity.item.attachment?
         %br/
