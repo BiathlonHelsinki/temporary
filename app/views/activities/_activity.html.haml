@@ -16,7 +16,7 @@
     - else
       = link_to activity.user.display_name, activity.user, target: :_blank
   %td
-    = activity.description
+    = raw activity.description
   %td
     = raw activity.linked_name
   %td.temps

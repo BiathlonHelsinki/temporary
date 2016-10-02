@@ -7,19 +7,24 @@ class PledgesController < ApplicationController
     current_user.update_balance_from_blockchain
     balance = current_user.latest_balance
     @proposal = Proposal.find(params[:proposal_id])
-    
-    if balance < params[:pledge][:pledge].to_i
-      flash[:error] = 'You do not have this many ' + ENV['currency_full_name']
-      redirect_to new_proposal_pledge_path(@proposal)
+    if !current_user.pledges.unconverted.where(item: @proposal).empty?
+      flash[:notice] = 'You already have an unspent pledge towards this proposal. You can edit or delete it but you cannot create a new one.'
+      redirect_to @proposal
     else
-      @pledge = Pledge.new(pledge_params)
-      @pledge.item = @proposal
-      @pledge.user = current_user
-      if @pledge.save
-        render template: 'pledges/after_pledge'
+      if balance < params[:pledge][:pledge].to_i
+        flash[:error] = 'You do not have this many ' + ENV['currency_full_name']
+        redirect_to new_proposal_pledge_path(@proposal)
       else
-        flash[:error] = 'There was an error saving your pledge: ' + @pledge.errors.messages.values.join('; ')
-        redirect_to @proposal
+        @pledge = Pledge.new(pledge_params)
+        @pledge.item = @proposal
+        @pledge.user = current_user
+        @pledge.converted = false
+        if @pledge.save
+          render template: 'pledges/after_pledge'
+        else
+          flash[:error] = 'There was an error saving your pledge: ' + @pledge.errors.messages.values.join('; ')
+          redirect_to @proposal
+        end
       end
     end
   end
@@ -44,10 +49,21 @@ class PledgesController < ApplicationController
   end
   
   def new
-    @next_meeting = Instance.next_meeting
-    @current_rate = Rate.get_current.experiment_cost
+
     @item = Proposal.find(params[:proposal_id])
-    @pledge = @item.pledges.build
+    if @item.stopped?
+      flash[:error] = 'This experiment has finished.'
+      redirect_to proposals_path
+    else
+      @next_meeting = Instance.next_meeting
+      @current_rate = Rate.get_current.experiment_cost
+      if current_user.pledges.unconverted.where(item: @item).empty?
+        @pledge = @item.pledges.build
+      else
+        flash[:notice] = 'You already have an unspent pledge towards this proposal. You can edit or delete it but you cannot create a new one.'
+        @pledge = current_user.pledges.unconverted.find_by(item: @item)
+      end
+    end
   end
   
   
@@ -58,7 +74,7 @@ class PledgesController < ApplicationController
       flash[:notice] = 'Your pledge has been edited!'
       redirect_to @item
     else
-      flash[:error] = 'There was an error saving your edited pledge.'
+      flash[:error] = 'There was an error saving your edited pledge: ' + @pledge.errors.values.join
       render action: 'edit'
     end
   end

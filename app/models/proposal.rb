@@ -24,11 +24,119 @@ class Proposal < ApplicationRecord
   end
   
   def self.schedulable
-    all.to_a.delete_if{|x| x.pledged < Rate.get_current.experiment_cost }
+    all.to_a.delete_if { |x| x.pledged - x.instances.published.sum(&:cost_in_temps) <  Rate.get_current.experiment_cost }
+  end
+  
+  def recurs?
+    recurrence == 2 || recurrence == 3
+  end
+  
+  def needed_array
+    rate = Rate.get_current.experiment_cost
+    array = [rate]
+    if recurs?
+      for f in 1..20  do 
+        inrate = rate
+        f.times do
+          inrate *= 0.9;
+        end
+        if inrate < 20
+          start = 20
+        else
+          start = inrate.round
+        end
+        array.push(start)
+      end
+    end
+    return array
+  end
+  
+  def needed_for(val)
+    rate = Rate.get_current.experiment_cost
+    array = [rate]
+    if recurs?
+      for f in 1..val  do 
+        inrate = rate
+        f.times do
+          inrate *= 0.9;
+        end
+        if inrate < 20
+          start = 20
+        else
+          start = inrate.round
+        end
+        array.push(start)
+      end
+      return array[val]
+    else
+      return rate
+    end
+  end
+  
+  def needed_for_next
+    rate = Rate.get_current.experiment_cost
+    if recurrence != 1
+      if instances.published.empty?
+        Rate.get_current.experiment_cost
+      else
+        r = instances.published.order(:start_at).last.cost_in_temps * 0.9
+        if r.round < 20
+          20
+        else
+          r.round
+        end
+      end
+    else
+      Rate.get_current.experiment_cost
+    end
   end
   
   def has_enough?
-    pledged >= Rate.get_current.experiment_cost
+
+    remaining_pledges >= needed_for_next
+  end
+  
+  def number_that_can_be_scheduled
+    rate = Rate.get_current.experiment_cost
+    tally = 0
+    if recurs?
+      needed_array.each_with_index do |val, index|
+        tally += val
+        
+        if remaining_pledges >= tally
+          next
+        else
+          return index 
+        end
+      end
+    else
+      return (remaining_pledges >= rate) ? 1 : 0
+    end
+  end
+  
+  def total_needed_with_recurrence
+    rate = Rate.get_current.experiment_cost
+    if recurrence == 2 || recurrence == 3
+      start = rate
+      if intended_sessions.blank?
+        return 0
+      else
+        for f in 1..(intended_sessions-1)  do 
+          inrate = rate
+          f.times do
+            inrate *= 0.9;
+          end
+          if inrate < 20
+            start += 20
+          else
+            start += inrate.round
+          end
+        end
+        return start
+      end
+    else
+      return rate
+    end
   end
   
   def maximum_pledgeable(user)
@@ -55,12 +163,21 @@ class Proposal < ApplicationRecord
     pledges.sum(&:pledge)
   end
   
+  def remaining_pledges
+    pledged - spent
+    #instances.published.sum(&:cost_in_temps)
+  end
+  
   def discussion
     [pledges, comments].flatten.compact
   end
   
   def scheduled?
     !instances.empty?
+  end
+  
+  def spent
+    activities.where(addition: -1).map(&:ethtransaction).sum(&:value) rescue 0
   end
   
   def next_instance

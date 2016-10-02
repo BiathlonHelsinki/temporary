@@ -332,6 +332,34 @@ article.instance_single {
   }
 }
 
+// modal styling
+.reveal {
+  a {
+    color: $blue;
+  }
+  .title {
+    font-family: $inconsolata;
+    font-size: 1.2rem;
+  }
+  .proposal_stats {
+    margin: 1rem 0;
+    color: #444;
+    font-size: 0.9rem;
+  }
+  .pledge_info {
+    margin: 1rem 0;
+  }
+  .schedule_info {
+    margin: 1rem 0;
+    font-family: $ptsans;
+  }
+  a.button {
+    color: black;
+  }
+  
+}
+
+
 /* Proposals */
 .proposals_index {
   h1 {
@@ -367,6 +395,7 @@ article.instance_single {
           font-family: $ptsans;
           font-size: 1rem;
           vertical-align: top;
+
           .occluded {
             display: none;
             font-size: 0.875rem;
@@ -398,8 +427,58 @@ article.instance_single {
             font-size: 0.875rem;
           }
           .comment_status {
+            font-size: 0.775rem;
+            margin-top: 1.5rem;
+            border-top: 1px dotted $yellow;
+            float: left;
+            padding: 0.3rem 0;
+          }
+          .avatar {
+            float: left;
+            margin-right: 15px;
+          }
+          .pledge_buttons {
+            margin-top: 0.4rem;
+          }
+          .recurrence {
+            font-weight: normal;
+            font-size: 0.8em;
+            color: #444;
+            font-family: $ptsans;
+            margin: 0.4rem 0;
+            clear: both;
+          }
+
+          .status {
+            font-family: $heebo;
+            text-transform: uppercase;
+            color: #666;
+            float: left;
+            clear: right;
             font-size: 0.875rem;
-            margin-top: 1rem;
+            border: 1px solid $yellow;
+            padding: 0.4rem;
+            margin-bottom: 0.6rem;
+            &.completed {
+              background-color: $yellow;
+              &:hover {
+                background-color: #999;
+                color: white;
+              }
+            }
+            &:hover {
+             background-color: $yellow;
+             color: black;
+             cursor: pointer; 
+            }
+          }
+          .status_info {
+            clear: left;
+            font-weight: normal;
+            font-size: 0.9em;
+            color: #333;
+            font-family: $ptsans;
+            margin: 0.4rem 0;
           }
           &.name {
             
@@ -409,6 +488,7 @@ article.instance_single {
               vertical-align: top;
               text-decoration: underline;
             }
+
             i {
               font-size: 2rem;
               padding-top: 0.4rem;
@@ -417,6 +497,18 @@ article.instance_single {
           }
         }
       }
+    }
+  }
+}
+
+.new_pledge {
+  padding: 2rem 0;
+  h3 {
+    font-family: $heebo;
+    text-transform: uppercase;
+    font-weight: 900;
+    span.title {
+      font-family: $inconsolata;
     }
   }
 }
@@ -435,6 +527,12 @@ article.instance_single {
         padding: 0.688rem 0;
         margin: 0.9rem 0;
         border-bottom: 8px solid black;
+      }
+    }
+    #intended {
+      display: none;
+      &.show {
+        display: block;
       }
     }
     a.add_nested_fields {
@@ -691,8 +789,17 @@ article.instance_single {
       padding: 0;
       text-align: center;
       .yellow {
+        margin-bottom: 1rem;
         padding: 2rem 0;
         background-color: $yellow;
+        .small {
+          text-align: center;
+          clear: both;
+          font-size: 0.9rem;
+          a {
+            color: black;
+          }
+        }
       }
       a {
         text-decoration: none;
@@ -767,6 +874,12 @@ article.instance_single {
       font-style: normal;
       font-size: 1rem;
       margin-bottom: 1rem;
+      
+      .extra_info {
+        margin-bottom: 2rem;
+        font-family: $inconsolata;
+        font-size: 0.875rem;
+      }
     }
   }
   
@@ -961,6 +1074,9 @@ article.instance_single {
       color: #fded57;
       margin-left: -26px;
       margin-top: -44px;
+      small {
+        font-size: 1.1rem;
+      }
     }
   }
   p {

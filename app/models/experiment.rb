@@ -66,7 +66,7 @@ class Experiment < ApplicationRecord
     if instances.empty?
       
       instances << Instance.new(cost_bb: cost_bb, sequence: sequence, cost_euros: cost_euros, start_at: start_at, end_at: end_at,
-                                   place_id: place_id, published: published, translations_attributes: [{locale: 'en', name: name(:en), description: description(:en)}])
+                                   place_id: place_id, published: false, translations_attributes: [{locale: 'en', name: name(:en), description: description(:en)}])
 
     end                          
   end

@@ -5,6 +5,21 @@
   .row
     .small-10.medium-6.columns= f.input :short_description, input_html: {required: ''}
   .row
+    .small-10.medium-6.columns= f.input :recurrence, as: :select, collection: [['One time only', 1], ['Multiple times over fixed period',2], ['Recurring regularly, indefinitely (eg. once per month, every other month, etc.)', 3]], label: 'How often will this occur?', include_blank: false
+  .row#intended{class: f.object.new_record? ? 'once' : (f.object.intended_sessions.to_i > 1 ? 'show' : 'once')}
+    .small-10.medium-6.columns= f.input :intended_sessions, label: 'How many different meetings do you estimate?', hint: 'This can be changed later, but it\'s good to give people some idea of a committment.', input_html: {value: (f.object.new_record? ? "1" : f.object.intended_sessions.to_i ) }
+  .row
+    .small-10.medium-6.columns
+      %label.label
+        Total
+        = raw tsign
+        needed: 
+      #needed
+        - if f.object.new_record?
+          = @current_rate
+        - else
+          = f.object.total_needed_with_recurrence.to_s
+  .row
     .small-10.medium-6.columns= f.input :timeframe, label: 'Proposed times and duration', input_html: {required: ''}
   .row
     .small-10.medium-6.columns= f.input :goals, label: 'What are the goals of this experiment?', input_html: {required: ''}
@@ -14,6 +29,9 @@
     .small-10.medium-6.columns
       %table#images
         = f.fields_for :images, wrapper: false do |image_form|
+          - if image_form.object.image?
+            %tr
+              %td{colspan: 2}= image_tag image_form.object.image.url(:small)
           %tr.fields
             %td= image_form.input :image
             %td= image_form.link_to_remove 'Remove this image', class: [:button, :tiny]
@@ -23,3 +41,46 @@
   .row
     .small-10.medium-6.columns= f.submit 'Propose!', class: [:button, :large]              
   
+= content_for :jquery do
+  :plain
+    $('#proposal_recurrence').change(function() {
+      if ($('#proposal_recurrence').val() > 1) {
+        $('#intended').fadeIn();
+
+      }
+      else {
+        $('#intended').fadeOut();
+        $('#needed').html('#{@current_rate}');
+      }
+    });
+    function calcNeeded(rate, number) {
+      var total = 0;
+      var show = '';
+      for (i = 0; i < number; i++ ) {
+        if (i == 0) {
+          total += rate;
+          show = rate;
+        }
+        else { 
+          var multiplier = rate;
+          for (f = 1; f <= i; f++) {
+            multiplier *= 0.9;
+          }
+          if (multiplier < 20) {
+            multiplier = 20;
+          }
+          total += Math.round(parseFloat(multiplier));
+          show += ' + ' + Math.round(parseFloat(multiplier));
+        }
+      }
+      return [total, show];
+    }
+    $('#proposal_intended_sessions').bind("propertychange change click keyup input paste", function(event){
+      var num = parseInt($('#proposal_intended_sessions').val());
+
+      $('#needed').html(calcNeeded(#{@current_rate}, num)[0]);
+      $('#needed').append('<br />');
+      $('#needed').append('<em>(' + calcNeeded(#{@current_rate}, num)[1] + ')</em>');
+      $('#needed').append('<br /><small>Multiple day experiments get a 10% discount from the cost of each previous meeting, until it gets down to the minimum, currently set 20#{raw tsign}.</small>');
+      $('#needed').append('<br /><small>You do not need the full amount to have the first meeting scheduled; it\'s ok to schedule the first after #{@current_rate}#{raw tsign} is pledged, and pledges for additional meetings can come later.</small>');
+    });

@@ -10,6 +10,9 @@ class Pledge < ApplicationRecord
   acts_as_paranoid
   validate :one_per_user
   
+  scope :unconverted, -> () { where('converted = 0 OR converted is null')}
+  scope :converted, -> () { where(converted: true)}
+  
   def check_balance
     user.update_balance_from_blockchain
     if pledge < 1 || pledge > user.latest_balance
@@ -18,8 +21,8 @@ class Pledge < ApplicationRecord
   end
   
   def one_per_user
-    unless item.pledges.where(user: user).to_a.delete_if{|x| x == self}.empty?
-      errors.add(:user, 'You have already pledged to this. Please edit your pledge.')
+    unless item.pledges.where(user: user, converted: false).to_a.delete_if{|x| x == self}.empty?
+      errors.add(:user, 'You have already pledged to this. Please edit your pledge.') 
     end
   end
   
@@ -59,14 +62,14 @@ class Pledge < ApplicationRecord
   def update_activity_feed
     if created_at == updated_at
       # assume it's new
-      Activity.create(user: user, item: self, description: "pledged to", extra_info: pledge, addition: 0)
+      Activity.create(user: user, item: self, description: "pledged #{pledge}#{ENV['currency_symbol']} to", extra_info: pledge, addition: 0)
     else
       Activity.create(user: user, item: self, description: "edited their pledge to", extra_info: pledge, addition: 0)
     end
   end
   
   def withdraw_activity
-    item.comments << Comment.create(user: user, content: "Pledge of #{pledge.to_s}#{ENV['currency_symbol']} withdrawn.", addition: 0, systemflag: true)
+    item.comments << Comment.create(user: user, content: "Pledge of #{pledge.to_s}#{ENV['currency_symbol']} withdrawn.",  systemflag: true)
     Activity.create(user: user, item: item, description: "withdrew a pledge", extra_info: "#{pledge.to_s}", addition: 0)
   end
   

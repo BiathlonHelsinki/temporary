@@ -1,20 +1,37 @@
 = semantic_form_for [@item, @pledge] do |f|
-  .row
+  .row.expanded
     .small-10.medium-6.columns
       %p 
         You have
         = raw("#{current_user.available_balance + @pledge.pledge.to_i}#{tsign}")
         available.
       - if @item.has_enough?
-        - unless @next_meeting.nil?
-          %p
-            This proposal already has enough pledges and will be reviewed for scheduling at the next meeting,
-            = link_to(@next_meeting.name, experiment_instance_path(@next_meeting.experiment, @next_meeting), target: :_blank) + "."
-            You may still pledge additional Temps towards it, however.
+        - if @item.recurs?
+          - if @item.total_needed_with_recurrence > @item.pledged
+            %p= raw "This experiment is proposed to meet multiple times. At Temporary, multi-day experiments cost per day, with a 10% discount applied to each successive meeting (until it gets down to 20#{tsign}, the minimum cost of any experiment)."
+            
+            - if @item.intended_sessions == 0
+              %p This proposal does not specify how many times it will meet, so it will continue indefinitely.
+              
+            - else
+              %p
+                This proposal currently plans to meet  
+                = @item.intended_sessions.to_s
+                times. There are currently enough Temps pledged 
+                = raw "(#{@item.pledged}#{tsign})"
+                to schedule
+                = pluralize(@item.number_that_can_be_scheduled.to_s, 'meeting') + "."
+                
+        - else
+          - unless @next_meeting.nil?
+            %p
+              This proposal already has enough pledges and will be reviewed for scheduling at the next meeting,
+              = link_to(@next_meeting.name, experiment_instance_path(@next_meeting.experiment, @next_meeting), target: :_blank) + "."
+              You may still pledge additional Temps towards it, however.
       - else
         %p
-          This proposal still needs 
-          = raw "#{@current_rate - @item.pledged}#{tsign}"
+          This proposal needs 
+          = raw "#{@item.needed_for_next - @item.remaining_pledges}#{tsign}"
           to be considered for scheduling.
           
         %p

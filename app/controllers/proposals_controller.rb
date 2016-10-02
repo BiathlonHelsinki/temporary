@@ -28,6 +28,8 @@ class ProposalsController < ApplicationController
       
   def edit
     @proposal = Proposal.find(params[:id])
+    current_user.update_balance_from_blockchain if @api_status
+    @current_rate = Rate.get_current.experiment_cost
     if @proposal.user != current_user && !current_user.has_role?(:admin)
       flash[:error] = "You cannot edit someone else's proposal."
       redirect_to @proposal
@@ -57,7 +59,7 @@ class ProposalsController < ApplicationController
   end
   
   def update
-    @proposal = Proposal.friendly.find(params[:id])
+    @proposal = Proposal.find(params[:id])
     if @proposal.user != current_user && !current_user.has_role?(:admin)
       flash[:error] = "You cannot edit someone else's proposal."
       redirect_to @proposal
@@ -74,7 +76,7 @@ class ProposalsController < ApplicationController
   protected
   
   def proposal_params
-    params.require(:proposal).permit(:user_id, :name, :short_description, :timeframe, :goals,:intended_participants,
+    params.require(:proposal).permit(:user_id, :name, :recurrence, :intended_sessions, :stopped, :short_description, :timeframe, :goals,:intended_participants,
                                       images_attributes: [:image, :_destroy, :proposal_id, :remove_image])
   end
   

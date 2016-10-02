@@ -172,9 +172,17 @@ class User < ActiveRecord::Base
    def has_pledged?(proposal)
      pledges.where(item: proposal).any?
    end
+   
+   def active_pledge?(proposal)
+     pledges.unconverted.where(item: proposal).any?
+   end
+   
+   def spent_pledges
+     pledges.converted
+   end
      
    def pending_pledges
-     pledges.to_a.delete_if{|x| x.converted == 1}
+     pledges.unconverted
    end
    
   def apply_omniauth(omniauth)

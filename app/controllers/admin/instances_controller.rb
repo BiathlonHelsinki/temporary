@@ -35,6 +35,7 @@ class Admin::InstancesController < Admin::BaseController
   
   def new
     @experiment = Experiment.friendly.find(params[:experiment_id])
+    @proposal = @experiment.instances.sort_by(&:sequence).last.proposal
     @instance = Instance.new(experiment: @experiment, cost_bb: @experiment.cost_bb, 
                               sequence: @experiment.instances.blank? ? @experiment.sequence + ".1" :
                               @experiment.instances.sort_by(&:sequence).last.sequence.rpartition(/\./).first + "." + (@experiment.instances.sort_by(&:sequence).last.sequence.rpartition(/\./).last.to_i + 1).to_s,
@@ -44,8 +45,9 @@ class Admin::InstancesController < Admin::BaseController
                               place_id: @experiment.place_id, published: @experiment.published, 
                               translations_attributes: [{locale: 'en', name: @experiment.name(:en), 
                                               description: @experiment.description(:en)}])
-                                         
-
+    if @proposal.remaining_pledges < @instance.cost_in_temps
+      flash[:warning] = 'Warning: There are not enough Temps pledged to this proposal to schedule another instance. Doing so anyway requires taking from a different proposal so only do this if you have a damn good reason.'
+    end
   end
   
   def destroy

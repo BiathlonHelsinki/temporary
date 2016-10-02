@@ -5,8 +5,15 @@
       .proposed_by= raw "Proposed by #{link_to @proposal.user.display_name, @proposal.user, target: :_blank}"
     .small-10.medium-4.columns.pledge_info
       .box
-        - if @proposal.scheduled 
-          .yellow Scheduled!
+        - if @proposal.scheduled
+          .yellow 
+            - if @proposal.stopped? || (@proposal.scheduled? && !@proposal.recurs? && @proposal.instances.future.empty?)
+              Completed!
+            - else
+              Scheduled!
+            - if @proposal.recurs?
+              - if @proposal.intended_sessions == 0 || @proposal.pledged < @proposal.total_needed_with_recurrence
+                .small= link_to 'but still taking pledges....', new_proposal_pledge_path(@proposal)
         - else
           - if @proposal.has_enough?
             .yellow  Pending scheduling!
@@ -26,22 +33,27 @@
           %p
             = raw "#{@proposal.pledged.to_s}#{tsign} "
             pledged by:
-            %small= @proposal.pledges.map(&:user).map(&:username).join(', ')
+            %small= raw @proposal.pledges.map(&:user).map{|x| link_to(x.display_name, x)}.uniq.join(', ')
       .pledge_data
         %p
-          - if @proposal.has_enough?
-            - if !@proposal.scheduled?
-              This proposal will be reviewed at Temporary's next organisational meeting:
-              - if @next_meeting.nil?
-                %em none currently scheduled
-              - else
-                = link_to @next_meeting.name, experiment_instance_path(@next_meeting.experiment, @next_meeting), target: :_blank
-            
+          - if @proposal.stopped? ||  (@proposal.scheduled? && !@proposal.recurs?)
+            - if @proposal.instances.future.empty?
+              = pluralize(@proposal.instances.first.experiment.instances.size, 'meeting')
+              took place!
           - else
-            %small 
-              Needed to be considered for scheduling:
-              = raw(@current_rate.to_s + tsign)
-            total, from at least two users
+            - if @proposal.has_enough?
+              - if !@proposal.scheduled?
+                This proposal will be reviewed at Temporary's next organisational meeting:
+                - if @next_meeting.nil?
+                  %em none currently scheduled
+                - else
+                  = link_to @next_meeting.name, experiment_instance_path(@next_meeting.experiment, @next_meeting), target: :_blank
+            
+              - else
+                %small 
+                  Needed to be considered for scheduling:
+                  = raw(@current_rate.to_s + tsign)
+                total, from at least two users
         - if @proposal.has_enough?
           %p You may still pledge over the requirements if you really want to show your support!
   .row.expanded
@@ -109,8 +121,12 @@
                         - if comment.class == Pledge
                           %em= raw t(:has_pledged, user: comment.user.username, amount: comment.pledge.to_s + tsign)
                           %br/
+
                           %br/
-                          - if comment.user == current_user
+                          - unless comment.extra_info.blank?
+                            .extra_info= raw comment.extra_info
+
+                          - if comment.user == current_user && comment.converted != 1
                             = link_to 'Edit your pledge', edit_proposal_pledge_path(@proposal, comment), class: [:button, :tiny]
                         - if comment.respond_to?(:systemflag)
                           - if comment.systemflag == true

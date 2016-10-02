@@ -21,7 +21,7 @@ class Instance < ApplicationRecord
   }
   scope :published, -> () { where(published: true) }
   scope :meetings, -> () {where(is_meeting: true)}
-  scope :future, -> () {where(["start_at >=  ?", Time.now.utc.strftime('%Y/%m/%d %H:%M')]) }
+  scope :future, -> () {where(["end_at >=  ?", Time.now.utc.strftime('%Y/%m/%d %H:%M')]) }
   scope :past, -> () {where(["end_at <  ?", Time.now.utc.strftime('%Y/%m/%d %H:%M')]) }
   scope :current, -> () { where(["start_at <=  ? and end_at >= ?", Time.now.utc.strftime('%Y/%m/%d %H:%M'), Time.now.utc.strftime('%Y/%m/%d %H:%M') ]) }
   scope :not_open_day,  -> ()  { where("event_id != 1")}
@@ -35,10 +35,10 @@ class Instance < ApplicationRecord
       :end => end_at.nil? ? start_at.strftime('%Y-%m-%d %H:%M:00') : end_at.strftime('%Y-%m-%d %H:%M:00'),
       :allDay => false, 
       :recurring => false,
-      :url => Rails.application.routes.url_helpers.experiment_instance_path(experiment.slug, slug),
-      #:color => "red"
-    }
+      :temps => self.cost_bb,
+      :url => Rails.application.routes.url_helpers.instance_path(slug)
 
+    }
   end
   
   def children
@@ -52,6 +52,36 @@ class Instance < ApplicationRecord
   
   def in_future?
     start_at >= Time.now
+  end
+  
+  def session_number
+    if new_record?
+      experiment.instances.order(:start_at).size + 1
+    else 
+      experiment.instances.order(:start_at).find_index(self) + 1
+    end
+  end
+  
+  def cost_in_temps
+    rate = Rate.get_current.experiment_cost
+    # if proposal.recurrence == 2 || proposal.recurrence == 3
+      start = rate
+    
+      for f in 1..(session_number-1)  do 
+        inrate = rate
+        f.times do
+          inrate *= 0.9;
+        end
+        if inrate < 20
+          start = 20
+        else
+          start = inrate.round
+        end
+      end
+      return start
+    # else
+    #   return rate
+    # end
   end
   
   private
