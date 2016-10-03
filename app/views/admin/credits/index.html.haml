@@ -9,6 +9,7 @@
         %th Date
         %th Person
         %th Description
+        %th has receipt?
         %th Amount
         %th
       %tbody
@@ -17,6 +18,11 @@
             %td= l (credit.created_at)
             %td= credit.user.name
             %td= credit.description
+            %td
+              - if credit.attachment?
+                %strong YES
+              - else
+                no
             %td= credit.value
             %td
               - if can? :edit, credit

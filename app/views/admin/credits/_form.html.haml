@@ -13,7 +13,10 @@
   .row
     .small-10.medium-5.columns
       - if f.object.attachment?
-        %small= link_to 'download', f.object.attachment.url
+        - if f.object.attachment.url =~ /(gif|jpg|jpeg|png)/i
+          = image_tag f.object.attachment.url
+        - else
+          %small= link_to 'download', f.object.attachment.url, class: [:button, :small, :secondary]
       = f.input :attachment, label: 'Upload receipt or other proof'
   .row
     .small-10.medium-5.columns= f.input :notes
