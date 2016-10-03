@@ -111,6 +111,14 @@ form {
   }
 }
 
+table {
+  td {
+    a {
+      color: green;
+    }
+  }
+}
+
 table.experiments {
   tr {
     border-top: 3px solid black;

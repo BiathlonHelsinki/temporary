@@ -1,0 +1,39 @@
+.row.expanded
+  .small-12.columns
+    - if @failed_transactions.empty?
+      No failed transactions.
+    - else
+      %h3 Failed blockchain transactions
+      %p The following transactions failed to write to the blockchain. Please attempt to resubmit them if they are over 30 minutes old.
+      
+      %table
+        %thead
+          %tr
+            %th Type
+            %th Descrpition
+            %th Value
+            %th hash
+            %th When?
+            %th
+        %tbody
+          - @failed_transactions.each do |ft|
+            %tr
+              %td
+                = ft.transaction_type_id == 1 ? 'Mint' : (ft.transaction_type_id == 2 ? 'Spend' : (ft.transaction_type_id == 3 ? 'Transfer' : '--error--'))
+              %td
+                - if ft.activity
+                  = raw ft.activity.sentence
+                - else
+                  %strong Orphaned!
+              %td
+                - if ft.transaction_type_id == 1
+                  = "+" + ft.value.to_s
+                - elsif ft.transaction_type_id == 2
+                  = "-" + ft.value.to_s
+                - else
+                  = ft.value
+              %td
+                = link_to ft.txaddress[0..5] + "...", "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/tx/#{ft.txaddress}", target: :_blank
+              %td
+                = time_ago_in_words(ft.created_at) + ' ago'
+              %td

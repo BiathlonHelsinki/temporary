@@ -27,7 +27,7 @@ class ExperimentsController < ApplicationController
     
     # @experiments = Instance.future.published.order(sequence: :asc).group_by(&:experiment)
     @experiments = Instance.current.or(Instance.future).order(:start_at).uniq
-    @past = Instance.past.published.order(sequence: :asc).uniq
+    @past = Instance.past.published.order(start_at: :desc).uniq
   end
   
   def radial

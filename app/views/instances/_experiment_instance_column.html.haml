@@ -20,9 +20,11 @@
           - if exp == n
             .next Happening now!
           - else
-            .next Next at:
+            - if exp.end_at < Time.now  
+              .next Happened on:
+            - else 
+              .next Next at:
         - else
-          / - n =  exp.experiment.instances.future.first
           .next Next at:
         .ongoing_month= l exp.start_at, format: '%B'
         .days
@@ -40,7 +42,6 @@
               .day= exp.start_at.day
               .times= exp.start_at.strftime("%H:%M") + " - " + exp.end_at.strftime("%H:%M")
             - else
-
               .range_day= exp.start_at.day
               .divider= fa_icon('angle-down')
               .range_day= exp.end_at.day
