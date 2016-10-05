@@ -54,6 +54,7 @@
             - @failed_transactions.each do |ft|
               %tr
                 %td
+                  = ft.id.to_s
                   = ft.transaction_type_id == 1 ? 'Mint' : (ft.transaction_type_id == 2 ? 'Spend' : (ft.transaction_type_id == 3 ? 'Transfer' : '--error--'))
                 %td
                   - if ft.activity
@@ -70,6 +71,7 @@
                 %td
                   = link_to ft.txaddress[0..5] + "...", "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/tx/#{ft.txaddress}", target: :_blank
                 %td
+
                   = time_ago_in_words(ft.timeof) + ' ago'
                 %td
                   - if can? :delete, ft

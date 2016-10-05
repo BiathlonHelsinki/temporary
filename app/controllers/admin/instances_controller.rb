@@ -63,6 +63,7 @@ class Admin::InstancesController < Admin::BaseController
 
   end                            
 
+ 
 
   def update
     api = BiathlonApi.new

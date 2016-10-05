@@ -34,7 +34,7 @@ class Admin::BaseController < ApplicationController
   end
   
   def home
-    @failed_transactions = Ethtransaction.unconfirmed.where(["timeof < ?", 1.hour.ago]).order(:created_at)
+    @failed_transactions = Ethtransaction.unconfirmed.order(timeof: :desc)
     @missing_transactions = Activity.where(addition: 1).or(Activity.where(addition: -1)).where(ethtransaction_id: nil)
   end
 
