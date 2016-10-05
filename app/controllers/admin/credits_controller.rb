@@ -1,6 +1,7 @@
 class Admin::CreditsController < Admin::BaseController
   skip_load_and_authorize_resource
   load_and_authorize_resource
+  has_scope :by_user
   
   def create
     api = BiathlonApi.new
@@ -43,7 +44,7 @@ class Admin::CreditsController < Admin::BaseController
   end
   
   def index
-    @credits = Credit.all.order(created_at: :desc)
+    @credits = apply_scopes(Credit).all.order(created_at: :desc)
   end
   
   def new

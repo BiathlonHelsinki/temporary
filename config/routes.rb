@@ -70,7 +70,7 @@ Rails.application.routes.draw do
   
 
   match '/link_temporary' => 'onetimers#link', via: :get
-  
+  match '/admin/:id/resubmit' => 'admin/base#resubmit', via: :post
   match '/users/auth/:provider/callback' => 'authentications#create', :via => :get
   delete '/users/signout' => 'devise/sessions#destroy', :as => :signout
   root to: 'home#index'

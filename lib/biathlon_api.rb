@@ -6,7 +6,11 @@ class BiathlonApi
   def api_get(url = '/')
     response = HTTParty.get(API_URL + url)
     # TODO more error checking (500 error, etc)
-    JSON.parse(response.body)['data']
+    if JSON.parse(response.body)['error']
+      JSON.parse(response.body)
+    else
+      JSON.parse(response.body)['data']
+    end
   end
   
   def api_post(url = '/', options)

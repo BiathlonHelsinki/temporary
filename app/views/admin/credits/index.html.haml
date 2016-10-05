@@ -1,32 +1,60 @@
-.row
-  .small-12.columns
-    = link_to 'Create new credit', new_admin_credit_path, class: [:button]
+.credits_interface
+  .row.expanded
+    .small-12.columns
+      = link_to 'Create new credit', new_admin_credit_path, class: [:button]
 
-.row
-  .small-10.columns
-    %table
-      %thead
-        %th Date
-        %th Person
-        %th Description
-        %th has receipt?
-        %th Amount
-        %th
-      %tbody
-        - @credits.each do |credit|
+  .filter_box.row.expanded
+    .medium-6.columns
+      .filter_title Filter by user:
+      %select#by_user
+        %option{:value => ""} &nbsp;
+        - Credit.all.map(&:user).uniq.sort_by{|x| x.display_name.downcase}.each do |user|
+          %option{:value => user.id, :selected => (params[:by_user] == user.id.to_s ? :selected : false)}= user.display_name
+        
+  .row.expanded
+    .small-10.columns
+      %table
+        %thead
           %tr
-            %td= l (credit.created_at)
-            %td= credit.user.name
-            %td= credit.description
-            %td
-              - if credit.attachment?
-                %strong YES
-              - else
-                no
-            %td= credit.value
-            %td
-              - if can? :edit, credit
-                = link_to 'Edit', edit_admin_credit_path(credit), class: [:button, :small]
-              - if can? :destroy, credit  
-                = link_to 'Delete', [:admin, credit], method: :delete, class: [:button, :alert, :small], data: {confirm: 'Are you sure?'}
+            %th Date
+            %th Person
+            %th Description
+            %th has receipt?
+            %th Amount
+          %th
+        %tfoot
+          %tr
+            %td{colspan: 3} &nbsp;
+            %td.right
+              Total:
+            %td= @credits.sum(:value)
+            %td &nbsp;
           
+      
+        %tbody
+          - @credits.each do |credit|
+            %tr
+              %td= l (credit.created_at)
+              %td= credit.user.name
+              %td= credit.description
+              %td
+                - if credit.attachment?
+                  %strong YES
+                - else
+                  no
+              %td= credit.value
+              %td
+                - if can? :edit, credit
+                  = link_to 'Edit', edit_admin_credit_path(credit), class: [:button, :small]
+                - if can? :destroy, credit  
+                  = link_to 'Delete', [:admin, credit], method: :delete, class: [:button, :alert, :small], data: {confirm: 'Are you sure?'}
+  = content_for :jquery do
+    :plain
+      $('.filter_box select').change(function() {
+        var parts = "#{request.url}".split(/\?/, 2);
+        if (parts[1]) {
+          window.location.href=parts[0] + "?" + parts[1].replace(new RegExp("\\&*" + $(this).attr('id') + "\=\\d+", "g"), '') + "&" + $(this).attr('id') + "=" + $(this).val();
+        } else {
+          window.location.href=parts[0] + "?" + $(this).attr('id') + "=" + $(this).val();
+        }
+      });              

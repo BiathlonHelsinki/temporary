@@ -211,6 +211,9 @@ GEM
       haml (>= 4.0.6, < 5.0)
       html2haml (>= 1.0.1)
       railties (>= 4.0.1)
+    has_scope (0.7.0)
+      actionpack (>= 4.1, < 5.1)
+      activesupport (>= 4.1, < 5.1)
     hashie (3.4.6)
     html2haml (2.0.0)
       erubis (~> 2.7.0)
@@ -251,6 +254,8 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.6.4)
       mime-types (>= 1.16, < 4)
+    meta-tags (2.3.1)
+      actionpack (>= 3.2.0, <= 5.1.0)
     method_source (0.8.2)
     migration_data (0.2.1)
     mime-types (3.1)
@@ -425,6 +430,7 @@ DEPENDENCIES
   globalize!
   haml
   haml-rails (~> 0.9)
+  has_scope
   httmultiparty
   httparty
   jbuilder (~> 2.5)
@@ -432,6 +438,7 @@ DEPENDENCIES
   kaminari
   letter_opener
   listen (~> 3.0.5)
+  meta-tags
   migration_data
   mimemagic
   mini_magick

@@ -9,6 +9,9 @@ class Credit < ApplicationRecord
   before_save :update_attachment_metadata
   validates_numericality_of :value, :greater_than_or_equal_to => 0
   validates_presence_of :user_id, :awarder_id, :description, :value, :rate_id
+  
+  scope :by_user, ->(user_id) { where(user_id: user_id) }
+  
   # before_save :award_points
   #
   # def award_points
