@@ -51,7 +51,7 @@ class Instance < ApplicationRecord
   
   
   def in_future?
-    start_at >= Time.now
+    start_at >= Time.current
   end
   
   def session_number

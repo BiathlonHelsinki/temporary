@@ -334,12 +334,21 @@ article.instance_single {
 
 // modal styling
 .reveal {
+  border: 6px solid $yellow;
   a {
     color: $blue;
+  }
+  ul.table_right {
+    float: right;
+    list-style-type: none;
   }
   .title {
     font-family: $inconsolata;
     font-size: 1.2rem;
+    a {
+      font-weight: bold;
+      color: black;
+    }
   }
   .proposal_stats {
     margin: 1rem 0;
@@ -395,7 +404,34 @@ article.instance_single {
           font-family: $ptsans;
           font-size: 1rem;
           vertical-align: top;
-
+          &.pledge_info {
+            a i {
+              font-size: 1.1rem;
+              color: black;
+              padding-top: 0.4rem;
+            }
+            .metadata {
+              font-size: 0.8rem;
+            }
+            .my_pledge {
+              clear: both;
+              font-size: 0.7rem;
+            }
+          }
+          ul {
+            margin: 0; padding: 0;
+            list-style-type: none;
+            li {
+              border-bottom: 1px solid $yellow;
+              padding: 0.2rem 0;
+              &:nth-last-child(1) {
+                border-bottom: none;
+              }
+            }
+          }
+          .hidden_list {
+            display: none;
+          }
           .occluded {
             display: none;
             font-size: 0.875rem;
@@ -422,10 +458,7 @@ article.instance_single {
             float: right;
             clear: both;
           }
-          .my_pledge {
-            clear: both;
-            font-size: 0.875rem;
-          }
+
           .comment_status {
             font-size: 0.775rem;
             margin-top: 1.5rem;
@@ -434,43 +467,38 @@ article.instance_single {
             padding: 0.3rem 0;
           }
           .avatar {
+            max-width: 50px;
             float: left;
             margin-right: 15px;
           }
           .pledge_buttons {
             margin-top: 0.4rem;
           }
-          .recurrence {
+          .recurrence, .recurrence p {
             font-weight: normal;
-            font-size: 0.8em;
+            font-size: 0.8rem;
             color: #444;
             font-family: $ptsans;
             margin: 0.4rem 0;
             clear: both;
           }
+          .attended {
+            font-size: 0.8em;
+          }
 
           .status {
             font-family: $heebo;
             text-transform: uppercase;
-            color: #666;
-            float: left;
+            color: black;
+            &.below {
+              margin: 0; padding: 0.4rem 0 0 0;
+            }
             clear: right;
             font-size: 0.875rem;
-            border: 1px solid $yellow;
-            padding: 0.4rem;
+//            border: 1px solid $yellow;
+            padding: 0.4rem 0;
             margin-bottom: 0.6rem;
-            &.completed {
-              background-color: $yellow;
-              &:hover {
-                background-color: #999;
-                color: white;
-              }
-            }
-            &:hover {
-             background-color: $yellow;
-             color: black;
-             cursor: pointer; 
-            }
+
           }
           .status_info {
             clear: left;
@@ -490,7 +518,7 @@ article.instance_single {
             }
 
             i {
-              font-size: 2rem;
+              font-size: 1.4rem;
               padding-top: 0.4rem;
             }
 

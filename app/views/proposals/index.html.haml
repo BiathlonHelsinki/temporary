@@ -27,6 +27,7 @@
     %thead
       %th Name
       %th Proposed by
+      %th When?
       %th.pledged
         Pledged 
 
@@ -37,39 +38,10 @@
         %tr
           %td.name
             = link_to proposal.name, proposal
-            = link_to fa_icon('caret-down'), '#', onclick: "javascript:$('#proposal_#{proposal.id}').slideToggle();$(this).next('i').removeClass('chevron-down');$(this).next('i').addClass('chevron-up');return false;"
+            = link_to fa_icon('info-circle'), '#', onclick: "javascript:$('#proposal_#{proposal.id}').slideToggle();$(this).next('i').removeClass('chevron-down');$(this).next('i').addClass('chevron-up');return false;"
 
-            .recurrence
-              - if proposal.recurrence == 2
-                = proposal.intended_sessions == 0  ? 'Multiple meetings proposed' : proposal.intended_sessions.to_s + " meetings proposed"
-              - if proposal.recurrence == 3
-                Happens regularly
-                - unless proposal.intended_sessions == 0
-                  %br/
-                  = proposal.intended_sessions.to_s + " meetings proposed"
-              / - if proposal.recurs?
-              /   - if proposal.scheduled?
-              /     %br/
-              /     = proposal.instances.published.size.to_s
-              /     scheduled so far
-              /     - unless proposal.intended_sessions.blank?
-              /
-              /       %br/
-              /       = proposal.spent.to_s + " spent"
-              /       - if proposal.instances.published.size < proposal.intended_sessions
-              /         %br/
-              /         - if proposal.has_enough?
-              /
-              /           Enough Temps are pledged to schedule
-              /           = (proposal.pledged /  (proposal.total_needed_with_recurrence - proposal.spent)).floor
-              /           more meeting(s)
-              /         - else
-              /           = raw "#{proposal.needed_for_next}#{tsign} needed for next meeting"
-              /
-              /
-              / - else
-              /   = proposal.needed_for_next.to_s
-              /   needed for next
+
+
 
           %td
             .avatar= link_to image_tag(proposal.user.avatar.url(:thumb).gsub(/development/, 'production')), proposal.user
@@ -79,6 +51,61 @@
                 %br/
                 = link_to 'Edit proposal', edit_proposal_path(proposal), class: [:button, :tiny], style: 'float: left; font-size: 0.7em; margin: 0.5rem 0;'
           %td
+            .recurrence
+              - if proposal.recurrence == 2
+                = proposal.intended_sessions == 0  ? 'Multiple meetings proposed' : proposal.intended_sessions.to_s + " meetings proposed"
+              - if proposal.recurrence == 3
+                Happens regularly
+                - unless proposal.intended_sessions == 0
+                  %p
+                    = proposal.intended_sessions.to_s + " meetings proposed"
+              - if proposal.scheduled?    
+                - if proposal.recurrence != 1
+                  - if proposal.instances.first.experiment.instances.future.or(proposal.instances.first.experiment.instances.current).empty?
+                    - if proposal.stopped == true
+                      %p Experiment completed
+                    - else
+                      %p None currently upcoming
+                  - else
+                    %p
+                      - if proposal.instances.first.experiment.instances.future.size > 1
+                        = link_to fa_icon('calendar'), '#', onclick: "javascript:$('#upcoming_events_#{proposal.id.to_s}').slideToggle();return false;"
+                      = proposal.instances.first.experiment.instances.future.size.to_s
+                      upcoming, next at:
+
+
+                    %ul
+                      - a = proposal.instances.first.experiment.instances.future.or(proposal.instances.first.experiment.instances.current).order(:start_at).first
+                      %li
+                        = link_to a.name, experiment_instance_path(a.experiment, a)
+                        %br/
+                        %em= date_range(a.start_at, a.end_at)
+                      .hidden_list{id: "upcoming_events_#{proposal.id.to_s}"}
+                        - proposal.instances.first.experiment.instances.future.or(proposal.instances.first.experiment.instances.current).order(:start_at).each do |i|
+                          %li
+                            = link_to i.name, experiment_instance_path(i.experiment, i)
+                            %br/
+                            %em= date_range(i.start_at, i.end_at)
+                          
+                          
+                - else 
+
+          
+                  %br/
+                  %em Next at:
+                  %ul
+                    - proposal.instances.first.experiment.instances.future.order(:start_at).each do |i|
+                      %li
+                        = link_to i.name, experiment_instance_path(i.experiment, i)
+                        %em= date_range(i.start_at, i.end_at)
+                - unless proposal.instances.past.empty?
+                  %p &nbsp;
+                  %p Last meeting:
+                  = link_to proposal.instances.past.order(:end_at).last.name, [proposal.instances.first.experiment, proposal.instances.first]
+                  %br/
+                  %em= date_range(proposal.instances.past.order(:end_at).last.start_at, proposal.instances.past.order(:end_at).last.end_at)
+                  .attended= pluralize(proposal.instances.past.order(:end_at).last.users.size + proposal.instances.past.order(:end_at).last.onetimers.unclaimed.size, 'person') + " participated" 
+          %td.pledge_info
             - if proposal.stopped == true || (proposal.scheduled? && !proposal.recurs?)
               = raw(proposal.pledged.to_s + tsign)
               %small
@@ -93,9 +120,74 @@
                 = proposal.needed_for_next
                 -#- if (proposal.recurrence == 2 || proposal.recurrence == 3 ) &&  proposal.intended_sessions != 0
                 -#  = " / #{proposal.total_needed_with_recurrence - proposal.spent}"
-            = link_to fa_icon('question-circle-o'), '#' , :"data-open" => "proposal_pledge_info_#{proposal.id.to_s}"
+            = link_to fa_icon('info-circle'), '#' , :"data-open" => "proposal_pledge_info_#{proposal.id.to_s}"
+            .metadata
+              %em= pluralize(proposal.pledges.map(&:user).uniq.size, 'person') + ' pledged' 
             .reveal{id: 'proposal_pledge_info_' + proposal.id.to_s, :"data-reveal" => ''}
-              .title= proposal.name
+              .title= link_to proposal.name, proposal
+              - if proposal.recurs?
+                .recurring_explanation
+                  Each recurring event gets a 10% discount in Temps from the previous meeting, until it gets down to 
+                  = raw "20#{tsign}, which is the minimum."
+                .number_proposed
+                  Number of meetings proposed:
+                  - if proposal.intended_sessions == 0
+                    unknown/indefinite
+                  - else
+                    = proposal.intended_sessions.to_s
+                    
+                %ul.table_right
+                  - if proposal.intended_sessions == 0
+                    - if proposal.instances.published.empty?
+                      nothing escheduled
+                    - else
+                      - proposal.instances.published.order(:start_at).each do |instance|
+                        %li
+                          = "##{instance.session_number}: "
+                          - if instance.in_future?
+                            = link_to 'SCHEDULED', experiment_instance_path(instance.experiment, instance)
+                          - else
+                            = link_to 'Took place on ' + instance.start_at.to_date.to_s, experiment_instance_path(instance.experiment, instance)
+                          = " : "
+                          = instance.cost_in_temps.to_s
+                          of 
+                          %strong
+                            = proposal.needed_for(instance.session_number - 1).to_s
+                            = raw tsign
+                      %li
+                        = "##{proposal.instances.published.size + 1}: "
+                        ACCEPTING MORE PLEDGES NOW: 
+                        = proposal.remaining_pledges
+                        out of
+                        %strong
+                          = proposal.needed_for(proposal.instances.published.size + 1).to_s
+                          = raw tsign
+                  - else
+                    - (1..proposal.intended_sessions).each do |num|
+                      %li
+                        = "##{num}: "
+                        - if proposal.instances.published.order(:start_at)[num-1].nil?
+                          ACCEPTING MORE PLEDGES NOW: 
+                          = proposal.remaining_pledges
+                          out of
+                          %strong
+                            = proposal.needed_for(proposal.instances.published.size + 1).to_s
+                            = raw tsign
+                        - elsif proposal.instances.published.order(:start_at)[num-1].in_future?
+                          = link_to 'SCHEDULED', experiment_instance_path(proposal.instances.published.order(:start_at)[num-1].experiment, proposal.instances.published.order(:start_at)[num-1])
+                        - else
+                          = link_to 'Took place on ' + proposal.instances.published.order(:start_at)[num-1].start_at.to_date.to_s, experiment_instance_path(proposal.instances.published.order(:start_at)[num-1].experiment, proposal.instances.published.order(:start_at)[num-1])
+                        = " : "
+                        - if proposal.instances.published.order(:start_at)[num-1].nil?
+                          proposal.remaining_pledges.to_s
+                        - else
+                          = proposal.instances.published.order(:start_at)[num-1].cost_in_temps.to_s
+                        of
+                        %strong
+                          = proposal.needed_for(num-1).to_s
+                          = raw tsign
+                          
+                          
               .proposal_stats
                 - if proposal.recurrence == 1          
                   %strong Proposed to only occur once
@@ -130,9 +222,7 @@
                     - else
                       = raw "Cost of next session/meeting: #{proposal.needed_for_next}#{tsign}."
                       %br/
-                      %small
-                        Each recurring event gets a 10% discount in Temps from the previous meeting, until it gets down to 
-                        = raw "20#{tsign}, which is the minimum."
+                      
                         
                 - else
                   - if proposal.scheduled?
@@ -175,26 +265,26 @@
             .pledge_buttons
               - unless proposal.stopped == true
                 - if proposal.recurs?
-                
-                  - if user_signed_in?
+ 
+                  - if user_signed_in? && proposal.pledgeable?
                     - if current_user.active_pledge?(proposal)
                       = link_to 'Edit pledge', edit_proposal_pledge_path(proposal,current_user.pledges.unconverted.find_by(item:proposal) ), class: [:button, :small]
-                    - elsif current_user.has_pledged?(proposal)
+                    - elsif current_user.has_pledged?(proposal) && proposal.pledgeable?
                       = link_to raw("Pledge more #{tsign}!"), new_proposal_pledge_path(proposal), class: [:button, :small]                      
                     - else
                       = link_to raw("Pledge #{tsign}!"), new_proposal_pledge_path(proposal), class: [:button, :small]
-                  - else
+                  - elsif proposal.pledgeable?
                     = link_to raw("Pledge #{tsign}!"), page_path('why-join'), class: [:button, :small]
 
               
                 - else
-                  - if user_signed_in?
+                  - if user_signed_in? && proposal.pledgeable?
                     - unless proposal.stopped || (proposal.scheduled && proposal.instances.published.future.empty?)
                       - if current_user.active_pledge?(proposal)
                         = link_to 'Edit pledge', edit_proposal_pledge_path(proposal,current_user.pledges.unconverted.where(item:proposal)), class: [:button, :small]
-                      - elsif current_user.has_pledged?(proposal)
+                      - elsif current_user.has_pledged?(proposal) && proposal.pledgeable?
                         = link_to raw("Pledge more #{tsign}!"), new_proposal_pledge_path(proposal), class: [:button, :small]
-                      -else
+                      -elsif proposal.pledgeable?
                         = link_to raw("Pledge #{tsign}!"), new_proposal_pledge_path(proposal), class: [:button, :small]
             - if user_signed_in?
               - if current_user.has_pledged?(proposal)
@@ -203,42 +293,84 @@
                     = raw "You pledged #{current_user.pending_pledges.where(item:proposal).sum(&:pledge)}#{tsign} "
                   - unless current_user.spent_pledges.where(item:proposal).empty?
                     %br/
-                    %br/
                     = raw "You spent #{current_user.spent_pledges.where(item:proposal).sum(&:pledge)}#{tsign}"                    
               
 
           %td
+     
             - if proposal.scheduled?
-              
+            
+              - if proposal.recurs?
+                - if proposal.instances.current.or(proposal.instances.future).empty?
+                  - if proposal.intended_sessions == 0
+                    .status To be continued...
+                  - else
+                    .status Completed
+                - else
+                  .status Scheduled
+                  
+              - elsif proposal.instances.current.or(proposal.instances.future).empty?
+                .status Completed
+              - else
+                .status Scheduled
               - unless proposal.next_instance.nil?
-                - if proposal.next_instance.end_at < Time.now
+                - if proposal.next_instance.end_at < Time.current
                   = link_to proposal do
-                    .status Error
+                    Error
                 - else
                   = link_to proposal do
-                    .status 
-                      Scheduled
-                      - if proposal.recurs?
-                        - if proposal.intended_sessions == 0 || proposal.pledged < proposal.total_needed_with_recurrence
-                          but accepting more pledges                  
-                  .status_info
-                    - if proposal.recurrence != 1
-                      %em
-                        = proposal.instances.first.experiment.instances.future.size.to_s
-                        scheduled:
-                    - else
-                      %em Next at:
-                    %ul
-                      - proposal.instances.first.experiment.instances.future.order(:start_at).each do |i|
-                        %li
-                          = link_to i.name, experiment_instance_path(i.experiment, i)
-                          %em= date_range(i.start_at, i.end_at)
+                  
+                    - if proposal.recurs?
+                      - if proposal.intended_sessions == 0 || proposal.pledged < proposal.total_needed_with_recurrence
+                        .status.below but accepting more pledges              
+                  - if proposal.recurs?
+                    .recurrence
+                      - if proposal.intended_sessions == 0
+                        - if (proposal.needed_for_next - proposal.remaining_pledges) > 0 
+                          = raw "#{(proposal.needed_for_next - proposal.remaining_pledges)} more #{tsign} needed to schedule next meeting (##{proposal.instances.published.size + 1})"
+                        - else
+                          Enough Temps are pledged to schedule
+                          = proposal.number_that_can_be_scheduled.to_s
+                          more meeting(s)
+                      - elsif  proposal.intended_sessions > proposal.instances.published.size 
+                        - if (proposal.needed_for_next - proposal.remaining_pledges) > 0 
+                          = raw "#{(proposal.needed_for_next - proposal.remaining_pledges)} more #{tsign} needed to schedule next meeting (##{proposal.instances.published.size + 1})"
+
+                    
+
+                      - elsif (proposal.total_needed_with_recurrence - proposal.spent - proposal.remaining_pledges) == 0
+                        %p
+                          All required
+                          = raw tsign
+                          have been pledged and/or spent.
+                    
+                      - else
+                        = raw "#{proposal.total_needed_with_recurrence - proposal.spent - proposal.remaining_pledges} more #{tsign} needed to schedule all #{proposal.intended_sessions.to_s} proposed #{'meeting'.pluralize(proposal.intended_sessions)}."
+                        
+
               - else 
-                - if proposal.instances.first.experiment.end_date < Time.now && proposal.instances.first.experiment.instances.future.empty?
-                  = link_to proposal do
-                    .status.completed Completed!
-                  .status_info= pluralize(proposal.instances.first.experiment.instances.size, 'experiment') + " took place"
-                  .status_info= link_to 'View archive', proposal.instances.first.experiment
+                - if proposal.instances.first.experiment.end_date < Time.current && proposal.instances.first.experiment.instances.future.empty?
+                  - if proposal.recurs?
+                    - if proposal.intended_sessions == 0
+                      = link_to proposal do
+                        .status.completed and accepting more pledges
+                      .recurrence
+                        - if proposal.intended_sessions > proposal.instances.published.size || proposal.intended_sessions == 0
+                          - if (proposal.needed_for_next - proposal.remaining_pledges) > 0 
+                    
+                            = raw "#{(proposal.needed_for_next - proposal.remaining_pledges)} more #{tsign} needed to schedule next meeting (##{proposal.instances.published.size + 1})"
+
+                    
+
+                        - elsif (proposal.total_needed_with_recurrence - proposal.spent - proposal.remaining_pledges) == 0
+                          %p
+                            All required
+                            = raw tsign
+                            have been pledged and/or spent.
+                    
+                        - else
+                          = raw "#{proposal.total_needed_with_recurrence - proposal.spent - proposal.remaining_pledges} more #{tsign} needed to schedule all #{proposal.intended_sessions.to_s} proposed #{'meeting'.pluralize(proposal.intended_sessions)}."
+
                 - elsif proposal.instances.first.experiment.instances.future.empty?
                   - if proposal.stopped
                     = link_to proposal do
@@ -251,28 +383,15 @@
                         - if proposal.recurs?
                           - if proposal.intended_sessions == 0 || proposal.pledged < proposal.total_needed_with_recurrence
                             and accepting more pledges
-                  - else
-                    = link_to proposal do
-                      .status Needs more support!
-                    .status_info
-                      = raw "#{proposal.needed_for_next - proposal.remaining_pledges} more #{tsign} needed before " + (proposal.recurrence == 2 || proposal.recurrence == 3 ? 'next session' : 'it') + " can be scheduled"
-                - else 
+                - else
                   = link_to proposal do
-                    .status Scheduled!
-                
-                  %br/
-                  %em Next at:
-                  %ul
-                    - proposal.instances.first.experiment.instances.future.order(:start_at).each do |i|
-                      %li
-                        = link_to i.name, experiment_instance_path(i.experiment, i)
-                        %em= date_range(i.start_at, i.end_at)
-                  - unless proposal.instances.empty?
-                    %br/
-                    = raw "Last meeting: #{link_to proposal.instances.first.name, [proposal.instances.first.experiment, proposal.instances.first]}"
-                
+                    .status Needs more support!
+                  .status_info
+                    = raw "#{proposal.needed_for_next - proposal.remaining_pledges} more #{tsign} needed before " + (proposal.recurrence == 2 || proposal.recurrence == 3 ? 'next session' : 'it') + " can be scheduled"
 
-                -#%em= date_range proposal.instances.first.start_at, proposal.instances.first.end_at  
+              
+
+              -#%em= date_range proposal.instances.first.start_at, proposal.instances.first.end_at  
             - else 
               - if proposal.has_enough?
                 = link_to proposal do
@@ -287,9 +406,9 @@
                     = pluralize(proposal.number_that_can_be_scheduled, 'meeting')
                     - unless proposal.intended_sessions == 0 
                       = "of #{proposal.intended_sessions.to_s}"
-                    
                   
-                  
+                
+                
                 .status_info
                   %strong Will be reviewed at next organisation meeting:
                   - if @next_meeting.nil?
@@ -299,27 +418,32 @@
               - else
                 = link_to proposal do
                   .status Needs more support!
-                .status_info
-                  = raw "#{proposal.needed_for_next - proposal.remaining_pledges} more #{tsign} needed before " + (proposal.recurrence == 2 || proposal.recurrence == 3 ? 'next session' : 'it') + " can be scheduled"
-            - if proposal.recurs?
-              - if proposal.recurrence == 3 && proposal.intended_sessions == 0
                 .recurrence
-                  Proposal is ongoing without a fixed end, so 
-                  = raw tsign
-                  are continually needed to keep it happening!
-                  / - if proposal.remaining_pledges < proposal.needed_for_next
-                  /   %br/
-                  /   %br/
-                  /   = raw "#{proposal.needed_for_next - proposal.remaining_pledges} more #{tsign} needed to schedule next session!"
-              - elsif proposal.recurs?
-                .recurrence
-                  - if proposal.intended_sessions > proposal.instances.published.size
-                    - if (proposal.needed_for_next - proposal.remaining_pledges) > 0
-                      = raw "#{(proposal.needed_for_next - proposal.remaining_pledges)} more #{tsign} needed to schedule next meeting (##{proposal.instances.published.size + 1})"
+                  = raw "#{proposal.needed_for_next - proposal.remaining_pledges} more #{tsign} needed before " + (proposal.recurs?  ? 'next session' : 'it') + " can be scheduled"
+                  - if proposal.recurs?
+                    - if proposal.recurrence == 3 && proposal.intended_sessions == 0
+                      .recurrence
+                        Proposal is ongoing without a fixed end, so 
+                        = raw tsign
+                        are continually needed to keep it happening!
 
-                      
-                    %br/
-                  = raw "#{proposal.total_needed_with_recurrence - proposal.spent - proposal.remaining_pledges} more #{tsign} needed to schedule all #{proposal.intended_sessions.to_s} proposed #{'meeting'.pluralize(proposal.intended_sessions)}."
+                - if proposal.recurs?
+                  .recurrence
+                    - if proposal.intended_sessions > proposal.instances.published.size
+                      - if (proposal.needed_for_next - proposal.remaining_pledges) > 0 
+                    
+                        = raw "#{(proposal.needed_for_next - proposal.remaining_pledges)} more #{tsign} needed to schedule next meeting (##{proposal.instances.published.size + 1})"
+
+                    
+
+                    - elsif (proposal.total_needed_with_recurrence - proposal.spent - proposal.remaining_pledges) == 0
+                      %p
+                        All required
+                        = raw tsign
+                        have been pledged and/or spent.
+                    
+                    - else
+                      = raw "#{proposal.total_needed_with_recurrence - proposal.spent - proposal.remaining_pledges} more #{tsign} needed to schedule all #{proposal.intended_sessions.to_s} proposed #{'meeting'.pluralize(proposal.intended_sessions)}."
               
             
             .comment_status
@@ -329,7 +453,7 @@
                 
                 %em
                   
-                  = pluralize(proposal.pledges.size, 'person') + ' pledged;' 
+                  
                   - if proposal.comments.empty?
                     = 'no comments yet.'
                   - else
@@ -342,7 +466,7 @@
                   = time_ago_in_words(proposal.comments_and_pledges.last.created_at) + " ago"
                   
         %tr.occluded_row
-          %td{colspan: 4}
+          %td{colspan: 5}
             %div.occluded[proposal]
               .title Description:
               .answer= simple_format proposal.short_description

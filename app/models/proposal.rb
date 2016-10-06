@@ -139,6 +139,18 @@ class Proposal < ApplicationRecord
     end
   end
   
+  def pledgeable?
+    if recurs?
+      if intended_sessions == 0
+        true
+      else
+        total_needed_with_recurrence - spent - remaining_pledges > 0
+      end
+    else
+      total_needed_with_recurrence - spent - remaining_pledges > 0
+    end
+  end
+  
   def maximum_pledgeable(user)
     if pledges.map(&:user).include?(user)  # user has already pledged
       if has_enough?
