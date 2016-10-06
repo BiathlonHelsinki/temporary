@@ -24,7 +24,7 @@ class Proposal < ApplicationRecord
   end
   
   def self.schedulable
-    all.to_a.delete_if { |x| x.pledged - x.instances.published.sum(&:cost_in_temps) <  Rate.get_current.experiment_cost }
+    all.to_a.delete_if { |x| x.pledged - x.instances.published.sum(&:cost_in_temps) <  x.needed_for_next }
   end
   
   def recurs?
