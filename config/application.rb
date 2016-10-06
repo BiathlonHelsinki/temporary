@@ -15,7 +15,7 @@ module Temporary
     config.encoding = "utf-8"
     config.middleware.insert 0, Rack::UTF8Sanitizer
     config.time_zone = 'Helsinki'
-     config.active_record.default_timezone = :local
+     # config.active_record.default_timezone = :local
     config.active_record.time_zone_aware_types = [:datetime, :time]
     config.autoload_paths += %w(#{config.root}/app/models/ckeditor)
   end
