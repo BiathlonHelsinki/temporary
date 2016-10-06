@@ -23,7 +23,7 @@ class Instance < ApplicationRecord
   scope :meetings, -> () {where(is_meeting: true)}
   scope :future, -> () {where(["end_at >=  ?", Time.now.utc.strftime('%Y/%m/%d %H:%M')]) }
   scope :past, -> () {where(["end_at <  ?", Time.now.utc.strftime('%Y/%m/%d %H:%M')]) }
-  scope :current, -> () { where(["start_at <=  ? and end_at >= ?", Time.now.utc.strftime('%Y/%m/%d %H:%M'), Time.now.utc.strftime('%Y/%m/%d %H:%M') ]) }
+  scope :current, -> () { where(["start_at <=  ? and end_at >= ?", Time.current.utc.strftime('%Y/%m/%d %H:%M'), Time.current.utc.strftime('%Y/%m/%d %H:%M') ]) }
   scope :not_open_day,  -> ()  { where("event_id != 1")}
 
   def as_json(options = {})
@@ -36,9 +36,9 @@ class Instance < ApplicationRecord
       :allDay => false, 
       :recurring => false,
       :temps => self.cost_bb,
-      :url => Rails.application.routes.url_helpers.instance_path(slug)
-
+      :url => Rails.application.routes.url_helpers.experiment_instance_path(experiment.slug, slug)
     }
+    
   end
   
   def children

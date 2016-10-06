@@ -60,7 +60,13 @@
                   - if ft.activity
                     = raw ft.activity.sentence
                   - else
-                    %strong Orphaned!
+                    - unless ft.source_account.nil?
+                      From:
+                      = Account.find_by(address: ft.source_account).user.display_name
+                      %br/
+                    - unless ft.recipient_account.nil?
+                      To:
+                      = Account.find_by(address: ft.recipient_account).user.display_name rescue ''
                 %td
                   - if ft.transaction_type_id == 1
                     = "+" + ft.value.to_s
@@ -71,12 +77,14 @@
                 %td
                   = link_to ft.txaddress[0..5] + "...", "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/tx/#{ft.txaddress}", target: :_blank
                 %td
-
+                  = ft.timeof.utc
                   = time_ago_in_words(ft.timeof) + ' ago'
                 %td
                   - if can? :delete, ft
-                    -#= link_to 'Delete', [:admin, ft.activity.instances_user]
-                    - unless ft.activity.nil?
-                      - unless ft.activity.instances_user.nil?
-                        = link_to 'Re-submit', "/admin/#{ft.activity.instances_user.id.to_s}/resubmit", method: :post, class: [:button, :tiny, :secondary]
+                    = link_to 'Delete', [:admin, ft], data: {confirm: 'Are you sure?'}, class: [:button, :tiny, :alert]
+                  - unless ft.activity.nil?
+                    - unless ft.activity.instances_user.nil?
+                      = link_to 'Re-submit', "/admin/#{ft.activity.instances_user.id.to_s}/resubmit", method: :post, class: [:button, :tiny, :secondary]
+                    - if ft.activity.item.class == Credit
+                      = link_to 'Re-submit', "/admin/credits/#{ft.activity.item.id.to_s}/resubmit", method: :get, class: [:button, :tiny, :secondary]
                         

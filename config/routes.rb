@@ -7,7 +7,12 @@ Rails.application.routes.draw do
   
   namespace :admin do
     root to: 'base#home'
-    resources :credits
+    resources :credits do
+      member do
+        get :resubmit
+      end
+    end
+    resources :ethtransactions
     resources :experiments do
       resources :instances
     end

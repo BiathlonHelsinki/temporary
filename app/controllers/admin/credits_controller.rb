@@ -51,6 +51,20 @@ class Admin::CreditsController < Admin::BaseController
     @credit = Credit.new
   end
   
+  def resubmit
+    @credit = Credit.find(params[:id])
+    api = BiathlonApi.new
+    api_request = api.api_post("/credits/#{@credit.id}/resubmit", {user_email: current_user.email, 
+                            user_token: current_user.authentication_token})
+    if api_request['error']
+      flash[:error] = 'Error: ' + api_request['error'] 
+    else
+      flash[:notice] = 'Re-submitted to blockchain as ' + api_request['data']['txaddress']
+    end
+           
+    redirect_to "/admin"
+  end
+    
   def update
     @credit = Credit.find(params[:id])
     if @credit.update_attributes(credit_params)
