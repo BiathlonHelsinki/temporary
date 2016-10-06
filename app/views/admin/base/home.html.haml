@@ -81,7 +81,7 @@
                   = time_ago_in_words(ft.timeof) + ' ago'
                 %td
                   - if can? :delete, ft
-                    = link_to 'Delete', [:admin, ft], data: {confirm: 'Are you sure?'}, class: [:button, :tiny, :alert]
+                    = link_to 'Delete', [:admin, ft], method: :delete, data: {confirm: 'Are you sure?'}, class: [:button, :tiny, :alert]
                   - unless ft.activity.nil?
                     - unless ft.activity.instances_user.nil?
                       = link_to 'Re-submit', "/admin/#{ft.activity.instances_user.id.to_s}/resubmit", method: :post, class: [:button, :tiny, :secondary]
