@@ -17,8 +17,13 @@
       = link_to activity.user.display_name, activity.user, target: :_blank
   %td
     = raw activity.description
+
   %td
     = raw activity.linked_name
+    - if activity.extra && !activity.extra_info.blank?
+      - if activity.extra.class == Instance
+        = activity.extra_info
+        = link_to activity.extra.name, experiment_instance_path(activity.extra.experiment, activity.extra)
   %td.temps
     - unless activity.value.nil?
       - if activity.addition == 1
