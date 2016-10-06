@@ -179,7 +179,7 @@
                           = link_to 'Took place on ' + proposal.instances.published.order(:start_at)[num-1].start_at.to_date.to_s, experiment_instance_path(proposal.instances.published.order(:start_at)[num-1].experiment, proposal.instances.published.order(:start_at)[num-1])
                         = " : "
                         - if proposal.instances.published.order(:start_at)[num-1].nil?
-                          proposal.remaining_pledges.to_s
+                          = proposal.remaining_pledges.to_s
                         - else
                           = proposal.instances.published.order(:start_at)[num-1].cost_in_temps.to_s
                         of
