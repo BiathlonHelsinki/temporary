@@ -51,6 +51,30 @@ class Proposal < ApplicationRecord
     return array
   end
   
+  def cumulative_needed_for(val)
+    rate = Rate.get_current.experiment_cost
+    array = [rate]
+    cum = rate
+    if recurs?
+      for f in 1..val  do 
+        inrate = rate
+        f.times do
+          inrate *= 0.9;
+        end
+        if inrate < 20
+          start = 20
+        else
+          start = inrate.round
+        end
+        array.push(start)
+        cum += start
+      end
+      return cum
+    else
+      return rate
+    end
+  end
+  
   def needed_for(val)
     rate = Rate.get_current.experiment_cost
     array = [rate]
@@ -72,6 +96,20 @@ class Proposal < ApplicationRecord
       return rate
     end
   end
+  
+  def has_for(val)
+    max = cumulative_needed_for(val)
+    if pledged >= max
+      needed_for(val)
+    else
+      if  needed_for(val) - (max - pledged) <= 0
+        0
+      else
+         needed_for(val) - (max - pledged)
+      end
+    end
+  end
+    
   
   def needed_for_next
     rate = Rate.get_current.experiment_cost
@@ -114,12 +152,13 @@ class Proposal < ApplicationRecord
     end
   end
   
+
   def total_needed_with_recurrence
     rate = Rate.get_current.experiment_cost
-    if recurrence == 2 || recurrence == 3
+    if recurs?
       start = rate
-      if intended_sessions.blank?
-        return 0
+      if intended_sessions == 0
+        cumulative_needed_for(instances.published.size)
       else
         for f in 1..(intended_sessions-1)  do 
           inrate = rate
@@ -189,7 +228,8 @@ class Proposal < ApplicationRecord
   end
   
   def spent
-    activities.where(addition: -1).map(&:ethtransaction).sum(&:value) rescue 0
+    # activities.where(addition: -1).map(&:ethtransaction).sum(&:value) rescue 0
+    pledges.converted.sum(&:pledge)
   end
   
   def next_instance

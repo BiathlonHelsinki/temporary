@@ -341,21 +341,37 @@ article.instance_single {
   ul.table_right {
     float: right;
     list-style-type: none;
+    li {
+      text-align: right;
+    }
   }
   .title {
     font-family: $inconsolata;
     font-size: 1.2rem;
+    margin-bottom: 1.313rem;
     a {
       font-weight: bold;
       color: black;
+      text-decoration: underline;
     }
   }
-  .proposal_stats {
-    margin: 1rem 0;
-    color: #444;
-    font-size: 0.9rem;
+  .recurring_explanation {
+    font-family: $ptsans;
+    font-size: 0.933rem;
+    margin-bottom: 1.313rem;
   }
+  .total {
+    float: right;
+    border-top: 2px solid black;
+    clear: both;
+  }
+  
   .pledge_info {
+    clear: both;
+    float: right;
+    text-align: right;
+    font-style: italic;
+    font-size: 0.75rem;
     margin: 1rem 0;
   }
   .schedule_info {
