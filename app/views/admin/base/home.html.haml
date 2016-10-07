@@ -24,6 +24,8 @@
                 %td
                   - unless mt.sentence.blank?
                     = raw mt.sentence
+                    - unless mt.instances_user.nil?
+                      = " (#{mt.instances_user.visit_date.to_s})"
                   - else
                     %strong Orphaned!
                 %td
@@ -33,6 +35,10 @@
                 %td
                   = time_ago_in_words(mt.created_at) + ' ago'
                 %td
+                  - unless mt.instances_user.nil?
+                    = link_to 'Re-submit', "/admin/#{mt.instances_user.id.to_s}/resubmit", method: :post, class: [:button, :tiny, :secondary]
+                  - if can? :delete, mt
+                    = link_to 'Delete', [:admin, mt], method: :delete, data: {confirm: 'are you sure?'}, class: [:button, :tiny, :alert]
   .row.expanded
     .small-12.columns
       - if @failed_transactions.empty?
