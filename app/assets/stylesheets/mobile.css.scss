@@ -21,8 +21,14 @@ $medium-portrait-only:"#{$screen} and (orientation: portrait) and (min-width:#{l
 $large-only: "#{$screen} and (min-width: #{lower-bound($large-range)}) and (max-width: #{upper-bound($large-range)})" !default;
 
 @media screen and (max-width: 39.9375em) {
-  .row.expanded {
-    padding: 0;
+  .stacktable.small-only tbody tr:nth-child(-n+3) {
+    display: table-row;
+    &.occluded_row {
+      display: none;
+    }
+  }
+  table.proposals:nth-child(even) {
+    border-bottom: 1px solid black;
   }
   h1 {
     text-align: center;
