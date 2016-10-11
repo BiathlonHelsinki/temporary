@@ -195,7 +195,7 @@
                   - if proposal.scheduled?
                     %strong= link_to 'SCHEDULED', experiment_instance_path(proposal.instances.first.experiment, proposal.instances.first)
                   - elsif proposal.has_enough?
-                    %strong= link_to 'AWAITING REVIEW', experiment_instance_path(@next_meeting.experiment, @next_meeting), target: :_blank
+                    %strong= link_to 'AWAITING REVIEW', experiment_instance_path(@next_meeting.experiment, @next_meeting), target: :_blank rescue 'Awaiting review'
                   - else
                     = link_to 'ACCEPTING MORE PLEDGES NOW: ',  new_proposal_pledge_path(proposal)
                   = proposal.remaining_pledges.to_s
