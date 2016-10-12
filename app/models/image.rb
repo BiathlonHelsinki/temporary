@@ -1,8 +1,9 @@
 class Image < ApplicationRecord
+  attr_accessor :image, :image_cache
   mount_uploader :image, ImageUploader
   before_save :update_image_attributes
   belongs_to :item, polymorphic: true
-  validates_presence_of :image  
+  # validates_presence_of :image
   
   def update_image_attributes
     if image.present? && image_changed?
