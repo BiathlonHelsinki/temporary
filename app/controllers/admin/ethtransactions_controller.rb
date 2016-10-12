@@ -8,6 +8,10 @@ class Admin::EthtransactionsController < Admin::BaseController
       if @ethtransaction.activity.nil?
         @ethtransaction.destroy
         redirect_to '/admin'
+      else
+        @ethtransaction.activity.destroy
+        @ethtransaction.destroy
+        redirect_to '/admin'
       end
     end
   end
