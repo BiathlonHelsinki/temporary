@@ -9,12 +9,13 @@ class ExperimentsController < ApplicationController
     @experiments.uniq!
     @experiments.flatten!
     # @experiments += experiments.reject{|x| !x.one_day? }
-
+    set_meta_tags title: 'Calendar'
     respond_to do |format|
       format.html # index.html.erb
       format.json { render :json => @experiments }
     end
   end
+  
   def hierarchy
     # @experiments = Experiment.roots.order(sequence: :asc)
 #     respond_to do |format|
@@ -28,6 +29,7 @@ class ExperimentsController < ApplicationController
     # @experiments = Instance.future.published.order(sequence: :asc).group_by(&:experiment)
     @experiments = Instance.current.or(Instance.future).order(:start_at).uniq
     @past = Instance.past.published.order(start_at: :desc).uniq
+    set_meta_tags title: 'Experiments'
   end
   
   def radial
@@ -36,6 +38,7 @@ class ExperimentsController < ApplicationController
   
   def show
     @experiment = Experiment.friendly.find(params[:id])
+    set_meta_tags title: @experiment.name
   end
   
   def tree

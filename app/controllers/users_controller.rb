@@ -8,10 +8,12 @@ class UsersController < ApplicationController
       flash[:error] = 'You cannot edit another user profile'
       redirect_to '/'
     end
+    set_meta_tags title: 'Edit your profile'
   end
   
   def show
     @user = User.friendly.find(params[:id])
+    set_meta_tags title: @user.display_name
   end
   
   def update

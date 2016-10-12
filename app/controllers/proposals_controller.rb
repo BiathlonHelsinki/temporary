@@ -34,12 +34,14 @@ class ProposalsController < ApplicationController
       flash[:error] = "You cannot edit someone else's proposal."
       redirect_to @proposal
     end
+    set_meta_tags title: 'Edit proposal'
   end
   
   def index
     @next_meeting = Instance.next_meeting
     @current_rate = Rate.get_current.experiment_cost
     @proposals = Proposal.all.order(updated_at: :desc)
+    set_meta_tags title: 'Proposals'
   end
 
   def new
@@ -51,11 +53,13 @@ class ProposalsController < ApplicationController
       @current_rate = Rate.get_current.experiment_cost
       @proposal = Proposal.new(user: current_user)
     end
+    set_meta_tags title: 'New proposal'
   end
   
   def show
     @current_rate = Rate.get_current.experiment_cost
     @proposal = Proposal.find(params[:id])
+    set_meta_tags title: @proposal.name
   end
   
   def update

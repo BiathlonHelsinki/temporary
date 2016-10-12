@@ -7,6 +7,7 @@ class ActivitiesController < ApplicationController
     else
       @activities = Activity.all.order(created_at: :desc).page(params[:page]).per(40)
     end
+    set_meta_tags title: 'Activities'
   end
   
 end

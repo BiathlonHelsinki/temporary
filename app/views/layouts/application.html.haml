@@ -4,7 +4,7 @@
     %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
     %meta{:charset => "utf-8"}/
     %meta{:content => "width=device-width, initial-scale=1.0", :name => "viewport"}/
-    %title= content_for?(:title) ? yield(:title) : "Temporary"
+    = display_meta_tags site: 'Temporary'
     %link{:href => "https://fonts.googleapis.com/css?family=Inconsolata|Heebo|Noto+Sans", :rel => "stylesheet"}/
     %meta{:content => "http://temporary.fi/icons/ms-icon-310x310.png", :property => "og:image"}/
     %meta{property: 'og:image:width', content: 310}
