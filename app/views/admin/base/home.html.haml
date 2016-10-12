@@ -68,7 +68,7 @@
                   - else
                     - unless ft.source_account.nil?
                       From:
-                      = Account.find_by(address: ft.source_account).user.display_name
+                      = Account.find_by(address: ft.source_account).user.display_name unless Rails.env.development?
                       %br/
                     - unless ft.recipient_account.nil?
                       To:

@@ -1,5 +1,5 @@
 class ProposalMailer < ActionMailer::Base
-  default from: "no-reply@temporary.fi"
+  default from: "admin@temporary.fi"
   
   def proposal_for_review(proposal)
     @proposal = proposal

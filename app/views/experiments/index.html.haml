@@ -11,6 +11,7 @@
       - if e.experiment.slug == 'open-days'
         - next if only_one_openday == true
         - only_one_openday = true
+      - next unless e.show_on_website?
       = render partial: 'instances/experiment_instance_column', locals: {exp: e, :"@experiment" =>  e.experiment }
 
         

@@ -44,7 +44,7 @@ class Admin::ExperimentsController < Admin::BaseController
   
   def experiment_params
     params.require(:experiment).permit(:published, :place_id, :primary_sponsor_id, 
-    :secondary_sponsor_id, :cost_euros, :cost_bb, :sequence, :start_at, :end_at, :sequence, 
+    :secondary_sponsor_id, :cost_euros, :cost_bb, :sequence, :start_at, :end_at, :sequence, :collapse_in_website,
     :parent_id, :image, translations_attributes: [:name, :description, :locale, :id]
     )
   end

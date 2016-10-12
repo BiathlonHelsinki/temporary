@@ -60,8 +60,14 @@
     .small-12.columns
       .details
         .title Description:
-        .answer= simple_format @proposal.short_description
-   
+        .answer
+          = simple_format @proposal.short_description
+          - if @proposal.images
+            .row.expanded.proposal_images
+              
+              - @proposal.images.each do |image|
+                .small-12.medium-12.large-6.columns= image_tag image.image.url(:medium)
+              
         .title Goals:
         .answer= simple_format @proposal.goals
    
@@ -70,9 +76,7 @@
     
         .title Intended participants:
         .answer= simple_format @proposal.intended_participants
-      - if @proposal.images
-        - @proposal.images.each do |image|
-          %p= image_tag image.image.url(:medium)
+
   #pledges
     .row    
       .small-10.columns
@@ -89,7 +93,9 @@
               = link_to 'Edit pledge', edit_proposal_pledge_path(@proposal, current_user.pledges.find_by(item: @proposal) ), class: [:button, :tiny]
             - else
               = link_to raw("Pledge #{tsign}!"), new_proposal_pledge_path(@proposal), class: [:button, :tiny]
-        
+          - if current_user == @proposal.user || current_user.has_role?(:admin)
+            %br/
+            = link_to 'Edit proposal', edit_proposal_path(@proposal), class: [:button, :tiny], style: 'float: left; font-size: 0.7em; margin: 0.5rem 0;'  
   - unless @proposal.comments.empty? && @proposal.pledges.empty?
 
 

@@ -40,6 +40,8 @@
   .row
     .small-10.medium-4.columns= f.input :primary_sponsor, input_html: {required: ''}
   .row
+    .small-10.medium-4.columns= f.input :collapse_in_website, label: 'Collapse sub-experiments on website?', hint: 'Tick this if the sub-events will have similar names ie: "Trashlab #1", "Trashlab #2", so the website will only show the next upcoming one'
+  .row
     .small-10.medium-8.columns
       - if f.object.image?
         = image_tag f.object.image.url(:box)

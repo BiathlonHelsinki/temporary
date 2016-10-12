@@ -53,7 +53,19 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+  
 end
 BetterErrors::Middleware.allow_ip! '192.168.11.20'
 BetterErrors::Middleware.allow_ip! '192.168.11.194'
 BetterErrors::Middleware.allow_ip! '192.168.11.19'
+
+module ActionView
+  module Helpers
+    module AssetTagHelper
+      def image_tag(source, options = {})
+        options[:src] = "#{source}".gsub(/development/, 'production')
+        tag("img", options)
+      end
+    end
+  end
+end

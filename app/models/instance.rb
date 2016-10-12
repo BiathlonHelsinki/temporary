@@ -62,6 +62,12 @@ class Instance < ApplicationRecord
     end
   end
   
+  def show_on_website?
+    experiment.collapse_in_website == true ? 
+      (experiment.instances.published.current.or(experiment.instances.published.future).sort_by(&:start_at).first == self ? true : false) 
+      : true
+  end
+  
   def cost_in_temps
     rate = Rate.get_current.experiment_cost
     # if proposal.recurrence == 2 || proposal.recurrence == 3
