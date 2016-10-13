@@ -4,7 +4,7 @@ class Admin::BaseController < ApplicationController
 
   before_action :authenticate_user!
   before_action :authenticate_admin!
-  load_and_authorize_resource except: [:home, :proposal, :resubmit], find_by: :slug
+  load_and_authorize_resource except: [:home, :proposal, :resubmit, :respend], find_by: :slug
   
   def authenticate_admin!
     redirect_to root_path unless current_user.has_role? :admin
@@ -13,6 +13,30 @@ class Admin::BaseController < ApplicationController
   def check_permissions
     authorize! :create, resource
   end
+  
+  def respend
+    api = BiathlonApi.new
+    @activity = Activity.find(params[:id])
+    api_request = api.api_post("/users/#{@activity.user_id}/respend", {user_email: current_user.email, 
+                            user_token: current_user.authentication_token, points: @activity.ethtransaction.value})
+    if api_request['error']
+      flash[:error] = 'Error: ' + api_request['error'] 
+    else
+      e = Ethtransaction.find_by(txaddress:api_request['data']['txaddress'])
+      if e.nil?
+        flash[:error] = 'Resubmitted as ' + api_request['data']['txaddress'] + ' but cannot find in local database'
+      else
+        old = Ethtransaction.find(@activity.ethtransaction_id)
+        @activity.ethtransaction_id = e.id
+        @activity.save!
+        old.destroy
+        flash[:notice] = 'Re-submitted to blockchain as ' + api_request['data']['txaddress']
+      end
+    end
+           
+    redirect_to "/admin"
+  end
+
   
 
   def resubmit

@@ -34,7 +34,7 @@ $('#calendar').fullCalendar({
 });
 
 
-updateEvent = function(the_event) {
+var updateEvent = function(the_event) {
 
 return $.update("/experiments/calendar/" + the_event.id, {
   event: {

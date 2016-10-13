@@ -18,7 +18,8 @@
 //= require fullcalendar
 //= require stacktable.min
 //= require jquery.infinitescroll
-  
+//= require masonry.pkgd.min
+//= require imagesloaded.pkgd.min
 $(function(){ $(document).foundation();
 
  });

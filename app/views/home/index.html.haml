@@ -1,6 +1,6 @@
 = content_for :header do
   .home_header
-    = image_tag 'temporary_logo.png'  
+    = link_to image_tag('temporary_logo.png'), '/'
   .top-bar
     = render partial: 'layouts/top_bar'
 
@@ -8,21 +8,7 @@
 
 
 .news_container
-  - unless @sticky.empty?
-    - @sticky.each do |post|
-      %article{class: cycle('odd', 'even')}
-        .post
-          .meta
-            %span.date= post.published_at.strftime('%d.%m.%Y')
-            = " // "
-            %span.category= post.category_text
-            = " // "
-          .title= link_to post.title, post
-          - if post.image?
-            = image_tag post.image.url.gsub('development', 'production')
-          .body= raw post.body
-          
-  %article{class: cycle('odd', 'even')}
+  %article.calendar{class: cycle('odd', 'even')}
     .post
       .meta
         %span.date= Time.now.strftime("%B %Y")
@@ -31,10 +17,25 @@
           = link_to  "Calendar",  calendar_experiments_path
         = "//"
       #calendar.small-centered
-      = content_for :jquery do
-        = render partial: 'experiments/calendar', formats: [:js]
+        
       = link_to 'View full calendar', calendar_experiments_path, class: [:button]
-                
+      
+  - unless @sticky.empty?
+    %article.sizer{class: cycle('odd', 'even')}
+      .post
+        .meta
+          %span.date= @sticky.first.published_at.strftime('%d.%m.%Y')
+          = " // "
+          %span.category= @sticky.first.category_text
+          = " // "
+        .title= link_to @sticky.first.title, @sticky.first
+        - if @sticky.first.image?
+          = image_tag @sticky.first.image.url
+        .body= raw @sticky.first.body
+         
+
+
+        
   - unless @open_day.nil?
     %article.open_day{class: cycle('odd', 'even')}
       .post
@@ -51,6 +52,24 @@
               .day= @open_day.start_at.day
               .times= @open_day.start_at.strftime("%H:%M") + " - " + @open_day.end_at.strftime("%H:%M")
         .body= raw simple_format(@open_day.description)
+
+  - unless @sticky.size < 2        
+    - @sticky.drop(1).each do |post|
+      %article{class: cycle('odd', 'even')}
+        .post
+          .meta
+            %span.date= post.published_at.strftime('%d.%m.%Y')
+            = " // "
+            %span.category= post.category_text
+            = " // "
+          .title= link_to post.title, post
+          - if post.image?
+            = image_tag post.image.url.gsub('development', 'production')
+          .body= raw post.body
+          
+
+                
+
   
 
     
@@ -118,3 +137,66 @@
             %big= raw "&ldquo;"
             = truncate_html prop.short_description, length: 300
             %big= raw "&rdquo;"
+            
+= content_for :jquery do
+  :plain
+    $('#calendar').fullCalendar({
+      editable: true,
+      header: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay'
+      },
+      defaultView: 'month',
+      contentHeight: '400px',
+      lang: '#{I18n.locale.to_s}',
+      contentHeight: 'auto',
+      firstDay: 1,
+      fixedWeekCount: false,
+      slotMinutes: 30,
+      eventSources: [
+        {
+          url: '/experiments/calendar.json', 
+          complete: function() {
+            $grid.masonry('layout');
+          }
+        }
+      ],
+      displayEventEnd: {
+        month: true,
+        basicWeek: true,
+        "default": true
+      },
+      timeFormat: 'H:mm',
+      dragOpacity: "0.5",
+      eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc) {
+        return updateEvent(event);
+      },
+      eventResize: function(event, dayDelta, minuteDelta, revertFunc) {
+        return updateEvent(event);
+      }
+    });
+
+
+    var updateEvent = function(the_event) {
+
+    return $.update("/experiments/calendar/" + the_event.id, {
+      event: {
+        title: the_event.title,
+        starts_at: "" + the_event.start,
+        ends_at: "" + the_event.end,
+        description: the_event.description
+        }
+      });
+     
+    };
+    var $grid = $('.news_container').masonry({
+      // options...
+      itemSelector: 'article',
+      columnWidth: 'article.sizer',
+      percentPosition: true
+    });
+    $grid.imagesLoaded().progress( function() {
+      $grid.masonry('layout');
+    });
+    

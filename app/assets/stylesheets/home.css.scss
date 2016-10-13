@@ -3,41 +3,108 @@
 header {
   .home_header {
 //    margin-bottom: 0.875rem;
-    background: url(/assets/home_header_bg.jpg) no-repeat top center;
+    background: url(/assets/home_header_bg.jpg) no-repeat center center;
     background-size: cover;
-    height: 630px;
+    height: 580px;
     padding: 1rem;
   }
 }
 
+@media screen and (max-width: 39.9375em) {
+  .news_container {
+    article {
+      &.sizer {
+        width: 100%;
+      }
+      width: 100%;
+    }
+  }
+}
+
+@media screen and (min-width: 40.063em) and (max-width: 64em) {
+  header {
+    .home_header {
+      height: 345px;
+    }
+    .top-bar-right {
+      padding-left: 0;
+    }
+  }
+  .news_container {
+    article {
+      &.sizer {
+        width: 50%;
+      }
+      width: 50%;
+    }
+  } 
+}
+
+@media screen and (min-width: 64.063em) and (max-width: 90em) {
+  .news_container {
+    article {
+      &.calendar {
+        width: 66.66666%;
+      }
+      &.sizer {
+        width: 33.33333%;
+      }
+      width: 33.3333%;
+    }
+  } 
+}
+
+@media screen and (min-width: 90.063em) {
+  .news_container {
+    article {
+      &.calendar {
+        width: 50%;
+      }
+      &.sizer {
+        width: 25%;
+      }
+      width: 25%;
+    }
+  } 
+}  
 
 .news_container {
   background-color: white;
-
-  -webkit-columns: 5 300px;
-  -moz-columns: 5 300px;
-  columns: 5 300px;
-  -webkit-column-gap: 2.25em;
-  -moz-column-gap: 2.25em;
-  column-gap: 2.25em;
-  padding: 0.875rem 1rem;
-  article {
-    -webkit-column-break-inside:avoid;
-    -moz-column-break-inside:avoid;
-    -o-column-break-inside:avoid;
-    -ms-column-break-inside:avoid;
-    column-break-inside:avoid;
-    border: 2px solid white;
-    box-sizing: border-box;
-    padding: 0.875rem;
+//  margin-left: .5em;
+//    padding-left: 0;
+//    list-style: none;
+//    display: flex;
+//    flex-wrap: wrap;
+//    align-items: flex-start;
     
+//
+//  -webkit-columns: 5 300px;
+//  -moz-columns: 5 300px;
+//  columns: 5 300px;
+//  -webkit-column-gap: 2.25em;
+//  -moz-column-gap: 2.25em;
+//  column-gap: 2.25em;
+  padding: 0.875rem 0rem;
+  article {
+    //    -webkit-column-break-inside:avoid;
+    //    -moz-column-break-inside:avoid;
+    //    -o-column-break-inside:avoid;
+    //    -ms-column-break-inside:avoid;
+    //    column-break-inside:avoid;
+        border: 2px solid white;
+        box-sizing: border-box;
+        padding: 1.2rem;
+        margin-left: 0;
+    //      padding-left: 0;
+
+
     &:hover {
       border: 2px solid $yellow;
     }
 
     &.open_day {
       background-color: $grey;
-      padding: 0.875rem;
+      padding: 1.2rem;
       .body {
         text-align: center;
         p {

@@ -2,6 +2,7 @@ class Admin::EthtransactionsController < Admin::BaseController
   skip_load_and_authorize_resource
   load_and_authorize_resource
   
+  
   def destroy
     @ethtransaction = Ethtransaction.find(params[:id])
     if @ethtransaction.confirmed == false

@@ -93,4 +93,6 @@
                       = link_to 'Re-submit', "/admin/#{ft.activity.instances_user.id.to_s}/resubmit", method: :post, class: [:button, :tiny, :secondary]
                     - if ft.activity.item.class == Credit
                       = link_to 'Re-submit', "/admin/credits/#{ft.activity.item.id.to_s}/resubmit", method: :get, class: [:button, :tiny, :secondary]
+                    - if ft.transaction_type_id == 2
+                      = link_to 'Re-spend', "/admin/#{ft.activity.id.to_s}/respend", method: :get, class: [:button, :tiny, :secondary]
                         
