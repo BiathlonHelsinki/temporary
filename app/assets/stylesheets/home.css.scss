@@ -174,10 +174,12 @@ header {
         font-family: $ptsans;
         font-size: 0.881em;
         padding-top: 1rem;
-        big {
+        span.quote {
+          font-family: serif;
           padding-top: 0.4rem;
-          font-size: 1.8rem;
+          font-size: 1.6rem;
           line-height: 0;
+          font-style: italic;
         }
         p {
           margin-bottom: 0.4rem;

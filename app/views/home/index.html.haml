@@ -128,10 +128,10 @@
                 = "Scheduled!"
               - else
                 = "Will be considered at next organisational meeting"
-                
+              = link_to "View!", post, class: [:button, :small]
             - else
-              = raw "#{post.needed_for_next}#{tsign} still needed"
-            
+              = raw "#{post.needed_for_next - post.remaining_pledges}#{tsign} still needed"
+              = link_to "Pledge!", post, class: [:button, :small]
           .body
             %span.quote= raw "&ldquo;"
             = truncate_html post.short_description, length: 300
