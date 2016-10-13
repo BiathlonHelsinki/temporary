@@ -16,6 +16,9 @@ header {
       }
     }
   }
+  .dropdown.menu.medium-horizontal>li.opens-right>.is-dropdown-submenu {
+    z-index: 3;
+  }
   .top-bar {
     padding: 0;
     background-color: $yellow;
