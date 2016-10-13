@@ -24,6 +24,10 @@ class Post < ApplicationRecord
       self.published_at ||= Time.now
     end
   end
+  
+  def feed_date
+    published_at
+  end
 
   def update_image_attributes
     if image.present? && image_changed?

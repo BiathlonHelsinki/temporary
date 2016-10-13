@@ -27,6 +27,10 @@ class Proposal < ApplicationRecord
     all.to_a.delete_if { |x| x.pledged - x.instances.published.sum(&:cost_in_temps) <  x.needed_for_next }
   end
   
+  def feed_date
+    comments_and_pledges.empty? ? updated_at : comments_and_pledges.last.updated_at
+  end
+  
   def recurs?
     recurrence == 2 || recurrence == 3
   end

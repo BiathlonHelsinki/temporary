@@ -49,6 +49,9 @@ class Instance < ApplicationRecord
     self.current.meetings.or(self.future.meetings).first
   end
   
+  def feed_date
+    updated_at
+  end
   
   def in_future?
     start_at >= Time.current

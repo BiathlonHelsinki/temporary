@@ -73,70 +73,69 @@
   
 
     
-  - @news.each do |post|
-    %article{class: cycle('odd', 'even')}
-      .post
-        .meta
-          %span.date= post.published_at.strftime('%d.%m.%Y')
-          = " // "
-          %span.category= post.category_text
-          = " // "
-        .title= link_to post.title, post
-        - if post.image?
-          = image_tag post.image.url.gsub('development', 'production')
-        .body= raw post.body
+  - @feed.each do |post|
+    - if post.class == Post
+      %article{class: cycle('odd', 'even')}
+        .post
+          .meta
+            %span.date= post.published_at.strftime('%d.%m.%Y')
+            = " // "
+            %span.category= post.category_text
+            = " // "
+          .title= link_to post.title, post
+          - if post.image?
+            = image_tag post.image.url.gsub('development', 'production')
+          .body= raw post.body
 
-  - unless @upcoming.empty?
-    - @upcoming.each do |exp|
+    - if post.class == Instance
       %article.experiment_front{class: cycle('odd', 'even')}
         .post
           .meta
-            %span.date= date_range(exp.start_at, exp.end_at)
+            %span.date= date_range(post.start_at, post.end_at)
             = "//"
             %span
               = "Experiment "
-              = "##{exp.sequence}"
+              = "##{post.sequence}"
             = "//"
           
-          .title= link_to exp.name, [exp.experiment, exp]
-          - if exp.image?
-            %p= image_tag exp.image.url(:medium).gsub('development', 'production')
-          - elsif exp.experiment.image?
-            %p= image_tag exp.experiment.image.url(:medium).gsub('development', 'production')
+          .title= link_to post.name, [post.experiment, post]
+          - if post.image?
+            %p= image_tag post.image.url(:medium)
+          - elsif post.experiment.image?
+            %p= image_tag post.experiment.image.url(:medium)
         
           .body
-            = truncate_html exp.description, length: 500
-            = link_to 'Read more...', [exp.experiment, exp], class: [:button]
+            = truncate_html post.description, length: 500
+            = link_to 'Read more...', [post.experiment, post], class: [:button]
             
-  - unless @recent_proposals.empty?
-    - @recent_proposals.each do |prop|
+    - if post.class == Proposal
       %article.proposal{class: cycle('odd', 'even')}
         .post
           .meta
-            %span.date= prop.created_at.strftime('%d.%m.%Y')
+            %span.date= post.created_at.strftime('%d.%m.%Y')
             = " // "
             %span.category Proposals
             = " // "
-          .title= link_to prop.name, prop
-          - unless prop.images.empty?
-            %p= image_tag prop.images.first.image.url(:medium).gsub('development', 'production')
-          .proposed_by= raw "Proposed by #{link_to prop.user.display_name, prop.user}"
+          .title= link_to post.name, post
+          - unless post.images.empty?
+            %p= image_tag post.images.first.image.url(:medium)
+          .proposed_by= raw "Proposed by #{link_to post.user.display_name, post.user}"
           .pledge_count
-            = raw "Currently pledged: #{prop.pledged.to_s}#{tsign}"
+            = raw "Currently pledged: #{post.pledged.to_s}#{tsign}"
           .needed
-            - if prop.has_enough?
-              - if prop.scheduled?
+            - if post.has_enough?
+              - if post.scheduled?
                 = "Scheduled!"
               - else
-                = "Will be considered at next orgaisational meeting"
+                = "Will be considered at next organisational meeting"
                 
             - else
-              = raw "#{@current_rate - prop.pledged}#{tsign} still needed"
+              = raw "#{post.needed_for_next}#{tsign} still needed"
             
           .body
-            %big= raw "&ldquo;"
-            = truncate_html prop.short_description, length: 300
-            %big= raw "&rdquo;"
+            %span.quote= raw "&ldquo;"
+            = truncate_html post.short_description, length: 300
+            %span.quote= raw "&rdquo;"
             
 = content_for :jquery do
   :plain
