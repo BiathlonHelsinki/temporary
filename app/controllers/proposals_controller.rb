@@ -2,6 +2,18 @@ class ProposalsController < ApplicationController
   
   before_filter :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
 
+  def archived
+    @needs_support_count = Proposal.active.to_a.delete_if{|x| x.has_enough? }.size
+    @scheduled_count = Instance.future.or(Instance.current).map(&:proposal).uniq.size
+    @review_count = Proposal.active.to_a.delete_if{|x| !x.has_enough? }.delete_if{|x| !x.instances.published.empty? }.size
+    
+    @next_meeting = Instance.next_meeting
+    @current_rate = Rate.get_current.experiment_cost
+    @proposals = Proposal.archived.order(updated_at: :desc)
+    set_meta_tags title: 'Archived proposals'
+    render template: 'proposals/index'
+  end
+  
   def create
     current_user.update_balance_from_blockchain if @api_status
     @proposal = Proposal.new(proposal_params)
@@ -38,9 +50,25 @@ class ProposalsController < ApplicationController
   end
   
   def index
+    if params[:filter].nil? || params[:filter] == 'false'
+      @proposals = Proposal.active.order(updated_at: :desc).sort_by { |x| (x.has_enough? ? (x.recurs? ? (x.intended_sessions == 0 && (x.pledged < x.total_needed_with_recurrence) ? 2 : 1 ) : 4 ) : 
+        (x.instances.empty? ? 0 : 1) ) }
+    elsif params[:filter] == 'needs_support'
+      @proposals = Proposal.active.to_a.delete_if{|x| x.has_enough? }.sort_by { |x| (x.has_enough? ? (x.recurs? ? (x.intended_sessions == 0 && (x.pledged < x.total_needed_with_recurrence) ? 2 : 1 ) : 4 ) : 
+        (x.instances.empty? ? 0 : 1) ) }
+    elsif params[:filter] == 'scheduled'
+      @proposals = Instance.future.or(Instance.current).map(&:proposal).uniq.sort_by{|x| x.next_instance.start_at }
+    elsif params[:filter] == 'review'
+      @proposals = Proposal.active.to_a.delete_if{|x| !x.has_enough? }.delete_if{|x| !x.instances.published.empty? }
+    end
+    
     @next_meeting = Instance.next_meeting
     @current_rate = Rate.get_current.experiment_cost
-    @proposals = Proposal.all.order(updated_at: :desc)
+    
+    @needs_support_count = Proposal.active.to_a.delete_if{|x| x.has_enough? }.size
+    @scheduled_count = Instance.future.or(Instance.current).map(&:proposal).uniq.size
+    @review_count = Proposal.active.to_a.delete_if{|x| !x.has_enough? }.delete_if{|x| !x.instances.published.empty? }.size
+    
     set_meta_tags title: 'Proposals'
   end
 

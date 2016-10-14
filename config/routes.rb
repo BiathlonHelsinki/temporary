@@ -55,6 +55,10 @@ Rails.application.routes.draw do
   resources :proposals do
     resources :comments
     resources :pledges
+    collection do
+      get :archived
+      get :active
+    end
   end
   
   

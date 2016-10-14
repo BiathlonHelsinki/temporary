@@ -11,6 +11,9 @@ class Proposal < ApplicationRecord
   after_create :add_to_activity_feed
   after_update :add_to_activity_feed_edited
  
+  scope :archived, -> () { where(stopped: true) }
+  scope :active, -> () { where(stopped: false) }
+
   def comments_and_pledges
     [comments, pledges].flatten.sort_by(&:updated_at)
   end
@@ -117,7 +120,7 @@ class Proposal < ApplicationRecord
   
   def needed_for_next
     rate = Rate.get_current.experiment_cost
-    if recurrence != 1
+    if recurs?
       if instances.published.empty?
         Rate.get_current.experiment_cost
       else
@@ -129,12 +132,15 @@ class Proposal < ApplicationRecord
         end
       end
     else
-      Rate.get_current.experiment_cost
+      if instances.published.empty?
+        Rate.get_current.experiment_cost
+      else
+        0
+      end
     end
   end
   
   def has_enough?
-
     remaining_pledges >= needed_for_next
   end
   

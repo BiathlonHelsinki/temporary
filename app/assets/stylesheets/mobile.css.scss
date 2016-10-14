@@ -23,9 +23,10 @@ $large-only: "#{$screen} and (min-width: #{lower-bound($large-range)}) and (max-
 @media screen and (max-width: 39.9375em) {
   .stacktable.small-only tbody tr:nth-child(-n+3) {
     display: table-row;
-    &.occluded_row {
+    &.occluded_row, &.border_row {
       display: none;
     }
+    
   }
   table.proposals:nth-child(even) {
     border-bottom: 1px solid black;

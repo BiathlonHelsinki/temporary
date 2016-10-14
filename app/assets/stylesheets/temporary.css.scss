@@ -335,6 +335,37 @@ article.instance_single {
   }
 }
 
+.submenu {
+  ul.menu {
+    padding: 0.4rem 2.5rem;
+    background-color: $yellow;
+    li {
+      a.first {
+        padding-left: 0.5rem;
+        text-align: left;
+      }
+      background-color: $yellow;
+      font-family: $inconsolata;
+      font-size: 0.9rem;
+      font-weight: bold;
+      text-align: left;
+      &.active, a.active {
+        border: 1px solid black;
+        a {
+          background: none;
+          color: black;
+        }
+      }
+      &.first {
+        a {
+          padding: 0.7rem 1rem 0.7rem 0;
+        }
+      }
+      
+    }
+  }
+  
+}
 // modal styling
 .reveal {
   border: 6px solid $yellow;
@@ -390,10 +421,31 @@ article.instance_single {
 
 /* Proposals */
 .proposals_index {
+  padding: 2rem 0;
   h1 {
     text-transform: uppercase;
   }
-
+  .filters {
+    padding: 1rem 0 2rem 0;
+    h3 {
+      font-family: $heebo;
+      font-weight: 900;
+      text-transform: uppercase;
+      span.filter {
+        box-sizing: border-box;
+        font-size: 1.15rem;
+        font-family: $inconsolata;
+        text-transform: initial;
+        padding: 0.4rem;
+        &.active, &:hover {
+          background-color: black;
+          border-radius: 4px;
+          a { color: $yellow; }
+          
+        }
+      }
+    }
+  }
   table.proposals {
     border-collapse: separate;
     border-spacing: 1rem;
@@ -412,14 +464,12 @@ article.instance_single {
     }
     tbody {
       tr {
-        &.occluded_row {
-          border: none;
-          td {
-            border-bottom: 1px solid $yellow;
-          }
+        border-collapse: collapse;
+        td.border {
+          border-bottom: 1px solid $yellow;
         }
         td {
-          border: none;
+          
           font-family: $ptsans;
           font-size: 1rem;
           vertical-align: top;
@@ -448,7 +498,7 @@ article.instance_single {
               }
             }
           }
-          .hidden_list {
+          ul.hidden_list {
             display: none;
           }
           .occluded {

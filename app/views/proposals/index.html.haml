@@ -1,22 +1,33 @@
+.submenu
+  %ul.menu
+    %li{class: (params[:filter] == false || params[:filter].nil?) && controller.action_name == 'index' ? :active : false}= link_to "All active proposals (#{Proposal.active.size.to_s})", proposals_path
+    %li{class: params[:filter] == 'needs_support' ? :active : false}= link_to raw("Needs more #{tsign} (#{@needs_support_count.to_s})"), proposals_path(filter: params[:filter] == 'needs_support' ? false : :needs_support)
+    %li{class: params[:filter] == 'scheduled' ? :active : false}= link_to "Scheduled (#{@scheduled_count.to_s})", proposals_path(filter: params[:filter] == 'scheduled' ? false :  :scheduled)
+    %li{class: params[:filter] == 'review' ? :active : false}= link_to "Awaiting review (#{@review_count.to_s})", proposals_path(filter: params[:filter] == 'review' ? false : :review)
+    %li{class: controller.action_name == 'archived' ? :active : false}= link_to "Archived (#{Proposal.archived.size.to_s})", archived_proposals_path
 .proposals_index
 
   .row.expanded
-    .small-12.columns
-      %h1 Proposals
+    .small-12.medium-6.columns.small-centered.medium-uncentered
+      %h1 
+        - if @proposals.first.stopped == true
+          Archived
+        Proposals
+
   - if user_signed_in?
     .row.expanded
-      .small-8.columns
+      .small-8.columns.small-centered.medium-uncentered.medium-12
         - if current_user.email =~ /^change@me/ 
           %p You must enter a valid email address to propose (or pledge towards) an experiment.
         - else
           = link_to 'Propose experiment!', new_proposal_path, class: [:button, :large]
   - else
     .row.expanded
-      .small-10.columns
+      .small-8.columns.small-centered.medium-uncentered.medium-12
         %p Log in (or join!) to propose an experiment.
     
   .row.expanded
-    .small-10.columns
+    .small-8.columns.small-centered.medium-uncentered.medium-12
       %p
          
         = raw tsign
@@ -40,9 +51,6 @@
           %td.name.sub
             = link_to proposal.name, proposal
             = link_to fa_icon('info-circle'), '#', :"data-open" => "proposal_#{proposal.id.to_s}", class: 'hide-for-small-only'
-
-
-
 
           %td
             .avatar= link_to image_tag(proposal.user.avatar.url(:thumb).gsub(/development/, 'production')), proposal.user
@@ -70,7 +78,7 @@
                   - else
                     %p
                       - if proposal.instances.first.experiment.instances.future.size > 1
-                        = link_to fa_icon('calendar'), '#', onclick: "javascript:$('#upcoming_events_#{proposal.id.to_s}').slideToggle();return false;"
+                        = link_to fa_icon('calendar'), '#', onclick: "javascript:$('ul#upcoming_events_#{proposal.id.to_s}').slideToggle();return false;"
                       = proposal.instances.first.experiment.instances.future.size.to_s
                       upcoming, next at:
 
@@ -81,12 +89,14 @@
                         = link_to a.name, experiment_instance_path(a.experiment, a)
                         %br/
                         %em= date_range(a.start_at, a.end_at)
-                      .hidden_list{id: "upcoming_events_#{proposal.id.to_s}"}
-                        - proposal.instances.first.experiment.instances.future.or(proposal.instances.first.experiment.instances.current).order(:start_at).each do |i|
-                          %li
-                            = link_to i.name, experiment_instance_path(i.experiment, i)
-                            %br/
-                            %em= date_range(i.start_at, i.end_at)
+                      
+                    
+                    %ul.hidden_list{id: "upcoming_events_#{proposal.id.to_s}"}
+                      - proposal.instances.first.experiment.instances.future.or(proposal.instances.first.experiment.instances.current).order(:start_at).each do |i|
+                        %li
+                          = link_to i.name, experiment_instance_path(i.experiment, i)
+                          %br/
+                          %em= date_range(i.start_at, i.end_at)
                           
                           
                 - else 
@@ -344,7 +354,7 @@
 
                     = link_to proposal do
                       .status
-                        Awaiting scheduling
+                        Awaiting review
                         - if proposal.recurs?
                           - if proposal.intended_sessions == 0 || proposal.pledged < proposal.total_needed_with_recurrence
                             and accepting more pledges
@@ -430,8 +440,7 @@
                   = link_to proposal.comments_and_pledges.last.user.display_name, proposal.comments_and_pledges.last.user, target: :_blank
                   = time_ago_in_words(proposal.comments_and_pledges.last.created_at) + " ago"
                   
-        / %tr.occluded_row
-        /   %td{colspan: 5}
+                  
         .reveal.occluded[proposal]{:"data-reveal" => ''}
           %h2= proposal.name
           = link_to 'See full proposal and comments', proposal, class: [:button]
@@ -466,6 +475,8 @@
           
           .title Intended participants:
           .answer= simple_format proposal.intended_participants
+        %tr.border_row
+          %td.border{colspan:  5} &nbsp;
 = content_for :jquery do
   :plain
     $('table.proposals').cardtable();
