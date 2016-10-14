@@ -50,6 +50,8 @@ class Admin::EmailsController < Admin::BaseController
           body = ERB.new(@email.body).result(binding).html_safe
           EmailsMailer.announcement(recipient, @email, body).deliver_later
         end
+        @email.sent = true
+        @email.save
       end
       flash[:notice] = 'Sending emails to ' + mailing_list.size.to_s + " users"
       redirect_to admin_emails_path
