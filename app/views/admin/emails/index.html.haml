@@ -17,7 +17,7 @@
       %tbody
         - @emails.each do |email|
           %tr
-            %td= l (email.sent == true ? email.sent_at : email.updated_at )
+            %td= email.sent == true ? email.try(:sent_at) : email.updated_at 
             %td= email.subject
             %td
               = email.sent == true ? 'SENT!' : 'not'
