@@ -14,7 +14,12 @@ Rails.application.routes.draw do
         get :respend
       end
     end
-    resources :emails
+    resources :emails do
+      member do
+        get :send_to_list
+        get :send_test
+      end
+    end
     resources :ethtransactions
     resources :experiments do
       resources :instances

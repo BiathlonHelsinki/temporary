@@ -1,8 +1,12 @@
-.row
+.row.expanded
+  .small-12.columns
+    %h2 Email newsletters
+    
+.row.expanded
   .small-12.columns
     = link_to 'Create new email', new_admin_email_path, class: [:button]
 
-.row
+.row.expanded
   .small-10.columns
     %table
       %thead
@@ -15,7 +19,12 @@
           %tr
             %td= l (email.sent == true ? email.sent_at : email.updated_at )
             %td= email.subject
-            %td= email.sent == true ? 'SENT!' : 'not'
+            %td
+              = email.sent == true ? 'SENT!' : 'not'
+              - if email.sent != true
+                = link_to 'Send!', send_to_list_admin_email_path(email), class: [:button, :small] 
+              %br/
+              = link_to 'Send test', send_test_admin_email_path(email), class: [:button, :tiny, :secondary]
             %td
               = link_to 'Preview', "/announcements/#{email.slug}", target: :_blank, class: [:button, :small, :secondary]
               - if can? :edit, email
