@@ -1,0 +1,20 @@
+.posts_index
+  .row.expanded
+    .small-12.columns
+      %h1 News
+  - @posts.each do |post|
+    .row.expanded
+      %article.post_single
+
+        .small-10.columns
+          .post
+            .meta
+              %span.date= post.published_at.strftime('%d.%m.%Y')
+              = " // "
+              %span.category News
+              = " // "
+            .title= link_to post.title, post
+            - if post.image?
+              = image_tag post.image.url
+            .body= raw post.body
+    

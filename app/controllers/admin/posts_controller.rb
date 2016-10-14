@@ -24,6 +24,7 @@ class Admin::PostsController < Admin::BaseController
   
   def index
     @posts = Post.all.order(created_at: :desc)
+    set_meta_tags title: 'News'
   end
   
   def new
