@@ -334,6 +334,35 @@ article.instance_single {
 
   }
 }
+
+.email_preview {
+  padding: 2rem 0;
+  .email {
+    border-top: 5px solid black;
+    padding: 0.875rem 0;
+  
+    h2 {
+      font-family: "Inconsolata", monospace;
+        font-size: 2.373rem;
+        line-height: 3.2rem;
+        font-weight: bold;
+        text-transform: uppercase;
+
+    }
+    .body {
+      font-family: $ptsans;
+      h2, h3 {
+         font-family: "Inconsolata", monospace;
+         text-decoration: underline;
+      }
+      li {
+        a {
+          color: $blue;
+        }
+      }
+    }
+  }
+}
 .posts_index {
   padding: 2rem 0;
   h1 {

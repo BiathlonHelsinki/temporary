@@ -1,0 +1,25 @@
+.row
+  .small-12.columns
+    = link_to 'Create new email', new_admin_email_path, class: [:button]
+
+.row
+  .small-10.columns
+    %table
+      %thead
+        %th Date
+        %th Subject
+        %th status
+        %th
+      %tbody
+        - @emails.each do |email|
+          %tr
+            %td= l (email.sent == true ? email.sent_at : email.updated_at )
+            %td= email.subject
+            %td= email.sent == true ? 'SENT!' : 'not'
+            %td
+              = link_to 'Preview', "/announcements/#{email.slug}", target: :_blank, class: [:button, :small, :secondary]
+              - if can? :edit, email
+                = link_to 'Edit', edit_admin_email_path(email), class: [:button, :small]
+              - if can? :destroy, email  
+                = link_to 'Delete', [:admin, email], method: :delete, class: [:button, :alert, :small], data: {confirm: 'Are you sure?'}
+          

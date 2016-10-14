@@ -14,6 +14,7 @@ Rails.application.routes.draw do
         get :respend
       end
     end
+    resources :emails
     resources :ethtransactions
     resources :experiments do
       resources :instances
@@ -79,7 +80,7 @@ Rails.application.routes.draw do
         
   end
   
-
+  get '/announcements/:id' => 'emails#show'
   match '/link_temporary' => 'onetimers#link', via: :get
   match '/admin/:id/resubmit' => 'admin/base#resubmit', via: :post
   match '/admin/:id/respend' => 'admin/base#respend', via: :get
