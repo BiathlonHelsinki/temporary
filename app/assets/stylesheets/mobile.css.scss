@@ -29,7 +29,7 @@ $large-only: "#{$screen} and (min-width: #{lower-bound($large-range)}) and (max-
     ul.menu {
       padding: 0;
       li {
-        width: 50%;
+//        width: 50%;
         display: block;
       }
     }

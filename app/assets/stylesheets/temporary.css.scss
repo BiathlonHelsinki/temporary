@@ -346,6 +346,9 @@ article.instance_single {
 .submenu {
   ul.menu {
     padding: 0.4rem 2.5rem;
+    &.page {
+      padding: 0.4rem;
+    }
     background-color: $yellow;
     li {
       a.first {

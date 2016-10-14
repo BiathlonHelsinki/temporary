@@ -1,3 +1,11 @@
+.submenu.hide-for-small-only
+  %ul.menu
+    %li.active= link_to 'News', posts_path
+    %li= link_to 'What is Temporary?', page_path('what-is-temporary')
+    %li= link_to 'How does it work?', page_path('how-does-it-work')
+    %li= link_to 'Where is it?', page_path('where-is-it')
+    %li= link_to raw("What's the #{tsign} mean?"), page_path('what-is-this-t-everywhere')
+    
 .posts_index
   .row.expanded
     .small-12.columns
