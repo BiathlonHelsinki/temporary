@@ -27,6 +27,8 @@ class Activity < ApplicationRecord
       end
     when 'Instance'
       "<a href='/experiments/#{item.experiment.slug}/#{item.slug}'>#{item.name}</a>"
+    when 'Nfc'
+      "an ID card"
     else
       item.name
     end

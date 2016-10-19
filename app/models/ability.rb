@@ -16,7 +16,7 @@ class Ability
       cannot :manage, Credit
       cannot :manage, Page
       cannot :manage, Email
-      
+      can :create, Comment
     end
   end
 end

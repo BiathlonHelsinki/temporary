@@ -20,6 +20,15 @@
 //= require jquery.infinitescroll
 //= require masonry.pkgd.min
 //= require imagesloaded.pkgd.min
+//= require jquery.scrollTo.min
+//= require rangy-core
+//= require rangy-cssclassapplier
+//= require rangy-highlighter
+//= require rangy-selectionsaverestore
+//= require rangy-serializer
+//= require rangy-textrange
+//= require jquery-ui/autocomplete
+  
 $(function(){ $(document).foundation();
 
  });

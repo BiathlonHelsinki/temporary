@@ -41,6 +41,19 @@
           %strong Ethereum accounts:
           - @user.accounts.each do |account|
             %p= link_to account.address, "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/address/#{account.address}", target: :_blank
+
+      .subsection
+        %div
+          %strong ID cards:
+          .info
+            - if @user.nfcs.empty?
+              %em No ID cards yet
+            - else
+              - @user.nfcs.each do |card|
+                .row
+                  .small-12.columns
+                    = card.tag_address
+
       - if user_signed_in?
         - if current_user.has_role? :admin
           %br/

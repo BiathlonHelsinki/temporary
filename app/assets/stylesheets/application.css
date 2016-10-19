@@ -23,7 +23,7 @@
  *= require profile
  *= require posts
  *= require mobile
-
+ *= require jquery-ui/autocomplete
  */
 
 .row.expanded {

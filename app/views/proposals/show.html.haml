@@ -166,3 +166,9 @@
                     = f.input :image, :label => t(:attach_image_to_comment)
                     = f.input :attachment, :label => t(:attach_attachment_to_comment)
                     = f.submit t(:save), :class => [:button, :round]
+
+= content_for :jquery do
+  :plain
+    $(function(){
+        $("textarea").autoSuggest("#{Figaro.env.biathlon_api_address}/users/all");
+    });
