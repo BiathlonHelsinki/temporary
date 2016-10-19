@@ -147,8 +147,12 @@
                       - if comment.attachment?
                         %p= link_to t(:download) + ' ' + File.basename(URI.parse(comment.attachment.url).path), comment.attachment.url, class: [:button, :round, :tiny]
                     
-  - if user_signed_in?                  
-    - if can? :create, Comment        
+  - if user_signed_in?
+    
+    - if can? :create, Comment
+      = content_for :jquery do
+        :plain
+          $("#comment_input").mentionable("/users/mentions");
       .row.expanded
         .small-12.columns
           #comment_form
@@ -166,7 +170,9 @@
                       = f.input :image, :label => t(:attach_image_to_comment)
                       = f.input :attachment, :label => t(:attach_attachment_to_comment)
                       = f.submit t(:save), :class => [:button, :round]
-
-= content_for :jquery do
-  :plain
-    $("#comment_input").mentionable("/users/mentions");
+  - else
+    .row.expanded
+      .small-12.columns                
+        %h3
+          = link_to 'Log in', '/users/sign_in'
+          to comment on this proposal.
