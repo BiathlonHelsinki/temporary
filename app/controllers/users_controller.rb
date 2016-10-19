@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, except: [:mentions]
   
   def edit
     # users can edit their own profile, somewhat
@@ -9,6 +9,12 @@ class UsersController < ApplicationController
       redirect_to '/'
     end
     set_meta_tags title: 'Edit your profile'
+  end
+  
+  def mentions
+    @users = User.fuzzy_search(params[:mentioning])
+    logger.warn('mentions are ' + @users.inspect)
+    render json: @users
   end
   
   def show

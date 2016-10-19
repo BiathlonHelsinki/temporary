@@ -70,6 +70,9 @@ Rails.application.routes.draw do
   
   
   resources :users do
+    collection do
+      get :mentions
+    end
     resources :activities
     resources :transfers  do
       collection do
