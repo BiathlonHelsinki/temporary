@@ -38,6 +38,17 @@ class User < ActiveRecord::Base
   validates_presence_of :geth_pwd
 
 
+  def as_mentionable
+    {
+      created_at: self.created_at,
+      id: self.id,
+      slug: self.slug,
+      image_url: self.avatar.url(:thumb).gsub(/development/, 'production'),
+      name:  self.display_name,
+      updated_at: self.updated_at
+    }
+  end
+  
   def self.find_for_database_authentication(warden_conditions)
     conditions = warden_conditions.dup
     if login = conditions.delete(:login)

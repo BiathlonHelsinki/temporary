@@ -203,19 +203,41 @@ class Proposal < ApplicationRecord
   def maximum_pledgeable(user)
     if pledges.map(&:user).include?(user)  # user has already pledged
       if has_enough?
-        user.available_balance + pledges.where(user: user).pledge
+        if recurs?
+          if intended_sessions == 0
+            user.available_balance + pledges.where(user: user).pledge
+          else
+            (user.available_balance + pledges.where(user: user).pledge) > cumulative_needed_for(intended_sessions) ? cumulative_needed_for(intended_sessions) : (user.available_balance + pledges.where(user: user).pledge) 
+          end
+        else
+          pledges.where(user: user).pledge
+        end
+      
       elsif pledges.map(&:user).size == 1
         Rate.get_current.experiment_cost - 1
       else
-        user.available_balance
+        cumulative_needed_for(intended_sessions) 
       end
     else    # user has not yet pledged
       if has_enough?
-        user.available_balance   # no limit 
+        if recurs?
+          if intended_sessions == 0
+            user.available_balance
+          else
+             (user.available_balance  > cumulative_needed_for(intended_sessions)) ? cumulative_needed_for(intended_sessions) : user.available_balance
+           end
+        else
+          0
+        end
+
       elsif pledges.to_a.delete_if(&:new_record?).empty?
-        Rate.get_current.experiment_cost - 1
+        if instances.published.empty?
+          needed_for_next - 1
+        else
+          needed_for_next
+        end
       else
-        user.available_balance
+        needed_for_next
       end
     end
   end

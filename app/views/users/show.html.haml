@@ -40,7 +40,7 @@
         .ethereum
           %strong Ethereum accounts:
           - @user.accounts.each do |account|
-            %p= link_to account.address, "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/address/#{account.address}", target: :_blank
+            %p= link_to account.address, "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/token/#{Figaro.env.contract_address}?a=#{account.address}", target: :_blank
 
       .subsection
         %div
@@ -127,31 +127,7 @@
               %td
           %tbody.page
             = render @user.all_activities.sort_by(&:created_at).reverse
-            / - @user.all_activities.sort_by(&:created_at).reverse.each do |activity|
-            /   %tr
-            /     %td= l activity.created_at, format: :long
-            /     %td= link_to activity.user.display_name, activity.user, target: :_blank
-            /     %td= activity.description
-            /     %td= raw activity.linked_name
-            /     %td.temps
-            /       - unless activity.value.nil?
-            /         - if activity.addition == 1
-            /           = fa_icon('plus')
-            /         - if activity.addition == 0
-            /           - if activity.description =~ /received/
-            /             = fa_icon('arrows-h')
-            /           - if activity.description =~ /pledged/
-            /             = fa_icon('smile-o')
-            /           - if activity.description =~ /withdrew/
-            /             = fa_icon('frown-o')
-            /         - if activity.addition == -1
-            /           = fa_icon('minus')
-            /         = raw ("#{activity.value}#{raw tsign}")
-            /
-            /     %td
-            /       - if activity.ethtransaction
-            /         = link_to activity.ethtransaction.txaddress[0..5] + "...", "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank
-            /
+      
 
     .row.expanded
       .small-5.columns.right.end

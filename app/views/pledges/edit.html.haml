@@ -1,6 +1,7 @@
-.row
-  .small-10.columns.medium-8
-    %h3 Editing your pledge for:
-    %h4= @item.name
+.new_pledge
+  .row.expanded
+    .small-10.columns.medium-8
+      %h3 Editing your pledge to:
+      %h4= link_to @item.name, @item, target: :_blank
     
 = render partial: 'form'

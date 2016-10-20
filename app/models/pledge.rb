@@ -26,6 +26,10 @@ class Pledge < ApplicationRecord
     end
   end
   
+  def content_linked
+    comment.gsub('href="#"', '').gsub(/\srel="/, ' href="')
+  end
+  
   def content
     comment
   end

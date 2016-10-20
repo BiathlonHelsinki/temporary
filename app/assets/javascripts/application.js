@@ -22,6 +22,17 @@
 //= require imagesloaded.pkgd.min
 //= require jquery.mentionable
   
-$(function(){ $(document).foundation();
+function getContent(){
+  var div_val=document.getElementById("comment_input").innerHTML;
+          document.getElementById("comment_input_textarea").value =div_val;
+      if(div_val==''){
+      return false;
+      //empty form will not be submit. You can also alert this message like this. alert(blahblah);
+    }
+}
+  
+$(function(){ 
+  
+  $(document).foundation();
 
  });

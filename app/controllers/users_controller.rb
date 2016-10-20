@@ -12,9 +12,9 @@ class UsersController < ApplicationController
   end
   
   def mentions
-    @users = User.fuzzy_search(params[:mentioning])
-    logger.warn('mentions are ' + @users.inspect)
-    render json: @users
+    @users = User.where("lower(username) LIKE '%" +  params[:mentioning].downcase + "%'")
+    logger.warn('mentions are ' + @users.map(&:as_mentionable).to_json )
+    render json: @users.map(&:as_mentionable).to_json
   end
   
   def show

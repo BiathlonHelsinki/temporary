@@ -1,6 +1,6 @@
-= semantic_form_for [@item, @pledge] do |f|
+= semantic_form_for [@item, @pledge], html: {onSubmit: "return getContent();", multipart: true, :"data-abide" => '' } do |f|
   .row.expanded
-    .small-10.medium-6.columns
+    .small-10.medium-9.columns
       %p 
         You have
         = raw("#{current_user.available_balance + @pledge.pledge.to_i}#{tsign}")
@@ -31,13 +31,11 @@
       - else
         %p
           This proposal needs 
-          = raw "#{@item.needed_for_next - @item.remaining_pledges}#{tsign}"
-          to be considered for scheduling.
+          = raw "#{@item.needed_for_next - @item.remaining_pledges} more #{tsign}"
+          to be reviewed for scheduling.
           
         %p
-          Currently,
-          = raw @current_rate.to_s + tsign
-          are needed before an experiment can be reviewed for scheduling.
+
           You may pledge a maximum of
           = raw "#{@item.maximum_pledgeable(current_user)}#{tsign}"
           to this proposal.
@@ -53,7 +51,10 @@
         - unless f.object.new_record?
           = link_to 'Delete your pledge!', [f.object.item, f.object], method: :delete, class: [:button, :small, :alert], data: {confirm: "Are you sure? Your #{tsign} will be restored to your full balance."} 
       - else
-        %p
+        = content_for :jquery do
+          :plain
+            $("#comment_input").mentionable("/users/mentions", {position: 'right'});
+        %h3
           How many 
           = ENV['currency_full_name'].pluralize
           would you like to pledge?
@@ -61,10 +62,17 @@
           .small-2.medium-2.columns= f.input :pledge, label: 'Your pledge:'
     
         .row
-          .small-10.medium-6.columns= f.input :comment, label: 'Any comments on your pledge?'
+          .small-10.medium-6.columns
+            %label Any comments on your pledge?
+            #comment_wrapper
+              #comment_input{contenteditable: true}= f.object.new_record? ? '' : raw(f.object.comment)
+
+            -#= f.input :content, :label => false, input_html: {:required => '', id: :comment_input_textarea}
+            
+            = f.input :comment, label: false,  as: :text, input_html: { id: :comment_input_textarea }
         .row
           .small-10.medium-6.columns
-            = f.submit 'Pledge!', class: [:button, :small]
+            = f.submit 'Pledge!', class: [:button]
             - unless f.object.new_record?
-              = link_to 'Delete your pledge!', [f.object.item, f.object], method: :delete, class: [:button, :small, :alert], data: {confirm: "Are you sure? Your #{tsign} will be restored to your full balance."}
+              = link_to 'Delete your pledge!', [f.object.item, f.object], method: :delete, class: [:button, :small, :alert, :delete_pledge], data: {confirm: raw("Are you sure? Your #{tsign} will be restored to your full balance.")}
   

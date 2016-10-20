@@ -6,7 +6,9 @@ class Comment < ApplicationRecord
   validates_presence_of :user_id, :item_id, :item_type, :content
   before_save :update_image_attributes, :update_attachment_attributes
   
-
+  def content_linked
+    content.gsub('href="#"', '').gsub(/\srel="/, ' href="')
+  end
   
   def update_image_attributes
     if image.present? && image_changed?

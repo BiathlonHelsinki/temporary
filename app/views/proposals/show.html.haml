@@ -71,8 +71,21 @@
         .title Goals:
         .answer= simple_format @proposal.goals
    
+        
         .title Timeframe
         .answer= simple_format @proposal.timeframe
+        
+        .title How often?
+        .answer
+          - if @proposal.recurrence == 1
+            Happens only once
+          - if @proposal.recurrence == 2
+            = @proposal.intended_sessions == 0  ? 'Multiple meetings proposed' : @proposal.intended_sessions.to_s + " meetings proposed"
+          - if @proposal.recurrence == 3
+            Happens regularly
+            - unless @proposal.intended_sessions == 0
+              %p
+                = @proposal.intended_sessions.to_s + " meetings proposed"
     
         .title Intended participants:
         .answer= simple_format @proposal.intended_participants
@@ -114,7 +127,11 @@
                 .sma11-12.medium-8.columns.end
                   .row
                     .small-2.columns
-                      = link_to image_tag(comment.user.avatar.url(:box)), comment.user, target: :_blank
+                      = link_to image_tag(comment.user.avatar.url(:box)), comment.user, target: :_blank, class: :comment_avatar
+                      - if comment.class == Comment
+                        - if user_signed_in?
+                          - if can? :destroy, comment
+                            = link_to 'Delete this comment', comment, method: :delete, data: {confirm: 'Are you sure? If someone has replied to this comment and you delete it, it might be confusing.'}, class: [:button, :tiny, :secondary]
                     .small-10.columns
                       .comment_type
                         - if comment.class == Pledge
@@ -137,11 +154,11 @@
                         - if comment.respond_to?(:systemflag)
                           - if comment.systemflag == true
                             .system
-                              %em= raw comment.content
+                              %em= raw comment.content_linked
                           - else
-                            = simple_format(comment.content)
+                            = simple_format(comment.content_linked)
                         - else
-                          = simple_format(comment.content)
+                          = simple_format(comment.content_linked)
                       - if comment.image?
                         = image_tag comment.image.url(:small)
                       - if comment.attachment?
@@ -152,7 +169,8 @@
     - if can? :create, Comment
       = content_for :jquery do
         :plain
-          $("#comment_input").mentionable("/users/mentions");
+          $("#comment_input").mentionable("/users/mentions", {position: 'right'});
+          
       .row.expanded
         .small-12.columns
           #comment_form
@@ -161,12 +179,19 @@
                 .row
                   .small-2.columns
                     = image_tag current_user.avatar.url(:box)
+                    
                     %p.small= link_to t(:edit_profile), edit_user_path(current_user), class: [:button, :tiny, :secondary, :round]
                   .small-10.columns
-                    %h3= t :what_do_you_think_about_this
-                    = semantic_form_for [ @proposal,  @comment = @proposal.comments.build(user: current_user)], html: {multipart: true, :"data-abide" => '' } do |f|
+                    %h3
+                      = t :what_do_you_think_about_this
+                    %p.small
+                      %em (Type '@' and someone's username to tag them in your comment.)
+                    = semantic_form_for [ @proposal,  @comment = @proposal.comments.build(user: current_user)], html: {onSubmit: "return getContent();", multipart: true, :"data-abide" => '' } do |f|
                       = f.input :user_id, as: :hidden, data: {value: current_user.id}
-                      = f.input :content, :label => false, input_html: { :required => '', id: :comment_input}
+                      #comment_wrapper
+                        #comment_input{contenteditable: true}
+
+                      = f.input :content, :label => false, input_html: {:required => '', id: :comment_input_textarea}
                       = f.input :image, :label => t(:attach_image_to_comment)
                       = f.input :attachment, :label => t(:attach_attachment_to_comment)
                       = f.submit t(:save), :class => [:button, :round]

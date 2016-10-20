@@ -649,6 +649,35 @@ article.instance_single {
     }
   }
 }
+form.pledge {
+  #comment_wrapper {
+    position: relative;
+  }
+  #mentioned-user-list {
+    div.occluded {
+      display: none;
+    }
+  }
+  #comment_input {
+    background-color: $grey;
+    white-space: pre-wrap;
+    height: 250px; 
+    img {
+      max-height: 25px;
+      margin-left: 0.4rem;
+    } 
+  }
+  #comment_input_textarea {
+    display: none;
+  }
+  li.text {
+    position: relative;
+
+  }
+  a.delete_pledge {
+    margin-top: 2rem;
+  }
+}
 
 .proposal_form {
   h1 {
@@ -695,6 +724,7 @@ article.instance_single {
       &:focus {
         outline: 1px solid $yellow;
       }
+     
     }
   }
 }
@@ -906,6 +936,9 @@ article.instance_single {
     padding: 2.5rem;
     border-bottom: 1px dotted #555;
   }
+  .comment_avatar  img {
+    margin-bottom: 0.4rem;
+  }
 }
 
 .proposal_detail {
@@ -1016,7 +1049,12 @@ article.instance_single {
       font-style: normal;
       font-size: 1rem;
       margin-bottom: 1rem;
-      
+      p {
+        img {
+          max-height: 30px;
+          margin-left: 0.4rem;
+        }
+      }
       .extra_info {
         margin-bottom: 2rem;
         font-family: $inconsolata;
@@ -1043,6 +1081,30 @@ article.instance_single {
       input[type=submit] {
         font-family: $inconsolata;
         font-size: 1rem;
+      }
+      #comment_wrapper {
+        position: relative;
+      }
+      #mentioned-user-list {
+        div.occluded {
+          display: none;
+        }
+      }
+      #comment_input {
+        background-color: $grey;
+        white-space: pre-wrap;
+        height: 250px; 
+        img {
+          max-height: 25px;
+          margin-left: 0.4rem;
+        } 
+      }
+      #comment_input_textarea {
+        display: none;
+      }
+      li.text {
+        position: relative;
+
       }
     }
     

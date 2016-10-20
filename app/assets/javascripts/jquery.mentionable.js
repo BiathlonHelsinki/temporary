@@ -21,7 +21,7 @@
   var targetURL             = null;
   var onComplete            = null;
   var options               = null;
-  var debugMode             = false;
+  var debugMode             = true;
   var debuggerBlock         = "<div id='mentionable-debugger'></div>"
   var caretStartPosition    = 0;
   var keyRespondingTimeOut  = null;
@@ -86,7 +86,7 @@
     }
 
     this.keypress(function(e){
-
+     
       watchKey();
 
       switch(e.keyCode){
@@ -123,6 +123,8 @@
       fullCachedName = cachedName;
     });
     this.keyup(function(e){
+       // $('#position').text(currentCaretPosition());
+       // $('#position_plain').text(currentCaretPositionPt());
       switch(e.keyCode){
         case KEY.DELETE:
         case KEY.BACKSPACE:
@@ -161,7 +163,7 @@
    * initialize a cache that store the user name that is being mentioned
    */
   function initNameCaching(){
-    caretStartPosition = currentCaretPosition();
+    caretStartPosition = currentCaretPositionPt();
     cachedName         = "@";
   }
 
@@ -232,6 +234,28 @@
       bindItemClicked();
     }
   }
+  
+  function setEndOfContenteditable(contentEditableElement)
+  {
+      var range,selection;
+      if(document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+
+      {
+          range = document.createRange();//Create a range (a range is a like the selection but invisible)
+          range.selectNodeContents(contentEditableElement);//Select the entire contents of the element with the range
+          range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
+          selection = window.getSelection();//get the selection object (allows you to change selection)
+          selection.removeAllRanges();//remove any selections already made
+          selection.addRange(range);//make the range you have just created the visible selection
+      }
+      else if(document.selection)//IE 8 and lower
+      { 
+          range = document.body.createTextRange();//Create a range (a range is a like the selection but invisible)
+          range.moveToElementText(contentEditableElement);//Select the entire contents of the element with the range
+          range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
+          range.select();//Select the range (make it the visible selection
+      }
+  }
+  
 
   /*
    * fill user name and image as a list item in user list block
@@ -240,7 +264,7 @@
     if(data.length > 0){
       listSize = data.length;
       $.each(data, function(key, value){
-        userList.append("<li><img src='" + value.image_url + "' /><span>" + value.name + "</span></li>");
+        userList.append("<li><img src='" + value.image_url + "' /><span class='the_name'>" + value.name + "</span><div class='occluded'><img height=25 src='" + value.image_url + "' /><a href='#' rel='/users/" + value.id + "'>" + value.name + "</a></div></li>");
       });
       userList.find("li:first-child").attr("class","active");
       bindItemClicked();
@@ -260,19 +284,111 @@
       selectUser($(this));
     });
   }
+  function getSelectionHtml() {
+      var html = "";
+      if (typeof window.getSelection != "undefined") {
+          var sel = window.getSelection();
+          if (sel.rangeCount) {
+              var container = document.createElement("div");
+              for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+                  container.appendChild(sel.getRangeAt(i).cloneContents());
+              }
+              html = container.innerHTML;
+          }
+      } else if (typeof document.selection != "undefined") {
+          if (document.selection.type == "Text") {
+              html = document.selection.createRange().htmlText;
+          }
+      }
+      return html;
+  }
+  
+  
+  function getCaretPlaintext(element) {
+    var caretOffset = 0;
+    var doc = element.ownerDocument || element.document;
+    var win = doc.defaultView || doc.parentWindow;
+    var sel;
+    if (typeof win.getSelection != "undefined") {
+      sel = win.getSelection();
+      var target = document.createTextNode("\u0001");
+      win.getSelection().getRangeAt(0).insertNode(target);
+      var position = element.innerHTML.indexOf("\u0001");
+      target.parentNode.removeChild(target);
+      // alert('position is ' + position);
+    }
+    else {
+      alert('error');
+    }
+    return position;
+      
+  }
+    
+  function getCaretCharacterOffsetWithin(element) {
+      var caretOffset = 0;
+      var doc = element.ownerDocument || element.document;
+      var win = doc.defaultView || doc.parentWindow;
+      var sel;
+      if (typeof win.getSelection != "undefined") {
+          sel = win.getSelection();
+          if (sel.rangeCount > 0) {
+              var range = win.getSelection().getRangeAt(0);
+              var preCaretRange = range.cloneRange();
+              preCaretRange.selectNodeContents(element);
+              preCaretRange.setEnd(range.endContainer, range.endOffset);
+              caretOffset = preCaretRange.toString().length;
+          }
+          
+      } else if ( (sel = doc.selection) && sel.type != "Control") {
+          var textRange = sel.createRange();
+          var preCaretTextRange = doc.body.createTextRange();
+          preCaretTextRange.moveToElementText(element);
+          preCaretTextRange.setEndPoint("EndToEnd", textRange);
+          caretOffset = preCaretTextRange.html.length;
+      }
+      return caretOffset;
+  }
 
+
+  /*
+   * replace a part of originalString from [from] to [to] position with addedString
+   * param from               An integer of a begining position
+   * param to                 An itenger of an ending position
+   * param originalString     An original string to be partialy replaced
+   * param addedString        A string to be replaced
+   */
+  function replaceString(from, to, originalString, addedString){
+    try{
+      if(from == 0){
+        return addedString + originalString.substring(to, originalString.length);
+      }
+      if(from != 0){
+        firstChunk = originalString.substring(0, from);
+        lastChunk  = originalString.substring(to, originalString.length);
+        return firstChunk + addedString + lastChunk;
+      }
+    }
+    catch(error){
+      return originalString;
+    }
+  }
+  
   /*
    * perform an user selection by adding the selected user name
    * to the text aprea
    */
   function selectUser(userItem){
-    inputText    = textArea.val();
+    inputText    = textArea.html();
+    // alert('input text is ' + inputText);
+    // alert('caretStartPosition  is ' + caretStartPosition + ', to is ' + (caretStartPosition + fullCachedName.length)  + ', addedString is is ' + "@" + userItem.find("span.the_name").html() );
+                                  
     replacedText = replaceString(caretStartPosition, caretStartPosition +
-                                  fullCachedName.length, inputText, "@" +
-                                  userItem.find("span").html());
+                                  fullCachedName.length, inputText, 
+                                  userItem.find("div.occluded").html());
     textArea.focus();
-    textArea.val(replacedText);
+    textArea.html(replacedText);
     hideUserFrame();
+    setEndOfContenteditable(textArea[0]);
   }
 
   function caretMoveLeft(){
@@ -324,37 +440,53 @@
     myDebugger = $("#mentionable-debugger");
     myDebugger.html("<b>cache : </b>" + cachedName +" | <b>full cache : </b>" + fullCachedName);
   }
-
+  //
+  // function getCaretPosition(editableDiv) {
+  //   var caretPos = 0,
+  //     sel, range;
+  //   if (window.getSelection) {
+  //     sel = window.getSelection();
+  //     if (sel.rangeCount) {
+  //       range = sel.getRangeAt(0);
+  //       if (range.commonAncestorContainer.parentNode == editableDiv) {
+  //
+  //         caretPos = range.endOffset;
+  //             alert(caretPos);
+  //       }
+  //     }
+  //   } else if (document.selection && document.selection.createRange) {
+  //     range = document.selection.createRange();
+  //     if (range.parentElement() == editableDiv) {
+  //       var tempEl = document.createElement("span");
+  //       editableDiv.insertBefore(tempEl, editableDiv.firstChild);
+  //       var tempRange = range.duplicate();
+  //       tempRange.moveToElementText(tempEl);
+  //       tempRange.setEndPoint("EndToEnd", range);
+  //
+  //       caretPos = tempRange.text.length;
+  //
+  //     }
+  //   }
+  //
+  //   return caretPos;
+  // }
+  //
   /*
    * return an integer of a curret caret position
    */
   function currentCaretPosition(){
-    caretContainer = textArea[0];
-    return caretContainer.selectionStart;
+    // caretContainer = textArea[0];
+
+    // return caretContainer.selectionStart;
+    return getCaretCharacterOffsetWithin(textArea[0]);
+  }
+  function currentCaretPositionPt(){
+    // caretContainer = textArea[0];
+
+    // return caretContainer.selectionStart;
+    return getCaretPlaintext(textArea[0]);
   }
 
-  /*
-   * replace a part of originalString from [from] to [to] position with addedString
-   * param from               An integer of a begining position
-   * param to                 An itenger of an ending position
-   * param originalString     An original string to be partialy replaced
-   * param addedString        A string to be replaced
-   */
-  function replaceString(from, to, originalString, addedString){
-    try{
-      if(from == 0){
-        return addedString + originalString.substring(to, originalString.length);
-      }
-      if(from != 0){
-        firstChunk = originalString.substring(0, from);
-        lastChunk  = originalString.substring(to, originalString.length);
-        return firstChunk + addedString + lastChunk;
-      }
-    }
-    catch(error){
-      return originalString;
-    }
-  }
 
   /*
    * initialize the key timeout. It will observe the user interaction.
