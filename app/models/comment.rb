@@ -5,6 +5,20 @@ class Comment < ApplicationRecord
   mount_uploader :attachment, AttachmentUploader
   validates_presence_of :user_id, :item_id, :item_type, :content
   before_save :update_image_attributes, :update_attachment_attributes
+  after_create :update_activity_feed
+  
+  def update_activity_feed
+    Activity.create(user: user, item: self.item, description: "commented on",  addition: 0)
+    matches = content.scan(/rel=\"\/users\/(\d*)\"/)
+    unless matches.empty?
+      matches.flatten.each do |uu|
+        u = User.find(uu.to_i)
+        unless u.nil?
+          Activity.create(user: u, description: 'was mentioned by', item: user, extra: self.item, extra_info: 'in a comment on ', addition: 0)
+        end
+      end
+    end
+  end
   
   def content_linked
     content.gsub('href="#"', '').gsub(/\srel="/, ' href="')

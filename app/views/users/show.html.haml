@@ -35,6 +35,11 @@
         - if current_user != @user && current_user.latest_balance > 0
           %br/
           = link_to raw("Send #{tsign} to #{@user.username}"), send_temps_user_transfers_path(@user), class: [:button]
+      - unless @user.instances_users.empty?
+        %br
+        .ethereum
+          %strong Participated in:
+          = pluralize(@user.instances_users.size, 'experiment')
       - unless @user.accounts.empty?
         %br/
         .ethereum
@@ -58,6 +63,10 @@
         - if current_user.has_role? :admin
           %br/
           .ethereum
+            %strong Email:
+            = @user.email
+            %br/ 
+            %br/
             %strong Authentications:
             - @user.authentications.each do |auth|
               %p= "provider: #{auth.provider}, username: #{auth.username}, uid: #{auth.uid}"
@@ -76,10 +85,10 @@
       - else
         .title Pledges
         %ul
-          - @user.pledges.order(created_at: :desc).each do |pledge|
+          - @user.pledges.group_by{|x| x.item}.each do |pledge|
             %li
-              = link_to pledge.item.name, pledge.item
-              = raw "(#{pledge.pledge.to_s}#{tsign})"
+              = link_to pledge.first.name, pledge.first
+              = raw "(#{pledge.last.sum(&:pledge).to_s}#{tsign})"
     .small-10.medium-8.large-4.columns
       - if @user.comments.empty?
         %em No comments made.
@@ -90,9 +99,10 @@
             %li
               commented on
               = link_to comment.item.name, comment.item, target: :_blank
+              = ": "
               .subtext
                 ="'"
-                = truncate_html comment.content, length: 80
+                = truncate_html sanitize(comment.content, tags: %w{strong b bold italic em u}), length: 80
                 = "'"
               
   - unless @user.all_activities.empty?
@@ -123,7 +133,7 @@
           %tfoot
             %tr
               %td{:colspan => "4"}
-              %td= @user.all_activities.select{|x| x.addition == 1}.sum{|x| x.value.to_i} - (@user.all_activities.select{|x| x.addition == -1}.sum{|x| x.value.to_i} + @user.all_activities.select{|x| x.description =~ /received/}.sum{|x| x.value.to_i})
+              %td= @user.all_activities.select{|x| x.addition == 1}.sum{|x| x.value.to_i}  - @user.all_activities.select{|x| x.addition == -1}.sum{|x| x.value.to_i} + @user.all_activities.select{|x| x.description =~ /received/ && x.user == @user }.sum{|x| x.value.to_i}  - @user.all_activities.select{|x| x.description =~ /received/ && x.item == @user }.sum{|x| x.value.to_i}
               %td
           %tbody.page
             = render @user.all_activities.sort_by(&:created_at).reverse
@@ -131,26 +141,47 @@
 
     .row.expanded
       .small-5.columns.right.end
+        - total = 0
         = fa_icon 'plus'
-        = @user.all_activities.select{|x| x.addition == 1}.sum{|x| x.value.to_i} 
+        - plus = @user.all_activities.select{|x| x.addition == 1}.sum{|x| x.value.to_i} 
+        = plus
+        - total += plus
         earned
         %br/
         = fa_icon 'minus'
-        = @user.all_activities.select{|x| x.addition == -1}.sum{|x| x.value.to_i}
+        - minus =  @user.all_activities.select{|x| x.addition == -1}.sum{|x| x.value.to_i}
+        = minus
+        - total -= minus
         spent
         %br/
         = fa_icon 'plus'
-        = @user.all_activities.select{|x| x.description =~ /received/ && x.user == @user }.sum{|x| x.value.to_i}
+        - plus2 = @user.all_activities.select{|x| x.description =~ /received/ && x.user == @user }.sum{|x| x.value.to_i}
+        = plus2
+        - total += plus2
         transferred from other users
         %br/
         = fa_icon 'minus'
-        = @user.all_activities.select{|x| x.description =~ /received/ && x.item == @user }.sum{|x| x.value.to_i}
+        - minus2 = @user.all_activities.select{|x| x.description =~ /received/ && x.item == @user }.sum{|x| x.value.to_i}
+        = minus2
+        - total -= minus2
         transferred to other users
         %hr/
         
         = fa_icon 'smile-o'
-        = @user.pending_pledges.sum(&:pledge)
+        - pending =  @user.pending_pledges.sum(&:pledge)
+        = pending
         pledged
+        
+        %hr
+        %strong Totals:
+        %br/
+        = raw "#{total.to_s}#{tsign} in total"
+        %br/
+        = raw "#{pending.to_s}#{tsign} in escow, pledged to pending proposals"
+        %br/
+        %strong
+          %u= raw "#{total - pending}#{tsign} available"
+        
 
 = content_for :jquery do
   :plain

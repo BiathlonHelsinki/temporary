@@ -13,8 +13,9 @@ class UsersController < ApplicationController
   
   def mentions
     @users = User.where("lower(username) LIKE '%" +  params[:mentioning].downcase + "%'")
-    logger.warn('mentions are ' + @users.map(&:as_mentionable).to_json )
-    render json: @users.map(&:as_mentionable).to_json
+    @users += User.where("lower(name) LIKE '%" +  params[:mentioning].downcase + "%'")
+    logger.warn('mentions are ' + @users.uniq.map(&:as_mentionable).to_json )
+    render json: @users.uniq.map(&:as_mentionable).to_json
   end
   
   def show

@@ -20,10 +20,10 @@ class Activity < ApplicationRecord
     when 'NilClass'
       item_type.constantize.with_deleted.find(item_id).name
     when 'User'
-      if !value.nil?
+      if value
         "#{item.display_name}#{extra_info}"
       else
-        ''
+        "<a href='/users/" + item.slug + "'>" + item.display_name + "</a> #{extra_info} <a href='/" + extra.class.table_name + "/#{extra.id.to_s}'>" + extra.name + "</a>"
       end
     when 'Instance'
       "<a href='/experiments/#{item.experiment.slug}/#{item.slug}'>#{item.name}</a>"
@@ -72,8 +72,10 @@ class Activity < ApplicationRecord
       item.pledge
     elsif ethtransaction
       ethtransaction.value
-    else
+    elsif extra.nil?
       extra_info
+    else
+      nil
     end
       
   end

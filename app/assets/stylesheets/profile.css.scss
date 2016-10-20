@@ -31,6 +31,14 @@
   }
   ul {
     clear: left;
+    a {
+      color: $blue;
+    }
+    li {
+      .subtext {
+        font-size: 0.75rem;
+      }
+    }
   }
   .since {
     clear: both;

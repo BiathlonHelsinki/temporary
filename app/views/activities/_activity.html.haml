@@ -24,6 +24,7 @@
       - if activity.extra.class == Instance
         = activity.extra_info
         = link_to activity.extra.name, experiment_instance_path(activity.extra.experiment, activity.extra)
+
   %td.temps
     - unless activity.value.nil?
       - if activity.addition == 1
