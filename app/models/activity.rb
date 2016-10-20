@@ -21,9 +21,11 @@ class Activity < ApplicationRecord
       item_type.constantize.with_deleted.find(item_id).name
     when 'User'
       if value
-        "#{item.display_name}#{extra_info}"
-      else
+        "#{item.display_name}  <br /><small>#{extra_info}</small>"
+      elsif extra
         "<a href='/users/" + item.slug + "'>" + item.display_name + "</a> #{extra_info} <a href='/" + extra.class.table_name + "/#{extra.id.to_s}'>" + extra.name + "</a>"
+      else
+        "<a href='/users/" + item.slug + "'>" + item.display_name + "</a>"
       end
     when 'Instance'
       "<a href='/experiments/#{item.experiment.slug}/#{item.slug}'>#{item.name}</a>"
