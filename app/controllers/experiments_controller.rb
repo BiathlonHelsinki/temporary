@@ -32,6 +32,8 @@ class ExperimentsController < ApplicationController
     set_meta_tags title: 'Experiments'
   end
   
+
+  
   def radial
     
   end
@@ -44,6 +46,12 @@ class ExperimentsController < ApplicationController
   def tree
     @experiments = Experiment.published.order(sequence: :asc).to_json
   end
+  
+  private
 
+  def set_item
+    @experiment = Experiment.friendly.find(params[:id])
+    redirect_to action: action_name, id: @experiment.friendly_id, status: 301 unless @experiment.friendly_id == params[:id]
+  end
 end
     

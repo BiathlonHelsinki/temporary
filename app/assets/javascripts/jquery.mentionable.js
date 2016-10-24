@@ -46,7 +46,8 @@
     DOWN:         40,
     NUMPAD_ENTER: 108,
     COMMA:        188,
-    ATSIGN:       64
+    ATSIGN:       64,
+    HASH:         35
   };
 
   /*
@@ -91,7 +92,10 @@
 
       switch(e.keyCode){
         case KEY.ATSIGN:
-          initNameCaching();
+          initNameCaching('@');
+          break;
+        case KEY.HASH:
+          initNameCaching('#');
           break;
         case KEY.ENTER:
           if(mentioningUser){
@@ -108,7 +112,10 @@
           // There is a problem on FF that @'s keycode returns 0.
           // The case KEY.ATSIGN fails to catch, so we need to do it here instead
           if(String.fromCharCode(e.charCode) == "@"){
-            initNameCaching();
+            initNameCaching('@');
+          }
+          else if(String.fromCharCode(e.charCode) == "#"){
+            initNameCaching('#');
           }
           else{
             // append pressed character to cache
@@ -162,10 +169,12 @@
   /*
    * initialize a cache that store the user name that is being mentioned
    */
-  function initNameCaching(){
+  function initNameCaching(c){
     caretStartPosition = currentCaretPositionPt();
-    cachedName         = "@";
+    cachedName         = c;
   }
+
+
 
   /*
    * hide the user list frame, and clear some related stuffs
@@ -221,7 +230,7 @@
       userList.html("");
       var data = {};
       if(keyword != undefined){
-        data[options.parameterName] = keyword.substring(1, keyword.length);
+        data[options.parameterName] = keyword.substring(0, keyword.length);
       }
       if(onComplete != undefined){
         $.getJSON(targetURL, data, onComplete);
@@ -264,7 +273,7 @@
     if(data.length > 0){
       listSize = data.length;
       $.each(data, function(key, value){
-        userList.append("<li><img src='" + value.image_url + "' /><span class='the_name'>" + value.name + "</span><div class='occluded'><img height=25 src='" + value.image_url + "' /><a href='#' rel='/users/" + value.id + "'>" + value.name + "</a></div></li>");
+        userList.append("<li><img src='" + value.image_url + "' /><span class='the_name'>" + value.name + "</span><div class='occluded'><img height=25 src='" + value.image_url + "' /><a href='#' rel='/" + value.route + "/" + value.id + "'>" + value.name + "</a></div></li>");
       });
       userList.find("li:first-child").attr("class","active");
       bindItemClicked();

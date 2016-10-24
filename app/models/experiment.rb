@@ -33,6 +33,20 @@ class Experiment < ApplicationRecord
     start_time, end_time, start_time, end_time, start_time, end_time, start_time, end_time])
   }
   
+  
+  def as_mentionable
+    {
+      created_at: self.created_at,
+      id: self.id,
+      slug: self.slug,
+      image_url: self.image.url(:thumb).gsub(/development/, 'production'),
+      name:  self.name,
+      route: 'experiments',
+      updated_at: self.updated_at
+    }
+  end
+  
+  
   def end_date
     self.end_at.nil? ? (instances.sort_by(&:start_at).last.end_at.nil? ? start_at : instances.sort_by(&:start_at).last.end_at) : self.end_at
   end

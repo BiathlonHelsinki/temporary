@@ -12,14 +12,24 @@ class UsersController < ApplicationController
   end
   
   def mentions
-    @users = User.where("lower(username) LIKE '%" +  params[:mentioning].downcase + "%'")
-    @users += User.where("lower(name) LIKE '%" +  params[:mentioning].downcase + "%'")
-    logger.warn('mentions are ' + @users.uniq.map(&:as_mentionable).to_json )
-    render json: @users.uniq.map(&:as_mentionable).to_json
+    if params[:mentioning][0] == '@'
+      @users = User.where("lower(username) LIKE '%" +  params[:mentioning][1..-1].downcase + "%'")
+      @users += User.where("lower(name) LIKE '%" +  params[:mentioning][1..-1].downcase + "%'")
+      logger.warn('mentions are ' + @users.uniq.map(&:as_mentionable).to_json )
+      render json: @users.uniq.map(&:as_mentionable).to_json
+    elsif params[:mentioning][0] == '#'
+      @experiments = Experiment.joins(:translations).where("lower(event_translations.name) LIKE '%" +  params[:mentioning][1..-1].downcase + "%'")
+      @experiments += Instance.joins(:translations).where("lower(instance_translations.name) LIKE '%" +  params[:mentioning][1..-1].downcase + "%'").map(&:experiment)
+      logger.warn('mentions are ' + @experiments.uniq.map(&:as_mentionable).to_json )
+      render json: @experiments.uniq.map(&:as_mentionable).to_json            
+    else
+      logger.warn('params is ' + params[:mentioning][0])
+    end
   end
   
   def show
     @user = User.friendly.find(params[:id])
+    redirect_to action: action_name, id: @user.friendly_id, status: 301 unless @user.friendly_id == params[:id]
     set_meta_tags title: @user.display_name
   end
   

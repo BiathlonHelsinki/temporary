@@ -185,7 +185,11 @@
                     %h3
                       = t :what_do_you_think_about_this
                     %p.small
-                      %em (Type '@' and someone's username to tag them in your comment.)
+                      %u Tagging: 
+                      %br/
+                      %em People: type '@' followed by someone's username [eg: @Jussi, @PsychoDog]
+                      %br/
+                      %em Experiments: type '#' followed by the name of the experiment [eg: #Open] 
                     = semantic_form_for [ @proposal,  @comment = @proposal.comments.build(user: current_user)], html: {onSubmit: "return getContent();", multipart: true, :"data-abide" => '' } do |f|
                       = f.input :user_id, as: :hidden, data: {value: current_user.id}
                       #comment_wrapper

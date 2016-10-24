@@ -43,6 +43,7 @@ class User < ActiveRecord::Base
       created_at: self.created_at,
       id: self.id,
       slug: self.slug,
+      route: 'users',
       image_url: self.avatar.url(:thumb).gsub(/development/, 'production'),
       name:  self.display_name,
       updated_at: self.updated_at
