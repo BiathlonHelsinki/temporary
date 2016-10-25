@@ -1,4 +1,4 @@
-= semantic_form_for [@item, @pledge], html: {onSubmit: "return getContent();", multipart: true, :"data-abide" => '' } do |f|
+= semantic_form_for [@item, @pledge], html: {onSubmit: "return getContentEmptyOK();", multipart: true, :"data-abide" => '' } do |f|
   .row.expanded
     .small-10.medium-9.columns
       %p 
@@ -59,7 +59,7 @@
           = ENV['currency_full_name'].pluralize
           would you like to pledge?
         .row
-          .small-2.medium-2.columns= f.input :pledge, label: 'Your pledge:'
+          .small-2.medium-2.columns= f.input :pledge, label: 'Your pledge:', input_html: {required: ''}
     
         .row
           .small-10.medium-6.columns
