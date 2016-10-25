@@ -256,7 +256,7 @@
                   - if user_signed_in? && proposal.pledgeable?
                     - unless proposal.stopped || (proposal.scheduled && proposal.instances.published.future.empty?)
                       - if current_user.active_pledge?(proposal)
-                        = link_to 'Edit pledge', edit_proposal_pledge_path(proposal,current_user.pledges.unconverted.where(item:proposal)), class: [:button, :small]
+                        = link_to 'Edit pledge', edit_proposal_pledge_path(proposal,current_user.pledges.unconverted.where(item:proposal).first), class: [:button, :small]
                       - elsif current_user.has_pledged?(proposal) && proposal.pledgeable?
                         = link_to raw("Pledge more #{tsign}!"), new_proposal_pledge_path(proposal), class: [:button, :small]
                       -elsif proposal.pledgeable?
