@@ -42,6 +42,7 @@ en:
   discussion: 'Discussion:'
   user_says: '%{user} says....'
   save: 'Save!'
+  leave_comment: 'Post this comment'
   your_comment_was_added: 'Your comment was added.'
   your_comment_was_not_added: 'There was an error saving your comment.'
   has_pledged: '%{user} has pledged %{amount} to this proposal.'

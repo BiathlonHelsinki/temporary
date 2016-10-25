@@ -649,7 +649,7 @@ article.instance_single {
     }
   }
 }
-form.pledge {
+form.pledge, form {
   #comment_wrapper {
     position: relative;
   }
@@ -677,6 +677,7 @@ form.pledge {
   a.delete_pledge {
     margin-top: 2rem;
   }
+
 }
 
 .proposal_form {
@@ -1009,106 +1010,7 @@ form.pledge {
     }
   }
   
-  #comments_list {
-    h1 {
-      text-transform: uppercase;
-    }
-    .comment_count {
-      font-size: 1.875rem;
-      font-family: $heebo;
-      padding-bottom: 0.5rem;
-      border-bottom: 8px solid black;
-      margin-bottom: 3rem;
-      float: left;
-      clear: both;
-    }
-    .entry {
-      border-top: 2px solid $yellow;
-      border-left: 2px solid $yellow;
-      border-right: 2px solid $yellow;
-    }
-    
-    .comment_type {
-      font-size: 1.25rem;
-      font-family: $heebo;
-      font-weight: bold;
-      padding-bottom: 0.4rem;
-      margin-bottom: 0.688rem;
-      border-bottom: 5px solid black;
-    }
-    .date {
-      font-family: $ptsans;
-      font-style: italic;
-      font-weight: 400;
-      font-size: 1rem;
-      margin-bottom: 1.563rem;
-    }
-    .comment_content {
-      font-family: $ptsans;
-      font-weight: 400;
-      font-style: normal;
-      font-size: 1rem;
-      margin-bottom: 1rem;
-      p {
-        img {
-          max-height: 30px;
-          margin-left: 0.4rem;
-        }
-      }
-      .extra_info {
-        margin-bottom: 2rem;
-        font-family: $inconsolata;
-        font-size: 0.875rem;
-      }
-    }
-  }
-  
 
-  #comment_form {
-    padding: 2.5rem;
-    border: 2px solid $yellow;
-    h3 {
-      font-size: 1.25rem;
-      font-family: $heebo;
-      font-weight: bold;
-      padding-bottom: 0.4rem;
-      margin-bottom: 0.688rem;
-    }
-    form {
-      textarea {
-        background-color: $grey;
-      }
-      input[type=submit] {
-        font-family: $inconsolata;
-        font-size: 1rem;
-      }
-      #comment_wrapper {
-        position: relative;
-      }
-      #mentioned-user-list {
-        div.occluded {
-          display: none;
-        }
-      }
-      #comment_input {
-        background-color: $grey;
-        white-space: pre-wrap;
-        height: 250px; 
-        img {
-          max-height: 25px;
-          margin-left: 0.4rem;
-        } 
-      }
-      #comment_input_textarea {
-        display: none;
-      }
-      li.text {
-        position: relative;
-
-      }
-    }
-    
-  }
   .details {
 
     border: 2px solid $yellow;
@@ -1136,6 +1038,110 @@ form.pledge {
   
 }
 
+#comments_list {
+  h1 {
+    text-transform: uppercase;
+  }
+  .comment_count {
+    font-size: 1.875rem;
+    font-family: $heebo;
+    padding-bottom: 0.5rem;
+    border-bottom: 8px solid black;
+    margin-bottom: 3rem;
+    float: left;
+    clear: both;
+  }
+  .entry {
+    border-top: 2px solid $yellow;
+    border-left: 2px solid $yellow;
+    border-right: 2px solid $yellow;
+  }
+  
+  .comment_type {
+    font-size: 1.25rem;
+    font-family: $heebo;
+    font-weight: bold;
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.688rem;
+    border-bottom: 5px solid black;
+  }
+  .date {
+    font-family: $ptsans;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1rem;
+    margin-bottom: 1.563rem;
+  }
+  .comment_content {
+    font-family: $ptsans;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    p {
+      img {
+        max-height: 30px;
+        margin-left: 0.4rem;
+      }
+    }
+    .extra_info {
+      margin-bottom: 2rem;
+      font-family: $inconsolata;
+      font-size: 0.875rem;
+    }
+  }
+}
+
+
+#comment_form {
+  padding: 2.5rem;
+  border: 2px solid $yellow;
+  h3 {
+    font-size: 1.25rem;
+    font-family: $heebo;
+    font-weight: bold;
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.688rem;
+  }
+  p.small {
+    clear:left;
+    font-size: 0.875rem;
+  }
+  form {
+    textarea {
+      background-color: $grey;
+    }
+    input[type=submit] {
+      font-family: $inconsolata;
+      font-size: 1rem;
+    }
+    #comment_wrapper {
+      position: relative;
+    }
+    #mentioned-user-list {
+      div.occluded {
+        display: none;
+      }
+    }
+    #comment_input {
+      background-color: $grey;
+      white-space: pre-wrap;
+      height: 250px; 
+      img {
+        max-height: 25px;
+        margin-left: 0.4rem;
+      } 
+    }
+    #comment_input_textarea {
+      display: none;
+    }
+    li.text {
+      position: relative;
+
+    }
+  }
+  
+}
 
 
 /* Activity feed */

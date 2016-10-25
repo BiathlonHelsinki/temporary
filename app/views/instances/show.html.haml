@@ -9,7 +9,7 @@
             - if @experiment.instances.size > 1
               = link_to @experiment.name, @experiment
             - else
-              = "Experiment "
+              = link_to "Experiment ", @experiment
           = " // "
         .title
           = "Experiment ##{@instance.sequence}:"
@@ -51,3 +51,7 @@
       .row.expanded#expandme.small-up-1.medium-up-2.large-up-4.xxlarge-up-5{:"data-equalizer" => '', :"data-equalize-by-row" => "true"}
         - @instance.experiment.instances.past.select{|x| x != @instance}.sort_by(&:start_at).each do |exp|
           = render partial: 'instances/experiment_instance_column', locals: {exp: exp, :"@experiment" =>  exp.experiment}
+          
+
+ 
+  = render partial: 'experiments/comments_and_form'

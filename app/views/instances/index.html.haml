@@ -1,6 +1,6 @@
 .experiments_index
   .row.expanded
-    .small-12.columns
+    .small-12.medium-9.columns
       %h1
         = t :experiment
         = "##{@experiment.sequence}: #{@experiment.name}"
@@ -24,4 +24,4 @@
       
 
 
-      
+  = render partial: 'experiments/comments_and_form'

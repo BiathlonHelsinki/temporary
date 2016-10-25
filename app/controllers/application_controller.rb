@@ -15,6 +15,8 @@ class ApplicationController < ActionController::Base
       if current_user.email =~ /change@me/
         flash[:warning] = " Please enter a valid email address in your <a href='/users/#{current_user.id}/edit'>profile</a>."
       end
+    else
+      save_location unless !request.fullpath.match(/^\/users/).nil?
     end
   end
   
@@ -26,7 +28,15 @@ class ApplicationController < ActionController::Base
   end
   
   protected
-
+   
+   def after_sign_in_path_for(resource)
+     if session[:return_to]
+       return session.delete(:return_to)
+     else
+       return '/'
+     end
+   end
+   
   def configure_permitted_parameters
     added_attrs = [:username, :email, :password, :password_confirmation, :remember_me]
     devise_parameter_sanitizer.permit :sign_up, keys: added_attrs
@@ -34,5 +44,8 @@ class ApplicationController < ActionController::Base
 
   end
   
-    
+  def save_location
+    session[:return_to] = request.fullpath
+  end
+  
 end

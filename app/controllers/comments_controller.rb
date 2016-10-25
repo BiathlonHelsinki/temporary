@@ -10,6 +10,9 @@ class CommentsController < ApplicationController
     if params[:opencallsubmission_id]
       @master = Opencallsubmission.find(params[:opencallsubmission_id])
     end
+    if params[:experiment_id]
+      @master= Experiment.friendly.find(params[:experiment_id])
+    end
     c = Comment.new(comment_params)
     @master.comments << c
     

@@ -15,7 +15,7 @@ class Experiment < ApplicationRecord
   validates_presence_of :place_id, :start_at, :primary_sponsor_id, :sequence
   validate :name_present_in_at_least_one_locale
   before_save :update_image_attributes
-
+  has_many :comments, as: :item, :dependent => :destroy
   
 
   
@@ -46,6 +46,9 @@ class Experiment < ApplicationRecord
     }
   end
   
+  def discussion
+    comments
+  end
   
   def end_date
     self.end_at.nil? ? (instances.sort_by(&:start_at).last.end_at.nil? ? start_at : instances.sort_by(&:start_at).last.end_at) : self.end_at

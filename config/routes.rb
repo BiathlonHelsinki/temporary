@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   end
   
   resources :experiments do
+    resources :comments
     collection do
       get :tree
       get :radial
