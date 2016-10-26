@@ -29,13 +29,13 @@ class ApplicationController < ActionController::Base
   
   protected
    
-   # def after_sign_in_path_for(resource)
-   #   if session[:return_to]
-   #     return session.delete(:return_to)
-   #   else
-   #     return '/'
-   #   end
-   # end
+   def after_sign_in_path_for(resource)
+     if session[:return_to]
+       return session.delete(:return_to)
+     else
+       return '/'
+     end
+   end
    
   def configure_permitted_parameters
     added_attrs = [:username, :email, :password, :password_confirmation, :remember_me]
