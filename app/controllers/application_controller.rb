@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
         flash[:warning] = " Please enter a valid email address in your <a href='/users/#{current_user.id}/edit'>profile</a>."
       end
     else
-      save_location unless !request.fullpath.match(/^\/users/).nil? || request.fullpath =~ /json$/
+      save_location unless !request.fullpath.match(/^\/users/).nil? || request.fullpath =~ /\.json/
     end
   end
   
