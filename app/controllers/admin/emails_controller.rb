@@ -54,6 +54,9 @@ class Admin::EmailsController < Admin::BaseController
         @email.save
       end
       flash[:notice] = 'Sending emails to ' + mailing_list.size.to_s + " users"
+      @email.sent_number = mailing_list.size
+      @email.sent_at = Time.current
+      @email.save
       redirect_to admin_emails_path
     end
   end
