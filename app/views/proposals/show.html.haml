@@ -41,7 +41,12 @@
               = pluralize(@proposal.instances.first.experiment.instances.size, 'meeting')
               took place!
           - else
-            - if @proposal.has_enough?
+            - if !@proposal.has_enough?
+              %small 
+                Needed to be considered for scheduling:
+                = raw(@proposal.needed_for_next.to_s + tsign)
+                total, from at least two users
+            - else
               - if !@proposal.scheduled?
                 This proposal will be reviewed at Temporary's next organisational meeting:
                 - if @next_meeting.nil?
@@ -51,16 +56,14 @@
               - else
                 %strong Come to this experiment:
                 %br/
-                - @proposal.instances.published.each to |instance|
-                  = link_to instance.name, experiment_instance_path(instance.experiment, instance)
-                  %em= date_range(instance.start_at, instance.end_at)
+                - @proposal.instances.published.each do |k|
+                  = link_to k.name, experiment_instance_path(k.experiment, k)
                   %br/
-                
-            - else
-              %small 
-                Needed to be considered for scheduling:
-                = raw(@proposal.needed_for_next.to_s + tsign)
-                total, from at least two users
+                  %em= date_range(k.start_at, k.end_at)
+                  %br/
+                  %br/
+
+
 
   .row.expanded
     .small-12.columns
