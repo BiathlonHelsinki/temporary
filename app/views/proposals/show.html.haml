@@ -56,9 +56,11 @@
               - else
                 %strong Come to this experiment:
                 %br/
-                - @proposal.instances.published.each do |k|
+                - @proposal.instances.experiment.instances.published.sort_by(&:start_at).each do |k|
                   = link_to k.name, experiment_instance_path(k.experiment, k)
                   %br/
+                  - if k.in_future?
+                    already happened: 
                   %em= date_range(k.start_at, k.end_at)
                   %br/
                   %br/
