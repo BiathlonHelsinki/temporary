@@ -48,14 +48,20 @@
                   %em none currently scheduled
                 - else
                   = link_to @next_meeting.name, experiment_instance_path(@next_meeting.experiment, @next_meeting), target: :_blank
-            
               - else
-                %small 
-                  Needed to be considered for scheduling:
-                  = raw(@current_rate.to_s + tsign)
+                %strong Come to this experiment:
+                %br/
+                - @proposal.instances.published.each to |instance|
+                  = link_to instance.name, experiment_instance_path(instance.experiment, instance)
+                  %em= date_range(instance.start_at, instance.end_at)
+                  %br/
+                
+            - else
+              %small 
+                Needed to be considered for scheduling:
+                = raw(@proposal.needed_for_next.to_s + tsign)
                 total, from at least two users
-        - if @proposal.has_enough?
-          %p You may still pledge over the requirements if you really want to show your support!
+
   .row.expanded
     .small-12.columns
       .details
