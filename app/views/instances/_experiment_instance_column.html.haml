@@ -48,7 +48,11 @@
           - else
             - if exp.start_at.to_date == exp.end_at.to_date
               .day= exp.start_at.day
-              .times= exp.start_at.strftime("%H:%M") + " - " + exp.end_at.strftime("%H:%M")
+              .times
+                - if exp.end_at.strftime("%H:%M") == '23:59'
+                  = exp.start_at.strftime('%H:%M') + " - ??"
+                - else
+                  = exp.start_at.strftime("%H:%M") + " - " + exp.end_at.strftime("%H:%M")
             - else
               .range_day= exp.start_at.day.to_s
               .divider= fa_icon('angle-down')

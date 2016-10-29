@@ -38,7 +38,11 @@ module ApplicationHelper
               I18n.t("date_range.#{format}.same_day_start_time", from_day: from_date.day, from_month: from_month, year: from_date.year, start_time: from_date.strftime("%H:%M"), sep: separator, end_time: until_date.strftime("%H:%M"), :format => :long)      
             end
           else
-            I18n.t("date_range.#{format}.same_day", from_day: from_date.day, from_month: from_month, year: from_date.year, start_time: from_date.strftime("%H:%M"), sep: separator, end_time: until_date.strftime("%H:%M"), :format => :long)
+            if until_date.strftime("%H:%M") == "23:59"
+              I18n.t("date_range.#{format}.same_day", from_day: from_date.day, from_month: from_month, year: from_date.year, start_time: from_date.strftime("%H:%M"), sep: separator, end_time: '???', :format => :long)      
+            else
+              I18n.t("date_range.#{format}.same_day", from_day: from_date.day, from_month: from_month, year: from_date.year, start_time: from_date.strftime("%H:%M"), sep: separator, end_time: until_date.strftime("%H:%M"), :format => :long)
+            end
           end
         elsif from_date.class == Date && until_date.class == Date
           I18n.t("date_range.#{format}.same_month_no_time", from_day: from_date.day, until_day: until_date.day, month: from_month, year: from_year, sep: separator, start_time: nil, end_time: nil)

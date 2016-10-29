@@ -32,7 +32,7 @@ class Instance < ApplicationRecord
       :title => self.name,
       :description => self.description || "",
       :start => start_at.strftime('%Y-%m-%d %H:%M:00'),
-      :end => end_at.nil? ? start_at.strftime('%Y-%m-%d %H:%M:00') : end_at.strftime('%Y-%m-%d %H:%M:00'),
+      :end => end_at.nil? ? start_at.strftime('%Y-%m-%d %H:%M:00') : (end_at.strftime('%H:%M') == '23:59' ? '??' : end_at.strftime('%Y-%m-%d %H:%M:00')),
       :allDay => false, 
       :recurring => false,
       :temps => self.cost_bb,
