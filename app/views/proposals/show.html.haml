@@ -40,6 +40,13 @@
             - if @proposal.instances.future.empty?
               = pluralize(@proposal.instances.first.experiment.instances.size, 'meeting')
               took place!
+            - else
+              = pluralize(@proposal.instances.first.experiment.instances.size, 'meeting') + ":"
+              %br/
+          - elsif (@proposal.scheduled? && @proposal.recurs?)
+            Recurring experiment. Meetings:
+            %br/
+
           - else
             - if !@proposal.has_enough?
               %small 
@@ -55,15 +62,17 @@
                   = link_to @next_meeting.name, experiment_instance_path(@next_meeting.experiment, @next_meeting), target: :_blank
               - else
                 %strong Come to this experiment:
-                %br/
-                - @proposal.instances.experiment.instances.published.sort_by(&:start_at).each do |k|
-                  = link_to k.name, experiment_instance_path(k.experiment, k)
-                  %br/
-                  - if k.in_future?
-                    already happened: 
-                  %em= date_range(k.start_at, k.end_at)
-                  %br/
-                  %br/
+          - unless @proposal.instances.published.empty?
+            %br/
+            - @proposal.instances.first.experiment.instances.published.sort_by(&:start_at).each do |k|
+              = link_to k.name, experiment_instance_path(k.experiment, k)
+              %br/
+              %small
+                - unless k.in_future?
+                  already happened: 
+                %em= date_range(k.start_at, k.end_at)
+              %br/
+              %br/
 
 
 

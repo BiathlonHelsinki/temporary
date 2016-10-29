@@ -256,7 +256,7 @@ class Proposal < ApplicationRecord
   end
   
   def scheduled?
-    !instances.empty?
+    !instances.published.empty?
   end
   
   def spent
