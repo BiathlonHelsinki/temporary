@@ -18,7 +18,11 @@ class Activity < ApplicationRecord
     when 'Proposal'
       "<a href='/proposals/#{item.id}'>#{item.name}</a>"
     when 'NilClass'
-      item_type.constantize.with_deleted.find(item_id).name
+      if item_type == 'Nfc'
+        'erased an ID card'
+      else
+        item_type.constantize.with_deleted.find(item_id).name
+      end
     when 'User'
       if value
         "#{item.display_name}  <br /><small>#{extra_info}</small>"
