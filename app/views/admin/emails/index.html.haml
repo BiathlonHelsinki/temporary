@@ -10,14 +10,16 @@
   .small-10.columns
     %table
       %thead
-        %th Date
+        %th Date sent?
+        %th Sent to:
         %th Subject
         %th status
         %th
       %tbody
         - @emails.each do |email|
           %tr
-            %td= email.sent == true ? email.try(:sent_at) : email.updated_at 
+            %td=l email.sent == true ? email.try(:sent_at) : email.updated_at, format: :short
+            %td= email.try(:sent_number)
             %td= email.subject
             %td
               = email.sent == true ? 'SENT!' : 'not'

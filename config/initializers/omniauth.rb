@@ -4,4 +4,6 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   provider :google_oauth2, ENV["google_client_id"], ENV["google_client_secret"]
   provider :github, ENV['github_key'], ENV['github_secret']
 end
-OmniAuth.config.full_host = 'https://temporary.fi'
+if Rails.env.production?
+  OmniAuth.config.full_host = 'https://temporary.fi'
+end
