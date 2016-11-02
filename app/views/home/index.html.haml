@@ -74,6 +74,21 @@
 
     
   - @feed.each do |post|
+  
+    - if post.class == Email
+      
+      %article{class: cycle('odd', 'even')}
+        .post
+          .meta
+            %span.date= post.sent_at.strftime('%d.%m.%Y')
+            = " // "
+            %span.category Announcements
+            = " // "
+          .title= link_to post.subject, "/announcements/#{post.slug}"
+          .body
+            = raw truncate_html(sanitize(post.body, tags: %w{a b bold strong i em br p blockquote img}, attributes: %w{src href}), length: 750)
+            = link_to 'Read more...', "/announcements/#{post.slug}", class: [:button]
+  
     - if post.class == Post
       %article{class: cycle('odd', 'even')}
         .post

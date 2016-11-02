@@ -1,4 +1,6 @@
 class HomeController < ApplicationController
+  include ActionView::Helpers::UrlHelper
+  include ApplicationHelper
   
   def index
     @feed = Post.not_sticky.published.order(published_at: :desc)
@@ -10,6 +12,11 @@ class HomeController < ApplicationController
     @feed += Instance.published.current.not_open_day.or(Instance.published.future.not_open_day).order(:start_at).to_a.delete_if{|x| !x.show_on_website?}
     # @next_other = Experiment
     @feed += Proposal.all.order(created_at: :desc).to_a.delete_if{|x| x.scheduled? }
+    announcements =  Email.published.order(sent_at: :desc).limit(2)
+    announcements.each do |a|
+      a.body = ERB.new(a.body).result(binding).html_safe
+      @feed << a
+    end
     @current_rate = Rate.get_current.experiment_cost
     
     cal = Experiment.where(nil)
