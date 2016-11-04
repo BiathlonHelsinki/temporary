@@ -1,5 +1,6 @@
 class ExperimentsController < ApplicationController
-
+  include ActionView::Helpers::SanitizeHelper
+  
   def calendar
     experiments = Experiment.where(nil)
     experiments = Experiment.published.between(params['start'], params['end']) if (params['start'] && params['end'])
@@ -10,14 +11,20 @@ class ExperimentsController < ApplicationController
     @experiments.flatten!
     # @experiments += experiments.reject{|x| !x.one_day? }
     if params[:format] == 'ics'
+      require 'icalendar/tzinfo'
       @cal = Icalendar::Calendar.new
+      @cal.prodid = '-//Temporary, Helsinki//NONSGML ExportToCalendar//EN'
+
+      tzid = "Europe/Helsinki"
+      tz = TZInfo::Timezone.get tzid
       @experiments.each do |event|
         @cal.event do |e|
-          e.dtstart     = Icalendar::Values::Date.new(event.start_at)
-          e.dtend       = Icalendar::Values::Date.new(event.end_at)
+          e.dtstart     = Icalendar::Values::DateTime.new(event.start_at, 'tzid' => tzid)
+          e.dtend       = Icalendar::Values::DateTime.new(event.end_at, 'tzid' => tzid)
           e.summary     = event.name
-          e.description = event.description
+          e.description = strip_tags event.description
           e.ip_class = 'PUBLIC'
+          e.url = e.uid = 'https://temporary.fi/experiments/' + event.experiment.slug + '/' + event.slug
         end
       end
       @cal.publish
