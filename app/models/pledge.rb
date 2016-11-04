@@ -45,12 +45,12 @@ class Pledge < ApplicationRecord
         
         begin
           ProposalMailer.proposal_for_review(self.item).deliver 
-          item.notified = true
-          item.save
+          item.update_attribute(:notified, true)
+
         rescue
 
           item.notified = false
-          item.save
+
         end
       end
     end
