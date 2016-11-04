@@ -58,21 +58,36 @@
           How many 
           = ENV['currency_full_name'].pluralize
           would you like to pledge?
-        .row
-          .small-2.medium-2.columns= f.input :pledge, label: 'Your pledge:', input_html: {required: ''}
-    
-        .row
-          .small-10.medium-6.columns
-            %label Any comments on your pledge?
-            #comment_wrapper
-              #comment_input{contenteditable: true}= f.object.new_record? ? '' : raw(f.object.comment)
 
-            -#= f.input :content, :label => false, input_html: {:required => '', id: :comment_input_textarea}
-            
-            = f.input :comment, label: false,  as: :text, input_html: { id: :comment_input_textarea }
-        .row
-          .small-10.medium-6.columns
-            = f.submit 'Pledge!', class: [:button]
-            - unless f.object.new_record?
-              = link_to 'Delete your pledge!', [f.object.item, f.object], method: :delete, class: [:button, :small, :alert, :delete_pledge], data: {confirm: raw("Are you sure? Your #{tsign} will be restored to your full balance.")}
+        = f.input :pledge, label: "Your pledge (max. #{@item.maximum_pledgeable(current_user)}):", input_html: {required: '', :'data-validator' => 'less_than', :'data-less-than' => @item.maximum_pledgeable(current_user), type: :number}
+    
+
+        %label Any comments on your pledge?
+        %p.small
+          %u Tagging: 
+          %br/
+          %em People: type '@' followed by someone's username [eg: @Jussi, @PsychoDog]
+          %br/
+          %em Experiments: type '#' followed by the name of the experiment [eg: #Open]
+        #comment_wrapper
+          #comment_input{contenteditable: true}= f.object.new_record? ? '' : raw(f.object.comment)
+
+        -#= f.input :content, :label => false, input_html: {:required => '', id: :comment_input_textarea}
+        
+        = f.input :comment, label: false,  as: :text, input_html: { id: :comment_input_textarea }
+        = f.submit 'Pledge!', class: [:button]
+        - unless f.object.new_record?
+          = link_to 'Delete your pledge!', [f.object.item, f.object], method: :delete, class: [:button, :small, :alert, :delete_pledge], data: {confirm: raw("Are you sure? Your #{tsign} will be restored to your full balance.")}
   
+= content_for :jquery do
+  :plain
+    Foundation.Abide.defaults.validators['less_than'] =
+    function($el,required,parent) {
+      // parameter 1 is jQuery selector
+      if (!required) return true;
+      var from = $('#pledge_pledge').attr('data-less-than');
+      var to = $el.val();
+      // alert('to is ' + parseInt(to) + ' and should be less than or equal to ' + parseInt(from));
+      return (parseInt(to) <= parseInt(from));
+
+    };

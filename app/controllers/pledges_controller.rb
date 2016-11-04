@@ -14,6 +14,10 @@ class PledgesController < ApplicationController
       if balance < params[:pledge][:pledge].to_i
         flash[:error] = 'You do not have this many ' + ENV['currency_full_name']
         redirect_to new_proposal_pledge_path(@proposal)
+      end
+      if params[:pledge][:pledge].to_i > @proposal.maximum_pledgeable(current_user)
+        flash[:error] = 'You can\'t pledge this much!'
+        redirect_to new_proposal_pledge_path(@proposal)
       else
         @pledge = Pledge.new(pledge_params)
         @pledge.item = @proposal
@@ -70,12 +74,17 @@ class PledgesController < ApplicationController
   def update
     @item = Proposal.find(params[:proposal_id])
     @pledge = @item.pledges.find(params[:id])
-    if @pledge.update_attributes(pledge_params)
-      flash[:notice] = 'Your pledge has been edited!'
-      redirect_to @item
+    if params[:pledge][:pledge].to_i > @item.maximum_pledgeable(current_user)
+      flash[:error] = 'You can\'t pledge this much!'
+      redirect_to new_proposal_pledge_path(@item)
     else
-      flash[:error] = 'There was an error saving your edited pledge: ' + @pledge.errors.values.join
-      render action: 'edit'
+      if @pledge.update_attributes(pledge_params)
+        flash[:notice] = 'Your pledge has been edited!'
+        redirect_to @item
+      else
+        flash[:error] = 'There was an error saving your edited pledge: ' + @pledge.errors.values.join
+        render action: 'edit'
+      end
     end
   end
   

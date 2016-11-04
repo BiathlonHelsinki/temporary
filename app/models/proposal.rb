@@ -210,7 +210,7 @@ class Proposal < ApplicationRecord
             (user.available_balance + pledges.where(user: user).pledge) > cumulative_needed_for(intended_sessions) ? cumulative_needed_for(intended_sessions) : (user.available_balance + pledges.where(user: user).pledge) 
           end
         else
-          pledges.where(user: user).pledge
+          pledges.find_by(user: user).pledge
         end
       
       elsif pledges.map(&:user).size == 1
