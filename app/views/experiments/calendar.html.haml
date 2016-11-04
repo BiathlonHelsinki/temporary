@@ -5,6 +5,9 @@
         = t :experiments
         %small= link_to fa_icon('list'), experiments_path
   .row.expanded
+    .small-12.columns
+      = link_to fa_icon('download') + " Calendar", calendar_experiments_path(format: 'ics'), class: [:button, :small]
+  .row.expanded
     #calendar.small-centered
   
   = content_for :jquery do

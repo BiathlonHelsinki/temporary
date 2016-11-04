@@ -31,8 +31,8 @@
               
               Supported by:
               = raw @instance.pledges.order(:created_at).map{|pledge|   "#{link_to pledge.user.display_name, pledge.user} (#{pledge.pledge.to_s})" }.join(', ') 
-
-                
+              
+        .temps= link_to fa_icon('download') + " Calendar", experiment_instance_path(@instance.experiment, @instance, format: 'ics'), class: [:button, :small]
         - if @instance.image?
           = image_tag @instance.image.url.gsub(/development/, 'production')
         - elsif @experiment.image?

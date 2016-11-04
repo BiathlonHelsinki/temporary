@@ -22,6 +22,7 @@ class ExperimentsController < ApplicationController
           e.dtstart     = Icalendar::Values::DateTime.new(event.start_at, 'tzid' => tzid)
           e.dtend       = Icalendar::Values::DateTime.new(event.end_at, 'tzid' => tzid)
           e.summary     = event.name
+          e.location  = 'Temporary, Kolmas linja 7, Helsinki'
           e.description = strip_tags event.description
           e.ip_class = 'PUBLIC'
           e.url = e.uid = 'https://temporary.fi/experiments/' + event.experiment.slug + '/' + event.slug
