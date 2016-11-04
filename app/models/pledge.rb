@@ -9,6 +9,7 @@ class Pledge < ApplicationRecord
   validates_numericality_of :pledge, greater_than_or_equal_to: 0
   acts_as_paranoid
   validate :one_per_user
+  belongs_to  :instance
   
   scope :unconverted, -> () { where('converted = 0 OR converted is null')}
   scope :converted, -> () { where(converted: true)}

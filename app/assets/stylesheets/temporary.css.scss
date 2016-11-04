@@ -144,6 +144,9 @@ section.main_container {
   }
   h1 {
     border-bottom: 8px solid black;
+    .sequence {
+      font-size: .5em;
+    }
   }
   
   h3 {
@@ -186,7 +189,15 @@ section.main_container {
       .participants {
         text-align: center;
         font-size: 0.813rem;
-        margin: 1rem 0;
+        margin: 1rem 0 0.2rem 0;
+      }
+      .temps {
+        text-align: center;
+        font-size: 1.13rem;
+        font-family: "Heebo Black", sans-serif;
+        color: #fded57;
+        
+        a { color: $yellow; }
       }
       .dates {
         font-family: $heebo;
@@ -283,12 +294,29 @@ section.main_container {
 // Single view
 article.instance_single {
   padding-top: 2.438rem;
+  
+  .temps {
+    margin: 1rem 0;
+    font-family: $heebo;
+    color: #444;
+    font-size: 1.1rem;
+  }
+  .proposal_info {
+    font-family: $ptsans;
+    color: #444;
+    a {
+      color: $blue;
+      font-family: $inconsolata;
+      font-weight: bold;
+    }
+  }
   .participant_header {
     font-family: $heebo;
     font-size: 1.275rem;
     background-color: white;
     border-bottom: 8px solid black;
     float: left;
+    margin-bottom: 0.8rem;
   }
   ul {
     clear: both;
@@ -332,6 +360,19 @@ article.instance_single {
       padding: 0.875rem 0;
     }
 
+  }
+  .participant_grid {
+    min-height: 120px;
+
+    background-size: cover;
+    .participant_overlay {
+      background-color: $yellow;
+      font-family: $inconsolata;
+
+      position: relative;
+      bottom: 20px;
+      font-size: 0.9rem;
+    }
   }
 }
 

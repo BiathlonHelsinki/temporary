@@ -65,6 +65,8 @@
 
     - unless exp.in_future?
       .participants=  pluralize(exp.users.size + exp.onetimers.unclaimed.size, 'person') + " participated"
+      .temps
+        = raw("#{(exp.users.uniq.size * exp.cost_bb).to_s}#{tsign} earned") #, page_path('what-is-this-t-everywhere')
     - else
       .earn_line
         = raw "Earn #{exp.cost_bb}#{tsign} "

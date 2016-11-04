@@ -21,6 +21,7 @@
 //= require masonry.pkgd.min
 //= require imagesloaded.pkgd.min
 //= require jquery.mentionable
+//= require jquery.scrollTo.min
   
 function getContent(){
   var div_val=document.getElementById("comment_input").innerHTML;
