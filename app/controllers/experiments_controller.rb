@@ -9,12 +9,28 @@ class ExperimentsController < ApplicationController
     @experiments.uniq!
     @experiments.flatten!
     # @experiments += experiments.reject{|x| !x.one_day? }
+    if params[:format] == 'ics'
+      @cal = Icalendar::Calendar.new
+      @experiments.each do |event|
+        @cal.event do |e|
+          e.dtstart     = Icalendar::Values::Date.new(event.start_at)
+          e.dtend       = Icalendar::Values::Date.new(event.end_at)
+          e.summary     = event.name
+          e.description = event.description
+          e.ip_class = 'PUBLIC'
+        end
+      end
+      @cal.publish
+    end
     set_meta_tags title: 'Calendar'
+    
     respond_to do |format|
       format.html # index.html.erb
       format.json { render :json => @experiments }
+      format.ics { render :text => @cal.to_ical }
     end
   end
+  
   
   def hierarchy
     # @experiments = Experiment.roots.order(sequence: :asc)
