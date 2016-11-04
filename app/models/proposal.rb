@@ -205,12 +205,12 @@ class Proposal < ApplicationRecord
       if has_enough?
         if recurs?
           if intended_sessions == 0
-            user.available_balance + pledges.where(user: user).pledge
+            user.available_balance + pledges.unconverted.find_by(user: user).pledge
           else
-            (user.available_balance + pledges.where(user: user).pledge) > cumulative_needed_for(intended_sessions) ? cumulative_needed_for(intended_sessions) : (user.available_balance + pledges.where(user: user).pledge) 
+            (user.available_balance + pledges.unconverted.find_by(user: user).pledge) > cumulative_needed_for(intended_sessions) ? cumulative_needed_for(intended_sessions) : (user.available_balance + pledges.unconverted.find_by(user: user).pledge) 
           end
         else
-          pledges.find_by(user: user).pledge
+          pledges.unconverted.find_by(user: user).pledge
         end
       
       elsif pledges.map(&:user).size == 1

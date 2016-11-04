@@ -72,6 +72,12 @@
               %p= "provider: #{auth.provider}, username: #{auth.username}, uid: #{auth.uid}"
   .row.expanded
     .small-10.medium-8.large-4.columns
+      - unless Experiment.where(primary_sponsor: @user).empty?
+        .title Experiments instigated
+        %ul
+          - Experiment.where(primary_sponsor: @user).order(:id).each do |exp|
+            %li= link_to exp.name, exp
+            
       - if @user.proposals.empty?
         %em No proposals made.
       - else
