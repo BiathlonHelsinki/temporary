@@ -88,7 +88,30 @@
           .body
             = raw truncate_html(sanitize(post.body, tags: %w{a b bold strong i em br p blockquote img}, attributes: %w{src href}), length: 750)
             = link_to 'Read more...', "/announcements/#{post.slug}", class: [:button]
-  
+
+    - if post.class == Comment
+      %article{class: cycle('odd', 'even')}
+        .post
+          .meta
+            %span.date= post.feed_date.strftime('%d.%m.%Y')
+            = " // "
+            %span.category= post.item.class.to_s + " news"
+            = " // "
+          .title= link_to post.item.name, post.item
+          - if post.image?
+            = image_tag post.image.url.gsub('development', 'production')
+          .body
+            %em
+              = link_to post.user.display_name, post.user
+              writes...
+              %br/
+              %br/
+            %p
+              %span.quote= raw "&ldquo;"
+              = raw post.content
+              %span.quote= raw "&rdquo;"
+
+          
     - if post.class == Post
       %article{class: cycle('odd', 'even')}
         .post

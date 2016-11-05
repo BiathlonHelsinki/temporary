@@ -4,6 +4,7 @@ class CommentsController < ApplicationController
   before_filter :authenticate_user!
   
   def create
+    c = Comment.new(comment_params)
     if params[:proposal_id]
       @master = Proposal.find(params[:proposal_id])
     end
@@ -12,8 +13,12 @@ class CommentsController < ApplicationController
     end
     if params[:experiment_id]
       @master= Experiment.friendly.find(params[:experiment_id])
+      if comment_params[:frontpage] == "1"
+        if current_user != @master.primary_sponsor && current_user != @master.secondary_sponsor
+          comment_params[:frontpage] = ''
+        end
+      end
     end
-    c = Comment.new(comment_params)
     @master.comments << c
     
     if @master.save!
@@ -39,7 +44,7 @@ class CommentsController < ApplicationController
   protected
   
   def comment_params
-    params.require(:comment).permit(:proposal_id, :item_type, :item_id, :user_id, :content, :attachment, :image)
+    params.require(:comment).permit(:proposal_id, :item_type, :item_id, :user_id, :content, :frontpage, :attachment, :image)
   end
   
 end

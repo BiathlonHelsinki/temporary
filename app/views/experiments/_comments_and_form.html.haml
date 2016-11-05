@@ -65,6 +65,8 @@
                     = f.input :content, :label => false, input_html: {:required => '', id: :comment_input_textarea}
                     = f.input :image, :label => t(:attach_image_to_comment)
                     = f.input :attachment, :label => t(:attach_attachment_to_comment)
+                    - if current_user == @experiment.primary_sponsor || current_user == @experiment.secondary_sponsor
+                      = f.input :frontpage, label: "Is this frontpage news?", hint: 'Tick this box and the comment will appear on Temporary\'s frontpage in the newsfeed.'
                     = f.submit t(:leave_comment), :class => [:button, :round]
 - else
   .row.expanded

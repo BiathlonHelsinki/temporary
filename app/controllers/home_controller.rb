@@ -17,6 +17,7 @@ class HomeController < ApplicationController
       a.body = ERB.new(a.body).result(binding).html_safe
       @feed << a
     end
+    @feed += Comment.frontpage
     @current_rate = Rate.get_current.experiment_cost
     
     cal = Experiment.where(nil)

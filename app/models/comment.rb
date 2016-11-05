@@ -7,6 +7,8 @@ class Comment < ApplicationRecord
   before_save :update_image_attributes, :update_attachment_attributes
   after_create :update_activity_feed
   
+  scope :frontpage, -> () { where(frontpage: true) }
+  
   def update_activity_feed
     Activity.create(user: user, item: self.item, description: "commented on",  addition: 0)
     matches = content.scan(/rel=\"\/users\/(\d*)\"/)
@@ -18,6 +20,10 @@ class Comment < ApplicationRecord
         end
       end
     end
+  end
+  
+  def feed_date
+    created_at
   end
   
   def content_linked
