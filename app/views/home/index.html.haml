@@ -78,7 +78,7 @@
     - if post.class == Email
       
       %article{class: cycle('odd', 'even')}
-        .post
+        .post{class: post.class.to_s.downcase}
           .meta
             %span.date= post.sent_at.strftime('%d.%m.%Y')
             = " // "
@@ -91,7 +91,7 @@
 
     - if post.class == Comment
       %article{class: cycle('odd', 'even')}
-        .post
+        .post.comment
           .meta
             %span.date= post.feed_date.strftime('%d.%m.%Y')
             = " // "
@@ -101,15 +101,14 @@
           - if post.image?
             = image_tag post.image.url.gsub('development', 'production')
           .body
-            %em
+            .attribution
               = link_to post.user.display_name, post.user
               writes...
-              %br/
-              %br/
-            %p
+
+            .content
               %span.quote= raw "&ldquo;"
               = raw post.content
-              %span.quote= raw "&rdquo;"
+         
 
           
     - if post.class == Post
@@ -173,7 +172,7 @@
           .body
             %span.quote= raw "&ldquo;"
             = truncate_html post.short_description, length: 300
-            %span.quote= raw "&rdquo;"
+
             
 = content_for :jquery do
   :plain

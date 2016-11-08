@@ -1,5 +1,19 @@
 class InstancesController < ApplicationController
   include ActionView::Helpers::SanitizeHelper
+  before_action :authenticate_user!, only: [:rsvp]
+  
+  def rsvp
+    if params[:experiment_id]
+      @experiment = Experiment.friendly.find(params[:experiment_id])
+      @instance = @experiment.instances.friendly.find(params[:id])
+      Rsvp.find_or_create_by(instance: @instance, user: current_user)
+      flash[:notice] = 'Thank you for RSVPing!'
+      redirect_to [@experiment, @instance]
+    else
+      flash[:error] = 'Error'
+      redirect_to '/'
+    end
+  end
   
   def show
     if params[:experiment_id]

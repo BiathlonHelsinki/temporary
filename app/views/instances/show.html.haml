@@ -21,16 +21,17 @@
             = link_to raw(pluralize((@instance.users.uniq + @instance.onetimers.unclaimed).size, 'person')), '#', onClick: "javascript:$(window).scrollTo('#participants', {duration: 1000});return false;"
             participated, earning
             = raw "#{@instance.users.uniq.size * @instance.cost_bb}#{tsign}." 
-        .proposal_info
-          Scheduled from proposal:
-          = link_to @instance.proposal.name, @instance.proposal, target: :_blank
-          with
-          = raw (@instance.cost_in_temps.to_s + tsign)
-          - unless @instance.pledges.empty?
-            .pledge_info
+        - if @instance.proposal
+          .proposal_info
+            Scheduled from proposal:
+            = link_to @instance.proposal.name, @instance.proposal, target: :_blank
+            with
+            = raw (@instance.cost_in_temps.to_s + tsign)
+            - unless @instance.pledges.empty?
+              .pledge_info
               
-              Supported by:
-              = raw @instance.pledges.order(:created_at).map{|pledge|   "#{link_to pledge.user.display_name, pledge.user} (#{pledge.pledge.to_s})" }.join(', ') 
+                Supported by:
+                = raw @instance.pledges.order(:created_at).map{|pledge|   "#{link_to pledge.user.display_name, pledge.user} (#{pledge.pledge.to_s})" }.join(', ') 
               
         .temps= link_to fa_icon('download') + " Calendar", experiment_instance_path(@instance.experiment, @instance, format: 'ics'), class: [:button, :small]
         - if @instance.image?
@@ -39,7 +40,18 @@
           = image_tag @experiment.image.url.gsub(/development/, 'production')
 
         .body= raw @instance.description
-
+  
+  .rsvp_container      
+    - if @instance.request_rsvp?
+      .row.expanded
+        .small-10.medium-8.columns
+          %h4 The organiser of this experiment has requested that you RSVP if you are attending.
+    .row.expanded
+      .small-10.medium-8.columns
+        - if user_signed_in?
+          - if @instance.rsvps.find_by(user: current_user).nil?
+            = link_to 'Yes, I plan to attend!', rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button]
+          - else
   - unless  @instance.users.empty? && @instance.onetimers.empty?
     %section#participants
       .row.expanded

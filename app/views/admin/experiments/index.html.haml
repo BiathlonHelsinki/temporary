@@ -60,10 +60,15 @@
                               %em
                                 Scheduled from proposal
                                 = link_to instance.proposal.name, instance.proposal, target: :_blank
+                        - if instance.request_rsvp?
+                          %strong - RSVP requested
+                        - if instance.request_registration?
+                          %strong - Registration requested        
                       %td
                         = date_range(instance.start_at, instance.end_at)
                         - if instance.published != true
                           %strong NOT YET PUBLISHED!!
+
                       %td
                         - if can? :delete, instance
                           = link_to 'Delete', [:admin, exp, instance], method: :delete, data: {confirm: 'Are you sure?'}, class: [:button, :alert, :tiny]

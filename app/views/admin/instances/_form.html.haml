@@ -51,6 +51,10 @@
   .row
     .small-10.medium-4.columns= f.input :is_meeting, label: 'Is a Temporary meeting?', hint: 'Tick this if this will also be a weekly-ish meeting for scheduling and other business.'
   .row
+    .small-10.medium-4.columns= f.input :request_rsvp, label: 'Ask people to RSVP', as: :boolean
+  .row
+    .small-10.medium-4.columns= f.input :request_registration, label: 'Require people to register', hint: 'Not yet functional', as: :boolean
+  .row
     .small-10.medium-4.columns= f.input :published
   .row
     .small-10.medium-4.columns= f.submit 'Save', class: [:button]

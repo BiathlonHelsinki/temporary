@@ -38,7 +38,11 @@ Rails.application.routes.draw do
       get :hierarchy
       get :calendar
     end
-    resources :instances, path: ''
+    resources :instances, path: '' do
+      member do
+        post :rsvp
+      end
+    end
 
   end
   
