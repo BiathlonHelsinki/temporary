@@ -71,7 +71,33 @@
           -  unless current_user.rsvpd?(@instance)
             = link_to 'Yes, I plan to attend!', rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button]
           - else
-  - unless  @instance.users.empty? && @instance.onetimers.empty?
+  - if @instance.users.empty? && @instance.onetimers.empty?
+    - unless @instance.rsvps.empty?
+      %section#participants
+        .row.expanded
+          .small-10.medium-6.columns
+            .participant_header RSVPd (planning to attend):
+        .row.expanded.small-up-4.medium-up-6.large-up-8.xlarge-up-9  
+          - @instance.rsvps.map(&:user).each do |attended|
+            .column.participant_grid
+              .image
+                - if attended.avatar?
+                  = image_tag attended.avatar.url(:box)
+                - else
+                  = image_tag image_path('user_missing_large.png')
+              .participant_overlay
+
+                = link_to attended.display_name, attended 
+                - if @instance.experiment.primary_sponsor == attended
+                  %br/
+                  = link_to "(experiment instigator)", @instance.proposal
+                - if user_signed_in?
+                  - if current_user == attended
+                    = link_to 'Cancel RSVP', cancel_rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button, :alert], data: {confirm: 'Are you sure you want to cancel your RSVP?'}
+                - if @instance.allow_multiple_entry == true
+                  = " (#{pluralize(@instance.users.select{|x| x == attended}.count, 'time')})"
+        
+  - else
     %section#participants
       .row.expanded
         .small-10.medium-6.columns
