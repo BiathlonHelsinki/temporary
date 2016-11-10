@@ -114,6 +114,11 @@ header {
       }
     }
     .post, .open_day {
+      .rsvp {
+        font-family: $inconsolata;
+        font-size: 1.25rem;
+        font-weight: bold;
+      }
       border-top: 9px solid black;
       padding: 0.875rem 0 2.5rem 0;
       .meta {

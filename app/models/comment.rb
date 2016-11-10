@@ -26,6 +26,14 @@ class Comment < ApplicationRecord
     created_at
   end
   
+  def title
+    item.name
+  end
+  
+  def body
+    content_linked
+  end
+  
   def content_linked
     content.gsub('href="#"', '').gsub(/\srel="/, ' href="')
   end

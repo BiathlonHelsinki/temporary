@@ -137,10 +137,23 @@
           
           .title= link_to post.name, [post.experiment, post]
           - if post.image?
-            %p= image_tag post.image.url(:medium)
+            .image= image_tag post.image.url(:medium)
           - elsif post.experiment.image?
             %p= image_tag post.experiment.image.url(:medium)
-        
+          - if post.in_future?
+            .rsvp
+              - if user_signed_in?
+                - if current_user.rsvpd?(post)
+                  You are going!
+                - else
+                  Are you going?
+                  = link_to 'RSVP!', rsvp_experiment_instance_path(post.experiment, post), method: :post, class: [:button]
+              - else
+                Are you going?
+                = link_to 'RSVP!',  [post.experiment, post], class: [:button]
+            - unless post.rsvps.empty?
+              .participants
+                = pluralize(post.rsvps.size, 'person') + ' has RSVPd'
           .body
             = truncate_html post.description, length: 500
             = link_to 'Read more...', [post.experiment, post], class: [:button]

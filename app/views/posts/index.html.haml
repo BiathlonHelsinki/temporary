@@ -17,12 +17,25 @@
         .small-10.columns
           .post
             .meta
-              %span.date= post.published_at.strftime('%d.%m.%Y')
+              %span.date= post.feed_date.strftime('%d.%m.%Y')
               = " // "
-              %span.category News
+              %span.category
+                - if post.class == Comment
+                  = link_to 'Experiment news', post.item
+                - else
+                  News
               = " // "
             .title= link_to post.title, post
             - if post.image?
               = image_tag post.image.url
-            .body= raw post.body
+            - if post.class == Comment
+              .attribution
+                = link_to post.user.display_name, post.user
+                writes...
+            .body
+              - if post.class == Comment
+                %span.quote= raw "&ldquo;"
+                .quoted= raw post.body
+              - else
+                = raw post.body
     

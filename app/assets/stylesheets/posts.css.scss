@@ -25,7 +25,23 @@
         color: $black;        
       }
     }
+    .attribution {
+      font-style: italic;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
     .body {
+      span.quote {
+        font-family: serif;
+        padding-top: 0.4rem;
+        font-size: 1.6rem;
+        line-height: 0;
+        font-style: italic;
+        float: left;
+      }
+      .quoted {
+        margin: 0 1.25rem;
+      }
       font-family: $ptsans;
       font-size: 0.881em;
       p {
