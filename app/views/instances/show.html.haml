@@ -64,12 +64,13 @@
             %h4
               The organiser of this experiment has requested that you RSVP if you are attending.
               = link_to 'RSVP!', '/users/sign_in', class: [:button]
-    .row.expanded
-      .small-10.medium-8.columns
-        - if user_signed_in?
-          -  unless current_user.rsvpd?(@instance)
-            = link_to 'Yes, I plan to attend!', rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button]
-          - else
+      .row.expanded
+        .small-10.medium-8.columns
+      
+          - if user_signed_in?
+            -  unless current_user.rsvpd?(@instance)
+              = link_to 'Yes, I plan to attend!', rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button]
+
   - if @instance.users.empty? && @instance.onetimers.empty?
     - unless @instance.rsvps.empty?
       %section#participants
