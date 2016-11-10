@@ -18,6 +18,7 @@ class Ability
       cannot :manage, Page
       cannot :manage, Email
       can :create, Comment
+      can :manage, Rsvp, user_id: user.id
       can :manage, Comment, :user_id => user.id 
     end
   end

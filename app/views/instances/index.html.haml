@@ -8,9 +8,24 @@
         = @experiment.name
         -# = link_to fa_icon('calendar'), calendar_experiments_path
       - if @experiment.image?
-        = image_tag @experiment.image.url(:medium)
+        .image= image_tag @experiment.image.url(:medium)
       %p= raw @experiment.description
-
+      
+  - unless @experiment.instances.empty?
+    .row.expanded
+      .small-12.columns
+        
+        %p
+          = pluralize(@experiment.instances.size, 'meeting') + ' scheduled.'
+          = pluralize(@experiment.instances.map(&:users).flatten.size, 'person') + ' have checked in '
+          = "(" + pluralize(@experiment.instances.map(&:users).flatten.uniq.size, 'distinct person') + "), and "
+          = pluralize(@experiment.instances.map{|x| x.onetimers.unclaimed}.flatten.size, 'anonymous guest ticket') + '.'
+          
+        %p
+          Original proposal:
+          = link_to @experiment.instances.first.proposal.name, @experiment.instances.first.proposal
+          by 
+          = link_to @experiment.instances.first.proposal.user.display_name,  @experiment.instances.first.proposal.user
   - unless @future.empty?
     .row.expanded
       .small-12.columns

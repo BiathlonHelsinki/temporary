@@ -17,6 +17,14 @@
         .temps
           - if @instance.in_future?
             = raw "You will earn #{@instance.cost_bb}#{tsign} for participating!"
+            
+            - if user_signed_in?
+              - if current_user.rsvpd?(@instance)
+              
+                %strong  You have RSVPd to this event.
+              - else
+                %br/
+                = link_to 'I plan to attend!', rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button]
           - else
             = link_to raw(pluralize((@instance.users.uniq + @instance.onetimers.unclaimed).size, 'person')), '#', onClick: "javascript:$(window).scrollTo('#participants', {duration: 1000});return false;"
             participated, earning
@@ -43,14 +51,24 @@
         .body= raw @instance.description
   
   .rsvp_container      
-    - if @instance.request_rsvp?
+    - if @instance.request_rsvp? && @instance.in_future?
       .row.expanded
         .small-10.medium-8.columns
-          %h4 The organiser of this experiment has requested that you RSVP if you are attending.
+          - if user_signed_in?
+            - if current_user.rsvpd?(@instance)
+              
+              %h5 You have RSVPd to this event. Thank you, and we will see you there!
+              = link_to 'Cancel RSVP', cancel_rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button, :alert], data: {confirm: 'Are you sure you want to cancel your RSVP?'}
+            - else
+              %h4 The organiser of this experiment has requested that you RSVP if you are attending.
+          - else
+            %h4
+              The organiser of this experiment has requested that you RSVP if you are attending.
+              = link_to 'RSVP!', '/users/sign_in', class: [:button]
     .row.expanded
       .small-10.medium-8.columns
         - if user_signed_in?
-          - if @instance.rsvps.find_by(user: current_user).nil?
+          -  unless current_user.rsvpd?(@instance)
             = link_to 'Yes, I plan to attend!', rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button]
           - else
   - unless  @instance.users.empty? && @instance.onetimers.empty?

@@ -136,6 +136,9 @@ section.main_container {
 .experiments_index, article.instance_single {
   padding: 2rem 0;
   background-color: white;
+  .image {
+    clear: both;
+  }
   h1, h3 {
     padding: 0 ; margin: 0 0 1rem 0;
     text-transform: uppercase;

@@ -41,6 +41,7 @@ Rails.application.routes.draw do
     resources :instances, path: '' do
       member do
         post :rsvp
+        post :cancel_rsvp
       end
     end
 

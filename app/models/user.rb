@@ -36,7 +36,7 @@ class User < ActiveRecord::Base
   after_create :add_to_activity_feed
   has_many :comments
   validates_presence_of :geth_pwd
-
+  has_many :rsvps
 
   def as_mentionable
     {
@@ -177,7 +177,11 @@ class User < ActiveRecord::Base
      user
    end
 
-   def email_verified?
+  def rsvpd?(instance)
+    !rsvps.find_by(instance: instance).nil?
+  end
+  
+  def email_verified?
      self.email && self.email !~ TEMP_EMAIL_REGEX
    end
    
