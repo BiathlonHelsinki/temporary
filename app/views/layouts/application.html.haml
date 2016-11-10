@@ -21,7 +21,7 @@
         _paq.push(['trackPageView']);
         _paq.push(['enableLinkTracking']);
         (function() {
-          var u="//stats.temporary.fi/";
+          var u="http://stats.temporary.fi/";
           _paq.push(['setTrackerUrl', u+'piwik.php']);
           _paq.push(['setSiteId', '1']);
           var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
@@ -29,7 +29,7 @@
         })();
       %noscript
         %p
-          %img{:alt => "", :src => "//stats.temporary.fi/piwik.php?idsite=1", :style => "border:0;"}/
+          %img{:alt => "", :src => "http://stats.temporary.fi/piwik.php?idsite=1", :style => "border:0;"}/
   %body
     - if flash
       - flash.each do |key, value|
