@@ -86,6 +86,7 @@ class ProposalsController < ApplicationController
   
   def show
     @current_rate = Rate.get_current.experiment_cost
+     @next_meeting = Instance.next_meeting
     @proposal = Proposal.find(params[:id])
     set_meta_tags title: @proposal.name
   end
