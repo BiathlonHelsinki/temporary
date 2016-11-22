@@ -10,7 +10,7 @@ class Proposal < ApplicationRecord
   has_many :activities, dependent: :destroy, as: :item
   after_create :add_to_activity_feed
   after_update :add_to_activity_feed_edited
- 
+
   scope :archived, -> () { where(stopped: true) }
   scope :active, -> () { where(stopped: false) }
 

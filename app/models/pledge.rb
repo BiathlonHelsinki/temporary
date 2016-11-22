@@ -34,8 +34,9 @@ class Pledge < ApplicationRecord
   def content
     comment
   end
+  
   def name
-    item.name
+    item.nil? ? ' deleted proposal ' :  item.name
   end
   
   def notify_if_enough
