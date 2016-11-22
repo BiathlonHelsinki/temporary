@@ -84,7 +84,7 @@ header {
 //  -webkit-column-gap: 2.25em;
 //  -moz-column-gap: 2.25em;
 //  column-gap: 2.25em;
-  padding: 0.875rem 0rem;
+  padding: 0 0 0.875rem 0rem;
   article {
     //    -webkit-column-break-inside:avoid;
     //    -moz-column-break-inside:avoid;
@@ -365,5 +365,23 @@ header {
       }
     }
     
+  }
+}
+
+.front_blurb_stripe {
+  background-color: $yellow;
+  padding: 1.2rem;
+  .inner {
+    border: 9px solid black;
+    margin: 0;
+    background-color: white;
+    color: black;
+    padding: 2.2rem 0;
+    font-family: $ptsans;
+    font-size: 1.4rem;
+    text-align: center;
+    a {
+      color: $blue;
+    }
   }
 }

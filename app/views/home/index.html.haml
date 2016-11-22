@@ -5,7 +5,22 @@
     = render partial: 'layouts/top_bar'
 
 
+- unless user_signed_in?
+  .front_blurb_stripe
+    .inner
+      .row.expanded
+        .small-12.medium-9.columns.medium-centered
+          Temporary is open every weekday as a free creative space for playing, working, socialising, or whatever else you'd like it to be. 
+          = link_to 'Come and visit!', experiment_path('open-days')
 
+      .row.expanded
+        .small-12.medium-9.columns.medium-centered
+          %br/
+          On evenings & weekends we host special 
+          %strong= link_to 'experiments', experiments_path
+          %span>, proposed and organised by YOU! 
+          %br/
+          = link_to 'Find out more ...', page_path('how-does-it-work')
 
 .news_container
   %article.calendar{class: cycle('odd', 'even')}
