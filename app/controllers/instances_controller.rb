@@ -38,6 +38,9 @@ class InstancesController < ApplicationController
     if params[:experiment_id]
       @experiment = Experiment.friendly.find(params[:experiment_id])
       @instance = @experiment.instances.friendly.find(params[:id])
+      if @instance.slug == @experiment.slug && @experiment.instances.published.size == 1
+        redirect_to experiment_path(@experiment.slug)
+      end
       set_meta_tags title: @instance.name
       if params[:format] == 'ics'
         require 'icalendar/tzinfo'
@@ -73,9 +76,9 @@ class InstancesController < ApplicationController
     
     end
     set_meta_tags title: @experiment.name
+    @instance = @experiment.instances.published.first
     if @experiment.instances.published.size == 1
-      @instance = @experiment.instances.published.first
-      render template: 'instances/show'
+       render template: 'instances/show'
     end
   end
   
