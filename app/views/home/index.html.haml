@@ -37,21 +37,22 @@
 
         
   - unless @open_day.nil?
-    %article.open_day{class: cycle('odd', 'even')}
-      .post
-        .meta
-          %span.date= @open_day.start_at.strftime('%d.%m.%Y')
-          = " // "
-          %span.category= link_to 'Experiments', experiments_path
-          = " // "
-        .title= link_to (@open_day.start_at.to_date == Time.now.to_date ? 'Current' : 'Next') + ' open day:', experiment_instance_path(@open_day.experiment, @open_day)
-        = link_to experiment_instance_path(@open_day.experiment, @open_day) do
-          .dates.text-center
-            .month= l @open_day.start_at, format: "%B"
-            .days
-              .day= @open_day.start_at.day
-              .times= @open_day.start_at.strftime("%H:%M") + " - " + @open_day.end_at.strftime("%H:%M")
-        .body= raw simple_format(@open_day.description)
+    - cache ['open_day_front', @open_day.start_at.strftime('%d.%m.%Y')] do 
+      %article.open_day{class: cycle('odd', 'even')}
+        .post
+          .meta
+            %span.date= @open_day.start_at.strftime('%d.%m.%Y')
+            = " // "
+            %span.category= link_to 'Experiments', experiments_path
+            = " // "
+          .title= link_to (@open_day.start_at.to_date == Time.now.to_date ? 'Current' : 'Next') + ' open day:', experiment_instance_path(@open_day.experiment, @open_day)
+          = link_to experiment_instance_path(@open_day.experiment, @open_day) do
+            .dates.text-center
+              .month= l @open_day.start_at, format: "%B"
+              .days
+                .day= @open_day.start_at.day
+                .times= @open_day.start_at.strftime("%H:%M") + " - " + @open_day.end_at.strftime("%H:%M")
+          .body= raw simple_format(@open_day.description)
 
   - unless @sticky.size < 2        
     - @sticky.drop(1).each do |post|
@@ -74,117 +75,117 @@
 
     
   - @feed.each do |post|
-  
-    - if post.class == Email
+    - cache ["front_post", post, current_user] do
+      - if post.class == Email
       
-      %article{class: cycle('odd', 'even')}
-        .post{class: post.class.to_s.downcase}
-          .meta
-            %span.date= post.sent_at.strftime('%d.%m.%Y')
-            = " // "
-            %span.category Announcements
-            = " // "
-          .title= link_to post.subject, "/announcements/#{post.slug}"
-          .body
-            = raw truncate_html(sanitize(post.body, tags: %w{a b bold strong i em br p blockquote img}, attributes: %w{src href}), length: 750)
-            = link_to 'Read more...', "/announcements/#{post.slug}", class: [:button]
+        %article{class: cycle('odd', 'even')}
+          .post{class: post.class.to_s.downcase}
+            .meta
+              %span.date= post.sent_at.strftime('%d.%m.%Y')
+              = " // "
+              %span.category Announcements
+              = " // "
+            .title= link_to post.subject, "/announcements/#{post.slug}"
+            .body
+              = raw truncate_html(sanitize(post.body, tags: %w{a b bold strong i em br p blockquote img}, attributes: %w{src href}), length: 750)
+              = link_to 'Read more...', "/announcements/#{post.slug}", class: [:button]
 
-    - if post.class == Comment
-      %article{class: cycle('odd', 'even')}
-        .post.comment
-          .meta
-            %span.date= post.feed_date.strftime('%d.%m.%Y')
-            = " // "
-            %span.category= post.item.class.to_s + " news"
-            = " // "
-          .title= link_to post.item.name, post.item
-          - if post.image?
-            = image_tag post.image.url.gsub('development', 'production')
-          .body
-            .attribution
-              = link_to post.user.display_name, post.user
-              writes...
+      - if post.class == Comment
+        %article{class: cycle('odd', 'even')}
+          .post.comment
+            .meta
+              %span.date= post.feed_date.strftime('%d.%m.%Y')
+              = " // "
+              %span.category= post.item.class.to_s + " news"
+              = " // "
+            .title= link_to post.item.name, post.item
+            - if post.image?
+              = image_tag post.image.url.gsub('development', 'production')
+            .body
+              .attribution
+                = link_to post.user.display_name, post.user
+                writes...
 
-            .content
-              %span.quote= raw "&ldquo;"
-              = raw post.content
+              .content
+                %span.quote= raw "&ldquo;"
+                = raw post.content
          
 
           
-    - if post.class == Post
-      %article{class: cycle('odd', 'even')}
-        .post
-          .meta
-            %span.date= post.published_at.strftime('%d.%m.%Y')
-            = " // "
-            %span.category= post.category_text
-            = " // "
-          .title= link_to post.title, post
-          - if post.image?
-            = image_tag post.image.url.gsub('development', 'production')
-          .body= raw post.body
+      - if post.class == Post
+        %article{class: cycle('odd', 'even')}
+          .post
+            .meta
+              %span.date= post.published_at.strftime('%d.%m.%Y')
+              = " // "
+              %span.category= post.category_text
+              = " // "
+            .title= link_to post.title, post
+            - if post.image?
+              = image_tag post.image.url.gsub('development', 'production')
+            .body= raw post.body
 
-    - if post.class == Instance
-      %article.experiment_front{class: cycle('odd', 'even')}
-        .post
-          .meta
-            %span.date= date_range(post.start_at, post.end_at)
-            = "//"
-            %span
-              = "Experiment "
-              = "##{post.sequence}"
-            = "//"
+      - if post.class == Instance
+        %article.experiment_front{class: cycle('odd', 'even')}
+          .post
+            .meta
+              %span.date= date_range(post.start_at, post.end_at)
+              = "//"
+              %span
+                = "Experiment "
+                = "##{post.sequence}"
+              = "//"
           
-          .title= link_to post.name, [post.experiment, post]
-          - if post.image?
-            .image= image_tag post.image.url(:medium)
-          - elsif post.experiment.image?
-            %p= image_tag post.experiment.image.url(:medium)
-          - if post.in_future?
-            .rsvp
-              - if user_signed_in?
-                - if current_user.rsvpd?(post)
-                  You are going!
+            .title= link_to post.name, [post.experiment, post]
+            - if post.image?
+              .image= image_tag post.image.url(:medium)
+            - elsif post.experiment.image?
+              %p= image_tag post.experiment.image.url(:medium)
+            - if post.in_future?
+              .rsvp
+                - if user_signed_in?
+                  - if current_user.rsvpd?(post)
+                    You are going!
+                  - else
+                    Are you going?
+                    = link_to 'RSVP!', rsvp_experiment_instance_path(post.experiment, post), method: :post, class: [:button]
                 - else
                   Are you going?
-                  = link_to 'RSVP!', rsvp_experiment_instance_path(post.experiment, post), method: :post, class: [:button]
-              - else
-                Are you going?
-                = link_to 'RSVP!',  [post.experiment, post], class: [:button]
-            - unless post.rsvps.empty?
-              .participants
-                = pluralize(post.rsvps.size, 'person') + ' has RSVPd'
-          .body
-            = truncate_html post.description, length: 500
-            = link_to 'Read more...', [post.experiment, post], class: [:button]
+                  = link_to 'RSVP!',  [post.experiment, post], class: [:button]
+              - unless post.rsvps.empty?
+                .participants
+                  = pluralize(post.rsvps.size, 'person') + ' has RSVPd'
+            .body
+              = truncate_html post.description, length: 500
+              = link_to 'Read more...', [post.experiment, post], class: [:button]
             
-    - if post.class == Proposal
-      %article.proposal{class: cycle('odd', 'even')}
-        .post
-          .meta
-            %span.date= post.created_at.strftime('%d.%m.%Y')
-            = " // "
-            %span.category Proposals
-            = " // "
-          .title= link_to post.name, post
-          - unless post.images.empty?
-            %p= image_tag post.images.first.image.url(:medium)
-          .proposed_by= raw "Proposed by #{link_to post.user.display_name, post.user}"
-          .pledge_count
-            = raw "Currently pledged: #{post.pledged.to_s}#{tsign}"
-          .needed
-            - if post.has_enough?
-              - if post.scheduled?
-                = "Scheduled!"
+      - if post.class == Proposal
+        %article.proposal{class: cycle('odd', 'even')}
+          .post
+            .meta
+              %span.date= post.created_at.strftime('%d.%m.%Y')
+              = " // "
+              %span.category Proposals
+              = " // "
+            .title= link_to post.name, post
+            - unless post.images.empty?
+              %p= image_tag post.images.first.image.url(:medium)
+            .proposed_by= raw "Proposed by #{link_to post.user.display_name, post.user}"
+            .pledge_count
+              = raw "Currently pledged: #{post.pledged.to_s}#{tsign}"
+            .needed
+              - if post.has_enough?
+                - if post.scheduled?
+                  = "Scheduled!"
+                - else
+                  = "Will be considered at next organisational meeting"
+                = link_to "View!", post, class: [:button, :small]
               - else
-                = "Will be considered at next organisational meeting"
-              = link_to "View!", post, class: [:button, :small]
-            - else
-              = raw "#{post.needed_for_next - post.remaining_pledges}#{tsign} still needed"
-              = link_to "Pledge!", post, class: [:button, :small]
-          .body
-            %span.quote= raw "&ldquo;"
-            = truncate_html post.short_description, length: 300
+                = raw "#{post.needed_for_next - post.remaining_pledges}#{tsign} still needed"
+                = link_to "Pledge!", post, class: [:button, :small]
+            .body
+              %span.quote= raw "&ldquo;"
+              = truncate_html post.short_description, length: 300
 
             
 = content_for :jquery do

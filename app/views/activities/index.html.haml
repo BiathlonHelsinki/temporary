@@ -36,7 +36,7 @@
         /       = @activities.where(addition: 1).sum{|x| x.value.to_i} - @activities.where(addition: -1).sum{|x| x.value.to_i}
         /     %td
         %tbody.page
-          = render @activities
+          = render @activities, cached: true
   .row.expanded
     .small-12.columns= paginate @activities
 

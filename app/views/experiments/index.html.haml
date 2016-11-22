@@ -1,3 +1,4 @@
+
 .experiments_index
   .row.expanded
     .small-12.columns
@@ -7,14 +8,15 @@
   .row.expanded#expandme.small-up-1.medium-up-2.large-up-4.xxlarge-up-5{:"data-equalizer" => '', :"data-equalize-by-row" => "true"}
     - only_one_openday = false
     - @experiments.each do |e|
-      
+  
       - if e.experiment.slug == 'open-days'
         - next if only_one_openday == true
         - only_one_openday = true
       - next unless e.show_on_website?
-      = render partial: 'instances/experiment_instance_column', locals: {exp: e, :"@experiment" =>  e.experiment }
+      - cache  e do 
+        = render partial: 'instances/experiment_instance_column', locals: {exp: e, :"@experiment" =>  e.experiment }
 
-        
+    
   .row.expanded
     .small-12.columns
       %h1
@@ -22,4 +24,5 @@
 
   .row.expanded#expandme.small-up-1.medium-up-2.large-up-4.xxlarge-up-5{:"data-equalizer" => '', :"data-equalize-by-row" => "true"}
     - @past.each do |exp|
-      = render partial: 'instances/experiment_instance_column', locals: {exp: exp, :"@experiment" =>  exp.experiment}
+      - cache  exp do
+        = render partial: 'instances/experiment_instance_column', locals: {exp: exp, :"@experiment" =>  exp.experiment}
