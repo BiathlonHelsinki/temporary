@@ -115,7 +115,7 @@
               = " // "
             .title= link_to post.item.name, post.item
             - if post.image?
-              = image_tag post.image.url.gsub('development', 'production')
+              = image_tag post.image.url
             .body
               .attribution
                 = link_to post.user.display_name, post.user
@@ -123,7 +123,7 @@
 
               .content
                 %span.quote= raw "&ldquo;"
-                = raw post.content
+                = raw post.content_linked
          
 
           

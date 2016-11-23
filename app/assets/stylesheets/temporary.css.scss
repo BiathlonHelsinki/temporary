@@ -1131,6 +1131,18 @@ form.pledge, form {
     font-style: normal;
     font-size: 1rem;
     margin-bottom: 1rem;
+    .image_attached img {
+      width:initial;
+      height: initial;
+    }
+    img {
+      height: 35px;
+      width: 35px;
+      margin-right: 4px;
+    }
+    a {
+      color: $blue;
+    }
     p {
       img {
         max-height: 30px;

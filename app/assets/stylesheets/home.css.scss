@@ -140,9 +140,19 @@ header {
             font-size: 0.9rem;
             margin-bottom: 1rem;
           }
-
+          .content {
+            img {
+              height: auto;
+              max-width: 25px;
+              margin-right: 4px;
+              padding: 0;
+            }
+            a {
+              color: $blue;
+            }
+          }
         }
-        
+
       }
       .dates {
         font-family: $heebo;

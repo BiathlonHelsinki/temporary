@@ -27,7 +27,7 @@
                       = simple_format(comment.content_linked)
                       - if comment.image?
                         %br/
-                        = image_tag comment.image.url(:small)
+                        .image_attached= image_tag comment.image.url(:medium)
                       - if comment.attachment?
                         %p= link_to t(:download) + ' ' + File.basename(URI.parse(comment.attachment.url).path), comment.attachment.url, class: [:button, :round, :tiny]
                   
