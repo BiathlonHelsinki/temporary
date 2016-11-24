@@ -98,7 +98,8 @@ class Admin::InstancesController < Admin::BaseController
   
   def instance_params
     params.require(:instance).permit(:published, :event_id, :place_id, :primary_sponsor_id, :is_meeting, :proposal_id,
-    :secondary_sponsor_id, :cost_euros, :cost_bb, :sequence, :start_at, :end_at, :sequence, :allow_multiple_entry,
+    :secondary_sponsor_id, :cost_euros, :cost_bb, :sequence, :start_at, :end_at, :sequence, :allow_multiple_entry, 
+    :request_rsvp, :request_registration,
     :parent_id, :image, translations_attributes: [:name, :description, :instance_id, :locale, :id]
     )
   end
