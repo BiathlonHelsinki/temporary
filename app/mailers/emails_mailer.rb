@@ -7,7 +7,7 @@ class EmailsMailer < ActionMailer::Base
     @user = user
     @announcement = announcement
     @body = body
-
+    headers['List-Unsubscribe'] = '<mailto:admin@temporary.fi>'
     mail(to: @user.email, subject: @announcement.subject)  do |format|
       format.html
       format.text
@@ -18,7 +18,7 @@ class EmailsMailer < ActionMailer::Base
 
     @announcement = announcement
     @body = body
-
+    headers['List-Unsubscribe'] = '<mailto:admin@temporary.fi>'
     mail(to: email, subject: @announcement.subject)  do |format|
       format.html
       format.text
