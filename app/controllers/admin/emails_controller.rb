@@ -34,11 +34,23 @@ class Admin::EmailsController < Admin::BaseController
     @emails = Email.all.order(:sent_at)
   end
   
+  
+  def send_test_address
+    @email = Email.friendly.find(params[:id])
+    recipient = params[:email_address]
+    body = ERB.new(@email.body).result(binding).html_safe
+    EmailsMailer.test(recipient, @email, body).deliver_now
+    
+    flash[:notice] = 'Email sent to ' + recipient
+    redirect_to admin_emails_path
+  end
+  
   def send_test
     @email = Email.friendly.find(params[:id])
     @user = User.find(1)
     body = ERB.new(@email.body).result(binding).html_safe
     EmailsMailer.announcement(@user, @email, body).deliver_now
+    
     flash[:notice] = 'Email sent to ' + @user.email
     redirect_to admin_emails_path
   end

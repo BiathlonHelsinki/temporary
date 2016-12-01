@@ -13,4 +13,16 @@ class EmailsMailer < ActionMailer::Base
       format.text
     end
   end
+  
+  def test(email, announcement, body)
+
+    @announcement = announcement
+    @body = body
+
+    mail(to: email, subject: @announcement.subject)  do |format|
+      format.html
+      format.text
+    end
+  end
+  
 end

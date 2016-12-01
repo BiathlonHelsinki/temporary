@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       member do
         get :send_to_list
         get :send_test
+        post :send_test_address
       end
     end
     resources :ethtransactions

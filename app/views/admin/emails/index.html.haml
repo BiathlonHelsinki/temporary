@@ -26,7 +26,12 @@
               - if email.sent != true
                 = link_to 'Send!', send_to_list_admin_email_path(email), class: [:button, :small] 
               %br/
-              = link_to 'Send test', send_test_admin_email_path(email), class: [:button, :tiny, :secondary]
+              .reveal[email]{:"data-reveal" => ''}
+                = form_tag send_test_address_admin_email_path(email) do
+                  %p Enter address to send email to:
+                  = text_field_tag :email_address
+                  = submit_tag 'send'
+              = link_to 'Send test', '#', class: [:button, :small, :secondary], :'data-open' => "email_#{email.id.to_s}" 
             %td
               = link_to 'Preview', "/announcements/#{email.slug}", target: :_blank, class: [:button, :small, :secondary]
               - if can? :edit, email
