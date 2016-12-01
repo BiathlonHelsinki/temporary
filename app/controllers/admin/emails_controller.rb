@@ -10,6 +10,18 @@ class Admin::EmailsController < Admin::BaseController
     end
   end
   
+  def destroy
+    @email = Email.friendly.find(params[:id])
+    if @email.sent == true
+      flash[:error] = 'You cannot delete an email announcement after it has been sent.'
+
+    else
+      @email.destroy
+      flash[:notice] = 'Email announcement deleted.'
+    end
+    redirect_to admin_emails_path
+  end
+  
   def edit
     @email = Email.friendly.find(params[:id])
   end
