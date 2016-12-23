@@ -189,14 +189,17 @@
             .pledge_count
               = raw "Currently pledged: #{post.pledged.to_s}#{tsign}"
             .needed
+
               - if post.has_enough?
                 - if post.scheduled?
                   = "Scheduled!"
                 - else
-                  = "Will be considered at next organisational meeting"
+                  = "Will be reviewed for scheduling at next organisational meeting"
+                  %br/
                 = link_to "View!", post, class: [:button, :small]
               - else
                 = raw "#{post.needed_for_next - post.remaining_pledges}#{tsign} still needed"
+                %br/
                 = link_to "Pledge!", post, class: [:button, :small]
             .body
               %span.quote= raw "&ldquo;"

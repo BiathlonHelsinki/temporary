@@ -1,12 +1,12 @@
 source 'https://rubygems.org'
 
-ruby '2.3.1'
+ruby '2.3.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '5.0.0.1'
+gem 'rails', '5.0.1'
 gem "pg", git: "https://github.com/ged/ruby-pg"
 # Use Puma as the app server
-gem 'puma'
+gem 'puma', group: :production
 
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -26,7 +26,7 @@ end
 
 group :development do
   gem 'better_errors'
-  gem 'binding_of_caller'
+#  gem 'binding_of_caller'
   gem 'letter_opener'
   gem 'listen', '~> 3.0.5'
   gem 'ruby_parser', '>= 3.0.1'
@@ -35,7 +35,7 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
-
+  gem 'thin'
 end
 
 gem 'capistrano'
@@ -92,10 +92,10 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 #  front-end specific stuff
 gem 'formtastic'
-gem 'foundation-rails'
+gem 'foundation-rails'#, "6.3.0.0"
 gem 'foundation-datetimepicker-rails', '0.2.4'
 gem 'haml'
-gem "haml-rails", "~> 0.9"
+gem "haml-rails"#, "~> 0.9"
 gem 'jquery-rails'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
