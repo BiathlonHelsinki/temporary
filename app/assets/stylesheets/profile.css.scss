@@ -34,9 +34,22 @@
     a {
       color: $blue;
     }
+    &.pledges {
+      padding: 0; margin: 0;
+    }
     li {
       .subtext {
         font-size: 0.75rem;
+      }
+      &.heading {
+        list-style-type: none;
+        font-weight: bold;
+        ul  {
+          padding-left: 1.4rem;
+          li {
+            font-weight: normal;
+          }
+        }
       }
     }
   }

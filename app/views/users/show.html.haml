@@ -90,11 +90,15 @@
         %em No pledges made.
       - else
         .title Pledges
-        %ul
-          - @user.pledges.group_by{|x| x.item}.each do |pledge|
-            %li
-              = link_to pledge.first.name, pledge.first
-              = raw "(#{pledge.last.sum(&:pledge).to_s}#{tsign})"
+        %ul.pledges
+          - @user.pledges.group_by{|x| x.converted.to_i}.each do |group|
+            %li.heading
+              = group.first == 1 ? 'Spent:' : 'Pending:'
+              %ul
+                - group.last.group_by{|x| x.item}.each do |pledge|
+                  %li
+                    = link_to pledge.first.name, pledge.first
+                    = raw "(#{pledge.last.sum(&:pledge).to_s}#{tsign})"
     .small-10.medium-8.large-4.columns
       - if @user.comments.empty?
         %em No comments made.

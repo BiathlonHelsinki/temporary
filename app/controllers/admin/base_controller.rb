@@ -80,8 +80,8 @@ class Admin::BaseController < ApplicationController
             flash[:error] = success['error']
             redirect_to '/admin'
           else
-            activity.ethtransaction = Ethtransaction.find_by(txaddress: success['data'])
-            if activity.save!
+            #activity.ethtransaction = Ethtransaction.find_by(txaddress: success['data'])
+            if activity.destroy
               #TransfersMailer.received_temps(current_user, @recipient, params[:temps_to_send], params[:reason]).deliver                   
               flash[:notice] = 'Your re-transfer was successful, thank you!'
               redirect_to '/admin'
