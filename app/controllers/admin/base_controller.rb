@@ -4,7 +4,7 @@ class Admin::BaseController < ApplicationController
 
   before_action :authenticate_user!
   before_action :authenticate_admin!
-  load_and_authorize_resource except: [:home, :proposal, :resubmit, :respend], find_by: :slug
+  load_and_authorize_resource except: [:home, :proposal, :resubmit, :respend, :retransfer], find_by: :slug
   
   def authenticate_admin!
     redirect_to root_path unless current_user.has_role? :admin
@@ -51,6 +51,42 @@ class Admin::BaseController < ApplicationController
     end
            
     redirect_to "/admin"
+  end
+  
+  def retransfer
+    activity = Activity.find(params[:id])
+    sender = activity.item
+    if sender.class != User
+      flash[:error] = 'Error, this activity was not a transfer'
+    else
+      if @api_status == false || @dapp_status == false
+        flash[:error] = 'The Biathlon API is currently down. Please try again later.'
+        redirect_to '/admin'
+      else
+        amount = activity.ethtransaction.value
+        if sender.available_balance < amount.to_i
+          flash[:error] = 'You cannot do that.'
+          redirect_to '/admin'
+        else
+          api = BiathlonApi.new
+        
+          success = api.api_post("/users/#{activity.user_id}/transfers/send_biathlon",
+                               {user_email: sender.email, 
+                                user_token: sender.authentication_token,
+                                points: amount,
+                                reason: activity.extra_info.gsub(/\s*\(reason\:\s*/, '').gsub(/\)$/, '')
+                                })
+          if success['error']
+            flash[:error] = success['error']
+            redirect_to '/admin'
+          else      
+            #TransfersMailer.received_temps(current_user, @recipient, params[:temps_to_send], params[:reason]).deliver                   
+            flash[:notice] = 'Your re-transfer was successful, thank you!'
+            redirect_to '/admin'
+          end   
+        end                     
+      end
+    end
   end
   
   def force_english
