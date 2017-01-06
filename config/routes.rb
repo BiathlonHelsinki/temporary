@@ -22,6 +22,7 @@ Rails.application.routes.draw do
       end
     end
     resources :ethtransactions
+    resources :instances_users
     resources :experiments do
       resources :instances
     end
