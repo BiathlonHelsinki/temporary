@@ -1,0 +1,12 @@
+.row.expanded
+  .small-12.columns
+    %h2 Edit check-in info
+.row.expanded
+  .small-12.columns
+    %p Do not do this without a good reason!
+    
+= semantic_form_for [:admin, @instance_user] do |f|
+  .row.expanded
+    .small-12.columns= f.input :instance, collection: Instance.order(start_at: :desc)
+  .row.expanded
+    .small-12.columns= f.submit 'Save'

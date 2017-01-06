@@ -1,0 +1,29 @@
+.row.expanded
+  .small-12.columns
+    %h2 All checkins
+
+.row.expanded
+  .small-12.columns
+    = paginate @instances_users
+.row.expanded
+  .small-12.columns    
+    %table
+      %thead
+        %tr
+          %th Who
+          %th What
+          %th When
+          %th
+      %tbody
+        - @instances_users.each do |iu|
+          %tr{class: cycle('even', 'odd')}
+            %td= iu.user.display_name
+            %td= iu.instance.name
+            %td
+              = l iu.visit_date
+            %td
+              = link_to 'Edit', edit_admin_instances_user_path(iu), class: [:button, :small]
+              = link_to 'Delete', [:admin, iu], method: :delete, data: {confirm: 'Are you sure?'}, class: [:button, :alert, :small]
+.row.expanded
+  .small-12.columns
+    = paginate @instances_users
