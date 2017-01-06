@@ -26,7 +26,7 @@ end
 
 group :development do
   gem 'better_errors'
-#  gem 'binding_of_caller'
+ gem 'binding_of_caller'
   gem 'letter_opener'
   gem 'listen', '~> 3.0.5'
   gem 'ruby_parser', '>= 3.0.1'
@@ -82,7 +82,7 @@ gem 'rack-utf8_sanitizer'
 gem "rails-observers", github: 'rails/rails-observers'
 gem 'redis-rails', '~> 5.0.1'
 gem 'redis'
-gem "recaptcha", '3.0', require: "recaptcha/rails"
+gem "recaptcha" #, '3.0', require: "recaptcha/rails"
 gem 'rolify'
 gem 'simple_token_authentication', git: 'https://github.com/gonzalo-bulnes/simple_token_authentication.git', branch: 'master'
 gem 'textacular', github: 'textacular/textacular', branch: 'master'

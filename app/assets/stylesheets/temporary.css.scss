@@ -137,6 +137,9 @@ section.main_container {
 .experiments_index, article.instance_single {
   padding: 2rem 0;
   background-color: white;
+  .section {
+    margin-top: 4.5rem;
+  }
   .image {
     clear: both;
   }

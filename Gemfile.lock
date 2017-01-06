@@ -128,6 +128,8 @@ GEM
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
       rack (>= 0.9.0)
+    binding_of_caller (0.7.2)
+      debug_inspector (>= 0.0.1)
     builder (3.2.2)
     byebug (9.0.6)
     cancancan (1.15.0)
@@ -349,7 +351,7 @@ GEM
     rb-fsevent (0.9.8)
     rb-inotify (0.9.7)
       ffi (>= 0.5.0)
-    recaptcha (3.0.0)
+    recaptcha (4.0.1)
       json
     redis (3.3.2)
     redis-actionpack (5.0.1)
@@ -435,6 +437,7 @@ DEPENDENCIES
   audited!
   awesome_nested_set
   better_errors
+  binding_of_caller
   byebug
   cancancan
   capistrano
@@ -486,7 +489,7 @@ DEPENDENCIES
   rack-utf8_sanitizer
   rails (= 5.0.1)
   rails-observers!
-  recaptcha (= 3.0)
+  recaptcha
   redis
   redis-rails (~> 5.0.1)
   rolify

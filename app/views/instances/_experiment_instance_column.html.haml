@@ -1,4 +1,4 @@
-= link_to experiment_instance_path(@experiment, exp), class: [:experiment, :column] do
+= link_to experiment_instance_path(exp.experiment, exp), class: [:experiment, :column] do
   .content{:"data-equalizer-watch" => ''}
     .meta{class: exp.experiment.slug}
       %span.date= exp.start_at.year.to_s
