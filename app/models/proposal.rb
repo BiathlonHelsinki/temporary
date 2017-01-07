@@ -243,7 +243,7 @@ class Proposal < ApplicationRecord
   end
   
   def pledged
-    pledges.sum(&:pledge)
+    pledges.sum{|x| x.pledge.to_i}
   end
   
   def remaining_pledges
