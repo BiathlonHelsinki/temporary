@@ -70,6 +70,8 @@ class Activity < ApplicationRecord
       "#{usertext} #{description} #{dead_item.description} and #{ethtransaction.value}#{ENV['currency_symbol']} were returned to the blockchain"
     elsif item.class == Pledge
       "#{usertext} #{description} #{linked_name} #{extra_info}"
+    elsif item.class == Post
+      "#{usertext} #{description} by the TempsBot"
     else
       "#{usertext} #{description} <a href='/experiments/#{item.experiment.slug}/#{item.slug}'>#{item.name}</a> and received #{item.cost_bb}#{ENV['currency_symbol']}"    
     end
