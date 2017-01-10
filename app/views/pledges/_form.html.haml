@@ -12,15 +12,26 @@
             
             - if @item.intended_sessions == 0
               %p This proposal does not specify how many times it will meet, so it will continue indefinitely.
-              
+              %p
+                - unless @item.instances.published.empty?
+                  This experiment has already happened (or been scheduled to happen)
+                  = pluralize(@item.instances.published.size, 'time') + "."
+                There are currently enough Temps pledged 
+                = raw "(#{@item.remaining_pledges}#{tsign})"
+                to schedule
+                = pluralize(@item.number_that_can_be_scheduled.to_s, @item.instances.published.empty? ? 'meeting' : 'more meeting') + "."
             - else
               %p
-                This proposal currently plans to meet  
+                This experiment is proposed to happen
                 = @item.intended_sessions.to_s
-                times. There are currently enough Temps pledged 
-                = raw "(#{@item.pledged}#{tsign})"
+                times. 
+                - unless @item.instances.published.empty?
+                  This experiment has already happened (or been scheduled to happen)
+                  = pluralize(@item.instances.published.size, 'time') + "."
+                There are currently enough Temps pledged 
+                = raw "(#{@item.remaining_pledges}#{tsign})"
                 to schedule
-                = pluralize(@item.number_that_can_be_scheduled.to_s, 'meeting') + "."
+                = pluralize(@item.number_that_can_be_scheduled.to_s, @item.instances.published.empty? ? 'meeting' : 'more meeting') + "."
                 
         - else
           - unless @next_meeting.nil?
@@ -29,19 +40,53 @@
               = link_to(@next_meeting.name, experiment_instance_path(@next_meeting.experiment, @next_meeting), target: :_blank) + "."
               You may still pledge additional Temps towards it, however.
       - else
-        %p
-          This proposal needs 
-          = raw "#{@item.needed_for_next - @item.remaining_pledges} more #{tsign}"
-          to be reviewed for scheduling.
+        - if @item.recurs?
+          - if @item.total_needed_with_recurrence > @item.pledged
+            %p= raw "This experiment is proposed to meet multiple times. At Temporary, multi-day experiments cost Temps for each day it meets, with a 10% discount applied to each successive day (until it gets down to 20#{tsign}, the minimum cost in Temps)."
+            
+            - if @item.intended_sessions == 0
+              %p This proposal does not specify how many times it will meet, so it will continue indefinitely.
+              %p
+                - unless @item.instances.published.empty?
+                  This experiment has already happened (or been scheduled to happen)
+                  = pluralize(@item.instances.published.size, 'time') + "."
+                There are currently enough Temps pledged 
+                = raw "(#{@item.remaining_pledges}#{tsign})"
+                to schedule
+                = pluralize(@item.number_that_can_be_scheduled.to_s, @item.instances.published.empty? ? 'meeting' : 'more meeting') + "."
+                - if @item.number_that_can_be_scheduled == 0
+                  This proposal needs 
+                  = raw "#{@item.needed_for_next - @item.remaining_pledges} more #{tsign}"
+                  pledged to happen again.
+            - else
+              %p
+                This experiment proposes to meet  
+                = @item.intended_sessions.to_s
+                times. 
+              %p
+                = raw "#{@item.needed_for_next.to_s}#{tsign} are needed to scheduled the #{@item.instances.published.empty? ? 'first' : 'next'} meeting."
+                - if @item.needed_for_next != @item.total_needed_with_recurrence
+                  = raw "#{@item.total_needed_with_recurrence} total #{tsign} are needed to schedule all proposed meetings."
+              
+              %p
+                There are currently enough Temps pledged 
+                = raw "(#{@item.pledged}#{tsign})"
+                to schedule
+                = pluralize(@item.number_that_can_be_scheduled.to_s, 'meeting') + "."
+        - else
+          %p
+            This proposal needs 
+            = raw "#{@item.needed_for_next - @item.remaining_pledges} more #{tsign}"
+            to be reviewed for scheduling.
           
-        %p
-
-          You may pledge a maximum of
-          = raw "#{@item.maximum_pledgeable(current_user)}#{tsign}"
-          to this proposal.
-          
-        %p 
-          %em (All proposals require at least two supporters before they can be scheduled).
+        / %p
+        /
+        /   You may pledge a maximum of
+        /   = raw "#{@item.maximum_pledgeable(current_user)}#{tsign}"
+        /   to this proposal.
+        - if @item.pledges.map(&:user).uniq.compact.size < 2
+          %p 
+            %em (All proposals require at least two supporters before they can be scheduled).
 
 
       - if @api_status == false
@@ -57,6 +102,7 @@
         %h3
           How many 
           = ENV['currency_full_name'].pluralize
+          = raw"(#{tsign})"
           would you like to pledge?
 
         = f.input :pledge, label: "Your pledge (max. #{@item.maximum_pledgeable(current_user)}):", input_html: {required: '', :'data-validator' => 'less_than', :'data-less-than' => @item.maximum_pledgeable(current_user), type: :number}

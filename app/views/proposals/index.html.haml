@@ -62,12 +62,22 @@
             %td
               .recurrence
                 - if proposal.recurrence == 2
-                  = proposal.intended_sessions == 0  ? 'Multiple meetings proposed' : proposal.intended_sessions.to_s + " meetings proposed"
+                  - if proposal.intended_sessions == 0
+                    Multiple meetings proposed
+                  - else  
+                    %p= proposal.intended_sessions.to_s + " meetings proposed"
+                    %p
+                      = raw (proposal.total_needed_with_recurrence.to_s + tsign)
+                      total needed to schedule the complete experiment
+                    
                 - if proposal.recurrence == 3
                   Happens regularly
                   - unless proposal.intended_sessions == 0
                     %p
                       = proposal.intended_sessions.to_s + " meetings proposed"
+                    %p
+                      = raw (proposal.total_needed_with_recurrence.to_s + tsign)
+                      total needed to schedule the complete experiment                      
                 - if proposal.scheduled?    
                   - if proposal.recurrence != 1
                     - if proposal.instances.first.experiment.instances.future.or(proposal.instances.first.experiment.instances.current).empty?
@@ -284,7 +294,7 @@
                     - if proposal.intended_sessions == 0
                       .status To be continued...
                     - else
-                      .status Completed
+                      .status Pledging completed
                   - else
                     .status Scheduled
                   

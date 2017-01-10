@@ -27,7 +27,7 @@ class Proposal < ApplicationRecord
   end
   
   def self.schedulable
-    all.to_a.delete_if { |x| x.pledged - x.instances.published.sum(&:cost_in_temps) <  x.needed_for_next }
+    all.to_a.delete_if { |x| ((x.pledged - x.spent) > 0) &&  (x.pledged - x.spent) < x.needed_for_next   }.sort_by(&:name)
   end
   
   def feed_date
@@ -150,11 +150,10 @@ class Proposal < ApplicationRecord
     if recurs?
       needed_array.each_with_index do |val, index|
         tally += val
-        
-        if remaining_pledges >= tally
+        if pledged >= tally
           next
         else
-          return index 
+          return index - instances.published.size
         end
       end
     else
@@ -232,12 +231,12 @@ class Proposal < ApplicationRecord
 
       elsif pledges.to_a.delete_if(&:new_record?).empty?
         if instances.published.empty?
-          needed_for_next - 1
+          total_needed_with_recurrence - 1
         else
-          needed_for_next
+          total_needed_with_recurrence
         end
       else
-        needed_for_next
+        total_needed_with_recurrence
       end
     end
   end
