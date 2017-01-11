@@ -27,7 +27,7 @@ class Proposal < ApplicationRecord
   end
   
   def self.schedulable
-    all.to_a.delete_if { |x| ((x.pledged - x.spent) > 0) &&  (x.pledged - x.spent) < x.needed_for_next   }.sort_by(&:name)
+    active.to_a.delete_if{|x| x.remaining_pledges == 0}.delete_if{ |x| x.remaining_pledges < x.needed_for_next  }.sort_by(&:name)
   end
   
   def feed_date

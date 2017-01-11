@@ -38,7 +38,7 @@ class Admin::InstancesController < Admin::BaseController
     @proposal = @experiment.instances.sort_by(&:sequence).last.proposal
     @instance = Instance.new(experiment: @experiment, cost_bb: @experiment.cost_bb, 
                               sequence: @experiment.instances.blank? ? @experiment.sequence + ".1" :
-                              @experiment.instances.sort_by(&:sequence).last.sequence.rpartition(/\./).first + "." + (@experiment.instances.sort_by(&:sequence).last.sequence.rpartition(/\./).last.to_i + 1).to_s,
+                              @experiment.instances.sort_by{|x| x.sequence.rpartition(/\./).last.to_i }.last.sequence.rpartition(/\./).first + "." + (@experiment.instances.sort_by{|x| x.sequence.rpartition(/\./).last.to_i}.last.sequence.rpartition(/\./).last.to_i + 1).to_s,
                               
                                cost_euros: @experiment.cost_euros, 
                               start_at: @experiment.start_at, end_at: @experiment.end_at,
@@ -99,7 +99,7 @@ class Admin::InstancesController < Admin::BaseController
   def instance_params
     params.require(:instance).permit(:published, :event_id, :place_id, :primary_sponsor_id, :is_meeting, :proposal_id,
     :secondary_sponsor_id, :cost_euros, :cost_bb, :sequence, :start_at, :end_at, :sequence, :allow_multiple_entry, 
-    :request_rsvp, :request_registration,
+    :request_rsvp, :request_registration, :custom_bb_fee,
     :parent_id, :image, translations_attributes: [:name, :description, :instance_id, :locale, :id]
     )
   end

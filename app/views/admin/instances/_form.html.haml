@@ -7,12 +7,13 @@
   
   .row
     .small-10.medium-6.columns= f.input :start_at, :as => :string,  :input_html => {required: '', class: 'datetimepicker', value: f.object.new_record? ? '' : (f.object.start_at.nil? ? '' : f.object.start_at.strftime('%Y-%m-%d %H:%M'))}, label: 'Starting date and time '
-  .row
     .small-10.medium-6.columns= f.input :end_at, :as => :string, :input_html => {:class => 'datetimepicker', value: f.object.new_record? ? '' : (f.object.end_at.nil? ? '' : f.object.end_at.strftime('%Y-%m-%d %H:%M'))}, :label => "Ending date and time of last event, if known. You will add individual intances later, if necessary.", :hint => 'if events run past midnight, put them as 23:59 '
   .row
     .small-10.medium-6.columns= f.input :place, as: :select
   .row
-    .small-10.medium-6.columns= f.input :proposal, as: :select, collection: f.object.new_record? ? Proposal.schedulable.map{|b| [raw(b.name + " (" + b.remaining_pledges.to_s + tsign + " available)"), b.id]} : Proposal.all.map{|b| [raw(b.name + " (" + b.remaining_pledges.to_s + tsign + " available)"), b.id]},  include_blank: false, hint: 'You need ' + f.object.cost_in_temps.to_s + ' for this'
+    .small-10.medium-6.columns= f.input :proposal, as: :select, collection: f.object.new_record? ? Proposal.schedulable.map{|b| [raw(b.name + " (" + b.remaining_pledges.to_s + tsign + " available)"), b.id]} : Proposal.all.map{|b| [raw(b.name + " (" + b.remaining_pledges.to_s + tsign + " available)"), b.id]},  include_blank: false, hint: 'You need ' + f.object.cost_in_temps.to_s + ' for this', label: 'Proposal to spend from:'
+  .row
+    .small-10.medium-4.columns= f.input :custom_bb_fee, label: 'Override expected Temps cost with:'    
   .row
     .small-10.medium-4.columns= f.input :cost_euros
   .row
