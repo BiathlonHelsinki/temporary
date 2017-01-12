@@ -141,19 +141,23 @@ class Proposal < ApplicationRecord
   end
   
   def has_enough?
-    remaining_pledges >= needed_for_next
+    remaining_pledges >= needed_for_next && (pledges.map(&:user).uniq.size > 1)
   end
   
   def number_that_can_be_scheduled
     rate = Rate.get_current.experiment_cost
     tally = 0
     if recurs?
-      needed_array.each_with_index do |val, index|
-        tally += val
-        if pledged >= tally
-          next
-        else
-          return index - instances.published.size
+      if instances.published.size > needed_array.size
+        return (remaining_pledges / needed_array.last).to_i
+      else
+        needed_array.each_with_index do |val, index|
+          tally += val
+          if remaining_pledges >= tally
+            next
+          else
+            return index - instances.published.size
+          end
         end
       end
     else

@@ -49,6 +49,10 @@
 
           - else
             - if !@proposal.has_enough?
+              - if @proposal.remaining_pledges > @proposal.needed_for_next
+                - if @proposal.pledges.map(&:user).size == 1
+                  This proposal needs at least one other user to pledge to it.
+
               %small 
                 Needed to be considered for scheduling:
                 = raw(@proposal.needed_for_next.to_s + tsign)

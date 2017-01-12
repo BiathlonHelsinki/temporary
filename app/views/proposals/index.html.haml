@@ -110,15 +110,15 @@
                           
                           
                   - else 
-
+                    - unless proposal.instances.first.experiment.instances.published.future.empty?
           
-                    %br/
-                    %em Next at:
-                    %ul
-                      - proposal.instances.first.experiment.instances.future.order(:start_at).each do |i|
-                        %li
-                          = link_to i.name, experiment_instance_path(i.experiment, i)
-                          %em= date_range(i.start_at, i.end_at)
+                      %br/
+                      %em Next at:
+                      %ul
+                        - proposal.instances.first.experiment.instances.published.future.order(:start_at).each do |i|
+                          %li
+                            = link_to i.name, experiment_instance_path(i.experiment, i)
+                            %em= date_range(i.start_at, i.end_at)
                   - unless proposal.instances.past.empty?
                     %p &nbsp;
                     %p Last meeting:
@@ -408,7 +408,12 @@
                   = link_to proposal do
                     .status Needs more support!
                   .recurrence
-                    = raw "#{proposal.needed_for_next - proposal.remaining_pledges} more #{tsign} needed before " + (proposal.recurs?  ? 'next session' : 'it') + " can be scheduled"
+                    - if (proposal.needed_for_next - proposal.remaining_pledges < 0) && proposal.pledges.map(&:user).uniq.size == 1
+                      Enough Temps have been pledged, but only from one user. A second person needs to pledge at least 1 
+                      = raw tsign
+                      before this can be considered for scheduling.
+                    - else
+                      = raw "#{proposal.needed_for_next - proposal.remaining_pledges} more #{tsign} needed before " + (proposal.recurs?  ? 'next session' : 'it') + " can be scheduled"
                     - if proposal.recurs?
                       - if proposal.recurrence == 3 && proposal.intended_sessions == 0
                         .recurrence
