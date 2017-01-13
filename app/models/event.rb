@@ -1,7 +1,7 @@
 class Event < ApplicationRecord
   # stub to catch events which should be called experiments but in polymorphic...
   extend FriendlyId
-  friendly_id :name_en , :use => [ :slugged, :finders ] # :history]
+  friendly_id :name_en , :use => [ :slugged, :finders] #
   belongs_to :place
   belongs_to :primary_sponsor, class_name: 'User'
   belongs_to :secondary_sponsor, class_name: 'User'
