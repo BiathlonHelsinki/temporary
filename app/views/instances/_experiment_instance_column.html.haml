@@ -9,7 +9,7 @@
         - else
           = "Experiment "
         = "##{exp.sequence}"
-      = "//"
+      -#= "//"
     .dates.text-center
       - if exp.experiment.slug == 'open-days'
         .ongoing Ongoing
@@ -73,3 +73,9 @@
         - if exp.allow_multiple_entry == true
           = "per day "
         = "for participating!"
+      - if controller.action_name == 'index'
+        - if exp.experiment.collapse_in_website == true
+          - unless exp.experiment.instances.future.published.to_a.delete_if{|i| i == exp}.empty?
+            .collapsed
+              .also_meets Also meets:
+              = exp.experiment.instances.future.published.to_a.delete_if{|i| i == exp}.map{|x| l(x.start_at.to_date , format: :short)}.join(', ')

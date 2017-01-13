@@ -36,9 +36,9 @@ class Activity < ApplicationRecord
     when 'Nfc'
       "an ID card"
     when 'Post'
-      "<a href='posts/#{item.slug}'>by the #{ENV['currency_symbol']}empsBot</a>"
-    else
-      item.name
+      "<a href='/posts/#{item.slug}'>by the #{ENV['currency_symbol']}empsBot</a>"
+    when 'Experiment'
+      "<a href='/experiments/#{item.slug}'>#{item.name}</a>"
     end
   end
   #
