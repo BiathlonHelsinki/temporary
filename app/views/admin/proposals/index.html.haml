@@ -17,11 +17,17 @@
           %tr
             %td
               %small= proposal.id.to_s
-            %td= proposal.name
+            %td
+              = proposal.name
+              - if proposal.proposalstatus 
+                %br/
+                %strong= proposal.proposalstatus.name
+                
             %td
               = proposal.user.name
             %td= proposal.pledged.to_s
             %td
+              = link_to 'View', proposal, target: :_blank, class: [:button, :small]
               - if can? :edit, proposal
                 = link_to 'Edit', edit_admin_proposal_path(proposal), class: [:button, :small]
               - if can? :destroy, proposal

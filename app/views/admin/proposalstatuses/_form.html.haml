@@ -1,0 +1,20 @@
+= semantic_form_for [:admin, @proposalstatus] do |f|
+  .row
+    .small-10.medium-8.columns= f.semantic_errors :base
+
+  .row
+    %dl.tabs{"data-tab" => ""}
+      - I18n.available_locales.each_with_index do |locale, i|
+        %dd{:class => (i == 0 ? :active : false)}
+          = link_to t(:locale_name, :locale => locale), "##{locale}"
+    .tabs-content
+      - I18n.available_locales.each_with_index do |locale, i|
+        .content{:class => (i == 0 ? :active : false), :id => "#{locale}"}
+          = f.globalize_fields_for locale do |en|
+            .row
+              .small-10.medium-8.columns
+                %b= "Name of proposal status in #{t :locale_name, :locale => locale}"
+                = en.text_field :name  
+  .row
+    .small-10.medium-8.columns= f.submit 'Save', :class => [:button, :round]
+

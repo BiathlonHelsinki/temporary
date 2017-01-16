@@ -1,0 +1,20 @@
+.row
+  .small-12.columns
+    = link_to 'Create new proposal status', new_admin_proposalstatus_path, class: [:button]
+
+.row
+  .small-10.columns
+    %table
+      %thead
+        %th Name
+        %th
+      %tbody
+        - @proposalstatuses.each do |ps|
+          %tr
+            %td= ps.name
+            %td
+              - if can? :edit, ps
+                = link_to 'Edit', edit_admin_proposalstatus_path(ps), class: [:button, :small]
+              - if can? :destroy, ps  
+                = link_to 'Delete', [:admin, ps], method: :delete, class: [:button, :alert, :small], data: {confirm: 'Are you sure?'}
+          

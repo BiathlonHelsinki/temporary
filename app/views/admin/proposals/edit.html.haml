@@ -6,5 +6,10 @@
       = f.input :timeframe
       = f.input :goals
       = f.input :intended_participants
+      = f.input :proposalstatus, as: :select
+      = f.fields_for comment = @proposal.comments.build(user: current_user) do |comment|
+        %p Add a comment on status change
+        = comment.input :content, as: :text
+        = comment.input :user, as: :select
       = f.input :stopped, hint: 'Tick this to stop experiment, stop accepting pledges, etc.'
       = f.submit 'Save'

@@ -10,6 +10,7 @@ class Ability
       can :manage, Credit
       can :manage, Email
       can :manage, Comment
+      can :manage, Proposalstatus
     else
       can :read, :all
       can :manage, User, :id => user.id
@@ -17,6 +18,7 @@ class Ability
       cannot :manage, Credit
       cannot :manage, Page
       cannot :manage, Email
+      cannot :manage, Proposalstatus
       can :create, Comment
       can :manage, Rsvp, user_id: user.id
       can :manage, Comment, :user_id => user.id 
