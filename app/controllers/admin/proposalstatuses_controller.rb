@@ -1,5 +1,6 @@
 class Admin::ProposalstatusesController < Admin::BaseController
-  
+  skip_load_and_authorize_resource
+  load_and_authorize_resource
   
   def create
     @proposalstatus = Proposalstatus.new(proposalstatus_params)
@@ -13,13 +14,14 @@ class Admin::ProposalstatusesController < Admin::BaseController
   end
   
   def destroy
-    proposalstatus = Proposalstatus.friendly.find(params[:id])
+    proposalstatus = Proposalstatus.find(params[:id])
     proposalstatus.destroy!
     redirect_to admin_proposalstatuses_path
   end
   
   def edit
-    @proposalstatus = Proposalstatus.friendly.find(params[:id])
+    @proposalstatus = Proposalstatus.find(params[:id])
+    set_meta_tags title: 'Edit proposal status'
   end
   
   def index
@@ -32,7 +34,7 @@ class Admin::ProposalstatusesController < Admin::BaseController
   end
   
   def update
-    @proposalstatus = Proposalstatus.friendly.find(params[:id])
+    @proposalstatus = Proposalstatus.find(params[:id])
     if @proposalstatus.update_attributes(proposalstatus_params)
       flash[:notice] = 'Proposalstatus details updated.'
       redirect_to admin_proposalstatuses_path
