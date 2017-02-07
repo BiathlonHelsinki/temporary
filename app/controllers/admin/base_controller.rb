@@ -4,7 +4,7 @@ class Admin::BaseController < ApplicationController
 
   before_action :authenticate_user!
   before_action :authenticate_admin!
-  load_and_authorize_resource except: [:home, :proposal, :resubmit, :respend, :retransfer], find_by: :slug
+  load_and_authorize_resource except: [:home, :proposal, :resubmit, :toggle_key, :respend, :retransfer], find_by: :slug
   
   def authenticate_admin!
     redirect_to root_path unless current_user.has_role? :admin
@@ -12,6 +12,12 @@ class Admin::BaseController < ApplicationController
   
   def check_permissions
     authorize! :create, resource
+  end
+  
+  def toggle_key
+    @nfc = Nfc.find(params[:id])
+    @nfc.toggle!(:keyholder)
+    redirect_to @nfc.user
   end
   
   def respend

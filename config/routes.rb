@@ -105,6 +105,7 @@ Rails.application.routes.draw do
   match '/admin/:id/respend' => 'admin/base#respend', via: :get
   match '/admin/:id/retransfer' => 'admin/base#retransfer', via: :get
   match '/users/auth/:provider/callback' => 'authentications#create', :via => :get
+  match '/admin/nfcs/:id/toggle' => 'admin/base#toggle_key', via: :get
   delete '/users/signout' => 'devise/sessions#destroy', :as => :signout
   root to: 'home#index'
 end

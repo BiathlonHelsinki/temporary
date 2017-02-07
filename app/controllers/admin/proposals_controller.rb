@@ -12,6 +12,7 @@ class Admin::ProposalsController < Admin::BaseController
 
     if @proposal.update_attributes(proposal_params)
       if @proposal.previous_changes.keys.include?("proposalstatus_id")
+        Activity.create(user: current_user, item: @proposal, description: 'changed the status of', extra_info: " to <em>#{@proposal.proposalstatus.nil? ? 'Active' : @proposal.proposalstatus.name}</em>")
         if @proposal.proposalstatus.nil?
           params[:proposal][:comment][:content] = "<em>Status changed to: <strong>Active</strong></em><br /><br/>" + params[:proposal][:comment][:content]
         else
