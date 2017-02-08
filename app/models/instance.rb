@@ -73,22 +73,27 @@ class Instance < ApplicationRecord
   end
   
   def cost_in_temps
-    rate = Rate.get_current.experiment_cost
-    # if proposal.recurrence == 2 || proposal.recurrence == 3
-      start = rate
+    if custom_bb_fee.blank?
+      rate = Rate.get_current.experiment_cost
+      # if proposal.recurrence == 2 || proposal.recurrence == 3
+        start = rate
     
-      for f in 1..(session_number-1)  do 
-        inrate = rate
-        f.times do
-          inrate *= 0.9;
+        for f in 1..(session_number-1)  do 
+          inrate = rate
+          f.times do
+            inrate *= 0.9;
+          end
+          if inrate < 20
+            start = 20
+          else
+            start = inrate.round
+          end
         end
-        if inrate < 20
-          start = 20
-        else
-          start = inrate.round
-        end
+        return start
+      else
+        return custom_bb_fee.to_i
       end
-      return start
+
     # else
     #   return rate
     # end
