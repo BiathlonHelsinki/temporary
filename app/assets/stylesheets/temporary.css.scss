@@ -841,6 +841,9 @@ form.pledge, form {
   #calendar {
     width: 92%;
     padding-top: 4rem;
+    .fc-unthemed td.fc-today {
+      background-color: $yellow;
+    }
     .fc-toolbar {
       button {
         &.fc-today-button {
@@ -892,13 +895,15 @@ form.pledge, form {
         white-space: pre-line;
     }
     .fc-event-container {
- 
+      &.fc-today {
+        background-color: $yellow;
+      }
       .fc-event {
         background-color: $grey;
         font-family: $inconsolata;
         border: none;
         padding: 0.3rem;
-        margin: 0 0 0.4rem 1.4rem;
+        margin: 0.3rem;
       }
     }
     .fc-day-grid-event .fc-content {
@@ -960,7 +965,7 @@ form.pledge, form {
       border-left: none;
       border-right: none;
       border-bottom: none;
-      
+      background-color: $yellow;
     }
   }
 }

@@ -30,6 +30,11 @@ $('#calendar').fullCalendar({
   },
   eventResize: function(event, dayDelta, minuteDelta, revertFunc) {
     return updateEvent(event);
+  },
+  eventAfterRender: function(event, element,view) {
+    if (moment(event.start).format('YYYY-M-D') == moment(new Date()).format('YYYY-M-D')) {
+      element.parent().addClass('fc-today');
+    } 
   }
 });
 

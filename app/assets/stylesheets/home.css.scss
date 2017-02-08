@@ -339,11 +339,8 @@ header {
         border: none;
         min-height: 150px;
         &.fc-today {
-          border-style: solid;
-          border-left: none;
-          border-right: none;
-          border-bottom: none;
-      
+          border: none;
+  
         }
       }
     }
@@ -360,7 +357,7 @@ header {
         border: none;
       }
       .fc-today {
-        background: none;
+        background-color: $yellow;
       }
       tbody {
         border: none;
