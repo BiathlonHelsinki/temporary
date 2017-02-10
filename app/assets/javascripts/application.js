@@ -21,6 +21,7 @@
 //= require masonry.pkgd.min
 //= require imagesloaded.pkgd.min
 //= require jquery.mentionable
+//= require readmore.min
 //= require jquery.scrollTo.min
   
 function getContent(){

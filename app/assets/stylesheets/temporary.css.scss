@@ -1028,6 +1028,24 @@ form.pledge, form {
     float: left;
     clear: both;
   }
+  .my_pledge_list {
+    ol.proposal_pledge_list {
+      li {
+
+        font-weight: normal;
+        color: #333;
+        margin-bottom: 1rem;
+        em {
+          font-size: 0.8em;
+        }
+      }
+    }
+    a[data-readmore-toggle] {
+     color: #333;
+     margin-left: 1.5rem;
+     margin-bottom: 2rem;
+    } 
+  }
   .pledge_info {
     .box {
       font-family: $inconsolata;

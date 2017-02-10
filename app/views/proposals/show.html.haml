@@ -3,6 +3,33 @@
     .small-12.medium-8.columns
       %h1= "PROPOSAL: #{@proposal.name}"
       .proposed_by= raw "Proposed by #{link_to @proposal.user.display_name, @proposal.user, target: :_blank}"
+      - if user_signed_in?
+        - if current_user.has_pledged?(@proposal)
+          .my_pledge_list
+            %br{clear: :all}
+            %h6 Your pledges to this proposal:
+            %ol.proposal_pledge_list{class: @proposal.pledges.where(user: current_user).size > 5  ? :readmore : false }
+              - @proposal.pledges.where(user: current_user).each do |p|
+                %li
+                  = raw "You pledged #{p.pledge.to_s}#{tsign}"
+                  on
+                  = l p.created_at, format: :short
+                  - if p.converted?
+                    %br/
+                    %em
+                      - unless p.extra_info.nil?
+                        = p.extra_info.gsub(/\s\+\d{4}$/, '')
+                      - if p.instance
+                        scheduling
+                        = link_to p.instance.name, experiment_instance_path(p.instance.experiment, p.instance), target: :_blank
+
+              - if @proposal.pledges.where(user: current_user).size > 5
+                = content_for :jquery do
+                  :plain
+                    $('ol.readmore').readmore({
+                        moreLink: '<a href="#">See more</a>', 
+                        lessLink: '<a href="#">See fewer</a>'
+                        });
     .small-10.medium-4.columns.pledge_info
       .box
         - if @proposal.scheduled?
@@ -10,10 +37,17 @@
             - if @proposal.stopped? || (@proposal.scheduled? && !@proposal.recurs? && @proposal.instances.future.empty?)
               Completed!
             - else
-              Scheduled!
+              %span.pledge_box_text Scheduled!
             - if @proposal.recurs?
               - if @proposal.intended_sessions == 0 || @proposal.pledged < @proposal.total_needed_with_recurrence
                 .small= link_to 'but still taking pledges....', new_proposal_pledge_path(@proposal)
+                = content_for :jquery do
+                  :plain
+                    $('.pledge_info .box .yellow').mouseenter(function() {
+                      $(".pledge_box_text").html('<a href="#{new_proposal_pledge_path(@proposal)}">Pledge more #{raw tsign.html_safe}!</a>');
+                    }).mouseleave(function() {
+                      $(".pledge_box_text").text('Scheduled!');
+                    });
         - else
           - if @proposal.has_enough?
             .yellow  Pending scheduling!
