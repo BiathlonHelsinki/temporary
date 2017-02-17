@@ -1,4 +1,4 @@
-= semantic_nested_form_for @proposal, html: {multipart: true} do |f|
+= semantic_nested_form_for @proposal, html: {multipart: true, :'data-abide' => ''} do |f|
   = f.input :user_id, data: {value: current_user.id}, as: :hidden 
   .row
     .small-10.medium-6.columns= f.input :name, label: 'Name of your experiment', input_html: {required: ''}
