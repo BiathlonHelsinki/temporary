@@ -1,0 +1,35 @@
+.row
+  .small-12.columns
+    %h1 Make a back room booking 
+    
+.row
+  .small-12.columns
+    %p Thank you for your interest in using the back room at Temporary.
+    
+    %p 
+      If you would like to rent the room for the day of 
+      = l @roombooking.day, format: :long
+      you will need to spend
+      = raw "#{@current_rate}#{tsign}."
+
+    - if current_user.nfcs.empty?
+      %p As you do not currently have a Temporary ID card, you will only be able to access the room when Temporary is open, if someone else is there.
+      
+    - else
+      %p The room will be yours to use as you like, from midnight until midnight on this day.
+      
+      %p Exceptions: You cannot do anything illegal, structurally damaging, or dangerous in the room. As the electric box and Internet is located in a closet in that room, you must be willing to let other Temporary people in in case of an electrical/Internet outage. 
+      
+      %p The room shares a wall with our residential neighbours, so please do not make too much noise at night or do anything else that may cause problems.
+      
+      %p Anything you bring to the room you should take with you when you are leaving. Temporary is not responsible for lost property.
+      
+      %p If there are other experiments going on at Temporary on this day, be mindful of noise and share the space.
+
+= semantic_form_for @roombooking do |f|
+  .row
+    .small-12.medium-6.columns
+      = f.input :user_id, as: :hidden
+      = f.input :day, as: :hidden
+      = f.input :purpose, label: 'What would you like to do on this day?', hint: 'This is optional. Just enter something if you\'d like others to know.'
+      = f.submit 'Book the room!', class: [:button], data: { confirm: 'Are you sure you wish to book this room? 25 Temps will be deducted from your balance.'}

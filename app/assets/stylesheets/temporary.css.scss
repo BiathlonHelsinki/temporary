@@ -1461,3 +1461,24 @@ footer {
     }
   }
 }
+
+
+.fc-unthemed tbody {
+  background: transparent;
+}
+.fc-content.roomcalendar_tobook {
+  background-color: $yellow;
+  border: 1px dotted black;
+  
+}
+
+.fc-event.booking_link {
+  background: none !important;
+}
+.fc-title {
+  .roomcalendar_icon {
+    min-height: 100px;
+    background-size: cover;
+    background-position: center/center;
+  }
+}

@@ -23,6 +23,8 @@ class Activity < ApplicationRecord
       else
         item_type.constantize.with_deleted.find(item_id).name
       end
+    when 'Roombooking' 
+      "<a href='/roombookings/'>#{item.day.strftime('%-d %B %Y')}</a> " + extra_info || ''
     when 'User'
       if value
         "#{item.display_name}  <br /><small>#{extra_info}</small>"
@@ -72,6 +74,8 @@ class Activity < ApplicationRecord
       "#{usertext} #{description} #{linked_name} #{extra_info}"
     elsif item.class == Post
       "#{usertext} #{description} by the TempsBot"
+    # elsif item.class == Roombooking
+      
     else
       "#{usertext} #{description} <a href='/experiments/#{item.experiment.slug}/#{item.slug}'>#{item.name}</a> and received #{item.cost_bb}#{ENV['currency_symbol']}"    
     end

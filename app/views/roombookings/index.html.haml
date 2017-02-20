@@ -1,0 +1,16 @@
+.calendar_view
+  .row.expanded
+    .small-12.columns
+      %h1
+        = t :room_bookings
+
+  .row.expanded
+    .small-12.columns
+      -#= link_to fa_icon('download') + " Calendar", calendar_experiments_path(format: 'ics'), class: [:button, :small]
+  .row.expanded
+    #calendar.small-centered
+  
+  = content_for :jquery do
+    = render partial: 'calendar', formats: [:js]
+
+    

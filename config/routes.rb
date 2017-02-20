@@ -79,6 +79,11 @@ Rails.application.routes.draw do
   end
   
   
+  resources :roombookings do
+    collection do
+      get :calendar
+    end
+  end
   
   resources :users do
     collection do
