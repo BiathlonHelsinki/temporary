@@ -376,7 +376,7 @@
                     = link_to proposal do
                       .status Needs more support!
                     .status_info
-                      = raw "#{proposal.needed_for_next - proposal.remaining_pledges} more #{tsign} needed before " + (proposal.recurrence == 2 || proposal.recurrence == 3 ? 'next session' : 'it') + " can be scheduled"
+                      = raw "#{proposal.needed_for_next - proposal.remaining_pledges} more #{tsign} needed before " + (proposal.recurrence == 2 || proposal.recurrence == 3 ? (proposal.instances.published.empty? ? 'first session ' : 'next session') : 'it') + " can be scheduled"
 
               
 
@@ -394,7 +394,7 @@
                     - if proposal.recurs?
                       = pluralize(proposal.number_that_can_be_scheduled, 'meeting')
                       - unless proposal.intended_sessions == 0 
-                        = "of #{proposal.intended_sessions.to_s}"
+                        = "of #{proposal.intended_sessions.to_s} proposed"
                   
                 
                 
@@ -413,7 +413,7 @@
                       = raw tsign
                       before this can be considered for scheduling.
                     - else
-                      = raw "#{proposal.needed_for_next - proposal.remaining_pledges} more #{tsign} needed before " + (proposal.recurs?  ? 'next session' : 'it') + " can be scheduled"
+                      = raw "#{proposal.needed_for_next - proposal.remaining_pledges} more #{tsign} needed before " + (proposal.recurs?  ? (proposal.instances.published.empty? ? 'first session' : 'next session' ) : 'it') + " can be scheduled"
                     - if proposal.recurs?
                       - if proposal.recurrence == 3 && proposal.intended_sessions == 0
                         .recurrence

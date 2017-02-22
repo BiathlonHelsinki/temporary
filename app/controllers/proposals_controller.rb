@@ -59,7 +59,7 @@ class ProposalsController < ApplicationController
     elsif params[:filter] == 'scheduled'
       @proposals = Instance.future.or(Instance.current).map(&:proposal).uniq.sort_by{|x| x.next_instance.start_at }
     elsif params[:filter] == 'review'
-      @proposals = Proposal.active.to_a.delete_if{|x| !x.has_enough? }.delete_if{|x| !x.instances.published.empty? }
+      @proposals = Proposal.active.schedulable #to_a.delete_if{|x| !x.has_enough? }.delete_if{|x| !x.instances.published.future.empty? }
     end
     
     @next_meeting = Instance.next_meeting
@@ -67,7 +67,7 @@ class ProposalsController < ApplicationController
     
     @needs_support_count = Proposal.active.to_a.delete_if{|x| x.has_enough? }.size
     @scheduled_count = Instance.future.or(Instance.current).map(&:proposal).uniq.size
-    @review_count = Proposal.active.to_a.delete_if{|x| !x.has_enough? }.delete_if{|x| !x.instances.published.empty? }.size
+    @review_count = Proposal.active.schedulable.size #to_a.delete_if{|x| !x.has_enough? }.delete_if{|x| !x.instances.published.empty? }.size
     
     set_meta_tags title: 'Proposals'
   end

@@ -43,8 +43,13 @@ class Proposal < ApplicationRecord
   def needed_array
     rate = Rate.get_current.experiment_cost
     array = [rate]
+    if intended_sessions.blank? || intended_sessions =~ /\D/
+      sesh = 35
+    else
+      sesh = intended_sessions
+    end
     if recurs?
-      for f in 1..20  do 
+      for f in 1..sesh  do 
         inrate = rate
         f.times do
           inrate *= 0.9;
@@ -152,6 +157,8 @@ class Proposal < ApplicationRecord
     if recurs?
       if instances.published.size > needed_array.size
         return (remaining_pledges / needed_array.last).to_i
+      elsif remaining_pledges > needed_array.sum
+        return needed_array.size
       else
         needed_array.each_with_index do |val, index|
           tally += val
