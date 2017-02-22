@@ -82,7 +82,11 @@ class User < ActiveRecord::Base
   
   def display_name
     if show_name == true
-      "#{name} (#{username})"
+      if name == username
+        name
+      else
+        "#{name} (#{username})"
+      end
     else
       username
     end
