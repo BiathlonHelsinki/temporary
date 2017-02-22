@@ -1,0 +1,26 @@
+.row
+  .small-12.columns
+    = link_to 'Create new roombooking', new_admin_roombooking_path, class: [:button]
+
+.row
+  .small-10.columns
+    %table
+      %thead
+        %th Date
+        %th Person
+        %th purpose
+        %th Paid?
+        %th
+      %tbody
+        - @roombookings.each do |roombooking|
+          %tr
+            %td= roombooking.day.strftime("%-d %B %Y")
+            %td= roombooking.user.display_name
+            %td= roombooking.purpose || ''
+            %td= link_to roombooking.ethtransaction.txaddress[0..5] + "...", "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/tx/#{roombooking.ethtransaction.txaddress}", target: :_blank
+            %td
+              - if can? :edit, roombooking
+                = link_to 'Edit', edit_admin_roombooking_path(roombooking), class: [:button, :small]
+              - if can? :destroy, roombooking  
+                = link_to 'Delete', [:admin, roombooking], method: :delete, class: [:button, :alert, :small], data: {confirm: 'Are you sure?'}
+          

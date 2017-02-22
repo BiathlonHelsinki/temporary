@@ -1,0 +1,16 @@
+= semantic_form_for [:admin, @roombooking], html: {multipart: true} do |f|
+  .row
+    .small-10.medium-8.columns= f.semantic_errors :base
+    .row
+      .small-6.columns= f.input :user, :as => :select, :collection => User.all.order(:name), :label => false
+    .row
+      .small-10.medium-8.columns= f.input :day, as: :string,  :input_html => {:class => "datetimepicker", value: f.object.new_record? ? '' : (f.object.day.nil? ? '' : f.object.day.strftime('%Y-%m-%d %H:%M'))}
+    .row
+      .small-10.medium-8.columns= f.input :purpose
+
+  .row
+    .small-10.medium-8.columns= f.submit 'Save', :class => [:button, :round]
+
+= content_for :jquery do
+  :plain    
+    $('.datetimepicker').fdatetimepicker({ weekStart: 1 })

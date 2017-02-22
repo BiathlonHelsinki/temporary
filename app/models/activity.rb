@@ -74,8 +74,8 @@ class Activity < ApplicationRecord
       "#{usertext} #{description} #{linked_name} #{extra_info}"
     elsif item.class == Post
       "#{usertext} #{description} by the TempsBot"
-    # elsif item.class == Roombooking
-      
+    elsif item.class == Roombooking
+      "#{usertext} #{description}"
     else
       "#{usertext} #{description} <a href='/experiments/#{item.experiment.slug}/#{item.slug}'>#{item.name}</a> and received #{item.cost_bb}#{ENV['currency_symbol']}"    
     end

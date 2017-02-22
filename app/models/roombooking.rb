@@ -2,7 +2,7 @@ class Roombooking < ApplicationRecord
   belongs_to :user
   belongs_to :ethtransaction
   belongs_to :rate
-  has_many :activities, as: :item
+  has_many :activities, as: :item, dependent: :destroy
     
   validates_presence_of :user_id, :rate_id, :ethtransaction_id, :day
   

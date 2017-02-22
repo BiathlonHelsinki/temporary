@@ -30,6 +30,7 @@ Rails.application.routes.draw do
     resources :posts
     resources :proposals
     resources :proposalstatuses
+    resources :roombookings
     resources :users
   end
   
