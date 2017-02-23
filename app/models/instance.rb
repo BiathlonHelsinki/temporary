@@ -27,6 +27,8 @@ class Instance < ApplicationRecord
   scope :current, -> () { where(["start_at <=  ? and end_at >= ?", Time.current.utc.strftime('%Y/%m/%d %H:%M'), Time.current.utc.strftime('%Y/%m/%d %H:%M') ]) }
   scope :not_open_day,  -> ()  { where("event_id != 1")}
 
+  attr_accessor :send_to_pledgers
+  
   def as_json(options = {})
     {
       :id => self.id,

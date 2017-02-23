@@ -21,7 +21,16 @@ class Admin::InstancesController < Admin::BaseController
       @instance = Instance.new(instance_params)
       @instance.experiment = @experiment
       render template: 'admin/instances/new'
-    else                           
+    else
+      if params[:instance][:send_to_pledgers] == '1' 
+        @instance = Instance.friendly.find(success['data']['id'])
+        if @instance.published == true
+          @instance.pledges.each do |pledge|
+            next if pledge.user.opt_in != true
+            InstancesMailer.pledge_was_scheduled(@instance.proposal, pledge.user).deliver_now
+          end
+        end
+      end
       flash[:notice] = 'Your instance was accepted, thank you!'
       redirect_to admin_experiments_path
     end                        
@@ -86,7 +95,16 @@ class Admin::InstancesController < Admin::BaseController
       @instance = Instance.friendly.find(params[:id])
       @instance.experiment = @experiment
       render template: 'admin/instances/edit'
-    else                           
+    else
+      if params[:instance][:send_to_pledgers] == '1' 
+        @instance = Instance.friendly.find(params[:id])
+        if @instance.published == true
+          @instance.pledges.each do |pledge|
+            next if pledge.user.opt_in != true
+            InstancesMailer.pledge_was_scheduled(@instance.proposal, pledge.user).deliver_now
+          end
+        end
+      end
       flash[:notice] = 'Your instance was accepted, thank you!'
       redirect_to admin_experiments_path
     end                        

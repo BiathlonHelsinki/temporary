@@ -1,0 +1,34 @@
+
+%h1 An experiment you pledged to was scheduled!
+
+%p Hi!
+%p
+  You pledged to the Temporary experiment proposal:
+  
+  = @proposal.name
+  
+%p
+  The proposal has been scheduled!
+  
+%p
+  The experiment(s) will take place on:
+  - @proposal.instances.published.future.each do |exp|
+    %br/
+    = link_to exp.name, experiment_instance_url(exp.experiment, exp)
+    = " (#{exp.start_at.strftime('%-d %B %Y')} starting at #{exp.start_at.strftime('%H:%M')})"
+  
+%p
+  If there is any discussion to be had before the experiment takes place, you can comment on the experiment at the
+  = link_to 'experiment page.', @proposal.instances.first.experiment
+
+%p 
+  If you don't want to receive these (or any other) emails from Temporary, you can unsubscribe from notifications from your
+  = link_to 'user profile page.', edit_user_url(@user)
+  If you do want to receive these emails, make sure admin@temporary.fi is whitelisted in your email client.
+  
+  
+  
+%p
+  Thank you for your interest in Temporary/Biathlon. See you at the experiment!
+  
+
