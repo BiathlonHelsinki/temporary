@@ -9,6 +9,7 @@
         %li= link_to 'How does it work?', page_path('how-does-it-work')
         %li= link_to 'Where is it?', page_path('where-is-it')
         %li= link_to raw("What's the #{tsign} mean?"), page_path('what-is-this-t-everywhere')
+        %li= link_to 'How do I get Temps?', page_path('how-do-i-get-temps')
         %li= link_to 'News', posts_path
     %li{class: ['experiments', 'instances'].include?(controller.controller_name) ?  :active : false}= link_to 'Experiments', experiments_path
     %li{class: controller.controller_name == 'activities' ? :active : false}= link_to 'Activity', activities_path
