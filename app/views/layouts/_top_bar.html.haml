@@ -14,6 +14,7 @@
     %li{class: controller.controller_name == 'activities' ? :active : false}= link_to 'Activity', activities_path
     %li{class: controller.controller_name == 'proposals' ? :active : false}= link_to 'Proposals', proposals_path
     %li= link_to 'Visit us', page_path('where-is-it')
+    %li{class: controller.controller_name == 'roombookings' ? :active : false}= link_to 'Book the back room', roombookings_path
 / Right Nav Section
 .top-bar-right
   %ul.vertical.medium-horizontal.menu{"data-responsive-menu" => "drilldown medium-dropdown"}

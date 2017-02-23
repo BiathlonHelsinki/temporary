@@ -834,13 +834,14 @@ form.pledge, form {
 }
 
 .calendar_view {
+  padding: 2rem 0;
   h1 {
     text-transform: uppercase;
   }
   // Calendar
   #calendar {
     width: 92%;
-    padding-top: 4rem;
+    padding-top: 2rem;
     .fc-unthemed td.fc-today {
       background-color: $yellow;
     }

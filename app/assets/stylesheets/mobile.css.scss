@@ -24,7 +24,9 @@ $large-only: "#{$screen} and (min-width: #{lower-bound($large-range)}) and (max-
   .row.expanded {
     padding: 0 0.6rem;
   }
-  
+  .title-bar {
+    background: transparent;
+  }
   .submenu {
     ul.menu {
       padding: 0;
@@ -68,5 +70,23 @@ $large-only: "#{$screen} and (min-width: #{lower-bound($large-range)}) and (max-
   
   .activities_index, .user_profile {
     padding-top: 0.8rem;
+  }
+  .calendar_view {
+    #calendar {
+      padding-top: 1rem;
+      .fc-toolbar {
+        button {
+          span {
+            font-size: 0.7rem;
+          }
+        }
+      }
+      .fc-header-toolbar {
+        font-size: 2rem;
+        h2 {
+          font-size: 2rem !important;
+        }
+      }
+    }
   }
 }
