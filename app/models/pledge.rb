@@ -11,6 +11,12 @@ class Pledge < ApplicationRecord
   validate :one_per_user
   belongs_to  :instance
   
+  after_save -> {
+    if item.class == Proposal
+      ActiveRecord::Base.connection.execute "UPDATE proposals SET updated_at=now() WHERE id=#{item.id}"
+    end
+  }
+  
   scope :unconverted, -> () { where('converted = 0 OR converted is null')}
   scope :converted, -> () { where(converted: true)}
   

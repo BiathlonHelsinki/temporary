@@ -51,15 +51,13 @@ class ProposalsController < ApplicationController
   
   def index
     if params[:filter].nil? || params[:filter] == 'false'
-      @proposals = Proposal.active.order(updated_at: :desc).sort_by { |x| (x.has_enough? ? (x.recurs? ? (x.intended_sessions == 0 && (x.pledged < x.total_needed_with_recurrence) ? 2 : 1 ) : 4 ) : 
-        (x.instances.empty? ? 0 : 1) ) }
+      @proposals = Proposal.active.order(updated_at: :desc) #.sort_by { |x| (x.has_enough? ? (x.recurs? ? (x.intended_sessions == 0 && (x.pledged < x.total_needed_with_recurrence) ? 2 : 1 ) : 4 ) :         (x.instances.empty? ? 0 : 1) ) }
     elsif params[:filter] == 'needs_support'
-      @proposals = Proposal.active.to_a.delete_if{|x| x.has_enough? }.sort_by { |x| (x.has_enough? ? (x.recurs? ? (x.intended_sessions == 0 && (x.pledged < x.total_needed_with_recurrence) ? 2 : 1 ) : 4 ) : 
-        (x.instances.empty? ? 0 : 1) ) }
+      @proposals = Proposal.active.order(updated_at: :desc).to_a.delete_if{|x| x.has_enough? } #.sort_by { |x| (x.has_enough? ? (x.recurs? ? (x.intended_sessions == 0 && (x.pledged < x.total_needed_with_recurrence) ? 2 : 1 ) : 4 ) :      (x.instances.empty? ? 0 : 1) ) }
     elsif params[:filter] == 'scheduled'
-      @proposals = Instance.future.or(Instance.current).map(&:proposal).uniq.sort_by{|x| x.next_instance.start_at }
+      @proposals = Instance.future.or(Instance.current).map(&:proposal).uniq.sort_by{|x| x.updated_at }.reverse # x.next_instance.start_at }
     elsif params[:filter] == 'review'
-      @proposals = Proposal.active.schedulable #to_a.delete_if{|x| !x.has_enough? }.delete_if{|x| !x.instances.published.future.empty? }
+      @proposals = Proposal.active.schedulable.order(updated_at: :desc) #to_a.delete_if{|x| !x.has_enough? }.delete_if{|x| !x.instances.published.future.empty? }
     end
     
     @next_meeting = Instance.next_meeting

@@ -46,7 +46,7 @@ class Proposal < ApplicationRecord
     if intended_sessions.blank? || intended_sessions =~ /\D/
       sesh = 35
     else
-      sesh = intended_sessions
+      sesh = intended_sessions - 1
     end
     if recurs?
       for f in 1..sesh  do 
@@ -157,15 +157,15 @@ class Proposal < ApplicationRecord
     if recurs?
       if instances.published.size > needed_array.size
         return (remaining_pledges / needed_array.last).to_i
-      elsif remaining_pledges > needed_array.sum
-        return needed_array.size
+      elsif remaining_pledges > needed_array[(instances.published.size)..-1].sum
+        return needed_array[(instances.published.size).-1].size
       else
-        needed_array.each_with_index do |val, index|
+        needed_array[(instances.published.size)..-1].each_with_index do |val, index|
           tally += val
           if remaining_pledges >= tally
             next
           else
-            return index - instances.published.size
+            return index # - instances.published.size
           end
         end
       end

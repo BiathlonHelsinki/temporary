@@ -6,7 +6,11 @@ class Comment < ApplicationRecord
   validates_presence_of :user_id, :item_id, :item_type, :content
   before_save :update_image_attributes, :update_attachment_attributes
   after_create :update_activity_feed
-  
+  after_create -> {
+    if item.class == Proposal
+      ActiveRecord::Base.connection.execute "UPDATE proposals SET updated_at=now() WHERE id=#{item.id}"
+    end
+  }
   scope :frontpage, -> () { where(frontpage: true) }
   
   def update_activity_feed
