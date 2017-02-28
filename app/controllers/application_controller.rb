@@ -3,12 +3,26 @@ class ApplicationController < ActionController::Base
   include CanCan::ControllerAdditions
   before_action :check_service_status
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :are_we_open?
+  
   rescue_from CanCan::AccessDenied do |exception|
     render json: {message: 'access denied!'}, status: 401
   end
   
   before_action :check_for_email
   private
+  
+  def are_we_open?
+    Opensession.uncached do
+      sesh = Opensession.by_node(1).find_by(closed_at: nil)
+    end
+    sesh = Opensession.by_node(1).find_by(closed_at: nil)
+    if sesh.nil?
+      @temporary_is_open = false
+    else
+      @temporary_is_open = true
+    end
+  end
   
   def check_for_email
     if user_signed_in?

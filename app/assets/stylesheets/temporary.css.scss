@@ -7,6 +7,17 @@ html, body {
   height:100%;
 }
 header {
+  a.logo {
+    float: left;
+  }
+  .open_or_closed {
+    float: left;
+    font-size: 3.7rem;
+    font-weight: bold;
+    padding-left: 1.2rem;
+    font-family: $inconsolata;
+  }
+  
   margin: 0.938rem 0.938rem 0 0.938rem;
   // top bar
   &.home {

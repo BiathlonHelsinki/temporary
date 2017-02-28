@@ -1,6 +1,7 @@
 = content_for :header do
-  .home_header
-    = link_to image_tag('temporary_logo.png'), '/'
+  -#.home_header
+  = link_to image_tag('temporary_logo.png'), '/', class: :logo
+  = render partial: 'layouts/open_or_closed'
   .top-bar
     = render partial: 'layouts/top_bar'
 
