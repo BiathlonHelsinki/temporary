@@ -1,6 +1,7 @@
 = content_for :header do
   .home_header{style: @page.image? ? "background: url(#{@page.image.url}) no-repeat top center; background-size: cover" : false}
-    = image_tag 'temporary_logo.png'  
+    = link_to  image_tag('temporary_logo.png'), '/', class: :logo
+    = render partial: 'layouts/open_or_closed'
   .top-bar
     = render partial: 'layouts/top_bar'
     
