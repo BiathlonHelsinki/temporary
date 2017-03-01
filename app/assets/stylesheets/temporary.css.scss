@@ -915,7 +915,7 @@ form.pledge, form {
     }
     .fc-event-container {
       &.fc-today {
-        background-color: $yellow;
+        background-color: transparent;
       }
       .fc-event {
         background-color: $grey;

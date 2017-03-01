@@ -277,7 +277,9 @@ header {
           font-size: 0.7rem;
       }
       .fc-event-container {
- 
+        &.fc-today {
+          background-color: transparent;
+        }
         .fc-event {
           background-color: $grey;
           font-family: $inconsolata;

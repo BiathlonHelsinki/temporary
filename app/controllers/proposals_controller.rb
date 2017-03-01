@@ -57,7 +57,7 @@ class ProposalsController < ApplicationController
     elsif params[:filter] == 'scheduled'
       @proposals = Instance.future.or(Instance.current).map(&:proposal).uniq.sort_by{|x| x.updated_at }.reverse # x.next_instance.start_at }
     elsif params[:filter] == 'review'
-      @proposals = Proposal.active.schedulable.order(updated_at: :desc) #to_a.delete_if{|x| !x.has_enough? }.delete_if{|x| !x.instances.published.future.empty? }
+      @proposals = Proposal.active.schedulable.sort_by(&:updated_at).reverse #to_a.delete_if{|x| !x.has_enough? }.delete_if{|x| !x.instances.published.future.empty? }
     end
     
     @next_meeting = Instance.next_meeting
