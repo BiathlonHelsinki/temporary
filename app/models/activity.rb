@@ -24,7 +24,7 @@ class Activity < ApplicationRecord
         item_type.constantize.with_deleted.find(item_id).name
       end
     when 'Roombooking' 
-      "<a href='/roombookings/'>#{item.day.strftime('%-d %B %Y')}</a> " + extra_info || ''
+      "<a href='/roombookings/'>#{item.day.strftime('%-d %B %Y')}</a> " + extra_info.to_s || ''
     when 'User'
       if value
         "#{item.display_name}  <br /><small>#{extra_info}</small>"
