@@ -13,6 +13,8 @@ class Activity < ApplicationRecord
   def linked_name
 
     case item.class.to_s
+    when 'Credit'
+      item.name
     when 'Pledge'
       "<a href='/proposals/#{item.item.id}'>#{item.item.name}</a>"
     when 'Proposal'
