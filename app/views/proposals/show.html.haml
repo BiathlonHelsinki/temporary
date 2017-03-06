@@ -33,7 +33,7 @@
                           });
       .small-10.medium-4.columns.pledge_info
         .box
-          - if @proposal.valid?
+          - if @proposal.is_valid?
             - if @proposal.scheduled?
               .yellow 
                 - if @proposal.stopped? || (@proposal.scheduled? && !@proposal.recurs? && @proposal.instances.future.empty?)
@@ -79,7 +79,7 @@
           %p
 
             - if @proposal.stopped? ||  (@proposal.scheduled? && !@proposal.recurs?) 
-              - if @proposal.valid?
+              - if @proposal.is_valid?
                 - if @proposal.instances.future.empty? 
                   = pluralize(@proposal.instances.first.experiment.instances.size, 'meeting')
                   took place!
@@ -165,7 +165,7 @@
     #pledges
       .row    
         .small-10.columns
-    - if @proposal.valid?
+    - if @proposal.is_valid?
       .row.expanded   
         .small-10.columns
           .pledge_panel
@@ -191,7 +191,7 @@
             %h1= t :discussion
           - if @proposal.discussion.size > 0
             .small-12.columns
-              .comment_count= "This experiment proposal #{@proposal.valid? ? 'has' : 'had'} #{pluralize(@proposal.discussion.size, 'comment')}."
+              .comment_count= "This experiment proposal #{@proposal.is_valid? ? 'has' : 'had'} #{pluralize(@proposal.discussion.size, 'comment')}."
         - @proposal.discussion.sort_by(&:created_at).each do |comment|
           .row.expanded
             .small-12.columns
@@ -236,7 +236,7 @@
                           = image_tag comment.image.url(:small)
                         - if comment.attachment?
                           %p= link_to t(:download) + ' ' + File.basename(URI.parse(comment.attachment.url).path), comment.attachment.url, class: [:button, :round, :tiny]
-    - if @proposal.valid?                
+    - if @proposal.is_valid?                
       - if user_signed_in?
     
         - if can? :create, Comment

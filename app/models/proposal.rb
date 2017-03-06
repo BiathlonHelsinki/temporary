@@ -16,7 +16,7 @@ class Proposal < ApplicationRecord
   scope :archived, -> () { where(stopped: true) }
   scope :active, -> () { where(stopped: false) }
 
-  def valid?
+  def is_valid?
     proposalstatus.nil? || proposalstatus.slug != 'invalid'
   end
 
