@@ -1085,6 +1085,19 @@ form.pledge, form {
           }
         }
       }
+      .grey {
+        margin-bottom: 1rem;
+        padding: 2rem 0;
+        background-color: $grey;
+        .small {
+          text-align: center;
+          clear: both;
+          font-size: 0.9rem;
+          a {
+            color: black;
+          }
+        }
+      }
       a {
         text-decoration: none;
         .grey {

@@ -16,6 +16,10 @@ class Proposal < ApplicationRecord
   scope :archived, -> () { where(stopped: true) }
   scope :active, -> () { where(stopped: false) }
 
+  def valid?
+    proposalstatus.nil? || proposalstatus.slug != 'invalid'
+  end
+
   def comments_and_pledges
     [comments, pledges].flatten.sort_by(&:updated_at)
   end

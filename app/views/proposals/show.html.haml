@@ -33,35 +33,41 @@
                           });
       .small-10.medium-4.columns.pledge_info
         .box
-          - if @proposal.scheduled?
-            .yellow 
-              - if @proposal.stopped? || (@proposal.scheduled? && !@proposal.recurs? && @proposal.instances.future.empty?)
-                Completed!
-              - else
-                %span.pledge_box_text Scheduled!
-              - if @proposal.recurs?
-                - if @proposal.intended_sessions == 0 || @proposal.pledged < @proposal.total_needed_with_recurrence
-                  .small= link_to 'but still taking pledges....', new_proposal_pledge_path(@proposal)
-                  = content_for :jquery do
-                    :plain
-                      $('.pledge_info .box .yellow').mouseenter(function() {
-                        $(".pledge_box_text").html('<a href="#{new_proposal_pledge_path(@proposal)}">Pledge more #{raw tsign.html_safe}!</a>');
-                      }).mouseleave(function() {
-                        $(".pledge_box_text").text('Scheduled!');
-                      });
-          - else
-            - if @proposal.has_enough?
-              .yellow  Pending scheduling!
+          - if @proposal.valid?
+            - if @proposal.scheduled?
+              .yellow 
+                - if @proposal.stopped? || (@proposal.scheduled? && !@proposal.recurs? && @proposal.instances.future.empty?)
+                  Completed!
+                - else
+                  %span.pledge_box_text Scheduled!
+                - if @proposal.recurs?
+                  - if @proposal.intended_sessions == 0 || @proposal.pledged < @proposal.total_needed_with_recurrence
+                    .small= link_to 'but still taking pledges....', new_proposal_pledge_path(@proposal)
+                    = content_for :jquery do
+                      :plain
+                        $('.pledge_info .box .yellow').mouseenter(function() {
+                          $(".pledge_box_text").html('<a href="#{new_proposal_pledge_path(@proposal)}">Pledge more #{raw tsign.html_safe}!</a>');
+                        }).mouseleave(function() {
+                          $(".pledge_box_text").text('Scheduled!');
+                        });
             - else
-              = link_to  new_proposal_pledge_path(@proposal) do
-                .grey
-                  %span
-                    = raw(@proposal.pledged.to_s + tsign)
-                    pledged
-                  .occluded= raw("Pledge #{tsign}!")
+              - if @proposal.has_enough?
+                .yellow  Pending scheduling!
+              - else
+                = link_to  new_proposal_pledge_path(@proposal) do
+                  .grey
+                    %span
+                      = raw(@proposal.pledged.to_s + tsign)
+                      pledged
+                    .occluded= raw("Pledge #{tsign}!")
                 
-            / - @proposal.instances.each do |instance|
-            /   = link_to instance.name, instance
+              / - @proposal.instances.each do |instance|
+              /   = link_to instance.name, instance
+          - else
+            .grey.invalid
+              Invalid
+              .small= link_to 'See comments for reason', 'javascript:$(document).scrollTo(".comment.last", 800);'
+              
 
         - unless @proposal.pledges.empty?
           .pledges
@@ -71,13 +77,15 @@
               %small= raw @proposal.pledges.map(&:user).map{|x| link_to(x.display_name, x)}.uniq.join(', ')
         .pledge_data
           %p
-            - if @proposal.stopped? ||  (@proposal.scheduled? && !@proposal.recurs?)
-              - if @proposal.instances.future.empty?
-                = pluralize(@proposal.instances.first.experiment.instances.size, 'meeting')
-                took place!
-              - else
-                = pluralize(@proposal.instances.first.experiment.instances.size, 'meeting') + ":"
-                %br/
+
+            - if @proposal.stopped? ||  (@proposal.scheduled? && !@proposal.recurs?) 
+              - if @proposal.valid?
+                - if @proposal.instances.future.empty? 
+                  = pluralize(@proposal.instances.first.experiment.instances.size, 'meeting')
+                  took place!
+                - else
+                  = pluralize(@proposal.instances.first.experiment.instances.size, 'meeting') + ":"
+                  %br/
             - elsif (@proposal.scheduled? && @proposal.recurs?)
               Recurring experiment. Meetings:
               %br/
@@ -157,22 +165,23 @@
     #pledges
       .row    
         .small-10.columns
-
-    .row.expanded   
-      .small-10.columns
-        .pledge_panel
-          - if user_signed_in?
-            - if current_user.has_pledged?(@proposal)
-              = raw "You pledged #{current_user.pledges.find_by(item: @proposal).pledge}#{tsign}"
-            - unless @proposal.scheduled?
+    - if @proposal.valid?
+      .row.expanded   
+        .small-10.columns
+          .pledge_panel
+            - if user_signed_in?
               - if current_user.has_pledged?(@proposal)
+                = raw "You pledged #{current_user.pledges.find_by(item: @proposal).pledge}#{tsign}"
+              - unless @proposal.scheduled?
+                - if current_user.has_pledged?(@proposal)
+                  %br/
+                  = link_to 'Edit pledge', edit_proposal_pledge_path(@proposal, current_user.pledges.find_by(item: @proposal) ), class: [:button, :tiny]
+                - else
+                  = link_to raw("Pledge #{tsign}!"), new_proposal_pledge_path(@proposal), class: [:button, :tiny]
+              - if current_user == @proposal.user || current_user.has_role?(:admin)
                 %br/
-                = link_to 'Edit pledge', edit_proposal_pledge_path(@proposal, current_user.pledges.find_by(item: @proposal) ), class: [:button, :tiny]
-              - else
-                = link_to raw("Pledge #{tsign}!"), new_proposal_pledge_path(@proposal), class: [:button, :tiny]
-            - if current_user == @proposal.user || current_user.has_role?(:admin)
-              %br/
-              = link_to 'Edit proposal', edit_proposal_path(@proposal), class: [:button, :tiny], style: 'float: left; font-size: 0.7em; margin: 0.5rem 0;'  
+                = link_to 'Edit proposal', edit_proposal_path(@proposal), class: [:button, :tiny], style: 'float: left; font-size: 0.7em; margin: 0.5rem 0;'  
+              
     - unless @proposal.comments.empty? && @proposal.pledges.empty?
 
 
@@ -182,7 +191,7 @@
             %h1= t :discussion
           - if @proposal.discussion.size > 0
             .small-12.columns
-              .comment_count= "This experiment proposal has #{pluralize(@proposal.discussion.size, 'comment')}."
+              .comment_count= "This experiment proposal #{@proposal.valid? ? 'has' : 'had'} #{pluralize(@proposal.discussion.size, 'comment')}."
         - @proposal.discussion.sort_by(&:created_at).each do |comment|
           .row.expanded
             .small-12.columns
@@ -227,45 +236,45 @@
                           = image_tag comment.image.url(:small)
                         - if comment.attachment?
                           %p= link_to t(:download) + ' ' + File.basename(URI.parse(comment.attachment.url).path), comment.attachment.url, class: [:button, :round, :tiny]
-                    
-    - if user_signed_in?
+    - if @proposal.valid?                
+      - if user_signed_in?
     
-      - if can? :create, Comment
-        = content_for :jquery do
-          :plain
-            $("#comment_input").mentionable("/users/mentions", {position: 'right'});
+        - if can? :create, Comment
+          = content_for :jquery do
+            :plain
+              $("#comment_input").mentionable("/users/mentions", {position: 'right'});
           
-        .row.expanded
-          .small-12.columns
-            #comment_form
-              .row
-                .small-12.medium-8.columns.end
-                  .row
-                    .small-2.columns
-                      = image_tag current_user.avatar.url(:box)
+          .row.expanded
+            .small-12.columns
+              #comment_form
+                .row
+                  .small-12.medium-8.columns.end
+                    .row
+                      .small-2.columns
+                        = image_tag current_user.avatar.url(:box)
                     
-                      %p.small= link_to t(:edit_profile), edit_user_path(current_user), class: [:button, :tiny, :secondary, :round]
-                    .small-10.columns
-                      %h3
-                        = t :what_do_you_think_about_this
-                      %p.small
-                        %u Tagging: 
-                        %br/
-                        %em People: type '@' followed by someone's username [eg: @Jussi, @PsychoDog]
-                        %br/
-                        %em Experiments: type '#' followed by the name of the experiment [eg: #Open] 
-                      = semantic_form_for [ @proposal,  @comment = @proposal.comments.build(user: current_user)], html: {onSubmit: "return getContent();", multipart: true, :"data-abide" => '' } do |f|
-                        = f.input :user_id, as: :hidden, data: {value: current_user.id}
-                        #comment_wrapper
-                          #comment_input{contenteditable: true}
+                        %p.small= link_to t(:edit_profile), edit_user_path(current_user), class: [:button, :tiny, :secondary, :round]
+                      .small-10.columns
+                        %h3
+                          = t :what_do_you_think_about_this
+                        %p.small
+                          %u Tagging: 
+                          %br/
+                          %em People: type '@' followed by someone's username [eg: @Jussi, @PsychoDog]
+                          %br/
+                          %em Experiments: type '#' followed by the name of the experiment [eg: #Open] 
+                        = semantic_form_for [ @proposal,  @comment = @proposal.comments.build(user: current_user)], html: {onSubmit: "return getContent();", multipart: true, :"data-abide" => '' } do |f|
+                          = f.input :user_id, as: :hidden, data: {value: current_user.id}
+                          #comment_wrapper
+                            #comment_input{contenteditable: true}
 
-                        = f.input :content, :label => false, input_html: {:required => '', id: :comment_input_textarea}
-                        = f.input :image, :label => t(:attach_image_to_comment)
-                        = f.input :attachment, :label => t(:attach_attachment_to_comment)
-                        = f.submit t(:save), :class => [:button, :round]
-    - else
-      .row.expanded
-        .small-12.columns                
-          %h3
-            = link_to 'Log in', '/users/sign_in'
-            to comment on this proposal.
+                          = f.input :content, :label => false, input_html: {:required => '', id: :comment_input_textarea}
+                          = f.input :image, :label => t(:attach_image_to_comment)
+                          = f.input :attachment, :label => t(:attach_attachment_to_comment)
+                          = f.submit t(:save), :class => [:button, :round]
+      - else
+        .row.expanded
+          .small-12.columns                
+            %h3
+              = link_to 'Log in', '/users/sign_in'
+              to comment on this proposal.

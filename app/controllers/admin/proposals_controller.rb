@@ -16,6 +16,11 @@ class Admin::ProposalsController < Admin::BaseController
         if @proposal.proposalstatus.nil?
           params[:proposal][:comment][:content] = "<em>Status changed to: <strong>Active</strong></em><br /><br/>" + params[:proposal][:comment][:content]
         else
+          if @proposal.proposalstatus.slug == 'invalid'
+            @proposal.pledges.each do |pledge|
+              pledge.destroy!
+            end
+          end
           params[:proposal][:comment][:content] = "<em>Status changed to: <strong>#{@proposal.proposalstatus.name}</strong></em><br /><br/>" + params[:proposal][:comment][:content]
         end
         @proposal.comments << Comment.create(params[:proposal][:comment].permit!)
@@ -29,7 +34,7 @@ class Admin::ProposalsController < Admin::BaseController
   
   
   def index
-    @proposals = Proposal.all
+    @proposals = Proposal.all.order(id: :desc)
   end
   
   private

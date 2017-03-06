@@ -55,7 +55,7 @@ class PledgesController < ApplicationController
   def new
 
     @item = Proposal.find(params[:proposal_id])
-    if @item.stopped?
+    if @item.stopped? || !@item.valid?
       flash[:error] = 'This experiment has finished.'
       redirect_to proposals_path
     else
