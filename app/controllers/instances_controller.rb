@@ -2,6 +2,24 @@ class InstancesController < ApplicationController
   include ActionView::Helpers::SanitizeHelper
   before_action :authenticate_user!, only: [:rsvp]
 
+  def cancel_registration
+    if params[:experiment_id]
+      @experiment = Experiment.friendly.find(params[:experiment_id])
+      @instance = @experiment.instances.friendly.find(params[:id])
+      if @instance.in_future?
+        registration = Registration.find_or_create_by(instance: @instance, user: current_user)
+        if registration.destroy
+          Activity.create(user: current_user, addition: 0, item: @instance, description: 'is no longer registered for ')
+          flash[:notice] = 'Thank you for letting us know, we are sorry you cannot make it.'
+          redirect_to [@experiment, @instance]
+        end
+      end
+    else
+      flash[:error] = 'Error'
+      redirect_to '/'
+    end
+  end
+  
   def cancel_rsvp
     if params[:experiment_id]
       @experiment = Experiment.friendly.find(params[:experiment_id])
@@ -33,7 +51,25 @@ class InstancesController < ApplicationController
       redirect_to '/'
     end
   end
-  
+
+  def register
+    if params[:experiment_id]
+      @experiment = Experiment.friendly.find(params[:experiment_id])
+      @instance = @experiment.instances.friendly.find(params[:id])
+      r = Registration.new(instance: @instance, user: current_user)
+      if r.update_attributes(params[:registration].permit!)
+        flash[:notice] = ' Thank you for registering.'
+      else
+        flash[:error] = 'There was an error registering: ' + r.errors.inspect
+      end
+      Activity.create(user: current_user, addition: 0, item: @instance, description: 'registered for')
+      redirect_to [@experiment, @instance]
+    else
+      flash[:error] = 'Error'
+      redirect_to '/'
+    end
+  end
+    
   def show
     if params[:experiment_id]
       @experiment = Experiment.friendly.find(params[:experiment_id])

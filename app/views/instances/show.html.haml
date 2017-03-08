@@ -17,14 +17,23 @@
         .temps
           - if @instance.in_future?
             = raw "You will earn #{@instance.cost_bb}#{tsign} for participating!"
-            
-            - if user_signed_in?
-              - if current_user.rsvpd?(@instance)
+            - if @instance.request_registration?
+              %p
+                You must register for this experiment.
+                - unless @instance.max_attendees.blank?
+                  There are 
+                  = pluralize(@instance.max_attendees - @instance.registrations.not_waiting.size, 'place')
+                  left.
+                = link_to 'Register!', '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('.registration_form', 800);return false;", class: [:button]
+            - else
+              - if user_signed_in?
+
+                - if current_user.rsvpd?(@instance)
               
-                %strong  You have RSVPd to this event.
-              - else
-                %br/
-                = link_to 'I plan to attend!', rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button]
+                  %strong  You have RSVPd to this event.
+                - else
+                  %br/
+                  = link_to 'I plan to attend!', rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button]
           - else
             = link_to raw(pluralize((@instance.users.uniq + @instance.onetimers.unclaimed).size, 'person')), '#', onClick: "javascript:$(window).scrollTo('#participants', {duration: 1000});return false;"
             participated, earning
@@ -50,52 +59,143 @@
         .body= raw @instance.description
   
   .rsvp_container      
-    - if @instance.request_rsvp? && @instance.in_future?
-      .row.expanded
-        .small-10.medium-8.columns
-          - if user_signed_in?
-            - if current_user.rsvpd?(@instance)
-              
-              %h5 You have RSVPd to this event. Thank you, and we will see you there!
-              = link_to 'Cancel RSVP', cancel_rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button, :alert], data: {confirm: 'Are you sure you want to cancel your RSVP?'}
+    - if @instance.request_registration == true
+      - if @instance.in_future? && @instance.registration_open == true
+        .row.expanded
+          .small-10.medium-8.columns
+            - if user_signed_in?
+              - if current_user.registered?(@instance)
+                %h5 You have registered for this event. Thank you, and we will see you there!
+                %h5 If you think you will not be able to attend, please cancel your registration, as a courtesy to others.
+                = link_to 'Cancel registration', cancel_registration_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button, :alert], data: {confirm: 'Are you sure you want to cancel your registration?'}
+              - else
+                %h4
+                  %strong You must register for this experiment.
+                  - unless @instance.max_attendees.blank?
+                    There are
+                    = pluralize(@instance.max_attendees - @instance.registrations.not_waiting.size, 'place')
+                    left.
+                    
             - else
-              %h4 The organiser of this experiment has requested that you RSVP if you are attending.
-          - else
-            %h4
-              The organiser of this experiment has requested that you RSVP if you are attending.
-              = link_to 'RSVP!', '/users/sign_in', class: [:button]
-      .row.expanded
-        .small-10.medium-8.columns
+              %h4
+                The organiser of this experiment has requested that you RSVP if you are attending.
+                = link_to 'RSVP!', '/users/sign_in', class: [:button]
+        .row.expanded
+          .small-10.medium-8.columns
+            - if user_signed_in?
+              -  unless current_user.registered?(@instance)
+                = link_to 'Register me', '#', onclick: 'javascript:$(".registration_form").slideToggle();return false;', class: [:button]
+                .registration_form
+                  .row.expanded
+                    .small-10.medium-8.columns
+                      %h5 Registration form
+                  = semantic_form_for  [ @instance.experiment, @instance,  @registration = @instance.registrations.build(user: current_user)], html: {:"data-abide" => '' } do |f|
+                    = f.input :user_id, as: :hidden, data: {value: current_user.id}
+                    - unless @instance.question1_text.blank?
+                      .row.expanded
+                        .small-10.medium-8.columns= f.input :question1, label: @instance.question1_text, input_html: {required: ''}
+                    - unless @instance.question2_text.blank?
+                      .row.expanded
+                        .small-10.medium-8.columns= f.input :question2, label: @instance.question2_text, input_html: {required: ''}
+                    - unless @instance.question3_text.blank?
+                      .row.expanded
+                        .small-10.medium-8.columns= f.input :question3, label: @instance.question3_text, input_html: {required: ''}
+                    - unless @instance.question4_text.blank?
+                      .row.expanded
+                        .small-10.medium-8.columns= f.input :question4, label: @instance.question4_text , input_html: {required: ''}   
+                    - unless @instance.boolean1_text.blank?
+                      .row.expanded
+                        .small-10.medium-8.columns= f.input :boolean1, as: :boolean, label: @instance.boolean1_text 
+                    - unless @instance.boolean2_text.blank?
+                      .row.expanded
+                        .small-10.medium-8.columns= f.input :boolean2, as: :boolean, label: @instance.boolean2_text                            
+                    .row.expanded
+                      .small-10.medium-8.columns= f.input :phone, label: 'Please enter your phone number so the experiment organiser can contact you if there are any issues or problems or last-minute changes', hint: 'This is optional, though.'
+                    .row.expanded
+                      .small-10.medium-8.columns= f.submit t(:register), :class => [:button, :round]                                                                                             
+                        
+      - elsif @instance.in_future?
+        .row.expanded
+          .small-10.medium-8.columns
+            %h5 Sorry, registration is currently closed.
+      - else
+        .row.expanded
+          .small-10.medium-8.columns
+            %h5 This experiment already took place.
+    - else
+      - if @instance.request_rsvp? && @instance.in_future?
+        .row.expanded
+          .small-10.medium-8.columns
+            - if user_signed_in?
+              - if current_user.rsvpd?(@instance)
+              
+                %h5 You have RSVPd to this event. Thank you, and we will see you there!
+                = link_to 'Cancel RSVP', cancel_rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button, :alert], data: {confirm: 'Are you sure you want to cancel your RSVP?'}
+              - else
+                %h4 The organiser of this experiment has requested that you RSVP if you are attending.
+            - else
+              %h4
+                The organiser of this experiment has requested that you RSVP if you are attending.
+                = link_to 'RSVP!', '/users/sign_in', class: [:button]
+        .row.expanded
+          .small-10.medium-8.columns
       
-          - if user_signed_in?
-            -  unless current_user.rsvpd?(@instance)
-              = link_to 'Yes, I plan to attend!', rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button]
-
+            - if user_signed_in?
+              -  unless current_user.rsvpd?(@instance)
+                = link_to 'Yes, I plan to attend!', rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button]
+  
+  
   - if @instance.users.empty? && @instance.onetimers.empty?
     - unless @instance.rsvps.empty?
       %section#participants
-        .row.expanded
-          .small-10.medium-6.columns
-            .participant_header RSVPd (planning to attend):
-        .row.expanded.small-up-4.medium-up-6.large-up-8.xlarge-up-9  
-          - @instance.rsvps.map(&:user).each do |attended|
-            .column.participant_grid
-              .image
-                - if attended.avatar?
-                  = image_tag attended.avatar.url(:box)
-                - else
-                  = image_tag image_path('user_missing_large.png')
-              .participant_overlay
+        - if @instance.request_registration == true
+          - unless @instance.registrations.to_a.delete_if{|x| x.new_record? }.empty?
+            .row.expanded
+              .small-10.medium-6.columns
+                .participant_header Registered participants (you must register to participate):
+            .row.expanded.small-up-4.medium-up-6.large-up-8.xlarge-up-9  
+              - @instance.registrations.to_a.delete_if{|x| x.new_record? }.map(&:user).each do |attended|
+                .column.participant_grid
+                  .image
+                    - if attended.avatar?
+                      = image_tag attended.avatar.url(:box)
+                    - else
+                      = image_tag image_path('user_missing_large.png')
+                  .participant_overlay
 
-                = link_to attended.display_name, attended 
-                - if @instance.experiment.primary_sponsor == attended
-                  %br/
-                  = link_to "(experiment instigator)", @instance.proposal
-                - if user_signed_in?
-                  - if current_user == attended
-                    = link_to 'Cancel RSVP', cancel_rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button, :alert], data: {confirm: 'Are you sure you want to cancel your RSVP?'}
-                - if @instance.allow_multiple_entry == true
-                  = " (#{pluralize(@instance.users.select{|x| x == attended}.count, 'time')})"
+                    = link_to attended.display_name, attended 
+                    - if @instance.experiment.primary_sponsor == attended
+                      %br/
+                      = link_to "(experiment instigator)", @instance.proposal
+                    - if user_signed_in?
+                      - if current_user == attended
+                        = link_to 'Cancel registration', cancel_registration_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button, :alert], data: {confirm: 'Are you sure you want to cancel your registration?'}
+                    - if @instance.allow_multiple_entry == true
+                      = " (#{pluralize(@instance.users.select{|x| x == attended}.count, 'time')})"
+                    
+        - else
+          .row.expanded
+            .small-10.medium-6.columns
+              .participant_header RSVPd (planning to attend):
+          .row.expanded.small-up-4.medium-up-6.large-up-8.xlarge-up-9  
+            - @instance.rsvps.map(&:user).each do |attended|
+              .column.participant_grid
+                .image
+                  - if attended.avatar?
+                    = image_tag attended.avatar.url(:box)
+                  - else
+                    = image_tag image_path('user_missing_large.png')
+                .participant_overlay
+
+                  = link_to attended.display_name, attended 
+                  - if @instance.experiment.primary_sponsor == attended
+                    %br/
+                    = link_to "(experiment instigator)", @instance.proposal
+                  - if user_signed_in?
+                    - if current_user == attended
+                      = link_to 'Cancel RSVP', cancel_rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button, :alert], data: {confirm: 'Are you sure you want to cancel your RSVP?'}
+                  - if @instance.allow_multiple_entry == true
+                    = " (#{pluralize(@instance.users.select{|x| x == attended}.count, 'time')})"
         
   - else
     %section#participants

@@ -56,6 +56,31 @@
   .row
     .small-10.medium-4.columns= f.input :request_registration, label: 'Require people to register', hint: 'Not yet functional', as: :boolean
   .row
+    .small-10.medium-10.columns
+      %fieldset
+        %legend Registration stuff
+        .row
+          .small-10.medium-9.columns= f.input :max_attendees
+        .row
+          .small-10.medium-9.columns= f.input :require_approval, label: 'Registrations must be approved by experiment instigator', as: :boolean
+        .row
+          .small-10.medium-9.columns= f.input :email_registrations_to, label: 'Email registrations to:', hint: 'Default is experiment instigator\'s email'
+        .row
+          .small-10.medium-9.columns= f.input :question1_text, label: 'Optional question 1'
+        .row
+          .small-10.medium-9.columns= f.input :question2_text, label: 'Optional question 2'
+        .row
+          .small-10.medium-9.columns= f.input :question3_text, label: 'Optional question 3'
+        .row
+          .small-10.medium-9.columns= f.input :question4_text, label: 'Optional question 4'                    
+        .row
+          .small-10.medium-9.columns= f.input :boolean1_text, label: 'Optional yes/no question 1'
+        .row
+          .small-10.medium-9.columns= f.input :boolean2_text, label: 'Optional yes/no question 2'
+        .row
+          .small-10.medium-9.columns= f.input :registration_open, label: 'Registration is open?', as: :boolean
+                             
+  .row
     .small-10.medium-8.columns= f.input :send_to_pledgers, label: 'Send notification email to all of those who pledged to this particular instance', as: :boolean
   .row
     .small-10.medium-4.columns= f.input :published

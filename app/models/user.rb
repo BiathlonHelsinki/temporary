@@ -37,6 +37,7 @@ class User < ActiveRecord::Base
   has_many :comments
   validates_presence_of :geth_pwd
   has_many :rsvps
+  has_many :registrations
 
   def as_mentionable
     {
@@ -183,6 +184,10 @@ class User < ActiveRecord::Base
 
   def rsvpd?(instance)
     !rsvps.find_by(instance: instance).nil?
+  end
+  
+  def registered?(instance)
+    !registrations.find_by(instance: instance).nil?
   end
   
   def email_verified?

@@ -729,8 +729,15 @@ form.pledge, form {
   #comment_wrapper {
     position: relative;
   }
-  label {
-    font-size: 1.2rem;
+  p.inline-hints {
+    font-size: 0.7em;
+    font-style: italic;
+    color: #666;
+    padding-top: 0;
+    margin-top: 0;
+  }
+  label.label {
+    font-size: 1.05rem;
     padding: 0.2rem 0;
   }
   #mentioned-user-list {
@@ -1512,5 +1519,20 @@ footer {
     min-height: 100px;
     background-size: cover;
     background-position: center/center;
+  }
+}
+
+.registration_form {
+  display: none;
+  form {
+    li {
+      textarea {
+        height: 90px;
+      }
+      input#registration_phone {
+        width: 150px;
+        margin-bottom: 5px;
+      }
+    }
   }
 }

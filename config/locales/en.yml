@@ -44,6 +44,7 @@ en:
   save: 'Save!'
   room_bookings: 'Back room bookings'
   leave_comment: 'Post this comment'
+  register: 'Register!'
   your_comment_was_added: 'Your comment was added.'
   your_comment_was_not_added: 'There was an error saving your comment.'
   has_pledged: '%{user} has pledged %{amount} to this proposal.'

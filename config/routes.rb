@@ -43,9 +43,12 @@ Rails.application.routes.draw do
       get :calendar
     end
     resources :instances, path: '' do
+      resources :registrations, controller: :experiment_registrations
       member do
         post :rsvp
+        post :register
         post :cancel_rsvp
+        post :cancel_registration
       end
     end
 
