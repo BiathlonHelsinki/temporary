@@ -81,7 +81,8 @@
             - else
               You must register in advance!
               - unless exp.max_attendees.blank?
-                There are
+                There
+                = exp.max_attendees - exp.registrations.not_waiting.size == 1 ? 'is' : 'are'
                 = pluralize(exp.max_attendees - exp.registrations.not_waiting.size, 'place')
                 left.
             

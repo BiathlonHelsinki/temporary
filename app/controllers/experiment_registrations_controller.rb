@@ -7,6 +7,10 @@ class ExperimentRegistrationsController < ApplicationController
       @instance = @experiment.instances.friendly.find(params[:instance_id])
       r = Registration.new(instance: @instance, user: current_user)
       if r.update_attributes(params[:registration].permit!)
+        if @instance.max_attendees - @instance.registrations.not_waiting.size < 1
+          r.waiting_list = true
+          r.save
+        end
         flash[:notice] = ' Thank you for registering.'
       else
         flash[:error] = 'There was an error registering: ' + r.errors.inspect

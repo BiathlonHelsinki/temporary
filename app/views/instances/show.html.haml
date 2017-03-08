@@ -21,7 +21,8 @@
               %p
                 You must register for this experiment.
                 - unless @instance.max_attendees.blank?
-                  There are 
+                  There 
+                  = @instance.max_attendees - @instance.registrations.not_waiting.size == 1 ? 'is' : 'are' 
                   = pluralize(@instance.max_attendees - @instance.registrations.not_waiting.size, 'place')
                   left.
                 = link_to 'Register!', '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('.registration_form', 800);return false;", class: [:button]
@@ -72,7 +73,8 @@
                 %h4
                   %strong You must register for this experiment.
                   - unless @instance.max_attendees.blank?
-                    There are
+                    There
+                    = @instance.max_attendees - @instance.registrations.not_waiting.size == 1 ? 'is' : 'are'
                     = pluralize(@instance.max_attendees - @instance.registrations.not_waiting.size, 'place')
                     left.
                     
@@ -88,9 +90,12 @@
                 .registration_form
                   .row.expanded
                     .small-10.medium-8.columns
-                      %h5 Registration form
+                      %h4 Registration form
+                      - if @instance.max_attendees - @instance.registrations.not_waiting.size < 1
+                        %h5 Registration is currently full. However, you may register for the waiting list and you will be notified if a space becomes available.
                   = semantic_form_for  [ @instance.experiment, @instance,  @registration = @instance.registrations.build(user: current_user)], html: {:"data-abide" => '' } do |f|
                     = f.input :user_id, as: :hidden, data: {value: current_user.id}
+
                     - unless @instance.question1_text.blank?
                       .row.expanded
                         .small-10.medium-8.columns= f.input :question1, label: @instance.question1_text, input_html: {required: ''}
@@ -154,24 +159,27 @@
               .small-10.medium-6.columns
                 .participant_header Registered participants (you must register to participate):
             .row.expanded.small-up-4.medium-up-6.large-up-8.xlarge-up-9  
-              - @instance.registrations.to_a.delete_if{|x| x.new_record? }.map(&:user).each do |attended|
+              - @instance.registrations.to_a.delete_if{|x| x.new_record? }.each do |attended|
                 .column.participant_grid
                   .image
-                    - if attended.avatar?
-                      = image_tag attended.avatar.url(:box)
+                    - if attended.user.avatar?
+                      = image_tag attended.user.avatar.url(:box)
                     - else
                       = image_tag image_path('user_missing_large.png')
                   .participant_overlay
 
-                    = link_to attended.display_name, attended 
-                    - if @instance.experiment.primary_sponsor == attended
+                    = link_to attended.user.display_name, attended.user
+                    - if @instance.experiment.primary_sponsor == attended.user
                       %br/
                       = link_to "(experiment instigator)", @instance.proposal
+                    - if attended.waiting_list == true
+                      %br/
+                      Waiting list
                     - if user_signed_in?
-                      - if current_user == attended
+                      - if current_user == attended.user
                         = link_to 'Cancel registration', cancel_registration_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button, :alert], data: {confirm: 'Are you sure you want to cancel your registration?'}
                     - if @instance.allow_multiple_entry == true
-                      = " (#{pluralize(@instance.users.select{|x| x == attended}.count, 'time')})"
+                      = " (#{pluralize(@instance.users.select{|x| x == attended.user}.count, 'time')})"
                     
         - else
           .row.expanded
