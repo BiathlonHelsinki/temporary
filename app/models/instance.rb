@@ -102,6 +102,26 @@ class Instance < ApplicationRecord
     # end
   end
   
+  def is_full?
+    if request_registration
+      if in_future?
+        if !max_attendees.blank?
+          if max_attendees - self.registrations.to_a.delete_if{|x| x.waiting_list == true}.size.to_i <= 0
+            return true
+          else
+            return false
+          end
+        else 
+          return false
+        end
+      else 
+        return false
+      end
+    else
+      return false
+    end
+  end 
+  
   private
   
   

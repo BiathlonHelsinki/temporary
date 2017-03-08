@@ -73,6 +73,18 @@
         - if exp.allow_multiple_entry == true
           = "per day "
         = "for participating!"
+        - if exp.request_registration == true
+          .red
+            
+            - if exp.is_full?
+              Sorry, there is no more space left.
+            - else
+              You must register in advance!
+              - unless exp.max_attendees.blank?
+                There are
+                = pluralize(exp.max_attendees - exp.registrations.not_waiting.size, 'place')
+                left.
+            
       - if controller.action_name == 'index'
         - if exp.experiment.collapse_in_website == true
           - unless exp.experiment.instances.future.published.to_a.delete_if{|i| i == exp}.empty?
