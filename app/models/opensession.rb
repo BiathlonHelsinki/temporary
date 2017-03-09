@@ -11,7 +11,11 @@ class Opensession < ApplicationRecord
   }
   
   def checked_in
-    parent_instance.instances_users.between(opened_at, closed_at)
+    if closed_at.nil?
+      parent_instance.instances_users.where(["created_at >= ?", opened_at])
+    else
+      parent_instance.instances_users.between(opened_at, closed_at)
+    end
   end
   
   def tagline
@@ -28,7 +32,11 @@ class Opensession < ApplicationRecord
   end
   
   def guest_tickets
-    parent_instance.onetimers.unclaimed.between(opened_at, closed_at)
+    if closed_at.nil?
+      parent_instance.onetimers.unclaimed.where(["created_at >= ?", opened_at])
+    else
+      parent_instance.onetimers.unclaimed.between(opened_at, closed_at)
+    end
   end
   
   def parent_instance
