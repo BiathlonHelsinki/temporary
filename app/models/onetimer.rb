@@ -7,6 +7,10 @@ class Onetimer < ApplicationRecord
 
   scope :claimed, ->() { where(claimed: true) }
   scope :unclaimed, ->() { where(claimed: false) }
+  scope :between, -> (start_time, end_time) { 
+    where( [ "(created_at >= ?  AND  created_at <= ?) ",
+    start_time, end_time ])
+  }
   
   def generate_code
     if code.blank?

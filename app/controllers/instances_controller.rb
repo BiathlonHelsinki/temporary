@@ -52,7 +52,34 @@ class InstancesController < ApplicationController
     end
   end
 
-
+  def stats
+    if params[:experiment_id]
+      @experiment = Experiment.friendly.find(params[:experiment_id])
+      @instance = @experiment.instances.friendly.find(params[:id])
+      if @experiment.slug == 'open-time' && @instance.name =~ /open time/i
+        if params['start'] && params['end']
+          @sessions = Opensession.between(params['start'], params['end'])
+          @sessions = @sessions.to_a.delete_if{|x| x.seconds_open < 90 }
+        else
+          @sessions = Opensession.between(@instance.start_at, @instance.end_at)
+          if @temporary_is_open == true && Time.current.localtime <= @instance.end_at
+            current = Opensession.by_node(1).find_by(closed_at: nil )
+          end
+          @sessions = @sessions.sort_by{|x| x.id }
+          @potential_minutes = ((Time.current - @instance.start_at) / 60).to_i
+        end
+      else
+        flash[:notice] = 'No statistics available for regular experiments.'
+        redirect_to experiment_instance_path(@experiment, @instance)
+      end
+    end
+    set_meta_tags title: 'Stats'
+    
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render :json => @sessions }
+    end
+  end
     
   def show
     if params[:experiment_id]

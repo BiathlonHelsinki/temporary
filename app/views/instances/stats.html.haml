@@ -1,0 +1,33 @@
+%article.instance_single
+  .row
+    .small-12.medium-10.large-9.columns
+      %h1
+        Statistics for:
+        = @instance.name 
+      
+      %p
+        This month has had
+        = @potential_minutes.to_s
+        minutes so far.
+
+      %p
+        Temporary has been open for
+        = @sessions.sum(&:minutes_open)
+        of these minutes.
+  
+      %p
+        The RATE OF OPENNESS is
+        = sprintf('%G', (@sessions.sum(&:minutes_open).to_f / @potential_minutes.to_f).to_f * 100).to_s + '%'
+        
+  .calendar_view.stats
+    .row.expanded
+      #calendar.small-centered
+  
+    = content_for :jquery do
+      = render partial: 'statscalendar', formats: [:js]
+
+- @sessions.each do |session|
+  .reveal[session]{:'data-reveal' => ''}
+    .session_title
+    .session_info
+    

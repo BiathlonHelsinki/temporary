@@ -96,6 +96,7 @@
                   = semantic_form_for  [ @instance.experiment, @instance,  @registration = @instance.registrations.build(user: current_user)], html: {:"data-abide" => '' } do |f|
                     = f.input :user_id, as: :hidden, data: {value: current_user.id}
 
+               
                     - unless @instance.question1_text.blank?
                       .row.expanded
                         .small-10.medium-8.columns= f.input :question1, label: @instance.question1_text, input_html: {required: ''}
@@ -212,7 +213,7 @@
           .participant_header 
             Participants
             = "(#{(@instance.users.uniq + @instance.onetimers.unclaimed).size.to_s}):"
-      .row.expanded.small-up-3.medium-up-4.large-up-6.xlarge-up-7
+      .row.expanded{class: (@instance.users.uniq.size > 12) ? 'small-up-6 medium-up-8 large-up-11 xlarge-up-13' : 'small-up-3 medium-up-4 large-up-6 xlarge-up-7' }
         - @instance.users.uniq.each do |attended|
           .column.participant_grid
             .image

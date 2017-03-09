@@ -859,12 +859,28 @@ form.pledge, form {
 }
 
 .calendar_view {
+  
+  &.stats {
+    #calendar .fc-toolbar .fc-right .fc-button-group {
+        display: block;
+      }
+  }
+  
   padding: 2rem 0;
   h1 {
     text-transform: uppercase;
   }
   // Calendar
   #calendar {
+    
+    
+    .fc-widget-header {
+      th.fc-axis {
+        border: none;
+        outline: none;
+      }
+    }
+    
     width: 92%;
     padding-top: 2rem;
     .fc-unthemed td.fc-today {
@@ -908,6 +924,7 @@ form.pledge, form {
         }
       }
     }
+
     .fc-time {
       color: $black;
     }
@@ -1533,6 +1550,22 @@ footer {
         width: 150px;
         margin-bottom: 5px;
       }
+    }
+  }
+}
+
+.opensession_overlay {
+  .participant_grid {
+    min-height: 120px;
+
+    background-size: cover;
+    .participant_overlay {
+      background-color: $yellow;
+      font-family: $inconsolata;
+
+      position: relative;
+      bottom: 20px;
+      font-size: 0.8rem;
     }
   }
 }

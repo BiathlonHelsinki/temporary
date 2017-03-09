@@ -11,14 +11,20 @@
         = "##{exp.sequence}"
       -#= "//"
     .dates.text-center
-      - if exp.experiment.slug == 'open-days'
+      - if exp.experiment.slug == 'open-time'
         .ongoing Ongoing
 
         - n = exp.experiment.instances.current
         - unless n.empty?
           - n = n.first
           - if exp == n
-            .next Happening now!
+            - if exp.experiment.slug == 'open-time'
+              - if @temporary_is_open == true
+                .next Open now!
+              - else
+                .next Currently not open, check back soon
+            - else
+              .next Happening now!
           - else
             - if exp.end_at < Time.now  
               .next Happened on:
@@ -26,14 +32,34 @@
               .next Next at:
         - else
           .next Next at:
-        .ongoing_month= l exp.start_at, format: '%B'
+          
+        .ongoing_month
+          - if exp.experiment.slug == 'open-time'
+            - if @temporary_is_open == true
+              = l exp.start_at, format: '%B'
+          - else
+            = l exp.start_at, format: '%B'
         .days
-          .day= exp.start_at.day
-          .times
-            -if exp.end_at.nil?
-              =  exp.start_at.strftime("%H:%M") 
+          - if exp.experiment.slug == 'open-time'
+            - if @temporary_is_open == true
+              .day= Time.current.to_date.day.to_s
             - else
-              =  exp.start_at.strftime("%H:%M") + " - " + exp.end_at.strftime("%H:%M")
+              every day!
+          - else
+            .day= exp.start_at.day
+          - if exp.experiment.slug == 'open-time'  
+            .times
+              
+              - if @temporary_is_open == true
+                All the time
+              - else
+                
+          - else
+            .times
+              -if exp.end_at.nil?
+                =  exp.start_at.strftime("%H:%M") 
+              - else
+                =  exp.start_at.strftime("%H:%M") + " - " + exp.end_at.strftime("%H:%M")
       - else
         .month= l exp.start_at, format: "%B"
         .days
@@ -61,7 +87,7 @@
               .range_day= exp.end_at.day
 
     .title.text-center=  exp.name
-    .body.text-center= truncate_html(strip_tags(exp.description), length: 110)
+    .body.text-center= truncate_html(strip_tags(exp.description.gsub(/\s*(&nbsp;\s*)+/, " ")), length: 110)
 
     - unless exp.in_future?
       .participants=  pluralize(exp.users.size + exp.onetimers.unclaimed.size, 'person') + " participated"

@@ -1,0 +1,36 @@
+.opensession_overlay
+  .row.expanded
+    %h1 
+      Open session on
+      = l @opensession.opened_at.to_date, format: :short
+      
+    %h5
+      from
+      = @opensession.opened_at.strftime("%H:%M")
+      to
+      - if @opensession.closed_at.nil?
+        the present moment
+      - else
+        = @opensession.closed_at.strftime("%H:%M")
+      = " (#{distance_of_time_in_words(@opensession.seconds_open)})"
+      
+
+  .row.expanded{class: (@opensession.checked_in.map(&:user).size > 12) ? 'small-up-6 medium-up-8 large-up-11 xlarge-up-13' : 'small-up-2 medium-up-2 large-up-4 xlarge-up-5' }
+    - @opensession.checked_in.sort_by(&:created_at).each do |attended|
+      .column.participant_grid
+        .image
+          - if attended.user.avatar?
+            = link_to image_tag(attended.user.avatar.url(:box)), attended.user
+          - else
+            = link_to image_tag(image_path('user_missing_large.png')), attended.user
+        .participant_overlay
+
+          = link_to attended.user.display_name, attended.user
+          = "checked-in at " + attended.created_at.strftime('%H:%M')
+    - @opensession.guest_tickets.each do |onetimer|
+      .column.participant_grid
+        .image= image_tag image_path('user_missing_large.png')
+        .participant_overlay
+          = raw "Anonymous person who arrived at #{onetimer.created_at.strftime('%H:%M')}"
+
+ 

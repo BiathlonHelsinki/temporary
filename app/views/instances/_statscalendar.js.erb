@@ -1,0 +1,64 @@
+
+$('#calendar').fullCalendar({
+  editable: true,
+  header: {
+    left: 'prev,next today',
+    center: 'title',
+    right: 'month,agendaWeek,agendaDay'
+  },
+  defaultView: 'agendaWeek',
+  contentHeight: '400px',
+  lang: '#{I18n.locale.to_s}',
+  contentHeight: 'auto',
+  firstDay: 1,
+  fixedWeekCount: false,
+  slotMinutes: 60,
+  allDaySlot: false,
+  eventSources: [
+    {
+      url: '/experiments/<%= @experiment.slug %>/<%= @instance.slug %>/stats.json'
+    }
+  ],
+  displayEventEnd: {
+    month: true,
+    basicWeek: true,
+    "default": true
+  },
+  timeFormat: 'H:mm',
+  dragOpacity: "0.5",
+  eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc) {
+    return updateEvent(event);
+  },
+  eventClick:  function(event, jsEvent, view) {
+      $.ajax(event.url).done(function(resp) {
+        $("#opensession_" + event.id).html(resp).foundation('open');
+      });
+      return false;
+
+  },
+  eventRender: function (event, element, view) {
+      element.find('.fc-title').append('<div class="hr-line-solid-no-margin"></div><span style="font-size: 10px">'+event.description+'</span></div>');
+  },
+                      
+  eventResize: function(event, dayDelta, minuteDelta, revertFunc) {
+    return updateEvent(event);
+  },
+  eventAfterRender: function(event, element,view) {
+    if (moment(event.start).format('YYYY-M-D') == moment(new Date()).format('YYYY-M-D')) {
+      element.parent().addClass('fc-today');
+    } 
+  }
+});
+
+
+var updateEvent = function(the_event) {
+
+return $.update("/experiments/<%= @experiment.slug %>/<%= @instance.slug %>", {
+  event: {
+    title: the_event.title,
+    starts_at: "" + the_event.start,
+    ends_at: "" + the_event.end,
+    description: the_event.description
+    }
+  });
+};

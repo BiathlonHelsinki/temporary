@@ -34,6 +34,7 @@ Rails.application.routes.draw do
     resources :users
   end
   
+  resources :opensessions
   resources :experiments do
     resources :comments
     collection do
@@ -49,6 +50,7 @@ Rails.application.routes.draw do
         post :register
         post :cancel_rsvp
         post :cancel_registration
+        get :stats
       end
     end
 
