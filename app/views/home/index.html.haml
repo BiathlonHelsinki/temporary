@@ -174,7 +174,7 @@
                     = link_to 'RSVP!',  [post.experiment, post], class: [:button]
                 - unless post.rsvps.empty?
                   .participants
-                    = pluralize(post.rsvps.size, 'person') + ' has RSVPd'
+                    = pluralize(post.rsvps.size, 'person') +  (post.rsvps.size == 1 ? ' has ' : ' have ' ) + 'RSVPd'
             .body
               = truncate_html post.description, length: 500
               = link_to 'Read more...', [post.experiment, post], class: [:button]
