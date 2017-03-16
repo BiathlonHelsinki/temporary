@@ -4,7 +4,7 @@ class Admin::BaseController < ApplicationController
 
   before_action :authenticate_user!
   before_action :authenticate_admin!
-  load_and_authorize_resource except: [:home, :proposal, :resubmit, :toggle_key, :respend, :retransfer], find_by: :slug
+  load_and_authorize_resource except: [:home, :proposal, :reports, :resubmit, :toggle_key, :respend, :retransfer], find_by: :slug
   
   def authenticate_admin!
     redirect_to root_path unless current_user.has_role? :admin
@@ -19,6 +19,16 @@ class Admin::BaseController < ApplicationController
     @nfc.toggle!(:keyholder)
     redirect_to @nfc.user
   end
+  
+  
+  def reports
+    @most_giving = User.all.sort_by{|y| y.pledges.sum(&:pledge) }.reverse
+    @richest = User.all.order(latest_balance: :desc).limit(40)
+    #@most_earned = Activity.where(addition: 1).group_by(&:user).map{|x| [x.first.display_name, x.last.sum(&:value) ] }.sort_by{|x| x.last}.reverse
+    @generous = Activity.where(addition: 1).group_by(&:user).map{|x| [x.first, x.last.sum(&:value), x.first.pledges.sum(&:pledge)]}.sort_by{|x| (x.last.to_f/x[1].to_f) }.reverse
+    @stingiest = @generous.reverse
+  end
+  
   
   def respend
     api = BiathlonApi.new

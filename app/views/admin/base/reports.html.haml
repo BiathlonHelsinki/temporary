@@ -1,0 +1,47 @@
+.stats
+  .row.expanded
+    .small-12.colimns
+      %h1 Temporary user stats 
+      %p Do not make public!
+    
+  .row.expanded
+    .small-6.medium-4.large-3.columns
+      %h4 Current richest
+      %ol
+        - @richest.each do |user|
+          %li
+            = link_to user.display_name, user, target: :_blank
+            %span.stats= raw "#{user.latest_balance}#{tsign}"
+  
+    .small-6.medium-4.large-3.columns
+      %h4 Biggest spenders
+      %ol
+        - @most_giving.take(40).each do |user|
+          %li
+            = link_to user.display_name, user, target: :_blank
+            %span.stats= raw "pledged #{user.pledges.sum(&:pledge)}#{tsign}"
+              
+    .small-6.medium-4.large-3.columns
+      %h4 Most generous (%)
+      %ol
+        - @generous.take(20).each do |user|
+          %li
+            = link_to user.first.display_name, user.first, target: :_blank
+            %span.stats= raw "pledged #{user.last}#{tsign} of #{user[1]}#{tsign} earned (#{sprintf('%.2f', (user.last.to_f/user[1].to_f)* 100)}%)"
+    .small-6.medium-4.large-3.columns
+      %h4 Stingiest
+      %small (who have actually pledged)
+      %ol
+        - @generous.delete_if{|x| x.last == 0}.reverse.take(20).each do |user|
+          %li
+            = link_to user.first.display_name, user.first, target: :_blank
+            %span.stats= raw "pledged #{user.last}#{tsign} of #{user[1]}#{tsign} earned (#{sprintf('%.2f', (user.last.to_f/user[1].to_f)* 100)}%)"
+
+    .small-6.medium-4.large-3.columns
+      %h4 Stingiest
+      %small never pledged
+      %ol
+        - @stingiest.delete_if {|x| x.last.to_i != 0}.sort_by{|x| x[1]}.reverse.take(40).each do |user|
+          %li
+            = link_to user.first.display_name, user.first, target: :_blank
+            %span.stats= raw "pledged #{user.last}#{tsign} of #{user[1]}#{tsign} earned (#{sprintf('%.2f', (user.last.to_f/user[1].to_f)* 100)}%)"            

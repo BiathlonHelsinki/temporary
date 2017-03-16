@@ -148,3 +148,20 @@ nav.pagination {
     float: left;
   }
 }
+
+.stats {
+  a {
+    color: green;
+  }
+  ol {
+    li {
+      a {
+        color: green;
+      }
+      span.stats {
+        font-size: 0.8em;
+        color: #666;
+      }
+    }
+  }
+}

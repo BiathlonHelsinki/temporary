@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   
   namespace :admin do
     root to: 'base#home'
+    get :reports, to: 'base#reports'
     resources :activities
     resources :credits do
       member do
