@@ -77,8 +77,9 @@ class Instance < ApplicationRecord
   
   def cost_in_temps
     if custom_bb_fee.blank?
-      rate = Rate.get_current.experiment_cost
-      # if proposal.recurrence == 2 || proposal.recurrence == 3
+      if new_record? || spent_biathlon == false
+        rate = Rate.get_current.experiment_cost
+      
         start = rate
     
         for f in 1..(session_number-1)  do 
@@ -93,13 +94,14 @@ class Instance < ApplicationRecord
           end
         end
         return start
-      else
-        return custom_bb_fee.to_i
+      elsif spent_biathlon == true
+        return  pledges.sum(&:pledge)
       end
+    else
+      return custom_bb_fee.to_i
+    end
 
-    # else
-    #   return rate
-    # end
+
   end
   
   def is_full?

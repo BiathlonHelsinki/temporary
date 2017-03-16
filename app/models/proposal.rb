@@ -94,24 +94,32 @@ class Proposal < ApplicationRecord
   end
   
   def needed_for(val)
-    rate = Rate.get_current.experiment_cost
-    array = [rate]
-    if recurs?
-      for f in 1..val  do 
-        inrate = rate
-        f.times do
-          inrate *= 0.9;
-        end
-        if inrate < 20
-          start = 20
-        else
-          start = inrate.round
-        end
-        array.push(start)
-      end
-      return array[val]
+    if instances.published.empty?
+      rate = Rate.get_current.experiment_cost
+    elsif instances.published.order(:sequence)[val].nil?
+      rate = Rate.get_current.experiment_cost
     else
-      return rate
+      return instances.published.order(:sequence)[val].cost_in_temps
+    end
+    if rate
+      array = [rate]
+      if recurs?
+        for f in 1..val  do 
+          inrate = rate
+          f.times do
+            inrate *= 0.9;
+          end
+          if inrate < 20
+            start = 20
+          else
+            start = inrate.round
+          end
+          array.push(start)
+        end
+        return array[val]
+      else
+        return rate
+      end
     end
   end
   
@@ -135,11 +143,16 @@ class Proposal < ApplicationRecord
       if instances.published.empty?
         Rate.get_current.experiment_cost
       else
-        r = instances.published.order(:start_at).last.cost_in_temps * 0.9
-        if r.round < 20
-          20
+        # check if rate changed
+        if rate == instances.published.order(:start_at).first.cost_in_temps        
+          r = instances.published.order(:start_at).last.cost_in_temps * 0.9
+          if r.round < 20
+            20
+          else
+            r.round
+          end
         else
-          r.round
+          needed_for(instances.published.size)
         end
       end
     else
