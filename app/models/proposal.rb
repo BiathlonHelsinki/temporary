@@ -46,50 +46,77 @@ class Proposal < ApplicationRecord
   
   def needed_array
     rate = Rate.get_current.experiment_cost
-    array = [rate]
-    if intended_sessions.blank? || intended_sessions =~ /\D/
-      sesh = 35
+    if instances.published.empty?
+      array = [rate]
+      if intended_sessions.blank? || intended_sessions =~ /\D/
+        sesh = 35
+      else
+        sesh = intended_sessions - 1
+      end
+      if recurs?
+        for f in 1..sesh  do 
+          inrate = rate
+          f.times do
+            inrate *= 0.9;
+          end
+          if inrate < 20
+            start = 20
+          else
+            start = inrate.round
+          end
+          array.push(start)
+        end
+      end
+      return array
     else
-      sesh = intended_sessions - 1
-    end
-    if recurs?
-      for f in 1..sesh  do 
-        inrate = rate
-        f.times do
-          inrate *= 0.9;
+      out = instances.published.order(:start_at).map(&:cost_in_temps)
+      if intended_sessions.blank? || intended_sessions =~ /\D/
+        sesh = 35
+      else
+        sesh = intended_sessions - 1
+      end
+      if recurs?
+        for f in instances.published.size..sesh  do 
+          out.push(needed_for(f))
         end
-        if inrate < 20
-          start = 20
-        else
-          start = inrate.round
-        end
-        array.push(start)
+        return out
       end
     end
-    return array
   end
   
   def cumulative_needed_for(val)
+
     rate = Rate.get_current.experiment_cost
-    array = [rate]
-    cum = rate
-    if recurs?
-      for f in 1..val  do 
-        inrate = rate
-        f.times do
-          inrate *= 0.9;
+    if instances.published.empty?
+      array = [rate]
+      cum = rate
+      if recurs?
+        for f in 1..val  do 
+          inrate = rate
+          f.times do
+            inrate *= 0.9;
+          end
+          if inrate < 20
+            start = 20
+          else
+            start = inrate.round
+          end
+          array.push(start)
+          cum += start
         end
-        if inrate < 20
-          start = 20
-        else
-          start = inrate.round
-        end
-        array.push(start)
-        cum += start
+        return cum
+      else
+        return rate
       end
-      return cum
     else
-      return rate
+      already = instances.published.size
+      out = instances.published.sum(&:cost_in_temps)
+      if recurs?
+        for f in already..val do
+          out += needed_for(f)
+        end
+        return out
+      end
     end
   end
   

@@ -147,11 +147,14 @@
                 %em= pluralize(proposal.pledges.map(&:user).uniq.size, 'person') + ' pledged' 
               .reveal{id: 'proposal_pledge_info_' + proposal.id.to_s, :"data-reveal" => ''}
                 .title= link_to proposal.name, proposal
-
+                %strong 
+                  = raw "NOTE: The cost of experiments rose from 70 to 100#{tsign} on 15 March 2017."
                 - if proposal.recurs?
                   .recurring_explanation
                     Each recurring event gets a 10% discount in Temps from the previous meeting, until it gets down to 
                     = raw "20#{tsign}, which is the minimum."
+
+                  
                   .recurring_explanation
                     Number of meetings proposed:
                     - if proposal.intended_sessions == 0
@@ -203,7 +206,7 @@
                           - if proposal.instances.published.order(:start_at)[num-1].nil?
                             = proposal.has_for(num - 1).to_s
                           - else
-                            = proposal.instances.published.order(:start_at)[num-1].cost_in_temps.to_s
+                            = proposal.instances.published.order(:start_at)[num-1].cost_in_temps.to_s 
                           of
                           %strong
                             = proposal.needed_for(num-1).to_s
