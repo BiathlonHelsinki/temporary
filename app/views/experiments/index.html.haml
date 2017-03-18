@@ -20,9 +20,12 @@
   .row.expanded.section
     .small-12.columns
       %h1
-        = t :in_the_past
-
+        = t(:in_the_past) + '...'
+      
   .row.expanded#expandme.small-up-1.medium-up-2.large-up-4.xxlarge-up-5{:"data-equalizer" => '', :"data-equalize-by-row" => "true"}
     - @past.each do |exp|
       - cache  exp do
         = render partial: 'instances/experiment_instance_column', locals: {exp: exp, :"@experiment" =>  exp.experiment}
+  .row.expanded
+    .small-12.columns
+      %h2= link_to 'See all past experiments....', archive_experiments_path

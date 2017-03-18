@@ -26,6 +26,7 @@ Rails.application.routes.draw do
     resources :instances_users
     resources :experiments do
       resources :instances
+
     end
     resources :pages
     resources :posts
@@ -43,6 +44,7 @@ Rails.application.routes.draw do
       get :radial
       get :hierarchy
       get :calendar
+      get :archive
     end
     resources :instances, path: '' do
       resources :registrations, controller: :experiment_registrations

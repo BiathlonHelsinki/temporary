@@ -1,6 +1,11 @@
 class ExperimentsController < ApplicationController
   include ActionView::Helpers::SanitizeHelper
   
+  def archive
+    @past = Instance.includes([:translations, :users, :onetimers]).past.published.order(start_at: :desc).uniq
+    set_meta_tags title: 'Experiment archive'
+  end
+
   def calendar
     experiments = Experiment.where(nil)
     experiments = Experiment.published.between(params['start'], params['end']) if (params['start'] && params['end'])
@@ -51,8 +56,8 @@ class ExperimentsController < ApplicationController
   def index
     
     # @experiments = Instance.future.published.order(sequence: :asc).group_by(&:experiment)
-    @experiments = Instance.current.or(Instance.future).order(:start_at).uniq
-    @past = Instance.past.published.order(start_at: :desc).uniq
+    @experiments = Instance.includes(:translations).current.or(Instance.future.includes(:translations)).order(:start_at).uniq
+    @past = Instance.includes([:translations, :users, :onetimers]).past.published.order(start_at: :desc).limit(8).uniq
     set_meta_tags title: 'Experiments'
   end
   
