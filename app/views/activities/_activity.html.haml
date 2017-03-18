@@ -1,54 +1,54 @@
+= cache activity do
+  %tr.activity[activity]
+    %td
+      = l activity.created_at, format: :long
+    %td
+      - if activity.onetimer
 
-%tr.activity[activity]
-  %td
-    = l activity.created_at, format: :long
-  %td
-    - if activity.onetimer
-
-      - if activity.onetimer.claimed == true
-        - if activity.onetimer.user.nil?
-          = activity.onetimer.inspect
-        - else
+        - if activity.onetimer.claimed == true
+          - if activity.onetimer.user.nil?
+            = activity.onetimer.inspect
+          - else
           
-          = link_to activity.onetimer.user.display_name, activity.onetimer.user, target: :_blank
-      - else
-        anonymous person
-    - else
-      = link_to activity.user.display_name, activity.user, target: :_blank
-  %td
-    = raw activity.description
-
-  %td
-    = raw activity.linked_name
-    - if activity.extra && !activity.extra_info.blank?
-      - if activity.extra.class == Instance
-        = activity.extra_info
-        = link_to activity.extra.name, experiment_instance_path(activity.extra.experiment, activity.extra)
-
-  %td.temps
-    - unless activity.value.nil?
-      - if activity.addition == 1
-        = fa_icon('plus')
-      - if activity.addition == 0
-        - if activity.description =~ /received/ 
-          = fa_icon('arrows-h')
-        - if activity.description =~ /pledged/
-          = fa_icon('smile-o')
-        - if activity.description =~ /withdrew/
-          = fa_icon('frown-o')
-      - if activity.addition == -1
-        = fa_icon('minus')
-      = raw ("#{activity.value}#{raw tsign}")
-  %td
-    - if activity.ethtransaction
-      = link_to activity.ethtransaction.txaddress[0..5] + "...", "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank
-      
-      - if activity.ethtransaction.confirmed != true
-        - if activity.ethtransaction.created_at < 1.hour.ago
-          %span.error= fa_icon 'warning'
+            = link_to activity.onetimer.user.display_name, activity.onetimer.user, target: :_blank
         - else
-          = fa_icon 'clock-o'
-    - if activity.item_type == 'Credit'
-      - if activity.item.attachment?
-        %br/
-        = link_to fa_icon('sticky-note-o'), activity.item.attachment.url, target: :_blank
+          anonymous person
+      - else
+        = link_to activity.user.display_name, activity.user, target: :_blank
+    %td
+      = raw activity.description
+
+    %td
+      = raw activity.linked_name
+      - if activity.extra && !activity.extra_info.blank?
+        - if activity.extra.class == Instance
+          = activity.extra_info
+          = link_to activity.extra.name, experiment_instance_path(activity.extra.experiment, activity.extra)
+
+    %td.temps
+      - unless activity.value.nil?
+        - if activity.addition == 1
+          = fa_icon('plus')
+        - if activity.addition == 0
+          - if activity.description =~ /received/ 
+            = fa_icon('arrows-h')
+          - if activity.description =~ /pledged/
+            = fa_icon('smile-o')
+          - if activity.description =~ /withdrew/
+            = fa_icon('frown-o')
+        - if activity.addition == -1
+          = fa_icon('minus')
+        = raw ("#{activity.value}#{raw tsign}")
+    %td
+      - if activity.ethtransaction
+        = link_to activity.ethtransaction.txaddress[0..5] + "...", "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank
+      
+        - if activity.ethtransaction.confirmed != true
+          - if activity.ethtransaction.created_at < 1.hour.ago
+            %span.error= fa_icon 'warning'
+          - else
+            = fa_icon 'clock-o'
+      - if activity.item_type == 'Credit'
+        - if activity.item.attachment?
+          %br/
+          = link_to fa_icon('sticky-note-o'), activity.item.attachment.url, target: :_blank
