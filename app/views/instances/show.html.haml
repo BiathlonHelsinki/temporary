@@ -91,7 +91,7 @@
                   .row.expanded
                     .small-10.medium-8.columns
                       %h4 Registration form
-                      - if @instance.max_attendees - @instance.registrations.not_waiting.size < 1
+                      - if @instance.max_attendees.to_i - @instance.registrations.not_waiting.size < 1
                         %h5 Registration is currently full. However, you may register for the waiting list and you will be notified if a space becomes available.
                   = semantic_form_for  [ @instance.experiment, @instance,  @registration = @instance.registrations.build(user: current_user)], html: {:"data-abide" => '' } do |f|
                     = f.input :user_id, as: :hidden, data: {value: current_user.id}
