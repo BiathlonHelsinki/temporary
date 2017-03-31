@@ -29,6 +29,18 @@ header .nav_menu {
 
 }
 
+@media screen and (max-width: 39.9375em) {
+  header .nav_menu li {
+    font-size: 0.8rem;
+  }
+  
+  .subevent {
+    margin-bottom: 3.5rem;
+    padding-bottom: 3rem;
+    border-bottom: 4px solid black;
+  }
+}
+
 section.main .dos {
   padding-bottom: 4.688rem;
   border-bottom: 4px solid black;
