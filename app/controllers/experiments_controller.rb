@@ -56,7 +56,7 @@ class ExperimentsController < ApplicationController
   def index
     
     # @experiments = Instance.future.published.order(sequence: :asc).group_by(&:experiment)
-    @experiments = Instance.includes(:translations).current.or(Instance.future.includes(:translations)).order(:start_at).uniq
+    @experiments = Instance.includes(:translations).current.published.or(Instance.future.published.includes(:translations)).order(:start_at).uniq
     @past = Instance.includes([:translations, :users, :onetimers]).past.published.order(start_at: :desc).limit(8).uniq
     set_meta_tags title: 'Experiments'
   end
