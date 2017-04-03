@@ -1,4 +1,6 @@
 class Comment < ApplicationRecord
+  include PgSearch
+  multisearchable :against => :content
   belongs_to :item, polymorphic: true, touch: true
   belongs_to :user
   mount_uploader :image, ImageUploader

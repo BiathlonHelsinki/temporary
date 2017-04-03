@@ -1,5 +1,6 @@
 class Experiment < ApplicationRecord
   self.table_name = "events"
+  include PgSearch
   belongs_to :place
   belongs_to :primary_sponsor, class_name: 'User'
   belongs_to :secondary_sponsor, class_name: 'User'

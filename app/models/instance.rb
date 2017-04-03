@@ -1,4 +1,7 @@
 class Instance < ApplicationRecord
+  include PgSearch
+  has_many :instance_translations
+  multisearchable against: [:name, :description]
   belongs_to :experiment, foreign_key: 'event_id'
   belongs_to :place
   translates :name, :description, :fallbacks_for_empty_translations => true

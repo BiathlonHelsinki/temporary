@@ -78,6 +78,7 @@ gem 'omniauth-github'
 gem 'omniauth-twitter'
 gem "omniauth-google-oauth2"
 gem "paranoia", github: "rubysherpas/paranoia", branch: "rails5"
+gem 'pg_search'
 gem 'rack-utf8_sanitizer'
 gem "rails-observers", github: 'rails/rails-observers'
 gem 'redis-rails', '~> 5.0.1'

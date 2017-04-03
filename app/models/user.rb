@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  include PgSearch
+  multisearchable :against => [:name, :about_me, :twitter_name, :username]
   rolify
   TEMP_EMAIL_PREFIX = 'change@me'
   TEMP_EMAIL_REGEX = /\Achange@me/

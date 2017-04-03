@@ -1,4 +1,6 @@
 class Roombooking < ApplicationRecord
+  include PgSearch
+  multisearchable :against => [:purpose]
   belongs_to :user
   belongs_to :ethtransaction
   belongs_to :rate

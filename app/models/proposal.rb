@@ -1,4 +1,6 @@
 class Proposal < ApplicationRecord
+  include PgSearch
+  multisearchable :against => [:name, :short_description, :timeframe, :goals, :intended_participants]
   belongs_to :user
   has_many :images, as: :item, :dependent => :destroy
   has_many :pledges, as: :item, :dependent => :destroy
