@@ -29,8 +29,10 @@
                 - if user_signed_in?
                   - if current_user.registered?(@instance)
                     = link_to "Cancel registration!", '#', onclick:"javascript:$(document).scrollTo('#cancel_link', 800);return false;", class: [:button, :alert]
+                  - elsif !@instance.max_attendees.blank?
+                    = link_to "Register#{(@instance.max_attendees - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record? }.size < 1 ? ' for the waiting list' : '')}!", '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('.registration_form', 800);return false;", class: [:button]
                   - else
-                    = link_to "Register#{(@instance.max_attendees - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record? }.size) < 1 ? ' for the waiting list' : ''}!", '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('.registration_form', 800);return false;", class: [:button]
+                    = link_to "Register!", '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('.registration_form', 800);return false;", class: [:button]
                 - else
                   = link_to "Register#{(@instance.max_attendees - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record? }.size) < 1 ? ' for the waiting list' : ''}!", '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('.registration_form', 800);return false;", class: [:button]
             - else
