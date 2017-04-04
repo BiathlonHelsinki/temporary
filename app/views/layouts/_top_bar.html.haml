@@ -2,10 +2,10 @@
 .top-bar-left
   %ul.vertical.medium-horizontal.menu{"data-responsive-menu" => "drilldown medium-dropdown"}
     %li.has-submenu
-      = link_to 'Questions & Answers', '#',class: [:first, controller.controller_name == 'pages' ? :active : false]
+      = link_to t(:question_and_answers), '#',class: [:first, controller.controller_name == 'pages' ? :active : false]
       
       %ul.submenu.menu.vertical{"data-submenu" => ""}
-        %li= link_to 'What is Temporary?', page_path('what-is-temporary')
+        %li= link_to t(:what_is_temporary), page_path('what-is-temporary')
         %li= link_to 'How does it work?', page_path('how-does-it-work')
         %li= link_to 'Where is it?', page_path('where-is-it')
         %li= link_to 'When is it open?', page_path('when-is-temporary-open')
