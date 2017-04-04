@@ -233,9 +233,9 @@ fi:
   log_in_join: 'Kirjaudu/Liity'
   sign_in: 'Liity'
   why_join: 'Miksi liittyä?'
-  temporary_is_open_blurb: "Temporary is open every weekday as a free creative space for playing, working, socialising, or whatever else you'd like it to be."
+  temporary_is_open_blurb: "Temporary is open continuously as a free creative space for playing, working, socialising, or whatever else you'd like it to be."
   come_and_visit: 'Come and visit!'
-  evenings_and_weekends: 'On evenings and weekends we host special %{link}, proposed and organised by you.'
+  evenings_and_weekends: 'We regularly host special %{link}, proposed and organised by you.'
   find_out_more: 'Find out more...'
   calendar: 'Calendar'
   view_full_calendar: 'View full calendar'
