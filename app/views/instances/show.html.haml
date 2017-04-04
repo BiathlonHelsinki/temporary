@@ -25,7 +25,14 @@
                   = @instance.max_attendees - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record? }.size == 1 ? 'is' : 'are' 
                   = pluralize(@instance.max_attendees - @instance.registrations.not_waiting.size, 'place')
                   left.
-                = link_to 'Register!', '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('.registration_form', 800);return false;", class: [:button]
+                %br/
+                - if user_signed_in?
+                  - if current_user.registered?(@instance)
+                    = link_to "Cancel registration!", '#', onclick:"javascript:$(document).scrollTo('#cancel_link', 800);return false;", class: [:button, :alert]
+                  - else
+                    = link_to "Register#{(@instance.max_attendees - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record? }.size) < 1 ? ' for the waiting list' : ''}!", '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('.registration_form', 800);return false;", class: [:button]
+                - else
+                  = link_to "Register#{(@instance.max_attendees - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record? }.size) < 1 ? ' for the waiting list' : ''}!", '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('.registration_form', 800);return false;", class: [:button]
             - else
               - if user_signed_in?
 
@@ -81,14 +88,16 @@
                     %br/
                     %br/
               
-      - if @instance.in_future? && @instance.registration_open == true
+      - if @instance.in_future? # && @instance.registration_open == true
         .row.expanded
           .small-10.medium-8.columns
             - if user_signed_in?
               - if current_user.registered?(@instance)
-                %h5 You have registered for this event. Thank you, and we will see you there!
-                %h5 If you think you will not be able to attend, please cancel your registration, as a courtesy to others.
-                = link_to 'Cancel registration', cancel_registration_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button, :alert], data: {confirm: 'Are you sure you want to cancel your registration?'}
+                #cancel_link
+                  %h5 You have registered for this event. Thank you, and we will see you there!
+                  %h5 If you think you will not be able to attend, please cancel your registration, as a courtesy to others.
+                
+                  = link_to 'Cancel registration', cancel_registration_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button, :alert], data: {confirm: 'Are you sure you want to cancel your registration?'}
               - else
                 %h4
                   %strong You must register for this experiment.
@@ -99,9 +108,8 @@
                     left.
                     
             - else
-              %h4
-                The organiser of this experiment has requested that you RSVP if you are attending.
-                = link_to 'RSVP!', '/users/sign_in', class: [:button]
+              If you would like to register for this event, please
+              = link_to 'sign in.', '/users/sign_in'
         .row.expanded
           .small-10.medium-8.columns
             - if user_signed_in?
