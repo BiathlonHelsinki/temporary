@@ -22,7 +22,7 @@
                 You must register for this experiment.
                 - unless @instance.max_attendees.blank?
                   There 
-                  = @instance.max_attendees - @instance.registrations.not_waiting.size == 1 ? 'is' : 'are' 
+                  = @instance.max_attendees - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record? }.size == 1 ? 'is' : 'are' 
                   = pluralize(@instance.max_attendees - @instance.registrations.not_waiting.size, 'place')
                   left.
                 = link_to 'Register!', '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('.registration_form', 800);return false;", class: [:button]
@@ -61,6 +61,26 @@
   
   .rsvp_container      
     - if @instance.request_registration == true
+      - if user_signed_in?
+        - if current_user.has_role?(:admin) || current_user == @instance.experiment.primary_sponsor
+          .row.expanded
+            .small-10.medium-8.columns
+              %h3 Registrations:
+          .row.expanded
+            .small-10.medium-8.columns              
+              %ol
+                - @instance.registrations.each do |user|
+                  %li
+                    = link_to user.user.display_name, user.user, target: :_blank
+                    - if user.waiting_list == true
+                      %em waiting list
+                    %br/
+                    = [user.user.email, user.phone].compact.join(' / ')
+                    %br/
+                    = [user.question1, user.question2].compact.join(', ')
+                    %br/
+                    %br/
+              
       - if @instance.in_future? && @instance.registration_open == true
         .row.expanded
           .small-10.medium-8.columns
@@ -91,7 +111,7 @@
                   .row.expanded
                     .small-10.medium-8.columns
                       %h4 Registration form
-                      - if @instance.max_attendees.to_i - @instance.registrations.not_waiting.size < 1
+                      - if @instance.max_attendees.to_i - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record? }.size < 1
                         %h5 Registration is currently full. However, you may register for the waiting list and you will be notified if a space becomes available.
                   = semantic_form_for  [ @instance.experiment, @instance,  @registration = @instance.registrations.build(user: current_user)], html: {:"data-abide" => '' } do |f|
                     = f.input :user_id, as: :hidden, data: {value: current_user.id}
