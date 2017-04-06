@@ -233,23 +233,23 @@ fi:
   log_in_join: 'Kirjaudu/Liity'
   sign_in: 'Liity'
   why_join: 'Miksi liittyä?'
-  temporary_is_open_blurb: "Temporary is open every weekday as a free creative space for playing, working, socialising, or whatever else you'd like it to be."
-  come_and_visit: 'Come and visit!'
-  evenings_and_weekends: 'On evenings and weekends we host special %{link}, proposed and organised by you.'
-  find_out_more: 'Find out more...'
-  calendar: 'Calendar'
-  view_full_calendar: 'View full calendar'
-  announcements: 'Announcements'
-  person_says: '%{link} writes'
-  you_must_register_for_this_experiment: 'You must register for this experiment!'
+  temporary_is_open_blurb: "Temporary on aina avoinna oleva luova tila leikkimiseen, työskentelyyn, tapaamisiin tai mihin tahansa muuhun."
+  come_and_visit: 'Tervetuloa!'
+  evenings_and_weekends:
+  find_out_more: 'Lisätietoa...'
+  calendar: 'Kalenteri'
+  view_full_calendar: 'Tarkastele koko kalenteria'
+  announcements: 'Ilmoitukset'
+  person_says: '%{link} kirjoittaa'
+  you_must_register_for_this_experiment: 'Sinun täytyy rekisteröityä tätä kokeilua varten!'
   rsvp: 'RSVP!'
-  proposed_by_person: "Proposed by %{link}"
-  currently_pledged: "Currently pledged:"
-  scheduled: 'Scheduled!'
-  will_be_reviewed: "Will be reviewed for scheduling at next organisational meeting"
-  view: 'View'
-  still_needed: '%{amount} still needed'
-  pledge: 'Pledge!'
-  must_enter_valid_email: 'You must enter a valid email address to propose (or pledge towards) an experiment.'
-  propose_experiment: 'Propose experiment!'
+  proposed_by_person: "Ehdottanut %{link}"
+  currently_pledged: "Tuen määrä nyt:"
+  scheduled: 'Sovittu!'
+  will_be_reviewed: "Sovitaan seuraavassa tapaamisessa."
+  view: 'Näytä'
+  still_needed: '%{amount} puuttuu'
+  pledge: 'Tue!'
+  must_enter_valid_email: 'Sinun täytyy syöttää sähköpostiosoitteesi, jotta voit ehdottaa tai tukea kokeiluita.'
+  propose_experiment: 'Ehdota kokeilua!'
   
