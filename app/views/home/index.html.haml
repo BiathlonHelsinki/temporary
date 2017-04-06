@@ -11,17 +11,15 @@
     .inner
       .row.expanded
         .small-12.medium-9.columns.medium-centered
-          Temporary is open every weekday as a free creative space for playing, working, socialising, or whatever else you'd like it to be. 
-          = link_to 'Come and visit!', experiment_path('open-days')
+          = t(:temporary_is_open) 
+          = link_to t(:come_and_visit), experiment_path('open-days')
 
       .row.expanded
         .small-12.medium-9.columns.medium-centered
           %br/
-          On evenings & weekends we host special 
-          %strong= link_to 'experiments', experiments_path
-          %span>, proposed and organised by YOU! 
-          %br/
-          = link_to 'Find out more ...', page_path('how-does-it-work')
+          = t(:evenings_and_weekends, link: link_to(t(:experiments), experiments_path)) 
+
+          = link_to t(:find_out_more), page_path('how-does-it-work')
 
 .news_container
   %article.calendar{class: cycle('odd', 'even')}
@@ -30,11 +28,11 @@
         %span.date= Time.now.strftime("%B %Y")
         = "//"
         %span
-          = link_to  "Calendar",  calendar_experiments_path
+          = link_to t(:calendar),  calendar_experiments_path
         = "//"
       #calendar.small-centered
         
-      = link_to 'View full calendar', calendar_experiments_path, class: [:button]
+      = link_to t(:view_full_calendar), calendar_experiments_path, class: [:button]
       
   - unless @sticky.empty?
     %article.sizer{class: cycle('odd', 'even')}
@@ -59,7 +57,7 @@
           .meta
             %span.date= @open_day.start_at.strftime('%d.%m.%Y')
             = " // "
-            %span.category= link_to 'Experiments', experiments_path
+            %span.category= link_to t(:experiments), experiments_path
             = " // "
           .title= link_to (@open_day.start_at.to_date == Time.now.to_date ? 'Current' : 'Next') + ' open day:', experiment_instance_path(@open_day.experiment, @open_day)
           = link_to experiment_instance_path(@open_day.experiment, @open_day) do
@@ -81,13 +79,8 @@
             = " // "
           .title= link_to post.title, post
           - if post.image?
-            = image_tag post.image.url.gsub('development', 'production')
+            = image_tag post.image.url
           .body= raw post.body
-          
-
-                
-
-  
 
     
   - @feed.each do |post|
@@ -99,7 +92,7 @@
             .meta
               %span.date= post.sent_at.strftime('%d.%m.%Y')
               = " // "
-              %span.category Announcements
+              %span.category= t(:announcements)
               = " // "
             .title= link_to post.subject, "/announcements/#{post.slug}"
             .body
@@ -119,9 +112,8 @@
               = image_tag post.image.url
             .body
               .attribution
-                = link_to post.user.display_name, post.user
-                writes...
-
+                = raw t(:person_says, link: link_to(post.user.display_name, post.user))
+                  
               .content
                 %span.quote= raw "&ldquo;"
                 = raw post.content_linked
@@ -148,7 +140,7 @@
               %span.date= date_range(post.start_at, post.end_at)
               = "//"
               %span
-                = "Experiment "
+                = t(:experiment)
                 = "##{post.sequence}"
               = "//"
           
@@ -160,7 +152,7 @@
             - if post.in_future?
               - if post.request_registration == true
                 .rsvp
-                  = link_to 'You must register for this experiment!',[post.experiment, post]
+                  = link_to t(:you_must_register_for_this_experiment),[post.experiment, post]
               - else
                 .rsvp
                   - if user_signed_in?
@@ -168,10 +160,10 @@
                       You are going!
                     - else
                       Are you going?
-                      = link_to 'RSVP!', rsvp_experiment_instance_path(post.experiment, post), method: :post, class: [:button]
+                      = link_to t(:rsvp), rsvp_experiment_instance_path(post.experiment, post), method: :post, class: [:button]
                   - else
                     Are you going?
-                    = link_to 'RSVP!',  [post.experiment, post], class: [:button]
+                    = link_to t(:rsvp),  [post.experiment, post], class: [:button]
                 - unless post.rsvps.empty?
                   .participants
                     = pluralize(post.rsvps.size, 'person') +  (post.rsvps.size == 1 ? ' has ' : ' have ' ) + 'RSVPd'
@@ -190,22 +182,23 @@
             .title= link_to post.name, post
             - unless post.images.empty?
               %p= image_tag post.images.first.image.url(:medium)
-            .proposed_by= raw "Proposed by #{link_to post.user.display_name, post.user}"
+            .proposed_by= raw t(:proposed_by_person, link: link_to(post.user.display_name, post.user))
             .pledge_count
-              = raw "Currently pledged: #{post.pledged.to_s}#{tsign}"
+              = t(:currently_pledged)
+              = raw "#{post.pledged.to_s}#{tsign}"
             .needed
 
               - if post.has_enough?
                 - if post.scheduled?
-                  = "Scheduled!"
+                  = t(:scheduled)
                 - else
-                  = "Will be reviewed for scheduling at next organisational meeting"
+                  = t(:will_be_reviewed)
                   %br/
-                = link_to "View!", post, class: [:button, :small]
+                = link_to t(:view), post, class: [:button, :small]
               - else
-                = raw "#{post.needed_for_next - post.remaining_pledges}#{tsign} still needed"
+                = raw t(:still_needed, amount: raw("#{post.needed_for_next - post.remaining_pledges}#{tsign}"))
                 %br/
-                = link_to "Pledge!", post, class: [:button, :small]
+                = link_to t(:pledge), post, class: [:button, :small]
             .body
               %span.quote= raw "&ldquo;"
               = truncate_html post.short_description, length: 300

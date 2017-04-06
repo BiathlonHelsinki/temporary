@@ -18,9 +18,9 @@
     .row.expanded
       .small-8.columns.small-centered.medium-uncentered.medium-12
         - if current_user.email =~ /^change@me/ 
-          %p You must enter a valid email address to propose (or pledge towards) an experiment.
+          %p= t(:must_enter_valid_email)
         - else
-          = link_to 'Propose experiment!', new_proposal_path, class: [:button, :large]
+          = link_to t(:propose_experiment), new_proposal_path, class: [:button, :large]
   - else
     .row.expanded
       .small-8.columns.small-centered.medium-uncentered.medium-12

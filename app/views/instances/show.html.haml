@@ -34,7 +34,10 @@
                   - else
                     = link_to "Register!", '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('.registration_form', 800);return false;", class: [:button]
                 - else
-                  = link_to "Register#{(@instance.max_attendees - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record? }.size) < 1 ? ' for the waiting list' : ''}!", '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('.registration_form', 800);return false;", class: [:button]
+                  - if !@instance.max_attendees.blank?
+                    = link_to "Register#{(@instance.max_attendees - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record? }.size) < 1 ? ' for the waiting list' : ''}!", '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('.registration_form', 800);return false;", class: [:button]
+                  - else
+                    = link_to "Register!", '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('.registration_form', 800);return false;", class: [:button]
             - else
               - if user_signed_in?
 
