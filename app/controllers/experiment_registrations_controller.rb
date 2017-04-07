@@ -6,9 +6,11 @@ class ExperimentRegistrationsController < ApplicationController
       @experiment = Experiment.friendly.find(params[:experiment_id])
       @instance = @experiment.instances.friendly.find(params[:instance_id])
       r = Registration.new(instance: @instance, user: current_user)
-      if @instance.max_attendees - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record?}.size < 1
-        r.waiting_list = true
-        r.save
+      if @instance.max_attendees
+        if @instance.max_attendees - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record?}.size < 1
+          r.waiting_list = true
+          r.save
+        end
       end
       if r.update_attributes(params[:registration].permit!)
         

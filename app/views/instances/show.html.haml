@@ -37,7 +37,7 @@
                   - if !@instance.max_attendees.blank?
                     = link_to "Register#{(@instance.max_attendees - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record? }.size) < 1 ? ' for the waiting list' : ''}!", '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('.registration_form', 800);return false;", class: [:button]
                   - else
-                    = link_to "Register!", '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('.registration_form', 800);return false;", class: [:button]
+                    = link_to "Register!", '/users/sign_in', class: [:button]
             - else
               - if user_signed_in?
 
@@ -124,8 +124,9 @@
                   .row.expanded
                     .small-10.medium-8.columns
                       %h4 Registration form
-                      - if @instance.max_attendees.to_i - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record? }.size < 1
-                        %h5 Registration is currently full. However, you may register for the waiting list and you will be notified if a space becomes available.
+                      - unless @instance.max_attendees.blank?
+                        - if @instance.max_attendees.to_i - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record? }.size < 1
+                          %h5 Registration is currently full. However, you may register for the waiting list and you will be notified if a space becomes available.
                   = semantic_form_for  [ @instance.experiment, @instance,  @registration = @instance.registrations.build(user: current_user)], html: {:"data-abide" => '' } do |f|
                     = f.input :user_id, as: :hidden, data: {value: current_user.id}
 
