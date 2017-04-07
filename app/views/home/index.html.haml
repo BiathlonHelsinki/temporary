@@ -17,7 +17,7 @@
       .row.expanded
         .small-12.medium-9.columns.medium-centered
           %br/
-          = raw t(:evenings_and_weekends, link: link_to(t(:experiments), experiments_path)) 
+          = raw t(:evenings_and_weekends, link: link_to(t(:experiments).downcase, experiments_path)) 
 
           = link_to t(:find_out_more), page_path('how-does-it-work')
 
