@@ -4,7 +4,7 @@ class Admin::BaseController < ApplicationController
 
   before_action :authenticate_user!
   before_action :authenticate_admin!
-  load_and_authorize_resource except: [:home, :proposal, :reports, :resubmit, :toggle_key, :respend, :retransfer], find_by: :slug
+  load_and_authorize_resource except: [:home, :proposal, :reports, :resubmit, :delete_nfc, :toggle_key, :respend, :retransfer], find_by: :slug
   
   def authenticate_admin!
     redirect_to root_path unless current_user.has_role? :admin
@@ -19,6 +19,18 @@ class Admin::BaseController < ApplicationController
     @nfc.toggle!(:keyholder)
     redirect_to @nfc.user
   end
+  
+  def delete_nfc
+    @nfc = Nfc.find(params[:id])
+    user = @nfc.user
+    if @nfc.destroy
+      flash[:message] = 'Card deleted from database'
+    else
+      flash[:error] = 'There was an error deleting this card.'
+    end
+    redirect_to user
+  end
+
   
   
   def reports
