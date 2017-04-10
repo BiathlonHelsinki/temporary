@@ -97,7 +97,23 @@ class Instance < ApplicationRecord
           end
         end
         return start
-      elsif spent_biathlon == true
+      elsif spent_biathlon == true && pledges.empty?
+        rate =  Rate.order(:created_at).where(["created_at <= ?", created_at]).last.experiment_cost
+        start = rate
+    
+        for f in 1..(session_number-1)  do 
+          inrate = rate
+          f.times do
+            inrate *= 0.9;
+          end
+          if inrate < 20
+            start = 20
+          else
+            start = inrate.round
+          end
+        end
+        return start
+      else
         return  pledges.sum(&:pledge)
       end
     else

@@ -228,18 +228,58 @@ class Proposal < ApplicationRecord
       if intended_sessions == 0
         cumulative_needed_for(instances.published.size)
       else
-        for f in 1..(intended_sessions-1)  do 
-          inrate = rate
-          f.times do
-            inrate *= 0.9;
+        if instances.published.empty?
+          for f in 1..(intended_sessions-1)  do 
+            inrate = rate
+            f.times do
+              inrate *= 0.9;
+            end
+            if inrate < 20
+              start += 20
+            else
+              start += inrate.round
+            end
           end
-          if inrate < 20
-            start += 20
+          return start
+        else
+          if rate == instances.published.order(:start_at).first.cost_in_temps
+          
+            for f in 1..(intended_sessions-1)  do 
+              inrate = rate
+              f.times do
+                inrate *= 0.9;
+              end
+              if inrate < 20
+                start += 20
+              else
+                start += inrate.round
+              end
+            end
+            return start
+        
           else
-            start += inrate.round
+            addto = instances.published.map{|x| x.cost_in_temps}.sum
+            if instances.published.size == intended_sessions
+              start = 0
+            else
+              start = 0
+              for f in (instances.published.size)..(intended_sessions - 1)  do 
+                
+                inrate = rate
+                f.times do
+                  inrate *= 0.9;
+                end
+                if inrate < 20
+                  start += 20
+                else
+                  start += inrate.round
+                end
+              end
+            end
+
+            return start + addto
           end
         end
-        return start
       end
     else
       return rate
