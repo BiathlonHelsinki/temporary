@@ -38,7 +38,8 @@
             = fa_icon('frown-o')
         - if activity.addition == -1
           = fa_icon('minus')
-        = raw ("#{activity.value}#{raw tsign}")
+
+        = raw ("#{activity.value}#{activity.value.class == Fixnum ? tsign : ''}")
     %td
       - if activity.ethtransaction
         = link_to activity.ethtransaction.txaddress[0..5] + "...", "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank

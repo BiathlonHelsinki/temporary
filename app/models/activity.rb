@@ -22,7 +22,11 @@ class Activity < ApplicationRecord
     when 'Pledge'
       "<a href='/proposals/#{item.item.id}'>#{item.item.name}</a>"
     when 'Proposal'
-      "<a href='/proposals/#{item.id}'>#{item.name}</a>"
+      out = "<a href='/proposals/#{item.id}'>#{item.name}</a>"
+      if description =~ /status/ && description =~ /changed/
+        out += extra_info
+      end
+      out
     when 'NilClass'
       if item_type == 'Nfc'
         'erased an ID card'
@@ -36,8 +40,11 @@ class Activity < ApplicationRecord
         "#{item.display_name}  <br /><small>#{extra_info}</small>"
       elsif extra
         "<a href='/users/" + item.slug + "'>" + item.display_name + "</a> #{extra_info} <a href='/" + extra.class.table_name + "/#{extra.id.to_s}'>" + extra.name + "</a>"
+      elsif description =~ /joined/
+        ''
       else
         "<a href='/users/" + item.slug + "'>" + item.display_name + "</a>"
+
       end
     when 'Instance'
       "<a href='/experiments/#{item.experiment.slug}/#{item.slug}'>#{item.name}</a>"
@@ -89,10 +96,10 @@ class Activity < ApplicationRecord
   
   def value
     if item.class == Pledge
-      item.pledge
+      item.pledge.to_i
     elsif ethtransaction
-      ethtransaction.value
-    elsif extra.nil?
+      ethtransaction.value.to_i
+    elsif extra.nil? && (description !~ /changed/ && description !~ /status/)
       extra_info
     else
       nil
