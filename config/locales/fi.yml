@@ -1,5 +1,6 @@
 ---
 fi:
+  locale_name: 'Suomi'
   activerecord:
     errors:
       messages:
