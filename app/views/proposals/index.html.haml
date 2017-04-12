@@ -34,6 +34,11 @@
         needed for an experiment to begin:
         = raw (@current_rate.to_s + tsign)
         %small= link_to "(why?)", "/pages/how-does-it-work#number_5", target: :_blank
+        
+  - if @proposals.methods.include?(:total_pages)
+    .row.expanded
+      .small-12.medium-6.columns.medium-uncentered= paginate @proposals
+              
   %table.proposals
     %thead
       %tr
@@ -381,6 +386,11 @@
           .reveal.occluded[proposal]{:"data-reveal" => ''}= render partial: 'proposal_overlay', locals: {proposal: proposal}
         %tr.border_row
           %td.border{colspan:  5} &nbsp;
+          
+  - if @proposals.methods.include?(:total_pages)
+    .row.expanded
+      .small-12.medium-6.columns.medium-uncentered= paginate @proposals
+   
 = content_for :jquery do
   :plain
     $('table.proposals').cardtable();

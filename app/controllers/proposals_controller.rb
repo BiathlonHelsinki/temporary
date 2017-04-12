@@ -3,13 +3,13 @@ class ProposalsController < ApplicationController
   before_filter :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
 
   def archived
-    @needs_support_count = Proposal.active.to_a.delete_if{|x| x.has_enough? }.size
+    @needs_support_count = Proposal.active.to_a.delete_if{|x| x.has_enough_cached == true }.size
     @scheduled_count = Instance.future.or(Instance.current).map(&:proposal).uniq.size
-    @review_count = Proposal.active.to_a.delete_if{|x| !x.has_enough? }.delete_if{|x| !x.instances.published.empty? }.size
-    
+    @review_count = Proposal.active.to_a.delete_if{|x| x.has_enough_cached == false }.delete_if{|x| !x.instances.published.empty? }.size
+
     @next_meeting = Instance.next_meeting
     @current_rate = Rate.get_current.experiment_cost
-    @proposals = Proposal.includes([:instances, :pledges]).archived.order(updated_at: :desc)
+    @proposals = Proposal.includes([:user, :proposalstatus, :comments => [:user], :instances => [:experiment, :translations, :pledges], :pledges => [:user]]).archived.order(updated_at: :desc).page(params[:page]).per(10)
     set_meta_tags title: 'Archived proposals'
     # render text: 'the error is in the template'
     render template: 'proposals/index'

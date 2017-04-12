@@ -15,8 +15,8 @@ class Proposal < ApplicationRecord
   after_update :add_to_activity_feed_edited
   belongs_to :proposalstatus
   
-  scope :archived, -> () { where(stopped: true) }
-  scope :active, -> () { where(stopped: false) }
+  scope :archived, -> () { where("stopped = true OR proposalstatus_id is not null") }
+  scope :active, -> () { where(stopped: false, proposalstatus: nil)}
   before_save :update_column_caches
 
   def update_column_caches
