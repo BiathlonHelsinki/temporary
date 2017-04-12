@@ -89,8 +89,8 @@ class Proposal < ApplicationRecord
       end
       return array
     else
-      out = instances.published.order(:start_at).map(&:cost_in_temps)
-      if intended_sessions.blank? || intended_sessions =~ /\D/
+      out = instances.published.order(:start_at).map(&:cost_in_temps).map(&:to_i)
+      if intended_sessions.blank? || intended_sessions =~ /\D/  || intended_sessions == 0
         sesh = 35
       else
         sesh = intended_sessions - 1
