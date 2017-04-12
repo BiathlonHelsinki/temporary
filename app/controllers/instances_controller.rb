@@ -66,7 +66,7 @@ class InstancesController < ApplicationController
             current = Opensession.by_node(1).find_by(closed_at: nil )
           end
           @sessions = @sessions.sort_by{|x| x.id }
-          @potential_minutes = ((Time.current - @instance.start_at) / 60).to_i
+          @potential_minutes = ((Time.current - @instance.start_at.beginning_of_month) / 60).to_i
         end
       else
         flash[:notice] = 'No statistics available for regular experiments.'
