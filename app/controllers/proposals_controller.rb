@@ -85,6 +85,12 @@ class ProposalsController < ApplicationController
   
   
   def search
+    @needs_support_count = Proposal.active.to_a.delete_if{|x| x.has_enough_cached == true }.size
+    @scheduled_count = Instance.future.or(Instance.current).map(&:proposal).uniq.size
+    @review_count = Proposal.active.to_a.delete_if{|x| x.has_enough_cached == false }.delete_if{|x| !x.instances.published.empty? }.size
+
+    @next_meeting = Instance.next_meeting
+    @current_rate = Rate.get_current.experiment_cost
     @proposals = Proposal.search_all_text(params[:by_string])
     render template: 'proposals/index'
   end

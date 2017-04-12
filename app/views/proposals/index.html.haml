@@ -10,7 +10,7 @@
   .row.expanded
     .small-12.medium-6.columns.medium-uncentered
       %h1 
-        - if !params[:by_string].empty?
+        - if !params[:by_string].nil?
           Search results for:
           %em= params[:by_string]
         - else

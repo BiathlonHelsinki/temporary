@@ -1,7 +1,8 @@
 class Proposal < ApplicationRecord
   include PgSearch
   multisearchable :against => [:name, :short_description, :timeframe, :goals, :intended_participants]
-  pg_search_scope :search_all_text, :against => [:name, :short_description, :timeframe, :goals, :intended_participants]
+  pg_search_scope :search_all_text, :against => [:name, :short_description, :timeframe, :goals, :intended_participants],  :associated_against => {
+    :comments => [:content], :pledges => [:comment] }
   belongs_to :user
   has_many :images, as: :item, :dependent => :destroy
   has_many :pledges, as: :item, :dependent => :destroy

@@ -61,7 +61,7 @@
               .pledge_info
               
                 Supported by:
-                = raw @instance.pledges.order(:created_at).map{|pledge|   "#{link_to pledge.user.display_name, pledge.user} (#{pledge.pledge.to_s})" }.join(', ') 
+                = raw @instance.pledges.order(:created_at).group_by(&:user).map{|user| "#{link_to user.first.display_name, user.first} (#{user.last.sum(&:pledge).to_s})" }.join(', ')
               
         .temps= link_to fa_icon('download') + " Calendar", experiment_instance_path(@instance.experiment, @instance, format: 'ics'), class: [:button, :small]
         - if @instance.image?
