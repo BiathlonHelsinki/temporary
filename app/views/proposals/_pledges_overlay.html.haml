@@ -1,0 +1,105 @@
+.title= link_to proposal.name, proposal
+%strong 
+  = raw "NOTE: The cost of experiments rose from 70 to 100#{tsign} on 15 March 2017."
+- if proposal.recurs?
+  .recurring_explanation
+    Each recurring event gets a 10% discount in Temps from the previous meeting, until it gets down to 
+    = raw "20#{tsign}, which is the minimum."
+
+  
+  .recurring_explanation
+    Number of meetings proposed:
+    - if proposal.intended_sessions == 0
+      unknown/indefinite
+    - else
+      = proposal.intended_sessions.to_s
+    
+  %ul.table_right
+    - if proposal.intended_sessions == 0
+      - if proposal.instances.published.empty?
+        nothing scheduled
+      - else
+        - proposal.instances.published.order(:start_at).each do |instance|
+          %li
+            = "##{instance.session_number}: "
+            - if instance.in_future?
+              %strong= link_to 'SCHEDULED', experiment_instance_path(instance.experiment, instance)
+            - else
+              = link_to 'Took place on ' + instance.start_at.to_date.to_s, experiment_instance_path(instance.experiment, instance)
+            = " : "
+            = proposal.has_for(instance.session_number - 1).to_s
+            of 
+            %strong
+              = proposal.needed_for(instance.session_number - 1).to_s
+              = raw tsign
+        %li
+          = "##{proposal.published_instances + 1}: "
+          = link_to 'ACCEPTING MORE PLEDGES NOW:', new_proposal_pledge_path(proposal)
+          = proposal.has_for(proposal.published_instances )
+          out of
+          %strong
+            = proposal.needed_for(proposal.published_instances ).to_s
+            = raw tsign
+    - else              # NOT recurring indefinitely, but fixed
+      - (1..proposal.intended_sessions).each do |num|
+        %li
+          = "##{num}: "
+          - if proposal.instances.published.order(:start_at)[num-1].nil?
+            - if proposal.has_for(num - 1) >= proposal.needed_for(num - 1)
+              WAITING TO BE SCHEDULED
+            - else 
+              = link_to 'ACCEPTING MORE PLEDGES NOW: ', new_proposal_pledge_path(proposal)
+
+          - elsif proposal.instances.published.order(:start_at)[num-1].in_future?
+            %strong= link_to 'SCHEDULED', experiment_instance_path(proposal.instances.published.order(:start_at)[num-1].experiment, proposal.instances.published.order(:start_at)[num-1])
+          - else
+            = link_to 'Took place on ' + proposal.instances.published.order(:start_at)[num-1].start_at.to_date.to_s, experiment_instance_path(proposal.instances.published.order(:start_at)[num-1].experiment, proposal.instances.published.order(:start_at)[num-1])
+          = " : "
+          - if proposal.instances.published.order(:start_at)[num-1].nil?
+            = proposal.has_for(num - 1).to_s
+          - else
+            = proposal.instances.published.order(:start_at)[num-1].cost_in_temps.to_s 
+          of
+          %strong
+            = proposal.needed_for(num-1).to_s
+            = raw tsign
+          
+
+- else
+  .recurring_explanation
+    = raw @current_rate.to_s + tsign
+    must be pledged_cached before this proposal can be reviewed and scheduled.
+  %ul.table_right
+    %li
+    - if proposal.scheduled?
+      %strong= link_to 'SCHEDULED', experiment_instance_path(proposal.instances.first.experiment, proposal.instances.first)
+    - elsif proposal.has_enough_cached
+      %strong= link_to 'AWAITING REVIEW', experiment_instance_path(@next_meeting.experiment, @next_meeting), target: :_blank rescue 'Awaiting review'
+    - else
+      = link_to 'ACCEPTING MORE PLEDGES NOW: ',  new_proposal_pledge_path(proposal)
+    = proposal.remaining_pledges_cached.to_s
+    of
+    %strong
+      = proposal.total_needed_with_recurrence_cached.to_s
+      = raw tsign
+.total
+  TOTAL:
+  = proposal.pledged_cached.to_s
+  of 
+  %strong
+    = raw (proposal.total_needed_with_recurrence_cached.to_s + tsign)
+.pledge_info
+  %p
+    - if proposal.scheduled?
+      - unless proposal.spent == 0
+        Pledges spent:
+        = raw proposal.spent.to_s + tsign
+        %br/
+        = proposal.pledges.converted.group_by(&:user).map{|x| x.first.username + " (#{x.last.sum(&:pledge)})"}.join(', ')
+    - unless proposal.pledges.unconverted.empty?
+      %br/
+      %br/
+      Pending pledges: 
+      = raw proposal.remaining_pledges_cached.to_s + tsign
+      %br/
+      = proposal.pledges.unconverted.map{|x| x.user.username + " (#{x.pledge})"}.join(', ')

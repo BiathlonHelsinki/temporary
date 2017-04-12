@@ -17,7 +17,21 @@ class Proposal < ApplicationRecord
   
   scope :archived, -> () { where(stopped: true) }
   scope :active, -> () { where(stopped: false) }
+  before_save :update_column_caches
 
+  def update_column_caches
+    self.total_needed_with_recurrence_cached = total_needed_with_recurrence
+    self.needed_array_cached = needed_array
+    self.has_enough_cached = has_enough?
+    self.number_that_can_be_scheduled_cached = number_that_can_be_scheduled
+    self.pledgeable_cached  = pledgeable?
+    self.pledged_cached = pledged
+    self.remaining_pledges_cached = remaining_pledges
+    self.spent_cached = spent
+    self.published_instances = instances.published.size
+
+  end
+  
   def is_valid?
     proposalstatus.nil? || proposalstatus.slug != 'invalid'
   end
@@ -35,7 +49,7 @@ class Proposal < ApplicationRecord
   end
   
   def self.schedulable
-    active.to_a.delete_if{|x| x.remaining_pledges == 0}.delete_if{ |x| x.remaining_pledges < x.needed_for_next  }.sort_by(&:name)
+    active.includes(:pledges).to_a.delete_if{|x| x.remaining_pledges == 0}.delete_if{ |x| x.remaining_pledges < x.needed_for_next  }.sort_by(&:name)
   end
   
   def feed_date
@@ -48,7 +62,7 @@ class Proposal < ApplicationRecord
   
   def needed_array
     rate = Rate.get_current.experiment_cost
-    if instances.published.empty?
+    if published_instances == 0
       array = [rate]
       if intended_sessions.blank? || intended_sessions =~ /\D/
         sesh = 35
@@ -78,7 +92,7 @@ class Proposal < ApplicationRecord
         sesh = intended_sessions - 1
       end
       if recurs?
-        for f in instances.published.size..sesh  do 
+        for f in published_instances..sesh  do 
           out.push(needed_for(f))
         end
         return out
@@ -111,7 +125,7 @@ class Proposal < ApplicationRecord
         return rate
       end
     else
-      already = instances.published.size
+      already = published_instances
       out = instances.published.sum(&:cost_in_temps)
       if recurs?
         for f in already..val do
@@ -123,9 +137,10 @@ class Proposal < ApplicationRecord
   end
   
   def needed_for(val)
-    if instances.published.empty?
+    # YAML.load(needed_array_cached)[val]
+    if published_instances == 0
       rate = Rate.get_current.experiment_cost
-    elsif instances.published.order(:sequence)[val].nil?
+    elsif published_instances <= val # instances.published.order(:sequence)[val].nil?
       rate = Rate.get_current.experiment_cost
     else
       return instances.published.order(:sequence)[val].cost_in_temps
@@ -133,7 +148,7 @@ class Proposal < ApplicationRecord
     if rate
       array = [rate]
       if recurs?
-        for f in 1..val  do 
+        for f in 1..val  do
           inrate = rate
           f.times do
             inrate *= 0.9;
@@ -181,7 +196,7 @@ class Proposal < ApplicationRecord
             r.round
           end
         else
-          needed_for(instances.published.size)
+          needed_for(published_instances)
         end
       end
     else
@@ -201,17 +216,17 @@ class Proposal < ApplicationRecord
     rate = Rate.get_current.experiment_cost
     tally = 0
     if recurs?
-      if instances.published.size > needed_array.size
-        return (remaining_pledges / needed_array.last).to_i
-      elsif remaining_pledges > needed_array[(instances.published.size)..-1].sum
-        return needed_array[(instances.published.size).-1].size
+      if published_instances > YAML.load(needed_array_cached).size
+        return (remaining_pledges / YAML.load(needed_array_cached).last).to_i
+      elsif remaining_pledges > YAML.load(needed_array_cached)[(published_instances)..-1].sum
+        return YAML.load(needed_array_cached)[(published_instances).-1].size
       else
-        needed_array[(instances.published.size)..-1].each_with_index do |val, index|
+        YAML.load(needed_array_cached)[(published_instances)..-1].each_with_index do |val, index|
           tally += val
           if remaining_pledges >= tally
             next
           else
-            return index # - instances.published.size
+            return index # - published_instances
           end
         end
       end
@@ -222,11 +237,15 @@ class Proposal < ApplicationRecord
   
 
   def total_needed_with_recurrence
+  #   return 0
+  # end
+  #
+  # deftotal_backup
     rate = Rate.get_current.experiment_cost
     if recurs?
       start = rate
       if intended_sessions == 0
-        cumulative_needed_for(instances.published.size)
+        cumulative_needed_for(published_instances)
       else
         if instances.published.empty?
           for f in 1..(intended_sessions-1)  do 
@@ -259,11 +278,11 @@ class Proposal < ApplicationRecord
         
           else
             addto = instances.published.map{|x| x.cost_in_temps}.sum
-            if instances.published.size == intended_sessions
+            if published_instances == intended_sessions
               start = 0
             else
               start = 0
-              for f in (instances.published.size)..(intended_sessions - 1)  do 
+              for f in (published_instances)..(intended_sessions - 1)  do 
                 
                 inrate = rate
                 f.times do

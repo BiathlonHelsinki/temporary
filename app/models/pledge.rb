@@ -10,11 +10,19 @@ class Pledge < ApplicationRecord
   acts_as_paranoid
   validate :one_per_user
   belongs_to  :instance
-  
+
   after_save -> {
     if item.class == Proposal
-      ActiveRecord::Base.connection.execute "UPDATE proposals SET updated_at=now() WHERE id=#{item.id}"
+      logger.warn('saving cache, item pledged is ' + item.pledged_cached.to_s)
+      item.update_column_caches
+      
+      item.save! 
+      logger.warn('after save, item pledged is ' + item.pledged_cached.to_s)
+
+      # ActiveRecord::Base.connection.execute "UPDATE proposals SET updated_at=now() WHERE id=#{item.id}"
+
     end
+    
   }
   
   scope :unconverted, -> () { where('converted = 0 OR converted is null')}

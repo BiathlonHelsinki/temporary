@@ -11,7 +11,7 @@ class ActivitiesController < ApplicationController
         @activities = Kaminari.paginate_array(stringsearch.to_a.delete_if{|x| !x.searchable.respond_to?(:activities)}.map{|x| x.searchable.activities}.flatten.uniq.sort_by(&:created_at).reverse).page(params[:page]).per(40)
         # @activities = Activity.search_activity_feed(params[:by_string]).page(params[:page]).per(40)
       else
-        @activities = Activity.all.order(created_at: :desc).page(params[:page]).per(40)
+        @activities = Activity.all.includes(:user, :onetimer, :ethtransaction).order(created_at: :desc).page(params[:page]).per(40)
       end
     end
     set_meta_tags title: 'Activities'

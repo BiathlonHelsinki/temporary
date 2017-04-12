@@ -116,9 +116,11 @@ class User < ActiveRecord::Base
     api = BiathlonApi.new
     balance = api.api_get("/users/#{id}/get_balance")
     if balance
-      latest_balance = balance.to_i
-      latest_balance_checked_at = Time.now.to_i
-      save(validate: false)
+      unless balance.class == Hash
+        latest_balance = balance.to_i
+        latest_balance_checked_at = Time.now.to_i
+        save(validate: false)
+      end
     end
     
   end

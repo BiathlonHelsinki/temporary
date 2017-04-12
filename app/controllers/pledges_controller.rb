@@ -54,7 +54,7 @@ class PledgesController < ApplicationController
   
   def new
 
-    @item = Proposal.find(params[:proposal_id])
+    @item = Proposal.includes(:pledges => [:user]).find(params[:proposal_id])
     if @item.stopped? || !@item.is_valid?
       flash[:error] = 'This experiment has finished.'
       redirect_to proposals_path

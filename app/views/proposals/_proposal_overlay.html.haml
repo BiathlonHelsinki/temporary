@@ -1,0 +1,33 @@
+%h2= proposal.name
+= link_to 'See full proposal and comments', proposal, class: [:button]
+.title Description:
+.answer= simple_format proposal.short_description
+
+.title Goals:
+.answer= simple_format proposal.goals
+
+.title How often?
+.answer
+  - if proposal.recurrence == 1
+    One time only
+  - elsif proposal.recurrence == 2
+    Multiple meetings 
+    - if proposal.intended_sessions == 0
+      Planned indefinitely
+    - else
+      = " (#{proposal.intended_sessions} estimated)"
+  - elsif proposal.recurrence == 3
+    = 'Recurring regularly '
+    - if proposal.intended_sessions == 0
+      Planned indefinitely
+    - else
+      = " (#{proposal.intended_sessions} estimated)"
+
+  - else
+    One time only
+%br/
+.title Timeframe
+.answer= simple_format proposal.timeframe
+
+.title Intended participants:
+.answer= simple_format proposal.intended_participants

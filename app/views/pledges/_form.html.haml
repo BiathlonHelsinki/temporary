@@ -53,11 +53,11 @@
                 There are currently enough Temps pledged 
                 = raw "(#{@item.remaining_pledges}#{tsign})"
                 to schedule
-                = pluralize(@item.number_that_can_be_scheduled.to_s, @item.instances.published.empty? ? 'meeting' : 'more meeting') + "."
+                = pluralize(@item.number_that_can_be_scheduled.to_s, @item.published_instances == 0 ? 'meeting' : 'more meeting') + "."
                 - if @item.number_that_can_be_scheduled == 0
                   This proposal needs 
                   = raw "#{@item.needed_for_next - @item.remaining_pledges} more #{tsign}"
-                  pledged to happen again.
+                  = "pledged to happen#{@item.published_instances > 0 ? ' again.' : '.'}"
             - else
               %p
                 This experiment proposes to meet  
