@@ -1,6 +1,7 @@
 class Proposal < ApplicationRecord
   include PgSearch
   multisearchable :against => [:name, :short_description, :timeframe, :goals, :intended_participants]
+  pg_search_scope :search_all_text, :against => [:name, :short_description, :timeframe, :goals, :intended_participants]
   belongs_to :user
   has_many :images, as: :item, :dependent => :destroy
   has_many :pledges, as: :item, :dependent => :destroy
@@ -18,6 +19,8 @@ class Proposal < ApplicationRecord
   scope :archived, -> () { where("stopped = true OR proposalstatus_id is not null") }
   scope :active, -> () { where(stopped: false, proposalstatus: nil)}
   before_save :update_column_caches
+
+
 
   def update_column_caches
     self.total_needed_with_recurrence_cached = total_needed_with_recurrence

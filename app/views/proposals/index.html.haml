@@ -10,9 +10,16 @@
   .row.expanded
     .small-12.medium-6.columns.medium-uncentered
       %h1 
-        - if @proposals.first.stopped == true
-          Archived
-        Proposals
+        - if !params[:by_string].empty?
+          Search results for:
+          %em= params[:by_string]
+        - else
+          - if @proposals.first.stopped == true
+            Archived
+          Proposals
+    .small-12.medium-4.columns.medium-right
+      = form_tag '/search_proposals', :method => :post do
+        = text_field_tag 'by_string', params[:by_string],  placeholder: 'Search....'
 
   - if user_signed_in?
     .row.expanded
@@ -38,236 +45,218 @@
   - if @proposals.methods.include?(:total_pages)
     .row.expanded
       .small-12.medium-6.columns.medium-uncentered= paginate @proposals
-              
-  %table.proposals
-    %thead
-      %tr
-        %th Name
-        %th Proposed by
-        %th When?
-        %th.pledged_cached
-          Pledged 
+        
+        
+  - if @proposals.empty?
+    .row.expanded
+      .small-12.medium-6.columns.medium-uncentered
+        %h4= t :no_matching_proposals
+  - else
+    %table.proposals
+      %thead
+        %tr
+          %th Name
+          %th Proposed by
+          %th When?
+          %th.pledged_cached
+            Pledged 
 
-        %th Status
-    %tbody
-      - @proposals.each do |proposal|
-        - cache [proposal, current_user] do
-          %tr
-            %td.name.sub
-              = link_to proposal.name, proposal
-              = link_to fa_icon('info-circle'), '#', :"data-open" => "proposal_#{proposal.id.to_s}", class: 'hide-for-small-only'
+          %th Status
+      %tbody
+        - @proposals.each do |proposal|
+          - cache [proposal, current_user] do
+            %tr
+              %td.name.sub
+                = link_to proposal.name, proposal
+                = link_to fa_icon('info-circle'), '#', :"data-open" => "proposal_#{proposal.id.to_s}", class: 'hide-for-small-only'
 
-            %td
-              .avatar= link_to image_tag(proposal.user.avatar.url(:thumb).gsub(/development/, 'production')), proposal.user
-              .user= link_to proposal.user.display_name, proposal.user
-              - if user_signed_in?
-                - if current_user == proposal.user || current_user.has_role?(:admin)
-                  %br/
-                  = link_to 'Edit proposal', edit_proposal_path(proposal), class: [:button, :tiny], style: 'float: left; font-size: 0.7em; margin: 0.5rem 0;'
-            %td
-              .recurrence
-                - if proposal.recurrence == 2
-                  - if proposal.intended_sessions == 0
-                    Multiple meetings proposed
-                  - else  
-                    %p= proposal.intended_sessions.to_s + " meetings proposed"
+              %td
+                .avatar= link_to image_tag(proposal.user.avatar.url(:thumb).gsub(/development/, 'production')), proposal.user
+                .user= link_to proposal.user.display_name, proposal.user
+                - if user_signed_in?
+                  - if current_user == proposal.user || current_user.has_role?(:admin)
+                    %br/
+                    = link_to 'Edit proposal', edit_proposal_path(proposal), class: [:button, :tiny], style: 'float: left; font-size: 0.7em; margin: 0.5rem 0;'
+              %td
+                .recurrence
+                  - if proposal.recurrence == 2
+                    - if proposal.intended_sessions == 0
+                      Multiple meetings proposed
+                    - else  
+                      %p= proposal.intended_sessions.to_s + " meetings proposed"
+                      - unless proposal.intended_sessions == 0
+                        %p
+                          = raw (proposal.total_needed_with_recurrence_cached.to_s + tsign)
+                          total needed to schedule the complete experiment
+                    
+                  - if proposal.recurrence == 3
+                    Happens regularly
                     - unless proposal.intended_sessions == 0
                       %p
-                        = raw (proposal.total_needed_with_recurrence_cached.to_s + tsign)
-                        total needed to schedule the complete experiment
-                    
-                - if proposal.recurrence == 3
-                  Happens regularly
-                  - unless proposal.intended_sessions == 0
-                    %p
-                      = proposal.intended_sessions.to_s + " meetings proposed"
-                    %p
-                      = raw (proposal.total_needed_with_recurrence_cached.to_s + tsign)
-                      total needed to schedule the complete experiment                      
-                - if proposal.scheduled?    
-                  - if proposal.recurrence != 1
-                    - if proposal.instances.first.experiment.instances.future.or(proposal.instances.first.experiment.instances.current).empty?
-                      - if proposal.stopped == true
-                        %p Experiment completed
-                      - else
-                        %p None currently upcoming
-                    - else
+                        = proposal.intended_sessions.to_s + " meetings proposed"
                       %p
-                        - if proposal.instances.first.experiment.instances.future.size > 1
-                          = link_to fa_icon('calendar'), '#', onclick: "javascript:$('ul#upcoming_events_#{proposal.id.to_s}').slideToggle();return false;"
-                        = proposal.instances.first.experiment.instances.future.size.to_s
-                        upcoming, next at:
+                        = raw (proposal.total_needed_with_recurrence_cached.to_s + tsign)
+                        total needed to schedule the complete experiment                      
+                  - if proposal.scheduled?    
+                    - if proposal.recurrence != 1
+                      - if proposal.instances.first.experiment.instances.future.or(proposal.instances.first.experiment.instances.current).empty?
+                        - if proposal.stopped == true
+                          %p Experiment completed
+                        - else
+                          %p None currently upcoming
+                      - else
+                        %p
+                          - if proposal.instances.first.experiment.instances.future.size > 1
+                            = link_to fa_icon('calendar'), '#', onclick: "javascript:$('ul#upcoming_events_#{proposal.id.to_s}').slideToggle();return false;"
+                          = proposal.instances.first.experiment.instances.future.size.to_s
+                          upcoming, next at:
 
 
-                      %ul
-                        - a = proposal.instances.first.experiment.instances.future.or(proposal.instances.first.experiment.instances.current).order(:start_at).first
-                        %li
-                          = link_to a.name, experiment_instance_path(a.experiment, a)
-                          %br/
-                          %em= date_range(a.start_at, a.end_at)
+                        %ul
+                          - a = proposal.instances.first.experiment.instances.future.or(proposal.instances.first.experiment.instances.current).order(:start_at).first
+                          %li
+                            = link_to a.name, experiment_instance_path(a.experiment, a)
+                            %br/
+                            %em= date_range(a.start_at, a.end_at)
                       
                     
-                      %ul.hidden_list{id: "upcoming_events_#{proposal.id.to_s}"}
-                        - proposal.instances.first.experiment.instances.future.or(proposal.instances.first.experiment.instances.current).order(:start_at).each do |i|
-                          %li
-                            = link_to i.name, experiment_instance_path(i.experiment, i)
-                            %br/
-                            %em= date_range(i.start_at, i.end_at)
+                        %ul.hidden_list{id: "upcoming_events_#{proposal.id.to_s}"}
+                          - proposal.instances.first.experiment.instances.future.or(proposal.instances.first.experiment.instances.current).order(:start_at).each do |i|
+                            %li
+                              = link_to i.name, experiment_instance_path(i.experiment, i)
+                              %br/
+                              %em= date_range(i.start_at, i.end_at)
                           
                           
-                  - else 
-                    - unless proposal.instances.first.experiment.instances.published.future.empty?
+                    - else 
+                      - unless proposal.instances.first.experiment.instances.published.future.empty?
           
+                        %br/
+                        %em Next at:
+                        %ul
+                          - proposal.instances.first.experiment.instances.published.future.order(:start_at).each do |i|
+                            %li
+                              = link_to i.name, experiment_instance_path(i.experiment, i)
+                              %em= date_range(i.start_at, i.end_at)
+                    - unless proposal.instances.past.empty?
+                      %p &nbsp;
+                      %p Last meeting:
+                      = link_to proposal.instances.past.order(:end_at).last.name, [proposal.instances.first.experiment, proposal.instances.first]
                       %br/
-                      %em Next at:
-                      %ul
-                        - proposal.instances.first.experiment.instances.published.future.order(:start_at).each do |i|
-                          %li
-                            = link_to i.name, experiment_instance_path(i.experiment, i)
-                            %em= date_range(i.start_at, i.end_at)
-                  - unless proposal.instances.past.empty?
-                    %p &nbsp;
-                    %p Last meeting:
-                    = link_to proposal.instances.past.order(:end_at).last.name, [proposal.instances.first.experiment, proposal.instances.first]
-                    %br/
-                    %em= date_range(proposal.instances.past.order(:end_at).last.start_at, proposal.instances.past.order(:end_at).last.end_at)
-                    .attended= pluralize(proposal.instances.past.order(:end_at).last.users.size + proposal.instances.past.order(:end_at).last.onetimers.unclaimed.size, 'person') + " participated" 
-            %td.pledge_info
-              - if proposal.stopped == true || (proposal.scheduled? && (!proposal.recurs? || proposal.intended_sessions == proposal.published_instances))
-                = raw(proposal.pledged_cached.to_s + tsign)
-                %small
-                  out of 
-                  = proposal.total_needed_with_recurrence_cached
-                  -#- if proposal.recurrence == 2 || proposal.recurrence == 3 
-                  -#  = " / #{proposal.total_needed_with_recurrence_cached}"
-              - else
-                = raw(proposal.remaining_pledges.to_s + tsign)
-                %small
-                  out of 
-                  = proposal.needed_for_next
-                  -#- if (proposal.recurrence == 2 || proposal.recurrence == 3 ) &&  proposal.intended_sessions != 0
-                  -#  = " / #{proposal.total_needed_with_recurrence_cached - proposal.spent}"
-              = link_to fa_icon('info-circle'), '#' , :"data-open" => "proposal_pledge_info_#{proposal.id.to_s}"
-              .metadata
-                %em= pluralize(proposal.pledges.map(&:user).uniq.size, 'person') + ' pledged' 
-              .reveal{id: 'proposal_pledge_info_' + proposal.id.to_s, :"data-reveal" => ''}= render partial: 'pledges_overlay', locals: {proposal: proposal}
+                      %em= date_range(proposal.instances.past.order(:end_at).last.start_at, proposal.instances.past.order(:end_at).last.end_at)
+                      .attended= pluralize(proposal.instances.past.order(:end_at).last.users.size + proposal.instances.past.order(:end_at).last.onetimers.unclaimed.size, 'person') + " participated" 
+              %td.pledge_info
+                - if proposal.stopped == true || (proposal.scheduled? && (!proposal.recurs? || proposal.intended_sessions == proposal.published_instances))
+                  = raw(proposal.pledged_cached.to_s + tsign)
+                  %small
+                    out of 
+                    = proposal.total_needed_with_recurrence_cached
+                    -#- if proposal.recurrence == 2 || proposal.recurrence == 3 
+                    -#  = " / #{proposal.total_needed_with_recurrence_cached}"
+                - else
+                  = raw(proposal.remaining_pledges.to_s + tsign)
+                  %small
+                    out of 
+                    = proposal.needed_for_next
+                    -#- if (proposal.recurrence == 2 || proposal.recurrence == 3 ) &&  proposal.intended_sessions != 0
+                    -#  = " / #{proposal.total_needed_with_recurrence_cached - proposal.spent}"
+                = link_to fa_icon('info-circle'), '#' , :"data-open" => "proposal_pledge_info_#{proposal.id.to_s}"
+                .metadata
+                  %em= pluralize(proposal.pledges.map(&:user).uniq.size, 'person') + ' pledged' 
+                .reveal{id: 'proposal_pledge_info_' + proposal.id.to_s, :"data-reveal" => ''}= render partial: 'pledges_overlay', locals: {proposal: proposal}
 
 
                     
 
-              .pledge_buttons
-                - unless proposal.stopped == true
-                  - if proposal.recurs?
+                .pledge_buttons
+                  - unless proposal.stopped == true
+                    - if proposal.recurs?
  
-                    - if user_signed_in? && proposal.pledgeable?
-                      - if current_user.active_pledge?(proposal)
-                        = link_to 'Edit pledge', edit_proposal_pledge_path(proposal,current_user.pledges.unconverted.find_by(item:proposal) ), class: [:button, :small]
-                      - elsif current_user.has_pledged?(proposal) && proposal.pledgeable?
-                        = link_to raw("Pledge more #{tsign}!"), new_proposal_pledge_path(proposal), class: [:button, :small]                      
-                      - else
-                        = link_to raw("Pledge #{tsign}!"), new_proposal_pledge_path(proposal), class: [:button, :small]
-                    - elsif proposal.pledgeable?
-                      = link_to raw("Pledge #{tsign}!"), page_path('why-join'), class: [:button, :small]
+                      - if user_signed_in? && proposal.pledgeable?
+                        - if current_user.active_pledge?(proposal)
+                          = link_to 'Edit pledge', edit_proposal_pledge_path(proposal,current_user.pledges.unconverted.find_by(item:proposal) ), class: [:button, :small]
+                        - elsif current_user.has_pledged?(proposal) && proposal.pledgeable?
+                          = link_to raw("Pledge more #{tsign}!"), new_proposal_pledge_path(proposal), class: [:button, :small]                      
+                        - else
+                          = link_to raw("Pledge #{tsign}!"), new_proposal_pledge_path(proposal), class: [:button, :small]
+                      - elsif proposal.pledgeable?
+                        = link_to raw("Pledge #{tsign}!"), page_path('why-join'), class: [:button, :small]
 
               
-                  - else
-                    - if user_signed_in? && proposal.pledgeable?
-                      - unless proposal.stopped? || (proposal.scheduled? && proposal.instances.published.future.empty?)
+                    - else
+                      - if user_signed_in? && proposal.pledgeable?
+                        - unless proposal.stopped? || (proposal.scheduled? && proposal.instances.published.future.empty?)
+                          - if current_user.active_pledge?(proposal)
+                            = link_to 'Edit pledge', edit_proposal_pledge_path(proposal,current_user.pledges.unconverted.where(item:proposal).first), class: [:button, :small]
+                          - elsif current_user.has_pledged?(proposal) && proposal.pledgeable?
+                            = link_to raw("Pledge more #{tsign}!"), new_proposal_pledge_path(proposal), class: [:button, :small]
+                          -elsif proposal.pledgeable?
+                            = link_to raw("Pledge #{tsign}!"), new_proposal_pledge_path(proposal), class: [:button, :small]
+                      - elsif user_signed_in? && !proposal.pledgeable?
                         - if current_user.active_pledge?(proposal)
                           = link_to 'Edit pledge', edit_proposal_pledge_path(proposal,current_user.pledges.unconverted.where(item:proposal).first), class: [:button, :small]
-                        - elsif current_user.has_pledged?(proposal) && proposal.pledgeable?
-                          = link_to raw("Pledge more #{tsign}!"), new_proposal_pledge_path(proposal), class: [:button, :small]
-                        -elsif proposal.pledgeable?
-                          = link_to raw("Pledge #{tsign}!"), new_proposal_pledge_path(proposal), class: [:button, :small]
-                    - elsif user_signed_in? && !proposal.pledgeable?
-                      - if current_user.active_pledge?(proposal)
-                        = link_to 'Edit pledge', edit_proposal_pledge_path(proposal,current_user.pledges.unconverted.where(item:proposal).first), class: [:button, :small]
                         
-              - if user_signed_in?
-                - if current_user.has_pledged?(proposal)
-                  .my_pledge
-                    - unless current_user.pending_pledges.where(item:proposal).empty?
-                      = raw "You pledged #{current_user.pending_pledges.where(item:proposal).sum(&:pledge)}#{tsign} "
-                    - unless current_user.spent_pledges.where(item:proposal).empty?
-                      %br/
-                      = raw "You spent #{current_user.spent_pledges.where(item:proposal).sum(&:pledge)}#{tsign}"
+                - if user_signed_in?
+                  - if current_user.has_pledged?(proposal)
+                    .my_pledge
+                      - unless current_user.pending_pledges.where(item:proposal).empty?
+                        = raw "You pledged #{current_user.pending_pledges.where(item:proposal).sum(&:pledge)}#{tsign} "
+                      - unless current_user.spent_pledges.where(item:proposal).empty?
+                        %br/
+                        = raw "You spent #{current_user.spent_pledges.where(item:proposal).sum(&:pledge)}#{tsign}"
               
 
-            %td
-              - if proposal.proposalstatus.nil?
-                - if proposal.scheduled?
+              %td
+                - if proposal.proposalstatus.nil?
+                  - if proposal.scheduled?
             
-                  - if proposal.recurs?
-                    - if proposal.instances.current.or(proposal.instances.future).empty?
-                      - if proposal.intended_sessions == 0
-                        .status To be continued...
-                      - elsif proposal.intended_sessions.size > proposal.published_instances
-                        - if proposal.remaining_pledges_cached < proposal.needed_for_next
-                          .status
-                            Needs more
-                            = raw tsign
-                            to continue!
+                    - if proposal.recurs?
+                      - if proposal.instances.current.or(proposal.instances.future).empty?
+                        - if proposal.intended_sessions == 0
+                          .status To be continued...
+                        - elsif proposal.intended_sessions.size > proposal.published_instances
+                          - if proposal.remaining_pledges_cached < proposal.needed_for_next
+                            .status
+                              Needs more
+                              = raw tsign
+                              to continue!
 
+                        - else
+                          .status Pledging completed
                       - else
-                        .status Pledging completed
+                        .status Scheduled
+
+                  
+                    - elsif proposal.instances.current.or(proposal.instances.future).empty?
+                      .status Completed
                     - else
                       .status Scheduled
-
+                    - if !proposal.next_instance.nil?
+                      - if proposal.next_instance.end_at < Time.current
+                        = link_to proposal do
+                          Error
+                      - else
+                        = link_to proposal do
                   
-                  - elsif proposal.instances.current.or(proposal.instances.future).empty?
-                    .status Completed
-                  - else
-                    .status Scheduled
-                  - if !proposal.next_instance.nil?
-                    - if proposal.next_instance.end_at < Time.current
-                      = link_to proposal do
-                        Error
-                    - else
-                      = link_to proposal do
-                  
+                          - if proposal.recurs?
+                            - if proposal.intended_sessions == 0 || proposal.pledged_cached < proposal.total_needed_with_recurrence_cached
+                              .status.below but accepting more pledges   !           
                         - if proposal.recurs?
-                          - if proposal.intended_sessions == 0 || proposal.pledged_cached < proposal.total_needed_with_recurrence_cached
-                            .status.below but accepting more pledges   !           
-                      - if proposal.recurs?
-                        .recurrence
-                          - if proposal.intended_sessions == 0
-                            - if (proposal.needed_for_next - proposal.remaining_pledges_cached) > 0 
-                              = raw "#{(proposal.needed_for_next - proposal.remaining_pledges_cached)} more #{tsign} needed to schedule next meeting (##{proposal.published_instances + 1})"
-                            - else
-                              Enough Temps are pledged_cached to schedule
-                              = proposal.number_that_can_be_scheduled_cached.to_s
-                              more meeting(s)
-                          - elsif  proposal.intended_sessions > proposal.published_instances 
-                            - if (proposal.needed_for_next - proposal.remaining_pledges_cached) > 0 
-                              = raw "#{(proposal.needed_for_next - proposal.remaining_pledges_cached)} more #{tsign} needed to schedule next meeting (##{proposal.published_instances + 1})"
-                            - else
-                              Enough Temps are pledged_cached to schedule
-                              = proposal.number_that_can_be_scheduled_cached.to_s
-                              more meeting(s)
-                    
-
-                          - elsif (proposal.total_needed_with_recurrence_cached - proposal.spent - proposal.remaining_pledges_cached) == 0
-                            %p
-                              All required
-                              = raw tsign
-                              have been pledged and/or spent.
-                    
-                          - else
-                            = raw "#{proposal.total_needed_with_recurrence_cached - proposal.spent - proposal.remaining_pledges_cached} more #{tsign} needed to schedule all #{proposal.intended_sessions.to_s} proposed #{'meeting'.pluralize(proposal.intended_sessions)}."
-                        
-
-                  - else 
-                    - if proposal.instances.first.experiment.end_date < Time.current && proposal.instances.first.experiment.instances.future.empty?
-                      - if proposal.recurs?
-                        - if true == true
-                          -#= link_to proposal do
-                          -#  .status.completed and accepting more pledges
                           .recurrence
-                            - if proposal.intended_sessions > proposal.published_instances || proposal.intended_sessions == 0 
-                              - if (proposal.needed_for_next - proposal.remaining_pledges_cached) > 0 && !proposal.instances.published.empty?
-                            
+                            - if proposal.intended_sessions == 0
+                              - if (proposal.needed_for_next - proposal.remaining_pledges_cached) > 0 
                                 = raw "#{(proposal.needed_for_next - proposal.remaining_pledges_cached)} more #{tsign} needed to schedule next meeting (##{proposal.published_instances + 1})"
-
+                              - else
+                                Enough Temps are pledged_cached to schedule
+                                = proposal.number_that_can_be_scheduled_cached.to_s
+                                more meeting(s)
+                            - elsif  proposal.intended_sessions > proposal.published_instances 
+                              - if (proposal.needed_for_next - proposal.remaining_pledges_cached) > 0 
+                                = raw "#{(proposal.needed_for_next - proposal.remaining_pledges_cached)} more #{tsign} needed to schedule next meeting (##{proposal.published_instances + 1})"
+                              - else
+                                Enough Temps are pledged_cached to schedule
+                                = proposal.number_that_can_be_scheduled_cached.to_s
+                                more meeting(s)
                     
 
                             - elsif (proposal.total_needed_with_recurrence_cached - proposal.spent - proposal.remaining_pledges_cached) == 0
@@ -278,118 +267,142 @@
                     
                             - else
                               = raw "#{proposal.total_needed_with_recurrence_cached - proposal.spent - proposal.remaining_pledges_cached} more #{tsign} needed to schedule all #{proposal.intended_sessions.to_s} proposed #{'meeting'.pluralize(proposal.intended_sessions)}."
+                        
+
+                    - else 
+                      - if proposal.instances.first.experiment.end_date < Time.current && proposal.instances.first.experiment.instances.future.empty?
+                        - if proposal.recurs?
+                          - if true == true
+                            -#= link_to proposal do
+                            -#  .status.completed and accepting more pledges
+                            .recurrence
+                              - if proposal.intended_sessions > proposal.published_instances || proposal.intended_sessions == 0 
+                                - if (proposal.needed_for_next - proposal.remaining_pledges_cached) > 0 && !proposal.instances.published.empty?
+                            
+                                  = raw "#{(proposal.needed_for_next - proposal.remaining_pledges_cached)} more #{tsign} needed to schedule next meeting (##{proposal.published_instances + 1})"
+
+                    
+
+                              - elsif (proposal.total_needed_with_recurrence_cached - proposal.spent - proposal.remaining_pledges_cached) == 0
+                                %p
+                                  All required
+                                  = raw tsign
+                                  have been pledged and/or spent.
+                    
+                              - else
+                                = raw "#{proposal.total_needed_with_recurrence_cached - proposal.spent - proposal.remaining_pledges_cached} more #{tsign} needed to schedule all #{proposal.intended_sessions.to_s} proposed #{'meeting'.pluralize(proposal.intended_sessions)}."
                    
                         
-                    - elsif proposal.instances.first.experiment.instances.future.empty?
-                      - if proposal.stopped
-                        = link_to proposal do
-                          .status Completed
-                      - elsif proposal.has_enough_cached
+                      - elsif proposal.instances.first.experiment.instances.future.empty?
+                        - if proposal.stopped
+                          = link_to proposal do
+                            .status Completed
+                        - elsif proposal.has_enough_cached
 
+                          = link_to proposal do
+                            .status
+                              Awaiting review
+                              - if proposal.recurs?
+                                - if proposal.intended_sessions == 0 || proposal.pledged_cached < proposal.total_needed_with_recurrence_cached
+                                  and accepting more pledges
+                      - else
                         = link_to proposal do
-                          .status
-                            Awaiting review
-                            - if proposal.recurs?
-                              - if proposal.intended_sessions == 0 || proposal.pledged_cached < proposal.total_needed_with_recurrence_cached
-                                and accepting more pledges
+                          .status Needs more support!
+                        .status_info
+                          = raw "#{proposal.needed_for_next - proposal.remaining_pledges_cached} more #{tsign} needed before " + (proposal.recurrence == 2 || proposal.recurrence == 3 ? (proposal.instances.published.empty? ? 'first session ' : 'next session') : 'it') + " can be scheduled"
+
+              
+
+                    -#%em= date_range proposal.instances.first.start_at, proposal.instances.first.end_at  
+                  - else 
+                    - if proposal.has_enough_cached
+                      = link_to proposal do
+                        .status
+                          Awaiting review
+                          - if proposal.recurs?
+                            - if proposal.intended_sessions == 0 || proposal.pledged_cached < proposal.total_needed_with_recurrence_cached
+                              but accepting more pledges
+                      .status_info
+                        = raw "Enough #{tsign} have been pledged_cached to schedule "
+                        - if proposal.recurs?
+                          = pluralize(proposal.number_that_can_be_scheduled_cached, 'meeting')
+                          - unless proposal.intended_sessions == 0 
+                            = "of #{proposal.intended_sessions.to_s} proposed"
+                  
+                
+                
+                      .status_info
+                        %strong Will be reviewed at next organisation meeting:
+                        - if @next_meeting.nil?
+                          %em none currently scheduled
+                        - else
+                          = link_to @next_meeting.name, experiment_instance_path(@next_meeting.experiment, @next_meeting), target: :_blank
                     - else
                       = link_to proposal do
                         .status Needs more support!
-                      .status_info
-                        = raw "#{proposal.needed_for_next - proposal.remaining_pledges_cached} more #{tsign} needed before " + (proposal.recurrence == 2 || proposal.recurrence == 3 ? (proposal.instances.published.empty? ? 'first session ' : 'next session') : 'it') + " can be scheduled"
-
-              
-
-                  -#%em= date_range proposal.instances.first.start_at, proposal.instances.first.end_at  
-                - else 
-                  - if proposal.has_enough_cached
-                    = link_to proposal do
-                      .status
-                        Awaiting review
-                        - if proposal.recurs?
-                          - if proposal.intended_sessions == 0 || proposal.pledged_cached < proposal.total_needed_with_recurrence_cached
-                            but accepting more pledges
-                    .status_info
-                      = raw "Enough #{tsign} have been pledged_cached to schedule "
-                      - if proposal.recurs?
-                        = pluralize(proposal.number_that_can_be_scheduled_cached, 'meeting')
-                        - unless proposal.intended_sessions == 0 
-                          = "of #{proposal.intended_sessions.to_s} proposed"
-                  
-                
-                
-                    .status_info
-                      %strong Will be reviewed at next organisation meeting:
-                      - if @next_meeting.nil?
-                        %em none currently scheduled
-                      - else
-                        = link_to @next_meeting.name, experiment_instance_path(@next_meeting.experiment, @next_meeting), target: :_blank
-                  - else
-                    = link_to proposal do
-                      .status Needs more support!
-                    .recurrence
-                      - if (proposal.needed_for_next - proposal.remaining_pledges_cached < 0) && proposal.pledges.map(&:user).uniq.size == 1
-                        Enough Temps have been pledged_cached, but only from one user. A second person needs to pledge at least 1 
-                        = raw tsign
-                        before this can be considered for scheduling.
-                      - else
-                        = raw "#{proposal.needed_for_next - proposal.remaining_pledges_cached} more #{tsign} needed before " + (proposal.recurs?  ? (proposal.instances.published.empty? ? 'first session' : 'next session' ) : 'it') + " can be scheduled"
-                      - if proposal.recurs?
-                        - if proposal.recurrence == 3 && proposal.intended_sessions == 0 && !proposal.instances.published.empty?
-                          .recurrence
-                            Proposal is ongoing without a fixed end, so 
-                            = raw tsign
-                            are continually needed to keep it happening!
-
-                    - if proposal.recurs?
                       .recurrence
-                        - if proposal.intended_sessions > proposal.published_instances
-                          - if (proposal.needed_for_next - proposal.remaining_pledges_cached) > 0 && !proposal.instances.published.empty?
-                            - unless proposal.intended_sessions == 0
-                              = raw "#{(proposal.needed_for_next - proposal.remaining_pledges_cached)} more #{tsign} needed to schedule next meeting (##{proposal.published_instances + 1})"
-
-                    
-
-                        - elsif (proposal.total_needed_with_recurrence_cached - proposal.spent - proposal.remaining_pledges_cached) == 0
-                          %p
-                            All required
-                            = raw tsign
-                            have been pledged_cached and/or spent.
-                    
+                        - if (proposal.needed_for_next - proposal.remaining_pledges_cached < 0) && proposal.pledges.map(&:user).uniq.size == 1
+                          Enough Temps have been pledged_cached, but only from one user. A second person needs to pledge at least 1 
+                          = raw tsign
+                          before this can be considered for scheduling.
                         - else
-                          - unless proposal.intended_sessions == 0
-                            = raw "#{proposal.total_needed_with_recurrence_cached - proposal.spent - proposal.remaining_pledges_cached} more #{tsign} needed to schedule all #{proposal.intended_sessions.to_s} proposed #{'meeting'.pluralize(proposal.intended_sessions)}."
+                          = raw "#{proposal.needed_for_next - proposal.remaining_pledges_cached} more #{tsign} needed before " + (proposal.recurs?  ? (proposal.instances.published.empty? ? 'first session' : 'next session' ) : 'it') + " can be scheduled"
+                        - if proposal.recurs?
+                          - if proposal.recurrence == 3 && proposal.intended_sessions == 0 && !proposal.instances.published.empty?
+                            .recurrence
+                              Proposal is ongoing without a fixed end, so 
+                              = raw tsign
+                              are continually needed to keep it happening!
+
+                      - if proposal.recurs?
+                        .recurrence
+                          - if proposal.intended_sessions > proposal.published_instances
+                            - if (proposal.needed_for_next - proposal.remaining_pledges_cached) > 0 && !proposal.instances.published.empty?
+                              - unless proposal.intended_sessions == 0
+                                = raw "#{(proposal.needed_for_next - proposal.remaining_pledges_cached)} more #{tsign} needed to schedule next meeting (##{proposal.published_instances + 1})"
+
+                    
+
+                          - elsif (proposal.total_needed_with_recurrence_cached - proposal.spent - proposal.remaining_pledges_cached) == 0
+                            %p
+                              All required
+                              = raw tsign
+                              have been pledged_cached and/or spent.
+                    
+                          - else
+                            - unless proposal.intended_sessions == 0
+                              = raw "#{proposal.total_needed_with_recurrence_cached - proposal.spent - proposal.remaining_pledges_cached} more #{tsign} needed to schedule all #{proposal.intended_sessions.to_s} proposed #{'meeting'.pluralize(proposal.intended_sessions)}."
               
-              - else
-                %strong
-                  %em= proposal.proposalstatus.name
-              .comment_status
-                - if proposal.comments_and_pledges.empty? 
-                  %em No comments or pledges yet.
                 - else
+                  %strong
+                    %em= proposal.proposalstatus.name
+                .comment_status
+                  - if proposal.comments_and_pledges.empty? 
+                    %em No comments or pledges yet.
+                  - else
                 
-                  %em
+                    %em
                   
                   
-                    - if proposal.comments.empty?
-                      = 'no comments yet.'
-                    - else
-                      = pluralize(proposal.comments.size, 'comment') +  ' on proposal;'
-                    %br/
-                    last 
-                    = proposal.comments_and_pledges.last.class.to_s.downcase
-                    by
-                    = link_to proposal.comments_and_pledges.last.user.display_name, proposal.comments_and_pledges.last.user, target: :_blank
-                    = time_ago_in_words(proposal.comments_and_pledges.last.created_at) + " ago"
+                      - if proposal.comments.empty?
+                        = 'no comments yet.'
+                      - else
+                        = pluralize(proposal.comments.size, 'comment') +  ' on proposal;'
+                      %br/
+                      last 
+                      = proposal.comments_and_pledges.last.class.to_s.downcase
+                      by
+                      = link_to proposal.comments_and_pledges.last.user.display_name, proposal.comments_and_pledges.last.user, target: :_blank
+                      = time_ago_in_words(proposal.comments_and_pledges.last.created_at) + " ago"
                   
                   
-          .reveal.occluded[proposal]{:"data-reveal" => ''}= render partial: 'proposal_overlay', locals: {proposal: proposal}
-        %tr.border_row
-          %td.border{colspan:  5} &nbsp;
+            .reveal.occluded[proposal]{:"data-reveal" => ''}= render partial: 'proposal_overlay', locals: {proposal: proposal}
+          %tr.border_row
+            %td.border{colspan:  5} &nbsp;
           
-  - if @proposals.methods.include?(:total_pages)
-    .row.expanded
-      .small-12.medium-6.columns.medium-uncentered= paginate @proposals
+    - if @proposals.methods.include?(:total_pages)
+      .row.expanded
+        .small-12.medium-6.columns.medium-uncentered= paginate @proposals
    
 = content_for :jquery do
   :plain

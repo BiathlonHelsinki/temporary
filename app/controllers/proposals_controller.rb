@@ -83,6 +83,13 @@ class ProposalsController < ApplicationController
     set_meta_tags title: 'New proposal'
   end
   
+  
+  def search
+    @proposals = Proposal.search_all_text(params[:by_string])
+    render template: 'proposals/index'
+  end
+  
+  
   def show
     @current_rate = Rate.get_current.experiment_cost
      @next_meeting = Instance.next_meeting

@@ -121,6 +121,7 @@ Rails.application.routes.draw do
   match '/users/auth/:provider/callback' => 'authentications#create', :via => :get
   match '/admin/nfcs/:id/toggle' => 'admin/base#toggle_key', via: :get
   match '/admin/nfcs/:id' => 'admin/base#delete_nfc', via: :delete
+  match '/search_proposals' => 'proposals#search', via: :post
   delete '/users/signout' => 'devise/sessions#destroy', :as => :signout
   root to: 'home#index'
 end
