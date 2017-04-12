@@ -14,6 +14,9 @@
         .title
           = "Experiment ##{@instance.sequence}:"
           = @instance.name
+          - if @instance.name =~ /open\stime/
+            %br/
+            = link_to fa_icon('area-chart'), stats_experiment_instance_path(@instance.experiment, @instance)
         .temps
           - if @instance.in_future?
             = raw "You will earn #{@instance.cost_bb}#{tsign} for participating!"

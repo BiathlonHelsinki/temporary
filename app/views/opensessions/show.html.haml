@@ -14,23 +14,35 @@
         = @opensession.closed_at.strftime("%H:%M")
       = " (#{distance_of_time_in_words(@opensession.seconds_open)})"
       
+  - if @opensession.checked_in.map(&:user).count <= 6
+    .row.expanded{class: (@opensession.checked_in.map(&:user).size > 12) ? 'small-up-6 medium-up-8 large-up-11 xlarge-up-13' : 'small-up-2 medium-up-2 large-up-4 xlarge-up-5' }
+      - @opensession.checked_in.sort_by(&:created_at).each do |attended|
+        .column.participant_grid
+          .image
+            - if attended.user.avatar?
+              = link_to image_tag(attended.user.avatar.url(:box)), attended.user
+            - else
+              = link_to image_tag(image_path('user_missing_large.png')), attended.user
+          .participant_overlay
 
-  .row.expanded{class: (@opensession.checked_in.map(&:user).size > 12) ? 'small-up-6 medium-up-8 large-up-11 xlarge-up-13' : 'small-up-2 medium-up-2 large-up-4 xlarge-up-5' }
-    - @opensession.checked_in.sort_by(&:created_at).each do |attended|
-      .column.participant_grid
-        .image
+            = link_to attended.user.display_name, attended.user
+            = "attended " + attended.instance.name + " at " + attended.created_at.strftime('%H:%M')
+      - @opensession.guest_tickets.each do |onetimer|
+        .column.participant_grid
+          .image= image_tag image_path('user_missing_large.png')
+          .participant_overlay
+            = raw "Anonymous person who arrived at #{onetimer.created_at.strftime('%H:%M')}"
+  - else
+    - @opensession.checked_in.order(:created_at).each do |attended|
+      .row
+        .small-6.medium-2.columns
           - if attended.user.avatar?
-            = link_to image_tag(attended.user.avatar.url(:box)), attended.user
+            = link_to image_tag(attended.user.avatar.url(:thumb)), attended.user
           - else
-            = link_to image_tag(image_path('user_missing_large.png')), attended.user
-        .participant_overlay
-
+            = link_to image_tag(image_path('user_missing.png')), attended.user
+        .small-6.medium-10.columns
           = link_to attended.user.display_name, attended.user
-          = "checked-in at " + attended.created_at.strftime('%H:%M')
-    - @opensession.guest_tickets.each do |onetimer|
-      .column.participant_grid
-        .image= image_tag image_path('user_missing_large.png')
-        .participant_overlay
-          = raw "Anonymous person who arrived at #{onetimer.created_at.strftime('%H:%M')}"
+          %br/
+          = "attended " + attended.instance.name + " at " + attended.created_at.strftime('%H:%M')
 
  

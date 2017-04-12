@@ -12,9 +12,11 @@ class Opensession < ApplicationRecord
   
   def checked_in
     if closed_at.nil?
-      parent_instance.instances_users.where(["created_at >= ?", opened_at])
+      # parent_instance.instances_users.where(["created_at >= ?", opened_at])
+      InstancesUser.includes(:user).where(["created_at >= ?", opened_at])
     else
-      parent_instance.instances_users.between(opened_at, closed_at)
+      # parent_instance.instances_users.between(opened_at, closed_at)
+      InstancesUser.includes(:user).between(opened_at, closed_at)
     end
   end
   

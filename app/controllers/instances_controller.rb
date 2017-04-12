@@ -56,12 +56,12 @@ class InstancesController < ApplicationController
     if params[:experiment_id]
       @experiment = Experiment.friendly.find(params[:experiment_id])
       @instance = @experiment.instances.friendly.find(params[:id])
-      if @experiment.slug == 'open-time' && @instance.name =~ /open time/i
+      if @instance.slug =~ /open\-time/ || @instance.name =~ /open time/i 
         if params['start'] && params['end']
           @sessions = Opensession.between(params['start'], params['end'])
           @sessions = @sessions.to_a.delete_if{|x| x.seconds_open < 90 }
         else
-          @sessions = Opensession.between(@instance.start_at, @instance.end_at)
+          @sessions = Opensession.between(@instance.start_at.beginning_of_month, @instance.end_at.end_of_month)
           if @temporary_is_open == true && Time.current.localtime <= @instance.end_at
             current = Opensession.by_node(1).find_by(closed_at: nil )
           end
