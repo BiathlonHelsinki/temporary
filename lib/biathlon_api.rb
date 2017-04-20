@@ -5,7 +5,7 @@ class BiathlonApi
 
   def api_get(url = '/') 
     begin
-      response = HTTParty.get(API_URL + url, timeout: 6)
+      response = HTTParty.get(API_URL + url, timeout: 14)
       # TODO more error checking (500 error, etc)
       if JSON.parse(response.body)['error']
         JSON.parse(response.body)
@@ -24,7 +24,7 @@ class BiathlonApi
   
   def api_post(url = '/', options)
     begin
-      response = HTTParty.post(API_URL + url, body: options, timeout: 8)
+      response = HTTParty.post(API_URL + url, body: options, timeout: 18)
       if JSON.parse(response.body)['error']
         JSON.parse(response.body)
       else
@@ -40,7 +40,7 @@ class BiathlonApi
   
   def api_put(url = '/', options)
     begin
-      response = HTTParty.put(API_URL + url, body: options, timeout: 8)
+      response = HTTParty.put(API_URL + url, body: options, timeout: 18)
       if JSON.parse(response.body)['error']
         JSON.parse(response.body)
       else
@@ -55,7 +55,7 @@ class BiathlonApi
   
   def api_delete(url, options)
     begin
-      response = HTTParty.delete(API_URL + url, body: options, timeout: 4)
+      response = HTTParty.delete(API_URL + url, body: options, timeout: 14)
       if JSON.parse(response.body)['error']
         JSON.parse(response.body)
       else
