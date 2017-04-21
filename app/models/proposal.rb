@@ -68,11 +68,12 @@ class Proposal < ApplicationRecord
     rate = Rate.get_current.experiment_cost
     if published_instances == 0
       array = [rate]
-      if intended_sessions.blank? || intended_sessions =~ /\D/
+      if intended_sessions.blank? || intended_sessions =~ /\D/ || intended_sessions == 0
         sesh = 35
       else
         sesh = intended_sessions - 1
       end
+
       if recurs?
         for f in 1..sesh  do 
           inrate = rate

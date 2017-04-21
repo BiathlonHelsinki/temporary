@@ -160,7 +160,7 @@
                     = proposal.needed_for_next
                     -#- if (proposal.recurrence == 2 || proposal.recurrence == 3 ) &&  proposal.intended_sessions != 0
                     -#  = " / #{proposal.total_needed_with_recurrence_cached - proposal.spent}"
-                = link_to fa_icon('info-circle'), '#' , :"data-open" => "proposal_pledge_info_#{proposal.id.to_s}"
+                %a{:"data-open" => "proposal_pledge_info_#{proposal.id.to_s}"}= fa_icon('info-circle')
                 .metadata
                   %em= pluralize(proposal.pledges.map(&:user).uniq.size, 'person') + ' pledged' 
                 .reveal{id: 'proposal_pledge_info_' + proposal.id.to_s, :"data-reveal" => ''}= render partial: 'pledges_overlay', locals: {proposal: proposal}
@@ -247,14 +247,14 @@
                               - if (proposal.needed_for_next - proposal.remaining_pledges_cached) > 0 
                                 = raw "#{(proposal.needed_for_next - proposal.remaining_pledges_cached)} more #{tsign} needed to schedule next meeting (##{proposal.published_instances + 1})"
                               - else
-                                Enough Temps are pledged_cached to schedule
+                                Enough Temps are pledged to schedule
                                 = proposal.number_that_can_be_scheduled_cached.to_s
                                 more meeting(s)
                             - elsif  proposal.intended_sessions > proposal.published_instances 
                               - if (proposal.needed_for_next - proposal.remaining_pledges_cached) > 0 
                                 = raw "#{(proposal.needed_for_next - proposal.remaining_pledges_cached)} more #{tsign} needed to schedule next meeting (##{proposal.published_instances + 1})"
                               - else
-                                Enough Temps are pledged_cached to schedule
+                                Enough Temps are pledged to schedule
                                 = proposal.number_that_can_be_scheduled_cached.to_s
                                 more meeting(s)
                     
