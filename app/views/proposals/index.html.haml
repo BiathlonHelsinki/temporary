@@ -58,7 +58,7 @@
           %th Name
           %th Proposed by
           %th When?
-          %th.pledged_cached
+          %th.pledged
             Pledged 
 
           %th Status
@@ -323,7 +323,7 @@
                             - if proposal.intended_sessions == 0 || proposal.pledged_cached < proposal.total_needed_with_recurrence_cached
                               but accepting more pledges
                       .status_info
-                        = raw "Enough #{tsign} have been pledged_cached to schedule "
+                        = raw "Enough #{tsign} have been pledged to schedule "
                         - if proposal.recurs?
                           = pluralize(proposal.number_that_can_be_scheduled_cached, 'meeting')
                           - unless proposal.intended_sessions == 0 
@@ -342,7 +342,7 @@
                         .status Needs more support!
                       .recurrence
                         - if (proposal.needed_for_next - proposal.remaining_pledges_cached < 0) && proposal.pledges.map(&:user).uniq.size == 1
-                          Enough Temps have been pledged_cached, but only from one user. A second person needs to pledge at least 1 
+                          Enough Temps have been pledged, but only from one user. A second person needs to pledge at least 1 
                           = raw tsign
                           before this can be considered for scheduling.
                         - else
@@ -367,7 +367,7 @@
                             %p
                               All required
                               = raw tsign
-                              have been pledged_cached and/or spent.
+                              have been pledged and/or spent.
                     
                           - else
                             - unless proposal.intended_sessions == 0
