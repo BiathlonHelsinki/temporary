@@ -45,4 +45,4 @@ $(function(){
 
  });
 
-$(function(){ $(document).foundation(); });
+
