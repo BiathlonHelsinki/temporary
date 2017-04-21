@@ -40,5 +40,7 @@
       %section.main_container= yield 
       %footer= render partial: 'layouts/footer'
     :javascript
-      $(document).ready(function() { #{yield :jquery} });
+      $(document).ready(function() { 
+        #{yield :jquery} 
+      });
   
