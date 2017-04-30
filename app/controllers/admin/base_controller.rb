@@ -37,7 +37,7 @@ class Admin::BaseController < ApplicationController
     @most_giving = User.all.sort_by{|y| y.pledges.sum(&:pledge) }.reverse
     @richest = User.all.order(latest_balance: :desc).limit(40)
     #@most_earned = Activity.where(addition: 1).group_by(&:user).map{|x| [x.first.display_name, x.last.sum(&:value) ] }.sort_by{|x| x.last}.reverse
-    @generous = Activity.where(addition: 1).group_by(&:user).map{|x| [x.first, x.last.sum{|x| x.value.to_s}, x.first.pledges.sum(&:pledge)]}.sort_by{|x| (x.last.to_f/x[1].to_f) }.reverse
+    @generous = Activity.where(addition: 1).group_by(&:user).map{|x| [x.first, x.last.sum{|x| x.value.to_i}, x.first.pledges.sum(&:pledge)]}.sort_by{|x| (x.last.to_f/x[1].to_f) }.reverse
     @stingiest = @generous.reverse
   end
   
