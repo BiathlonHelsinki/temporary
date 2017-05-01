@@ -16,7 +16,7 @@
     
   %ul.table_right
     - if proposal.intended_sessions == 0
-      - if proposal.instances.published.empty?
+      - if proposal.published_instances == 0
         nothing scheduled
       - else
         - proposal.instances.published.order(:start_at).each do |instance|
@@ -34,12 +34,22 @@
               = raw tsign
         %li
           = "##{proposal.published_instances + 1}: "
-          = link_to 'ACCEPTING MORE PLEDGES NOW:', new_proposal_pledge_path(proposal)
+          - text = (proposal.has_for(proposal.published_instances ) >= proposal.needed_for(proposal.published_instances ) ) ? 'READY TO SCHEDULE: ' : 'ACCEPTING MORE PLEDGES NOW: '
+          %strong= link_to text, new_proposal_pledge_path(proposal)
           = proposal.has_for(proposal.published_instances )
           out of
           %strong
             = proposal.needed_for(proposal.published_instances ).to_s
             = raw tsign
+        - if proposal.remaining_pledges_cached > proposal.needed_for(proposal.published_instances)
+          %li
+            = "##{proposal.published_instances + 1}: "
+            = link_to 'ACCEPTING MORE PLEDGES NOW: ', new_proposal_pledge_path(proposal)
+            = proposal.has_for(proposal.published_instances + 1)
+            out of
+            %strong
+              = proposal.needed_for(proposal.published_instances + 1 ).to_s
+              = raw tsign
     - else              # NOT recurring indefinitely, but fixed
       - (1..proposal.intended_sessions).each do |num|
         %li

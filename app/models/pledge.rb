@@ -11,20 +11,6 @@ class Pledge < ApplicationRecord
   validate :one_per_user
   belongs_to  :instance
 
-  after_save -> {
-    if item.class == Proposal
-      logger.warn('saving cache, item pledged is ' + item.pledged_cached.to_s)
-      item.update_column_caches
-      
-      item.save! 
-      logger.warn('after save, item pledged is ' + item.pledged_cached.to_s)
-
-      # ActiveRecord::Base.connection.execute "UPDATE proposals SET updated_at=now() WHERE id=#{item.id}"
-
-    end
-    
-  }
-  
   scope :unconverted, -> () { where('converted = 0 OR converted is null')}
   scope :converted, -> () { where(converted: true)}
   
@@ -82,10 +68,13 @@ class Pledge < ApplicationRecord
   def update_activity_feed
     if created_at == updated_at
       # assume it's new
-      Activity.create(user: user, item: self, description: "pledged #{pledge}#{ENV['currency_symbol']} to", extra_info: pledge, addition: 0)
+      Activity.create(user_id: user_id, item: self, description: "pledged #{pledge}#{ENV['currency_symbol']} to", extra_info: pledge, addition: 0)
     else
       Activity.create(user: user, item: self, description: "edited their pledge to", extra_info: pledge, addition: 0)
     end
+    item.update_column_caches
+    item.save
+
   end
   
   def withdraw_activity

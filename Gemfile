@@ -89,7 +89,7 @@ gem 'rolify'
 gem 'simple_token_authentication', git: 'https://github.com/gonzalo-bulnes/simple_token_authentication.git', branch: 'master'
 gem 'skylight'
 
-gem 'textacular', github: 'textacular/textacular', branch: 'master'
+# gem 'textacular', github: 'textacular/textacular', branch: 'master'
 gem 'truncate_html'
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
@@ -104,4 +104,3 @@ gem 'jquery-rails'
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
-

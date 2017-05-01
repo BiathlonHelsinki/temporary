@@ -187,28 +187,33 @@ class Proposal < ApplicationRecord
     
   
   def needed_for_next
-    rate = Rate.get_current.experiment_cost
-    if recurs?
-      if instances.published.empty?
-        Rate.get_current.experiment_cost
-      else
-        # check if rate changed
-        if rate == instances.published.order(:start_at).first.cost_in_temps        
-          r = instances.published.order(:start_at).last.cost_in_temps * 0.9
-          if r.round < 20
-            20
-          else
-            r.round
-          end
-        else
-          needed_for(published_instances)
-        end
-      end
+    if is_month_long == true
+      20 * Time.days_in_month(instances.published.order(:start_at).last.end_at.month + 1, instances.published.order(:start_at).last.end_at.month == 12 ? instances.published.order(:start_at).last.end_at.year + 1 : instances.published.order(:start_at).last.end_at.year)
     else
-      if instances.published.empty?
-        Rate.get_current.experiment_cost
+      rate = Rate.get_current.experiment_cost
+      if recurs?
+        if published_instances == 0
+          Rate.get_current.experiment_cost
+        
+        else
+          # check if rate changed
+          if rate == instances.published.order(:start_at).first.cost_in_temps        
+            r = instances.published.order(:start_at).last.cost_in_temps * 0.9
+            if r.round < 20
+              20
+            else
+              r.round
+            end
+          else
+            needed_for(published_instances)
+          end
+        end
       else
-        0
+        if published_instances == 0
+          Rate.get_current.experiment_cost
+        else
+          0
+        end
       end
     end
   end

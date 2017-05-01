@@ -7,6 +7,10 @@
       = f.input :goals
       = f.input :intended_participants
       = f.input :proposalstatus, as: :select
+      .row
+        .small-10.medium-6.columns= f.input :duration, label: 'Duration (in days) of each session', input_html: {required: ''}
+      .row
+        .small-10.medium-6.columns= f.input :is_month_long, label: 'Runs for entire month?', hint: 'Use for Open Time; overrides "duration" above', input_html: {required: ''}
       = f.fields_for comment = @proposal.comments.build(user: current_user) do |comment|
         %p Add a comment on status change
         = comment.input :content, as: :text

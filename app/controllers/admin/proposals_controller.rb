@@ -40,7 +40,7 @@ class Admin::ProposalsController < Admin::BaseController
   private
   
   def proposal_params
-    params.require(:proposal).permit(:name, :proposalstatus_id, :short_description, 
+    params.require(:proposal).permit(:name, :proposalstatus_id, :short_description, :duration, :is_month_long, 
     :goals, :timeframe, :stopped, :intended_participants)
   end
 
