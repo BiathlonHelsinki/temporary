@@ -106,37 +106,74 @@ class Proposal < ApplicationRecord
   end
   
   def cumulative_needed_for(val)
-
-    rate = Rate.get_current.experiment_cost
-    if instances.published.empty?
-      array = [rate]
-      cum = rate
-      if recurs?
-        for f in 1..val  do 
-          inrate = rate
-          f.times do
-            inrate *= 0.9;
+    if val >= published_instances
+      rate = Rate.get_current.experiment_cost
+      if published_instances == 0
+        array = [rate]
+        cum = rate
+        if recurs?
+          for f in 1..val  do 
+            inrate = rate
+            f.times do
+              inrate *= 0.9;
+            end
+            if inrate < 20
+              start = 20
+            else
+              start = inrate.round
+            end
+            array.push(start)
+            cum += start
           end
-          if inrate < 20
-            start = 20
-          else
-            start = inrate.round
-          end
-          array.push(start)
-          cum += start
+          return cum
+        else
+          return rate
         end
-        return cum
       else
-        return rate
+        already = published_instances
+        out = instances.published.sum(&:cost_in_temps)
+        if recurs?
+          for f in already..val do
+            out += needed_for(f)
+          end
+          return out
+        end
       end
     else
-      already = published_instances
-      out = instances.published.sum(&:cost_in_temps)
-      if recurs?
-        for f in already..val do
-          out += needed_for(f)
+      if published_instances == 0
+        array = [rate]
+        cum = rate
+        if recurs?
+          for f in 1..val  do 
+            inrate = rate
+            f.times do
+              inrate *= 0.9;
+            end
+            if inrate < 20
+              start = 20
+            else
+              start = inrate.round
+            end
+            array.push(start)
+            cum += start
+          end
+          return cum
+        else
+          return rate
         end
-        return out
+      else
+        # already = published_instances
+        out = 0
+        if recurs?
+          for f in 0..val do
+            if f <= published_instances
+              out += instances.published.order(:start_at)[f].cost_in_temps
+            else
+              out += needed_for(f)
+            end
+          end
+          return out
+        end
       end
     end
   end
@@ -145,8 +182,11 @@ class Proposal < ApplicationRecord
     # YAML.load(needed_array_cached)[val]
     if published_instances == 0
       rate = Rate.get_current.experiment_cost
-    elsif published_instances <= val # instances.published.order(:sequence)[val].nil?
+    elsif is_month_long == true && ((val + 1) > published_instances)
+     return 20 * Time.days_in_month(instances.published.order(:start_at).last.end_at.month + 1, instances.published.order(:start_at).last.end_at.month == 12 ? instances.published.order(:start_at).last.end_at.year + 1 : instances.published.order(:start_at).last.end_at.year)
+    elsif published_instances <= val 
       rate = Rate.get_current.experiment_cost
+
     else
       return instances.published.order(:sequence)[val].cost_in_temps
     end

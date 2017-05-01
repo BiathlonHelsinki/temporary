@@ -35,6 +35,9 @@
         %li
           = "##{proposal.published_instances + 1}: "
           - text = (proposal.has_for(proposal.published_instances ) >= proposal.needed_for(proposal.published_instances ) ) ? 'READY TO SCHEDULE: ' : 'ACCEPTING MORE PLEDGES NOW: '
+          / - if proposal.is_month_long
+            
+          / - else
           %strong= link_to text, new_proposal_pledge_path(proposal)
           = proposal.has_for(proposal.published_instances )
           out of
@@ -43,7 +46,7 @@
             = raw tsign
         - if proposal.remaining_pledges_cached > proposal.needed_for(proposal.published_instances)
           %li
-            = "##{proposal.published_instances + 1}: "
+            = "##{proposal.published_instances + 2}: "
             = link_to 'ACCEPTING MORE PLEDGES NOW: ', new_proposal_pledge_path(proposal)
             = proposal.has_for(proposal.published_instances + 1)
             out of

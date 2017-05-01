@@ -269,7 +269,12 @@
                                 have been pledged and/or spent.
                     
                             - else
-                              = raw "#{proposal.total_needed_with_recurrence_cached - proposal.spent - proposal.remaining_pledges_cached} more #{tsign} needed to schedule all #{proposal.intended_sessions.to_s} proposed #{'meeting'.pluralize(proposal.intended_sessions)}."
+                              - if (proposal.total_needed_with_recurrence_cached - proposal.spent - proposal.remaining_pledges_cached) <  0
+                                More than enough 
+                                = raw tsign
+                                were pledged to schedule all proposed meetings
+                              - else
+                                = raw "#{proposal.total_needed_with_recurrence_cached - proposal.spent - proposal.remaining_pledges_cached} more #{tsign} needed to schedule all #{proposal.intended_sessions.to_s} proposed #{'meeting'.pluralize(proposal.intended_sessions)}."
                         
 
                     - else 
