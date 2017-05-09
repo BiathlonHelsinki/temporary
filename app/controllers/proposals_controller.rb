@@ -5,7 +5,7 @@ class ProposalsController < ApplicationController
   def archived
     @needs_support_count = Proposal.active.to_a.delete_if{|x| x.has_enough_cached == true }.size
     @scheduled_count = Instance.future.or(Instance.current).map(&:proposal).uniq.size
-    @review_count = Proposal.active.to_a.delete_if{|x| x.has_enough_cached == false }.delete_if{|x| !x.instances.published.empty? }.size
+    @review_count = Proposal.active.schedulable.delete_if{|x| !x.instances.current.or(x.instances.future).empty? }.count
 
     @next_meeting = Instance.next_meeting
     @current_rate = Rate.get_current.experiment_cost
@@ -58,7 +58,7 @@ class ProposalsController < ApplicationController
     elsif params[:filter] == 'scheduled'
       @proposals = Instance.includes(:translations).future.or(Instance.includes([:translations]).current).map(&:proposal).uniq.sort_by{|x| x.updated_at }.reverse # x.next_instance.start_at }
     elsif params[:filter] == 'review'
-      @proposals = Proposal.includes([:user, :proposalstatus, :comments => [:user], :instances => [:experiment, :translations, :pledges], :pledges => [:user]]).active.schedulable.sort_by(&:updated_at).reverse #to_a.delete_if{|x| !x.has_enough? }.delete_if{|x| !x.instances.published.future.empty? }
+      @proposals = Proposal.includes([:user, :proposalstatus, :comments => [:user], :instances => [:experiment, :translations, :pledges], :pledges => [:user]]).active.schedulable.sort_by(&:updated_at).reverse.to_a.delete_if{|x| !x.instances.current.or(x.instances.future).empty? }  #to_a.delete_if{|x| !x.has_enough? }.delete_if{|x| !x.instances.published.future.empty? }
     end
     
     @next_meeting = Instance.includes(:experiment, :pledges).next_meeting
@@ -66,7 +66,7 @@ class ProposalsController < ApplicationController
     
     @needs_support_count = Proposal.active.to_a.delete_if{|x| x.has_enough_cached == true }.size
     @scheduled_count = Instance.future.includes(:proposal).or(Instance.current.includes(:proposal)).map(&:proposal).uniq.size
-    @review_count = Proposal.active.schedulable.count #to_a.delete_if{|x| !x.has_enough? }.delete_if{|x| !x.instances.published.empty? }.size
+    @review_count = Proposal.active.schedulable.delete_if{|x| !x.instances.current.or(x.instances.future).empty? }.count #to_a.delete_if{|x| !x.has_enough? }.delete_if{|x| !x.instances.published.empty? }.size
     
     set_meta_tags title: 'Proposals'
   end
