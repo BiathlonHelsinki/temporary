@@ -20,7 +20,7 @@
         - else
           = f.object.total_needed_with_recurrence.to_s
   .row
-    .small-10.medium-6.columns= f.input :timeframe, label: 'Proposed times and duration', input_html: {required: ''}
+    .small-10.medium-6.columns= f.input :timeframe, label: 'Proposed times and duration', input_html: {required: ''}, hint: 'If you suggest an exact date, we will do our best when scheduling to co-exist with other experiments. We recommend planning experiments at least a few weeks from now to give more time to collect pledges, as well as to allow you to prepare for and promote your experiment after it is scheduled.'
   .row
     .small-10.medium-6.columns= f.input :goals, label: 'What are the goals of this experiment?', input_html: {required: ''}
   .row

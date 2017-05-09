@@ -38,6 +38,7 @@ header {
     z-index: 3;
   }
   .top-bar {
+    clear: left;
     padding: 0;
     background-color: $yellow;
     .top-bar-left {

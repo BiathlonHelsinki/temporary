@@ -216,14 +216,18 @@
                           - if proposal.remaining_pledges_cached >= proposal.needed_for(proposal.published_instances + 1 )
                             .status Ready to schedule but accepting more pledges
                           - else
-                            .status To be continued...
+                            .status
+                              Needs more
+                              = raw tsign
+                              to continue!
+                              
                         - elsif proposal.intended_sessions.size > proposal.published_instances
                           - if proposal.remaining_pledges_cached < proposal.needed_for_next
                             .status
                               Needs more
                               = raw tsign
                               to continue!
-
+                            
                         - else
                           .status Pledging completed
                       - else
