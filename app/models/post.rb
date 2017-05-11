@@ -11,7 +11,8 @@ class Post < ApplicationRecord
   scope :published, -> () { where(published: true) }
   scope :sticky, -> () { where(sticky: true) }
   scope :not_sticky, -> () { where("sticky is not true") }
-  
+  belongs_to :postcategory
+    
   def title_en
     self.title(:en)
   end

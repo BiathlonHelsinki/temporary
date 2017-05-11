@@ -112,7 +112,7 @@ Rails.application.routes.draw do
     end
         
   end
-  
+  get '/category/:id', to: "postcategories#show"
   get '/announcements/:id' => 'emails#show'
   match '/link_temporary' => 'onetimers#link', via: :get
   match '/admin/:id/resubmit' => 'admin/base#resubmit', via: :post

@@ -33,6 +33,8 @@
     .row
       .small-10.medium-8.columns= f.input :sticky, hint: 'show at top of posts'
     .row
+      .small-10.medium-8.columns= f.input :postcategory, hint: 'optional'      
+    .row
       .small-10.medium-8.columns= f.input :published
     .row
       .small-10.medium-8.columns= f.input :published_at, :as => :string, :input_html => {:class => "datetimepicker", value: f.object.new_record? ? '' : (f.object.published_at.nil? ? '' : f.object.published_at.strftime('%Y-%m-%d %H:%M'))}

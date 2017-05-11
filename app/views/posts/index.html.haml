@@ -9,7 +9,10 @@
 .posts_index
   .row.expanded
     .small-12.columns
-      %h1 News
+      %h1
+        News
+        - if @category
+          = ": " + @category.name
   - @posts.each do |post|
     .row.expanded
       %article.post_single
