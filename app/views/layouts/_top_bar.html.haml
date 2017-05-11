@@ -11,6 +11,7 @@
         %li= link_to t(:when_is_it_open), page_path('when-is-temporary-open')
         %li= link_to raw(t(:whats_the_t_mean, tsign: tsign)), page_path('what-is-this-t-everywhere')
         %li= link_to t(:how_do_i_get_temps), page_path('how-do-i-get-temps')
+        %li= link_to t(:donate_to_temporary), page_path('donate-to-temporary')
         %li= link_to t(:news), posts_path
     %li{class: ['experiments', 'instances'].include?(controller.controller_name) ?  :active : false}= link_to t(:experiments), experiments_path
     %li{class: controller.controller_name == 'activities' ? :active : false}= link_to t(:activity_feed), activities_path

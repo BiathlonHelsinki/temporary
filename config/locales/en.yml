@@ -95,5 +95,6 @@ en:
   still_needed: '%{amount} still needed'
   pledge: 'Pledge!'
   must_enter_valid_email: 'You must enter a valid email address to propose (or pledge towards) an experiment.'
+  donate_to_temporary: 'Donate to Temporary!'
   no_matching_proposals: 'Sorry, no proposals match these search terms.'
   propose_experiment: 'Propose experiment!'
