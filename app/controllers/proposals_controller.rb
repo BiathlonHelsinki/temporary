@@ -121,7 +121,7 @@ class ProposalsController < ApplicationController
   protected
   
   def proposal_params
-    params.require(:proposal).permit(:user_id, :name, :recurrence, :intended_sessions, :stopped, :short_description, :timeframe, :goals,:intended_participants,
+    params.require(:proposal).permit(:user_id, :name, :recurrence, :intended_sessions, :stopped, :short_description, :timeframe, :goals,:intended_participants, :require_all,
                                       images_attributes: [:image, :_destroy, :proposal_id, :id, :remove_image])
   end
   

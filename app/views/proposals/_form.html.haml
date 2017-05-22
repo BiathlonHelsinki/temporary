@@ -8,6 +8,8 @@
     .small-10.medium-6.columns= f.input :recurrence, as: :select, collection: [['One time only', 1], ['Multiple times over fixed period',2], ['Recurring regularly, indefinitely (eg. once per month, every other month, etc.)', 3]], label: 'How often will this occur?', include_blank: false
   .row#intended{class: f.object.new_record? ? 'once' : (f.object.intended_sessions.to_i > 1 ? 'show' : 'once')}
     .small-10.medium-6.columns= f.input :intended_sessions, label: 'How many different meetings do you estimate?', hint: 'This can be changed later, but it\'s good to give people some idea of a committment.', input_html: {value: (f.object.new_record? ? "1" : f.object.intended_sessions.to_i ) }
+  .row#requireall{class: f.object.new_record? ? 'once' : (f.object.intended_sessions.to_i == 2 ? 'show' : 'once')}
+    .small-10.medium-6.columns= f.input :require_all, label: 'Should we wait until there are enough pledges for the complete experiment before scheduling?', hint: 'For example, if your proposal requires three consecutive days, then all 3 days will be need to get pledges and the entire expriment can then be scheduled at once instead of just the first day.'
   .row
     .small-10.medium-6.columns
       %label.label
@@ -76,6 +78,19 @@
       }
       return [total, show];
     }
+    $('#proposal_recurrence').change(function(event) {
+      var num = parseInt($('#proposal_recurrence').val());
+      if (num == 2) {
+        $('li#proposal_intended_sessions_input label').text("How many days (of the calendar) will this happen?");
+        $('#requireall').fadeIn();
+      } 
+      else if (num == 3) {
+        $('li#proposal_intended_sessions_input label').text("How many total meetings do you estimate? (Enter '0' to keep it going indefinitely)");
+        $('#requireall').fadeOut();
+      } else {
+        $('#requireall').fadeOut();
+      }
+    });
     $('#proposal_intended_sessions').bind("propertychange change click keyup input paste", function(event){
       var num = parseInt($('#proposal_intended_sessions').val());
 

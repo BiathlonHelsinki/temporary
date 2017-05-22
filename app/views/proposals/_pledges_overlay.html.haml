@@ -43,6 +43,7 @@
           out of
           %strong
             = proposal.needed_for(proposal.published_instances ).to_s
+            
             = raw tsign
         - if proposal.remaining_pledges_cached > proposal.needed_for(proposal.published_instances)
           %li
@@ -54,28 +55,45 @@
               = proposal.needed_for(proposal.published_instances + 1 ).to_s
               = raw tsign
     - else              # NOT recurring indefinitely, but fixed
-      - (1..proposal.intended_sessions).each do |num|
+      - if proposal.recurrence == 2 && proposal.require_all == true
         %li
-          = "##{num}: "
-          - if proposal.instances.published.order(:start_at)[num-1].nil?
-            - if proposal.has_for(num - 1) >= proposal.needed_for(num - 1)
+          = proposal.intended_sessions.to_s + ' day activity - '
+          - if proposal.instances.published.empty?
+            - if proposal.remaining_pledges >= proposal.total_needed_with_recurrence
               WAITING TO BE SCHEDULED
-            - else 
+            - else
               = link_to 'ACCEPTING MORE PLEDGES NOW: ', new_proposal_pledge_path(proposal)
-
-          - elsif proposal.instances.published.order(:start_at)[num-1].in_future?
-            %strong= link_to 'SCHEDULED', experiment_instance_path(proposal.instances.published.order(:start_at)[num-1].experiment, proposal.instances.published.order(:start_at)[num-1])
-          - else
-            = link_to 'Took place on ' + proposal.instances.published.order(:start_at)[num-1].start_at.to_date.to_s, experiment_instance_path(proposal.instances.published.order(:start_at)[num-1].experiment, proposal.instances.published.order(:start_at)[num-1])
-          = " : "
-          - if proposal.instances.published.order(:start_at)[num-1].nil?
-            = proposal.has_for(num - 1).to_s
-          - else
-            = proposal.instances.published.order(:start_at)[num-1].cost_in_temps.to_s 
+          - elsif proposal.pledges.converted >= proposal.total_needed_with_recurrence
+            = link_to 'Took place starting ' + proposal.instances.published.first.start_at.to_date, proposal.instances.published.first
+          = proposal.remaining_pledges.to_s
           of
           %strong
-            = proposal.needed_for(num-1).to_s
+            = proposal.total_needed_with_recurrence.to_s
             = raw tsign
+            
+      - else
+        - (1..proposal.intended_sessions).each do |num|
+          %li
+            = "##{num}: "
+            - if proposal.instances.published.order(:start_at)[num-1].nil?
+              - if proposal.has_for(num - 1) >= proposal.needed_for(num - 1)
+                WAITING TO BE SCHEDULED
+              - else 
+                = link_to 'ACCEPTING MORE PLEDGES NOW: ', new_proposal_pledge_path(proposal)
+
+            - elsif proposal.instances.published.order(:start_at)[num-1].in_future?
+              %strong= link_to 'SCHEDULED', experiment_instance_path(proposal.instances.published.order(:start_at)[num-1].experiment, proposal.instances.published.order(:start_at)[num-1])
+            - else
+              = link_to 'Took place on ' + proposal.instances.published.order(:start_at)[num-1].start_at.to_date.to_s, experiment_instance_path(proposal.instances.published.order(:start_at)[num-1].experiment, proposal.instances.published.order(:start_at)[num-1])
+            = " : "
+            - if proposal.instances.published.order(:start_at)[num-1].nil?
+              = proposal.has_for(num - 1).to_s
+            - else
+              = proposal.instances.published.order(:start_at)[num-1].cost_in_temps.to_s 
+            of
+            %strong
+              = proposal.needed_for(num-1).to_s
+              = raw tsign
           
 
 - else

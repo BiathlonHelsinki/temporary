@@ -157,7 +157,10 @@
                   = raw(proposal.remaining_pledges.to_s + tsign)
                   %small
                     out of 
-                    = proposal.needed_for_next
+                    - if proposal.recurrence == 2 && proposal.require_all == true
+                      = proposal.total_needed_with_recurrence
+                    - else
+                      = proposal.needed_for_next 
                     -#- if (proposal.recurrence == 2 || proposal.recurrence == 3 ) &&  proposal.intended_sessions != 0
                     -#  = " / #{proposal.total_needed_with_recurrence_cached - proposal.spent}"
                 %a{:"data-open" => "proposal_pledge_info_#{proposal.id.to_s}"}= fa_icon('info-circle')
@@ -358,7 +361,7 @@
                           = raw tsign
                           before this can be considered for scheduling.
                         - else
-                          = raw "#{proposal.needed_for_next - proposal.remaining_pledges_cached} more #{tsign} needed before " + (proposal.recurs?  ? (proposal.instances.published.empty? ? 'first session' : 'next session' ) : 'it') + " can be scheduled"
+                          = raw "#{proposal.needed_for_next - proposal.remaining_pledges_cached} more #{tsign} needed before " + (proposal.recurs?  ? (proposal.instances.published.empty? ? (proposal.recurrence == 2 && proposal.require_all == true ? 'complete experiment' : 'first session' ) : 'next session' ) : 'it') + " can be scheduled"
                         - if proposal.recurs?
                           - if proposal.recurrence == 3 && proposal.intended_sessions == 0 && !proposal.instances.published.empty?
                             .recurrence

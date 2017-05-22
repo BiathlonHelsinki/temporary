@@ -812,6 +812,14 @@ form.pledge, form {
         padding-left: 0;
       }
     }
+    #proposal_require_all_input {
+      margin-top: 1.5rem;
+    }
+    #proposal_require_all {
+    
+      float: left;
+      margin-top: 7px;
+    }
     input, textarea {
       border: 2px solid $yellow;
       &:focus {

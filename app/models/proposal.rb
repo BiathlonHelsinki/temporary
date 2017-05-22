@@ -233,7 +233,11 @@ class Proposal < ApplicationRecord
       rate = Rate.get_current.experiment_cost
       if recurs?
         if published_instances == 0
-          Rate.get_current.experiment_cost
+          if recurrence == 2 && require_all == true
+            total_needed_with_recurrence
+          else
+            Rate.get_current.experiment_cost
+          end
         
         else
           # check if rate changed
@@ -259,7 +263,11 @@ class Proposal < ApplicationRecord
   end
   
   def has_enough?
-    remaining_pledges >= needed_for_next && (pledges.map(&:user).uniq.size > 1)
+    if recurrence == 2 && require_all == true
+      remaining_pledges >= total_needed_with_recurrence
+    else
+      remaining_pledges >= needed_for_next && (pledges.map(&:user).uniq.size > 1)
+    end
   end
   
   def number_that_can_be_scheduled
