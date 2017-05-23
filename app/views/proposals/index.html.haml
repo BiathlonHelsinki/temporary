@@ -340,9 +340,12 @@
                       .status_info
                         = raw "Enough #{tsign} have been pledged to schedule "
                         - if proposal.recurs?
-                          = pluralize(proposal.number_that_can_be_scheduled_cached, 'meeting')
-                          - unless proposal.intended_sessions == 0 
-                            = "of #{proposal.intended_sessions.to_s} proposed"
+                          - if proposal.recurrence == 2 && proposal.require_all == true
+                            complete experiment
+                          - else
+                            = pluralize(proposal.number_that_can_be_scheduled_cached, 'meeting')
+                            - unless proposal.intended_sessions == 0 
+                              = "of #{proposal.intended_sessions.to_s} proposed"
                   
                 
                 
