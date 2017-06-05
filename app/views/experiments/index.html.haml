@@ -13,8 +13,11 @@
         - next if only_one_openday == true
         - only_one_openday = true
       - next unless e.show_on_website?
-      - cache  e do 
+      - if e.experiment.slug == 'open-time'
         = render partial: 'instances/experiment_instance_column', locals: {exp: e, :"@experiment" =>  e.experiment }
+      - else
+        - cache e do 
+          = render partial: 'instances/experiment_instance_column', locals: {exp: e, :"@experiment" =>  e.experiment }
 
     
   .row.expanded.section
