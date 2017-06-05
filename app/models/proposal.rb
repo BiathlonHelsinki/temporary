@@ -382,7 +382,7 @@ class Proposal < ApplicationRecord
           if intended_sessions == 0
             user.available_balance + (pledges.unconverted.find_by(user: user).nil? ? 0 :  pledges.unconverted.find_by(user: user).pledge)
           else
-            (user.available_balance + pledges.unconverted.find_by(user: user).pledge) > cumulative_needed_for(intended_sessions) ? cumulative_needed_for(intended_sessions) : (user.available_balance + pledges.unconverted.find_by(user: user).pledge) 
+            (user.available_balance + (pledges.unconverted.find_by(user: user).nil? ? 0 : pledges.unconverted.find_by(user: user).pledge)) > cumulative_needed_for(intended_sessions) ? cumulative_needed_for(intended_sessions) : (user.available_balance + pledges.unconverted.find_by(user: user).pledge) 
           end
         else
           pledges.unconverted.find_by(user: user).pledge
