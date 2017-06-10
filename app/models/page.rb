@@ -1,9 +1,11 @@
 class Page < ApplicationRecord
-  audited
+  audited except: :image
   resourcify
   extend FriendlyId
   friendly_id :title_en , :use => [ :slugged, :finders, :history]
   mount_uploader :image, ImageUploader
+  process_in_background :image
+  
   translates :title, :body
   accepts_nested_attributes_for :translations, :reject_if => proc {|x| x['title'].blank? && x['body'].blank? }
   before_save :update_image_attributes

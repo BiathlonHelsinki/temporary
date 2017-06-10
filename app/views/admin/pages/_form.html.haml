@@ -21,7 +21,7 @@
       .small-10.medium-8.columns
         - if f.object.image?
           = image_tag f.object.image.url(:medium)
-          = f.input :remove_image
+          = f.input :remove_image, as: :boolean
         = f.input :image
     .row
       .small-10.medium-8.columns= f.input :slug

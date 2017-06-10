@@ -42,7 +42,7 @@
         = raw ("#{activity.value}#{activity.value.class == Fixnum ? tsign : ''}")
     %td
       - if activity.ethtransaction
-        = link_to activity.ethtransaction.txaddress[0..5] + "...", "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank
+        = link_to activity.ethtransaction.txaddress[0..5] + "...", "https://#{Rails.env.development? ? 'ropsten.' : ''}etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank
       
         - if activity.ethtransaction.confirmed != true
           - if activity.ethtransaction.created_at < 1.hour.ago

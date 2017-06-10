@@ -13,6 +13,7 @@ class Experiment < ApplicationRecord
   extend FriendlyId
   friendly_id :name_en , :use => [ :slugged, :finders ] # :history]
   mount_uploader :image, ImageUploader
+  process_in_background :image
   validates_presence_of :place_id, :start_at, :primary_sponsor_id, :sequence
   validate :name_present_in_at_least_one_locale
   before_save :update_image_attributes

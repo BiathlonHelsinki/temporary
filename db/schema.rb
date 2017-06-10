@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170410132240) do
+ActiveRecord::Schema.define(version: 20170610103504) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -81,6 +81,22 @@ ActiveRecord::Schema.define(version: 20170410132240) do
     t.index ["user_id"], name: "index_authentications_on_user_id", using: :btree
   end
 
+  create_table "blockchain_transactions", force: :cascade do |t|
+    t.integer  "transaction_type_id"
+    t.integer  "account_id"
+    t.integer  "ethtransaction_id"
+    t.integer  "activity_id"
+    t.integer  "value"
+    t.datetime "submitted_at"
+    t.datetime "confirmed_at"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.index ["account_id"], name: "index_blockchain_transactions_on_account_id", using: :btree
+    t.index ["activity_id"], name: "index_blockchain_transactions_on_activity_id", using: :btree
+    t.index ["ethtransaction_id"], name: "index_blockchain_transactions_on_ethtransaction_id", using: :btree
+    t.index ["transaction_type_id"], name: "index_blockchain_transactions_on_transaction_type_id", using: :btree
+  end
+
   create_table "ckeditor_assets", force: :cascade do |t|
     t.string   "data_file_name",               null: false
     t.string   "data_content_type"
@@ -135,6 +151,21 @@ ActiveRecord::Schema.define(version: 20170410132240) do
     t.index ["ethtransaction_id"], name: "index_credits_on_ethtransaction_id", using: :btree
     t.index ["rate_id"], name: "index_credits_on_rate_id", using: :btree
     t.index ["user_id"], name: "index_credits_on_user_id", using: :btree
+  end
+
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer  "priority",   default: 0, null: false
+    t.integer  "attempts",   default: 0, null: false
+    t.text     "handler",                null: false
+    t.text     "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.string   "queue"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
   end
 
   create_table "emails", force: :cascade do |t|
@@ -443,6 +474,22 @@ ActiveRecord::Schema.define(version: 20170410132240) do
     t.index ["post_id"], name: "index_post_translations_on_post_id", using: :btree
   end
 
+  create_table "postcategories", force: :cascade do |t|
+    t.string   "slug"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "postcategory_translations", force: :cascade do |t|
+    t.integer  "postcategory_id", null: false
+    t.string   "locale",          null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.string   "name"
+    t.index ["locale"], name: "index_postcategory_translations_on_locale", using: :btree
+    t.index ["postcategory_id"], name: "index_postcategory_translations_on_postcategory_id", using: :btree
+  end
+
   create_table "posts", force: :cascade do |t|
     t.string   "slug"
     t.boolean  "published"
@@ -457,6 +504,7 @@ ActiveRecord::Schema.define(version: 20170410132240) do
     t.datetime "updated_at",         null: false
     t.boolean  "sticky"
     t.integer  "instance_id"
+    t.integer  "postcategory_id"
     t.index ["user_id"], name: "index_posts_on_user_id", using: :btree
   end
 
@@ -486,6 +534,9 @@ ActiveRecord::Schema.define(version: 20170410132240) do
     t.integer  "remaining_pledges_cached"
     t.integer  "spent_cached"
     t.integer  "published_instances",                 default: 0,     null: false
+    t.integer  "duration",                            default: 1
+    t.boolean  "is_month_long",                       default: false, null: false
+    t.boolean  "require_all",                         default: false, null: false
     t.index ["user_id"], name: "index_proposals_on_user_id", using: :btree
   end
 
@@ -579,8 +630,9 @@ ActiveRecord::Schema.define(version: 20170410132240) do
   create_table "transaction_types", force: :cascade do |t|
     t.string   "name"
     t.string   "slug"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.integer  "factorial",  default: 0
   end
 
   create_table "users", force: :cascade do |t|
@@ -638,6 +690,10 @@ ActiveRecord::Schema.define(version: 20170410132240) do
   add_foreign_key "accounts", "users"
   add_foreign_key "activities", "ethtransactions"
   add_foreign_key "authentications", "users"
+  add_foreign_key "blockchain_transactions", "accounts"
+  add_foreign_key "blockchain_transactions", "activities"
+  add_foreign_key "blockchain_transactions", "ethtransactions"
+  add_foreign_key "blockchain_transactions", "transaction_types"
   add_foreign_key "comments", "users"
   add_foreign_key "credits", "ethtransactions"
   add_foreign_key "credits", "rates"

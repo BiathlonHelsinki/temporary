@@ -92,6 +92,7 @@ class RoombookingsController < ApplicationController
     @current_rate = Rate.get_current.room_cost
     if current_user.latest_balance < @current_rate
       flash[:notice] = 'You do not have enough Temps to book the back room, sorry.'
+      redirect_to '/roombookings'
     else
       lookfor = Roombooking.find_by(day: params[:day])
       if !lookfor.nil?

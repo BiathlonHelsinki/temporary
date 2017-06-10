@@ -4,7 +4,7 @@ class Instance < ApplicationRecord
   multisearchable against: [:name, :description]
   belongs_to :experiment, foreign_key: 'event_id'
   belongs_to :place
-  translates :name, :description, :fallbacks_for_empty_translations => true
+  translates :name, :description, :fallbacks_for_empty_translations => false
   accepts_nested_attributes_for :translations, :reject_if => proc {|x| x['name'].blank? && x['description'].blank? }
   extend FriendlyId
   friendly_id :name_en , :use => [ :slugged, :finders, :history]

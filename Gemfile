@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 ruby '2.3.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '5.0.1'
+gem 'rails', '5.0.3'
 gem "pg", git: "https://github.com/ged/ruby-pg"
 # Use Puma as the app server
 gem 'puma', group: :production
@@ -27,7 +27,7 @@ end
 group :development do
   gem 'better_errors'
   gem 'bullet'
-  gem 'binding_of_caller'
+  # gem 'binding_of_caller'
   gem 'letter_opener'
   gem 'listen', '~> 3.0.5'
   gem 'ruby_parser', '>= 3.0.1'
@@ -44,21 +44,24 @@ gem 'capistrano-rails'#, '1.1.3'
 gem 'capistrano-rvm'
 gem 'capistrano-bundler'#, '1.1.4'
 gem 'capistrano3-puma'
-
-gem "audited", github: 'collectiveidea/audited', branch: :master
+gem 'activemodel-serializers-xml'
+gem "audited", "~> 4.5"
 gem 'awesome_nested_set'
 gem 'cancancan'
 gem 'carrierwave'
+gem 'carrierwave_backgrounder', :git => 'https://github.com/lardawge/carrierwave_backgrounder.git'
 gem 'carrierwave-aws'
+
 gem 'ckeditor', github: 'galetahub/ckeditor'
 gem 'country_select'
+gem 'delayed_job_active_record'
 gem 'devise'
 gem 'figaro'
 gem 'font-awesome-rails', '4.6.3.0'
 gem 'friendly_id', '~> 5.1.0'
 gem 'fullcalendar-rails'
 gem 'geocoder'
-gem 'globalize', github: 'globalize/globalize', branch: 'master'
+gem 'globalize', git: 'https://github.com/globalize/globalize'
 gem 'has_scope'
 gem 'httparty'
 gem 'httmultiparty'
