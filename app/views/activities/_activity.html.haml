@@ -50,6 +50,7 @@
           - else
             = fa_icon 'clock-o'
       - if activity.item_type == 'Credit'
-        - if activity.item.attachment?
-          %br/
-          = link_to fa_icon('sticky-note-o'), activity.item.attachment.url, target: :_blank
+        - unless activity.item.nil?
+          - if activity.item.attachment?
+            %br/
+            = link_to fa_icon('sticky-note-o'), activity.item.attachment.url, target: :_blank

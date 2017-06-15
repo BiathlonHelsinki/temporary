@@ -30,3 +30,8 @@
   padding: 0 2rem;
 
 }
+
+span.translation_missing {
+  font-size: 3rem;
+  color: red;
+}

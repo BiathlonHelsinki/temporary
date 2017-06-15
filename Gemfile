@@ -25,9 +25,9 @@ group :development, :test do
 end
 
 group :development do
-  gem 'better_errors'
+  gem 'better_errors', github: 'workingnotworking/better_errors'
   gem 'bullet'
-  # gem 'binding_of_caller'
+  gem 'binding_of_caller'
   gem 'letter_opener'
   gem 'listen', '~> 3.0.5'
   gem 'ruby_parser', '>= 3.0.1'
@@ -64,6 +64,7 @@ gem 'geocoder'
 gem 'globalize', git: 'https://github.com/globalize/globalize'
 gem 'has_scope'
 gem 'httparty'
+gem 'http_accept_language'
 gem 'httmultiparty'
 gem 'icalendar'
 gem 'kaminari'

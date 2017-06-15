@@ -31,7 +31,7 @@ class Admin::CreditsController < Admin::BaseController
     success = api.api_delete("/credits/" + params[:id], {user_email: current_user.email, 
                             user_token: current_user.authentication_token})
     if success['error']
-      flash[:error] = success['error']
+      flash[:error] = success['error'] 
     else                           
       flash[:notice] = 'The credit was deleted, thank you!'
     end

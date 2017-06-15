@@ -15,7 +15,7 @@ module Temporary
     config.encoding = "utf-8"
     config.middleware.insert 0, Rack::UTF8Sanitizer
     config.time_zone = 'Helsinki'
-    config.active_job.queue_adapter = :delayed_job
+   
      # config.active_record.default_timezone = :local
     config.active_record.time_zone_aware_types = [:datetime, :time]
     config.cache_store = :redis_store, "redis://localhost:6379/0/cache", { expires_in: 8.hours }

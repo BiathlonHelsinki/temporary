@@ -63,7 +63,7 @@ class RoombookingsController < ApplicationController
 
       if @api_status == false || @dapp_status == false
         flash[:error] = 'The Biathlon API is currently down. Please try again later.'
-        redirect_to new_roombooking_path
+        redirect_to roombookings_path
       else
         api = BiathlonApi.new
         

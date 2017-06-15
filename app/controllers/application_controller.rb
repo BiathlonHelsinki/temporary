@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   before_action :check_service_status
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :are_we_open?
+  before_action :get_locale
   
   rescue_from CanCan::AccessDenied do |exception|
     render json: {message: 'access denied!'}, status: 401
@@ -62,4 +63,21 @@ class ApplicationController < ActionController::Base
     session[:return_to] = request.fullpath
   end
   
+  def get_locale 
+    if Rails.env.development?
+      if params[:locale]
+        session[:locale] = params[:locale]
+      end
+    
+      if session[:locale].blank?
+        available  = %w{en fi}
+        I18n.locale = http_accept_language.compatible_language_from(available)
+        session[:locale] = I18n.locale
+      else
+        I18n.locale = session[:locale]
+      end
+    else
+      I18n.locale = :en
+    end
+  end
 end

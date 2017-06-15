@@ -253,4 +253,6 @@ fi:
   pledge: 'Tue!'
   must_enter_valid_email: 'Sinun täytyy syöttää sähköpostiosoitteesi, jotta voit ehdottaa tai tukea kokeiluita.'
   propose_experiment: 'Ehdota kokeilua!'
-  
+  who: 'Kuka'
+  subject: 'Subject'
+  info: 'Info'

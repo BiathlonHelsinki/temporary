@@ -6,7 +6,7 @@ class Activity < ApplicationRecord
 
   belongs_to :user
   belongs_to :ethtransaction
-  # has_one :blockchain_transaction
+  belongs_to :blockchain_transaction
   belongs_to :item, polymorphic: true
   belongs_to :extra, polymorphic: true
   belongs_to :onetimer
@@ -80,14 +80,14 @@ class Activity < ApplicationRecord
     elsif item.class == User
       "#{usertext} #{description} <a href='users/#{item.slug}'>#{item.name}</a> #{extra_info}"
     elsif item.class == Credit
-      # if blockchain_transaction
-      #   "#{usertext} #{description} <a href='credits/#{item.id}'>#{item.description}</a> and received  #{blockchain_transaction.value}#{ENV['currency_symbol']}"
-      # else
+      if blockchain_transaction
+        "#{usertext} #{description} <a href='credits/#{item.id}'>#{item.description}</a> and received  #{blockchain_transaction.value}#{ENV['currency_symbol']}"
+      else
         "#{usertext} #{description} <a href='credits/#{item.id}'>#{item.description}</a> and received  #{item.value}#{ENV['currency_symbol']}"
-      # end
+      end
     elsif item.class == NilClass
       dead_item = item_type.constantize.with_deleted.find(item_id) rescue 'something is not right here'
-      "#{usertext} #{description} #{dead_item.description} and #{ethtransaction.value}#{ENV['currency_symbol']} were returned to the blockchain"
+      "#{usertext} #{description} #{dead_item.description} and #{dead_item.value}#{ENV['currency_symbol']} were returned to the blockchain"
     elsif item.class == Pledge
       "#{usertext} #{description} #{linked_name} #{extra_info}"
     elsif item.class == Post
@@ -102,8 +102,8 @@ class Activity < ApplicationRecord
   def value
     if item.class == Pledge
       item.pledge.to_i
-    # elsif blockchain_transaction
-    #   blockchain_transaction.value.to_i
+    elsif blockchain_transaction
+      blockchain_transaction.value.to_i
     elsif ethtransaction
       ethtransaction.value.to_i
     elsif extra.nil? && (description !~ /changed/ && description !~ /status/)
