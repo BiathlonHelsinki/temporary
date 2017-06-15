@@ -256,3 +256,13 @@ fi:
   who: 'Kuka'
   subject: 'Aihe'
   info: 'Info'
+  the_date: "Date"
+  showing_all_activity_for_user: 'Showing all activity for user %{user}'
+  filter_by: 'Filter by:'
+  is_currently_open: 'is currently open!'
+  is_not_currently_open: 'is not currently open.'
+  current: 'Current'
+  next: 'Next'
+  experiment: 'Experiment'
+  read_more: 'Read more ...'
+  temporary_biathlon_is_powered_by: 'Temporary/Biathlon is powered by:'

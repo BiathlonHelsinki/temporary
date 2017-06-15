@@ -2,7 +2,7 @@
 .top-bar-left
   %ul.vertical.medium-horizontal.menu{"data-responsive-menu" => "drilldown medium-dropdown"}
     %li.has-submenu
-      = link_to t(:question_and_answers), '#',class: [:first, controller.controller_name == 'pages' ? :active : false]
+      = link_to t(:questions_and_answers), '#',class: [:first, controller.controller_name == 'pages' ? :active : false]
       
       %ul.submenu.menu.vertical{"data-submenu" => ""}
         %li= link_to t(:what_is_temporary), page_path('what-is-temporary')

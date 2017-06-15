@@ -1,9 +1,9 @@
 - if @temporary_is_open == true
   .open_or_closed
-    %strong 
-      is currently open!
+    %strong= t :is_currently_open
+
 - else
   .open_or_closed.closed
-    %strong is not currently open.
+    %strong= t :is_not_currently_open
     %br/
-    %small= link_to '(When is Temporary open?)', '/pages/when-is-temporary-open'
+    %small= link_to "(#{t :when_is_temporary_open})", '/pages/when-is-temporary-open'

@@ -40,7 +40,7 @@
         .meta
           %span.date= @sticky.first.published_at.strftime('%d.%m.%Y')
           = " // "
-          %span.category= @sticky.first.category_text
+          %span.category= t @sticky.first.category_text.to_sym
           = " // "
         .title= link_to @sticky.first.title, @sticky.first
         - if @sticky.first.image?
@@ -59,7 +59,7 @@
             = " // "
             %span.category= link_to t(:experiments), experiments_path
             = " // "
-          .title= link_to (@open_day.start_at.to_date == Time.now.to_date ? 'Current' : 'Next') + ' open day:', experiment_instance_path(@open_day.experiment, @open_day)
+          .title= link_to (@open_day.start_at.to_date == Time.now.to_date ? t(:current) : t(:next)) + ' open day:', experiment_instance_path(@open_day.experiment, @open_day)
           = link_to experiment_instance_path(@open_day.experiment, @open_day) do
             .dates.text-center
               .month= l @open_day.start_at, format: "%B"
@@ -75,7 +75,7 @@
           .meta
             %span.date= post.published_at.strftime('%d.%m.%Y')
             = " // "
-            %span.category= post.category_text
+            %span.category= t post.category_text.to_sym
             = " // "
           .title= link_to post.title, post
           - if post.image?
@@ -97,7 +97,7 @@
             .title= link_to post.subject, "/announcements/#{post.slug}"
             .body
               = raw truncate_html(sanitize(post.body, tags: %w{a b bold strong i em br p blockquote img}, attributes: %w{src href}), length: 750)
-              = link_to 'Read more...', "/announcements/#{post.slug}", class: [:button]
+              = link_to t(:read_more), "/announcements/#{post.slug}", class: [:button]
 
       - if post.class == Comment
         %article{class: cycle('odd', 'even')}
@@ -126,7 +126,7 @@
             .meta
               %span.date= post.published_at.strftime('%d.%m.%Y')
               = " // "
-              %span.category= post.category_text
+              %span.category= t post.category_text.to_sym
               = " // "
             .title= link_to post.title, post
             - if post.image?
@@ -177,7 +177,7 @@
             .meta
               %span.date= post.created_at.strftime('%d.%m.%Y')
               = " // "
-              %span.category Proposals
+              %span.category= t :proposals
               = " // "
             .title= link_to post.name, post
             - unless post.images.empty?

@@ -1,10 +1,10 @@
 .activities_index
   .row.expanded
     .small-12.columns
-      %h1 Activity
+      %h1= t :activity
   .row.expanded
     .small-12.columns
-      %h6 Filter by:
+      %h6= t :filter_by
   .row.expanded
     / .small-6.medium-4.large-3.columns
     /   %select#activity_description
@@ -18,18 +18,17 @@
   - if params[:user_id]
     .row.expanded
       .small-8.columns
-        %h4
-          Showing all activity for user
-          = @user.display_name
+        %h4= t(:showing_all_activity_for_user, user: @user.display_name)
+
   .row.expanded
     .small-12.columns
       %table.activities#activities
         %thead
           %tr
-            %th Date
+            %th= t :the_date
             %th= t :who
             %th= t :activity
-            %th Subject
+            %th= t :subject
             %th
               = raw tsign
               %small= link_to '?', '#', onclick: "javascript:$('.occluded').slideToggle();return false"
