@@ -16,6 +16,7 @@
 //= require jquery_nested_form
 //= require moment 
 //= require fullcalendar
+//= require fullcalendar/lang/fi
 //= require stacktable.min
 //= require jquery.infinitescroll
 //= require masonry.pkgd.min

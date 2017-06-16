@@ -128,3 +128,14 @@ return $.update("/roombookings/calendar/" + the_event.id, {
     }
   });
 };
+
+$(window).resize(function() {
+  screenWidth = $(window).width(); 
+  $fc.fullCalendar('destroy');
+  if (screenWidth < 700) {
+    $fc.fullCalendar(mobileOptions);
+    } else {
+      $fc.fullCalendar(options);
+    };
+  
+});
