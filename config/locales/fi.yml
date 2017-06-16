@@ -299,3 +299,5 @@ fi:
   registration_thanks: 'Thank you for registering.'
   updated_proposal: 'Proposal details updated.'
   proposal_update_error: 'Error updating proposal'
+  which_was_scheduled_as: 'which was scheduled as'
+  was_decredited_for: 'was de-credited for'
