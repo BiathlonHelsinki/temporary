@@ -13,7 +13,9 @@ class Instance < ApplicationRecord
   validates_uniqueness_of :sequence
   belongs_to :proposal
   has_many :instances_users
+  has_many :instances_organisers
   has_many :users, through: :instances_users
+  has_many :organisers, through: :instances_organisers
   has_many :onetimers, dependent: :destroy
   has_many :pledges
   has_many :rsvps
@@ -63,6 +65,11 @@ class Instance < ApplicationRecord
   def in_future?
     start_at >= Time.current
   end
+  
+  def responsible_people
+    [experiment.primary_sponsor, experiment.secondary_sponsor, organisers].flatten.compact.uniq
+  end
+  
   
   def session_number
     if new_record?

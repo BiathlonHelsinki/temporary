@@ -192,4 +192,11 @@ en:
   tagging_experiments: "Experiments: type '#' followed by the name of the experiment [eg: #Open]"
   attach_image_to_comment: 'Attach image to comment'
   attach_attachment_to_comment: 'Add file attachment to comment'
-  edit_profile: 'Edit your profile'    
+  edit_profile: 'Edit your profile'
+  if_you_want_to_register: 'If you would like to register for this experiment, please %{sign_in}.'
+  rsvp_explanation: 'RSVPd (planning to attend):'
+  experiment_instigator_brackets: '(& experiment instigator)'
+  organiser: '(organiser)'
+  cancel_rsvp: 'Cancel RSVP'
+  confirm_cancel_rsvp: 'Are you sure you want to cancel your RSVP?'
+  when_is_temporary_open: 'When is Temporary open?'      

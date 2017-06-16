@@ -118,8 +118,8 @@
             - else
               #sign_in_to_register
                 %h4
-                  If you would like to register for this event, please
-                  = link_to 'sign in.', '/users/sign_in'
+                  = t(:if_you_want_to_register, sign_in: link_to(t(:sign_in).downcase, '/users/sign_in'))
+
                   %br/
                   = link_to 'Sign in (or join)', '/users/sign_in', class: [:button]
                   %br/
@@ -195,7 +195,7 @@
   
   
   - if @instance.users.empty? && @instance.onetimers.empty?
-    - unless @instance.rsvps.empty?
+    - unless @instance.rsvps.empty? && @instance.responsible_people.empty?
       %section#participants
         - if @instance.request_registration == true
           - unless @instance.registrations.to_a.delete_if{|x| x.new_record? }.empty?
@@ -228,9 +228,9 @@
         - else
           .row.expanded
             .small-10.medium-6.columns
-              .participant_header RSVPd (planning to attend):
+              .participant_header= t(:rsvp_explanation)
           .row.expanded.small-up-4.medium-up-6.large-up-8.xlarge-up-9  
-            - @instance.rsvps.map(&:user).each do |attended|
+            - [@instance.rsvps.map(&:user), @instance.responsible_people].flatten.compact.uniq.each do |attended|
               .column.participant_grid
                 .image
                   - if attended.avatar?
@@ -240,12 +240,16 @@
                 .participant_overlay
 
                   = link_to attended.display_name, attended 
-                  - if @instance.experiment.primary_sponsor == attended
+                  - if @instance.responsible_people.include?(attended)
                     %br/
-                    = link_to "(experiment instigator)", @instance.proposal
+                    = t(:organiser)
+                    - if @instance.experiment.primary_sponsor == attended || @instance.experiment.secondary_sponsor == attended
+                      %br/
+                      = link_to t(:experiment_instigator_brackets), @instance.proposal
+
                   - if user_signed_in?
                     - if current_user == attended
-                      = link_to 'Cancel RSVP', cancel_rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button, :alert], data: {confirm: 'Are you sure you want to cancel your RSVP?'}
+                      = link_to t(:cancel_rsvp), cancel_rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button, :alert], data: {confirm: t(:confirm_cancel_rsvp) }
                   - if @instance.allow_multiple_entry == true
                     = " (#{pluralize(@instance.users.select{|x| x == attended}.count, 'time')})"
         
