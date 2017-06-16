@@ -199,4 +199,5 @@ en:
   organiser: '(organiser)'
   cancel_rsvp: 'Cancel RSVP'
   confirm_cancel_rsvp: 'Are you sure you want to cancel your RSVP?'
-  when_is_temporary_open: 'When is Temporary open?'      
+  when_is_temporary_open: 'When is Temporary open?'
+  pending_scheduling: 'Pending scheduling'      
