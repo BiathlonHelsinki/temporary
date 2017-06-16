@@ -41,7 +41,8 @@ class Comment < ApplicationRecord
   end
   
   def content_linked
-    content.gsub(/href="(.*)#"/, '').gsub(/\srel="/, ' href="')
+    content.gsub(/href="#"/, '').gsub(/\srel="/, ' href="')
+    # content.gsub(/href="(.*)#"/, '').gsub(/\srel="/, ' href="')
   end
   
   def update_image_attributes
