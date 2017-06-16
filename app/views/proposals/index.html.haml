@@ -403,7 +403,7 @@
                   
                   
                       - if proposal.comments.empty?
-                        = 'no comments yet.'
+                        = t :no_comments_yet
                       - else
                         = pluralize(proposal.comments.size, 'comment') +  ' on proposal;'
                       %br/

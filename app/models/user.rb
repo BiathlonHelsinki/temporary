@@ -72,7 +72,7 @@ class User < ActiveRecord::Base
   end
   
   def add_to_activity_feed
-    Activity.create(item: self, description: 'joined!', user: self)
+    Activity.create(item: self, description: 'joined', user: self)
   end
   
   def copy_password

@@ -15,11 +15,11 @@ class ExperimentRegistrationsController < ApplicationController
       if r.update_attributes(params[:registration].permit!)
         
 
-        flash[:notice] = ' Thank you for registering.'
+        flash[:notice] = t(:registration_thanks)
       else
         flash[:error] = 'There was an error registering: ' + r.errors.inspect
       end
-      Activity.create(user: current_user, addition: 0, item: @instance, description: 'registered for')
+      Activity.create(user: current_user, addition: 0, item: @instance, description: 'registered_for')
       redirect_to [@experiment, @instance]
     else
       flash[:error] = 'Error'

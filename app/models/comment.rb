@@ -16,13 +16,13 @@ class Comment < ApplicationRecord
   scope :frontpage, -> () { where(frontpage: true) }
   
   def update_activity_feed
-    Activity.create(user: user, item: self.item, description: "commented on",  addition: 0)
+    Activity.create(user: user, item: self.item, description: "commented_on",  addition: 0)
     matches = content.scan(/rel=\"\/users\/(\d*)\"/)
     unless matches.empty?
       matches.flatten.each do |uu|
         u = User.find(uu.to_i)
         unless u.nil?
-          Activity.create(user: u, description: 'was mentioned by', item: user, extra: self.item, extra_info: 'in a comment on ', addition: 0)
+          Activity.create(user: u, description: 'was_mentioned_by', item: user, extra: self.item, extra_info: 'in_a_comment_on', addition: 0)
         end
       end
     end

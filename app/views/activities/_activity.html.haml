@@ -16,7 +16,11 @@
       - else
         = link_to activity.user.display_name, activity.user, target: :_blank
     %td
-      = raw activity.description
+      - if activity.numerical_value.nil?
+        = raw t(activity.description.to_sym)
+      - else
+        = raw activity.numerical_value
+        = raw t(activity.description.to_sym, numerical_value: activity.numerical_value)
 
     %td
       = raw activity.linked_name

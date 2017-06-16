@@ -9,8 +9,8 @@ class InstancesController < ApplicationController
       if @instance.in_future?
         registration = Registration.find_or_create_by(instance: @instance, user: current_user)
         if registration.destroy
-          Activity.create(user: current_user, addition: 0, item: @instance, description: 'is no longer registered for ')
-          flash[:notice] = 'Thank you for letting us know, we are sorry you cannot make it.'
+          Activity.create(user: current_user, addition: 0, item: @instance, description: 'is_no_longer_registered_for ')
+          flash[:notice] = t(:unregistred)
           redirect_to [@experiment, @instance]
         end
       end
@@ -27,8 +27,8 @@ class InstancesController < ApplicationController
       if @instance.in_future?
         rsvp = Rsvp.find_or_create_by(instance: @instance, user: current_user)
         if rsvp.destroy
-          Activity.create(user: current_user, addition: 0, item: @instance, description: 'is no longer planning to attend')
-          flash[:notice] = 'Thank you for letting us know, we are sorry you cannot make it.'
+          Activity.create(user: current_user, addition: 0, item: @instance, description: 'is_no_longer_planning_to_attend')
+          flash[:notice] = t(:unregistred)
           redirect_to [@experiment, @instance]
         end
       end
@@ -43,8 +43,8 @@ class InstancesController < ApplicationController
       @experiment = Experiment.friendly.find(params[:experiment_id])
       @instance = @experiment.instances.friendly.find(params[:id])
       Rsvp.find_or_create_by(instance: @instance, user: current_user)
-      Activity.create(user: current_user, addition: 0, item: @instance, description: 'plans to attend')
-      flash[:notice] = 'Thank you for RSVPing!'
+      Activity.create(user: current_user, addition: 0, item: @instance, description: 'plans_to_attend')
+      flash[:notice] = t(:rsvp_thanks)
       redirect_to [@experiment, @instance]
     else
       flash[:error] = 'Error'

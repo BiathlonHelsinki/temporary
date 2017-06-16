@@ -12,7 +12,7 @@ class Admin::ProposalsController < Admin::BaseController
 
     if @proposal.update_attributes(proposal_params)
       if @proposal.previous_changes.keys.include?("proposalstatus_id")
-        Activity.create(user: current_user, item: @proposal, description: 'changed the status of', extra_info: " to <em>#{@proposal.proposalstatus.nil? ? 'Active' : @proposal.proposalstatus.name}</em>")
+        Activity.create(user: current_user, item: @proposal, description: 'changed_the_status_of', extra_info: " to <em>#{@proposal.proposalstatus.nil? ? 'Active' : @proposal.proposalstatus.name}</em>")
         if @proposal.proposalstatus.nil?
           params[:proposal][:comment][:content] = "<em>Status changed to: <strong>Active</strong></em><br /><br/>" + params[:proposal][:comment][:content]
         else
@@ -25,10 +25,10 @@ class Admin::ProposalsController < Admin::BaseController
         end
         @proposal.comments << Comment.create(params[:proposal][:comment].permit!)
       end
-      flash[:notice] = 'Proposal details updated.'
+      flash[:notice] = t(:updated_proposal)
       redirect_to admin_proposals_path
     else
-      flash[:error] = 'Error updating proposal'
+      flash[:error] = t(:proposal_update_error)
     end
   end
   

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170610103504) do
+ActiveRecord::Schema.define(version: 20170615132436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,14 +34,16 @@ ActiveRecord::Schema.define(version: 20170610103504) do
     t.string   "item_type"
     t.integer  "item_id"
     t.string   "description"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
     t.integer  "onetimer_id"
     t.string   "extra_info"
-    t.integer  "addition",          default: 0, null: false
+    t.integer  "addition",                  default: 0, null: false
     t.string   "extra_type"
     t.integer  "extra_id"
     t.string   "txaddress"
+    t.integer  "blockchain_transaction_id"
+    t.integer  "numerical_value"
     t.index ["ethtransaction_id"], name: "index_activities_on_ethtransaction_id", using: :btree
     t.index ["extra_type", "extra_id"], name: "index_activities_on_extra_type_and_extra_id", using: :btree
     t.index ["item_type", "item_id"], name: "index_activities_on_item_type_and_item_id", using: :btree
@@ -85,14 +87,13 @@ ActiveRecord::Schema.define(version: 20170610103504) do
     t.integer  "transaction_type_id"
     t.integer  "account_id"
     t.integer  "ethtransaction_id"
-    t.integer  "activity_id"
     t.integer  "value"
     t.datetime "submitted_at"
     t.datetime "confirmed_at"
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
+    t.integer  "recipient_id"
     t.index ["account_id"], name: "index_blockchain_transactions_on_account_id", using: :btree
-    t.index ["activity_id"], name: "index_blockchain_transactions_on_activity_id", using: :btree
     t.index ["ethtransaction_id"], name: "index_blockchain_transactions_on_ethtransaction_id", using: :btree
     t.index ["transaction_type_id"], name: "index_blockchain_transactions_on_transaction_type_id", using: :btree
   end
@@ -691,7 +692,6 @@ ActiveRecord::Schema.define(version: 20170610103504) do
   add_foreign_key "activities", "ethtransactions"
   add_foreign_key "authentications", "users"
   add_foreign_key "blockchain_transactions", "accounts"
-  add_foreign_key "blockchain_transactions", "activities"
   add_foreign_key "blockchain_transactions", "ethtransactions"
   add_foreign_key "blockchain_transactions", "transaction_types"
   add_foreign_key "comments", "users"
