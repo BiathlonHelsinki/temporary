@@ -2,26 +2,26 @@
 .proposal_detail
   .row.expanded
     .small-12.medium-8.columns
-      %h1= "PROPOSAL: #{@proposal.name}"
-      .proposed_by= raw "Proposed by #{link_to @proposal.user.display_name, @proposal.user, target: :_blank}"
+      %h1
+        = t(:proposal) + ":"
+        = @proposal.name
+      .proposed_by= raw t(:proposed_by_person, link: link_to(@proposal.user.display_name, @proposal.user, target: :_blank))
       - if user_signed_in?
         - if current_user.has_pledged?(@proposal)
           .my_pledge_list
             %br{clear: :all}
-            %h6 Your pledges to this proposal:
+            %h6= t(:your_pledges_to_this_proposal)
             %ol.proposal_pledge_list{class: @proposal.pledges.where(user: current_user).size > 5  ? :readmore : false }
               - @proposal.pledges.where(user: current_user).each do |p|
                 %li
-                  = raw "You pledged #{p.pledge.to_s}#{tsign}"
-                  on
-                  = l p.created_at, format: :short
+                  = raw t(:you_pledged_date, amount: p.pledge.to_s + tsign, date: l(p.created_at, format: :short))
                   - if p.converted?
                     %br/
                     %em
                       - unless p.extra_info.nil?
                         = p.extra_info.gsub(/\s\+\d{4}$/, '')
                       - if p.instance
-                        scheduling
+                        = t(:scheduling)
                         = link_to p.instance.name, experiment_instance_path(p.instance.experiment, p.instance), target: :_blank
 
               - if @proposal.pledges.where(user: current_user).size > 5
@@ -37,12 +37,12 @@
           - if @proposal.scheduled?
             .yellow 
               - if @proposal.stopped? || (@proposal.scheduled? && !@proposal.recurs? && @proposal.instances.future.empty?)
-                Completed!
+                = t(:completed)
               - else
                 %span.pledge_box_text Scheduled!
               - if @proposal.recurs?
                 - if @proposal.intended_sessions == 0 || @proposal.pledged < @proposal.total_needed_with_recurrence
-                  .small= link_to 'but still taking pledges....', new_proposal_pledge_path(@proposal)
+                  .small= link_to t(:but_still_taking_pledges)
                   = content_for :jquery do
                     :plain
                       $('.pledge_info .box .yellow').mouseenter(function() {
@@ -52,76 +52,78 @@
                       });
           - else
             - if @proposal.has_enough?
-              .yellow  Pending scheduling!
+              .yellow= t :pending_scheduling
             - else
               = link_to  new_proposal_pledge_path(@proposal) do
                 .grey
                   %span
                     = raw(@proposal.pledged.to_s + tsign)
                     pledged
-                  .occluded= raw("Pledge #{tsign}!")
+                  .occluded= raw t(:pledge_temps)
               
             / - @proposal.instances.each do |instance|
             /   = link_to instance.name, instance
         - else
           .grey.invalid
             Invalid
-            .small= link_to 'See comments for reason', 'javascript:$(document).scrollTo(".comment.last", 800);'
+            .small= link_to t(:see_comments_for_reason), 'javascript:$(document).scrollTo(".comment.last", 800);'
             
 
       - unless @proposal.pledges.empty?
         .pledges
           %p
-            = raw "#{@proposal.pledged.to_s}#{tsign} "
-            pledged by:
+            = raw t(:full_pledged_by, amount: @proposal.pledged.to_s + tsign )
+
             %small= raw @proposal.pledges.map(&:user).map{|x| link_to(x.display_name, x)}.uniq.join(', ')
       .pledge_data
         %p
 
           - if @proposal.stopped? ||  (@proposal.scheduled? && !@proposal.recurs?) 
             - if @proposal.is_valid?
-              - if @proposal.instances.future.empty? 
-                = pluralize(@proposal.instances.first.experiment.instances.size, 'meeting')
-                took place!
+              - if @proposal.instances.future.empty?
+                = t(:meetings_took_place_past, amount: pluralize(@proposal.instances.first.experiment.instances.size, t(:meeting)))
+
               - else
-                = pluralize(@proposal.instances.first.experiment.instances.size, 'meeting') + ":"
+                = pluralize(@proposal.instances.first.experiment.instances.size, t(:meeting)) + ":"
                 %br/
           - elsif (@proposal.scheduled? && @proposal.recurs?)
-            Recurring experiment. Meetings:
+            = t :recurring_experiment_meetings
             %br/
 
           - else
             - if !@proposal.has_enough?
               - if @proposal.remaining_pledges > @proposal.needed_for_next
                 - if @proposal.pledges.map(&:user).size == 1
-                  This proposal needs at least one other user to pledge to it.
+                  = t :this_proposal_needs_at_least_one_other_user_to_pledge_to_it 
+                  
 
-              %small 
-                Needed to be considered for scheduling:
-                = raw(@proposal.needed_for_next.to_s + tsign)
-                total, from at least two users
+              %small
+                = t :needed_to_be_considered_for_scheduling
+                = t(:needed_total_from_users, amount: @proposal.needed_for_next.to_s + tsign)
+
             - else
               - if !@proposal.scheduled?
-                This proposal will be reviewed at Temporary's next organisational meeting:
+                = t :review_at_next_meeting
+                
                 - if @next_meeting.nil?
-                  %em none currently scheduled
+                  %em= t :none_currently_scheduled
                 - else
                   = link_to @next_meeting.name, experiment_instance_path(@next_meeting.experiment, @next_meeting), target: :_blank
               - else
-                %strong Come to this experiment:
+                %strong= t :come_to_this_experiment
           - unless @proposal.instances.published.empty?
             %br/
             - if @proposal.instances.first.experiment.instances.published.size > 6
               = @proposal.instances.first.experiment.instances.published.size.to_s
               meetings. 
-              = link_to 'See all...', @proposal.instances.first.experiment
+              = link_to t(:see_all), @proposal.instances.first.experiment
             - else 
               - @proposal.instances.first.experiment.instances.published.sort_by(&:start_at).each do |k|
                 = link_to k.name, experiment_instance_path(k.experiment, k)
                 %br/
                 %small
                   - unless k.in_future?
-                    already happened: 
+                    = t :already_happened
                   %em= date_range(k.start_at, k.end_at)
                 %br/
                 %br/
@@ -131,7 +133,7 @@
   .row.expanded
     .small-12.columns
       .details
-        .title Description:
+        .title= t(:description) + ":"
         .answer
           = simple_format @proposal.short_description
           - if @proposal.images
@@ -140,26 +142,26 @@
               - @proposal.images.each do |image|
                 .small-12.medium-12.large-6.columns= image_tag image.image.url(:medium)
             
-        .title Goals:
+        .title= t(:goals) + ":"
         .answer= simple_format @proposal.goals
  
       
-        .title Timeframe
+        .title= t(:timeframe) + ':'
         .answer= simple_format @proposal.timeframe
       
-        .title How often?
+        .title= t(:how_often) + ":"
         .answer
           - if @proposal.recurrence == 1
-            Happens only once
+            = t :happens_only_once
           - if @proposal.recurrence == 2
-            = @proposal.intended_sessions == 0  ? 'Multiple meetings proposed' : @proposal.intended_sessions.to_s + " meetings proposed"
+            = @proposal.intended_sessions == 0  ? t(:multiple_meetings_proposed) : t(:x_meetings_proposed, amount: @proposal.intended_sessions)
           - if @proposal.recurrence == 3
-            Happens regularly
+            = t :happens_regularly
             - unless @proposal.intended_sessions == 0
-              %p
-                = @proposal.intended_sessions.to_s + " meetings proposed"
+              %p= t(:x_meetings_proposed, amount: @proposal.intended_sessions)
+
   
-        .title Intended participants:
+        .title= t(:intended_participants) + ":"
         .answer= simple_format @proposal.intended_participants
 
   #pledges
@@ -171,16 +173,16 @@
         .pledge_panel
           - if user_signed_in?
             - if current_user.has_pledged?(@proposal)
-              = raw "You pledged #{current_user.pledges.find_by(item: @proposal).pledge}#{tsign}"
+              = raw t(:you_pledged, amount: current_user.pledges.where(item: @proposal).sum(&:pledge).to_s + tsign)
             - unless @proposal.scheduled?
               - if current_user.has_pledged?(@proposal)
                 %br/
-                = link_to 'Edit pledge', edit_proposal_pledge_path(@proposal, current_user.pledges.find_by(item: @proposal) ), class: [:button, :tiny]
+                = link_to t(:edit_pledge), edit_proposal_pledge_path(@proposal, current_user.pledges.find_by(item: @proposal) ), class: [:button, :tiny]
               - else
-                = link_to raw("Pledge #{tsign}!"), new_proposal_pledge_path(@proposal), class: [:button, :tiny]
+                = link_to raw(t(:pledge_temps)), new_proposal_pledge_path(@proposal), class: [:button, :tiny]
             - if current_user == @proposal.user || current_user.has_role?(:admin)
               %br/
-              = link_to 'Edit proposal', edit_proposal_path(@proposal), class: [:button, :tiny], style: 'float: left; font-size: 0.7em; margin: 0.5rem 0;'  
+              = link_to t(:edit_proposal), edit_proposal_path(@proposal), class: [:button, :tiny], style: 'float: left; font-size: 0.7em; margin: 0.5rem 0;'  
             
   - unless @proposal.comments.empty? && @proposal.pledges.empty?
 
@@ -191,7 +193,11 @@
           %h1= t :discussion
         - if @proposal.discussion.size > 0
           .small-12.columns
-            .comment_count= "This experiment proposal #{@proposal.is_valid? ? 'has' : 'had'} #{pluralize(@proposal.discussion.size, 'comment')}."
+            .comment_count
+              - if @proposal.is_valid?
+                = t(:this_proposal_has_x_comments, comments: pluralize(@proposal.discussion.size, t(:comment)))
+              - else
+                = t(:this_proposal_had_x_comments, comments: pluralize(@proposal.discussion.size, t(:comment)))
       - @proposal.discussion.sort_by(&:created_at).each do |comment|
         .row.expanded
           .small-12.columns
@@ -204,11 +210,11 @@
                       - if comment.class == Comment
                         - if user_signed_in?
                           - if can? :destroy, comment
-                            = link_to 'Delete this comment', comment, method: :delete, data: {confirm: 'Are you sure? If someone has replied to this comment and you delete it, it might be confusing.'}, class: [:button, :tiny, :secondary]
+                            = link_to t(:delete_this_comment), comment, method: :delete, data: {confirm: t(:are_you_sure_delete_comment)}, class: [:button, :tiny, :secondary]
                     .small-10.columns
                       .comment_type
                         - if comment.class == Pledge
-                          = raw "#{link_to comment.user.display_name, comment.user, target: :_blank} pledged in support of this proposal!"
+                          = raw t(:pledged_in_support_of_this_proposal, user: link_to( comment.user.display_name, comment.user, target: :_blank))
                         
                         - else
                           = raw t(:user_says, :user => comment.user.display_name)
@@ -223,7 +229,7 @@
                             .extra_info= raw comment.extra_info
 
                           - if comment.user == current_user && comment.converted != 1
-                            = link_to 'Edit your pledge', edit_proposal_pledge_path(@proposal, comment), class: [:button, :tiny]
+                            = link_to t(:edit_your_pledge),edit_proposal_pledge_path(@proposal, comment), class: [:button, :tiny]
                         - if comment.respond_to?(:systemflag)
                           - if comment.systemflag == true
                             .system
@@ -258,11 +264,11 @@
                       %h3
                         = t :what_do_you_think_about_this
                       %p.small
-                        %u Tagging: 
+                        %u= t(:tagging) + ":"
                         %br/
-                        %em People: type '@' followed by someone's username [eg: @Jussi, @PsychoDog]
+                        %em= t(:tagging_people) 
                         %br/
-                        %em Experiments: type '#' followed by the name of the experiment [eg: #Open] 
+                        %em= t(:tagging_experiments) 
                       = semantic_form_for [ @proposal,  @comment = @proposal.comments.build(user: current_user)], html: {onSubmit: "return getContent();", multipart: true, :"data-abide" => '' } do |f|
                         = f.input :user_id, as: :hidden, data: {value: current_user.id}
                         #comment_wrapper
