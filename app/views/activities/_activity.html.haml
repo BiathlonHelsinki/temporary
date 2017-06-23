@@ -19,7 +19,7 @@
       - if activity.numerical_value.nil?
         = raw t(activity.description.to_sym)
       - else
-        = raw activity.numerical_value
+        
         = raw t(activity.description.to_sym, numerical_value: activity.numerical_value)
 
     %td
