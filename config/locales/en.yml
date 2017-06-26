@@ -202,3 +202,5 @@ en:
   when_is_temporary_open: 'When is Temporary open?'
   pending_scheduling: 'Pending scheduling'      
   edit_pledge: 'Edit pledge'
+  cancelled: 'This experiment has been cancelled.'
+  reschedule_info: 'Check back soon for information on when/if it will be rescheduled.'

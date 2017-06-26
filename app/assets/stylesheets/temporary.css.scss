@@ -187,8 +187,19 @@ section.main_container {
     padding:  0.9375rem;
     .content {
       background-color: $grey;
-      
+
       padding: 0.563em;
+      .cancelled_header {
+        color: red;
+        .cancelled_title {
+          font-size: 1.3rem;
+        }
+      }
+      &.cancelled {
+        .meta, .dates, .title, .body, .earn_line {
+          opacity: 0.4;
+        }
+      }
       .meta {
         height: 3.5rem;
         padding: 0.4rem 0;
@@ -198,6 +209,7 @@ section.main_container {
         text-transform: uppercase;
         font-weight: bold;
         color: $yellow;
+
         span {
           color: $black;
         }
@@ -336,6 +348,9 @@ article.instance_single {
     font-family: $heebo;
     color: #444;
     font-size: 1.1rem;
+    .cancelled {
+      color: red;
+    }
   }
   .proposal_info {
     font-family: $ptsans;
@@ -368,6 +383,9 @@ article.instance_single {
         color: $black;
         text-transform: uppercase;
         font-size: 1.320rem;
+        &.cancelled {
+          color: red;
+        }
       }
     }
     .title {
@@ -956,6 +974,12 @@ form.pledge, form {
         border: none;
         padding: 0.3rem;
         margin: 0.3rem;
+        &.fc-cancelled {
+          span.fc-title {
+            opacity: 0.6;
+            text-decoration: line-through;
+          }
+        }
       }
     }
     .fc-day-grid-event .fc-content {
@@ -987,6 +1011,12 @@ form.pledge, form {
 
   }
 }
+td.fc-list-item-title {
+  a.cancelled {
+    text-decoration: line-through;
+  }
+}
+
 .fc-basic-view td.fc-day-number {
   font-family: $heebo;
   font-size: 3.9rem;
@@ -1540,6 +1570,12 @@ footer {
 .fc-event.booking_link {
   background: none !important;
 }
+span.fc-time {
+  span.cancelled {
+    color: red;
+  }
+}
+
 .fc-title {
   .roomcalendar_icon {
     min-height: 100px;

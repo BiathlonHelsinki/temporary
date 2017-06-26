@@ -115,7 +115,7 @@ class Admin::InstancesController < Admin::BaseController
   private
   
   def instance_params
-    params.require(:instance).permit(:published, :event_id, :place_id, :primary_sponsor_id, :is_meeting, :proposal_id,
+    params.require(:instance).permit(:published, :event_id, :place_id, :primary_sponsor_id, :is_meeting, :proposal_id, :cancelled,
     :secondary_sponsor_id, :cost_euros, :cost_bb, :sequence, :start_at, :end_at, :sequence, :allow_multiple_entry, 
     :request_rsvp, :request_registration, :custom_bb_fee, :email_registrations_to, :question1_text, :question2_text,
     :question3_text, :question4_text, :boolean1_text, :boolean2_text, :require_approval, :hide_registrants,

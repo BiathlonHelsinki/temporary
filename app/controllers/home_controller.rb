@@ -9,7 +9,7 @@ class HomeController < ApplicationController
     if @open_day.nil? 
       @open_day = Experiment.friendly.find('open-days').instances.published.future.order(:start_at).first
     end
-    @feed += Instance.published.current.not_open_day.or(Instance.published.future.not_open_day).order(:start_at).to_a.delete_if{|x| !x.show_on_website?}
+    @feed += Instance.published.current.not_open_day.not_cancelled.or(Instance.published.future.not_cancelled.not_open_day).order(:start_at).to_a.delete_if{|x| !x.show_on_website?}
     # @next_other = Experiment
     # @feed += Proposal.active.order(created_at: :desc).to_a.delete_if{|x| x.scheduled? }
     @feed += Proposal.active.includes([:instances, :pledges]).order(updated_at: :desc).to_a.delete_if{|x| x.has_enough? }
@@ -25,7 +25,7 @@ class HomeController < ApplicationController
     cal = Experiment.published.between(params['start'], params['end']) if (params['start'] && params['end'])
     @calendar = []
     @calendar += cal.map(&:instances).flatten
-    @calendar += Instance.published.between(params['start'], params['end']) if (params['start'] && params['end'])
+    @calendar += Instance.published.not_cancelled.between(params['start'], params['end']) if (params['start'] && params['end'])
     @calendar.uniq!
     @calendar.flatten!
     @feed.sort_by!(&:feed_date).reverse!

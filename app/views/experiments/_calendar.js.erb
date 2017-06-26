@@ -33,7 +33,11 @@ var options = {
     eventResize: function(event, dayDelta, minuteDelta, revertFunc) {
       return updateEvent(event);
     },
-    eventAfterRender: function(event, element,view) {
+    eventAfterRender: function(event, element, view) {
+      if (event.cancelled == true) {
+        element.addClass('fc-cancelled');
+        element.find('.fc-time').append(" <span class='cancelled'>CANCELLED!</span>"); 
+      }
       if (moment(event.start).format('YYYY-M-D') == moment(new Date()).format('YYYY-M-D')) {
         element.parent().addClass('fc-today');
       } 
@@ -75,19 +79,16 @@ var mobileOptions = {
   },
   eventRender: function(copiedEventObject,element) {
 
-    var icon = $(document.createElement('div'));
-    if (copiedEventObject.icon_url) {
-      icon.addClass('roomcalendar_icon');
-      icon.css('background-image',"url(" + copiedEventObject.icon_url + ")");
-      element.find('.fc-title').prepend(icon);
-     
-    } else {
-      element.find('.fc-content').addClass('roomcalendar_tobook');
-       element.addClass('booking_link');
+    if (copiedEventObject.cancelled == true) {
+   
+      element.find('.fc-widget-content a').prepend(" <span class='cancelled'>CANCELLED: </span>"); 
+      element.find('.fc-widget-content a').addClass('cancelled');
     }
+
 
   },
   eventAfterRender: function(event, element,view) {
+
     if (moment(event.start).format('YYYY-M-D') == moment(new Date()).format('YYYY-M-D')) {
       element.parent().addClass('fc-today');
     } 

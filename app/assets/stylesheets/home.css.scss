@@ -267,6 +267,16 @@ header {
         display: none;
         color: $black;
       }
+      .fc-cancelled {
+        .fc-title {
+          text-decoration: line-through;
+          opacity: 0.6;
+          span.cancelled {
+            text-decoration: none;
+            color: red;
+          }
+        }
+      }
       .fc-title {
         color: $black;
       }

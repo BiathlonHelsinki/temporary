@@ -27,6 +27,7 @@ class Instance < ApplicationRecord
     start_time, end_time, start_time, end_time, start_time, end_time, start_time, end_time])
   }
   scope :published, -> () { where(published: true) }
+  scope :not_cancelled, -> { where('cancelled is not true') }
   scope :meetings, -> () {where(is_meeting: true)}
   scope :future, -> () {where(["end_at >=  ?", Time.now.utc.strftime('%Y/%m/%d %H:%M')]) }
   scope :past, -> () {where(["end_at <  ?", Time.now.utc.strftime('%Y/%m/%d %H:%M')]) }
@@ -38,13 +39,14 @@ class Instance < ApplicationRecord
   def as_json(options = {})
     {
       :id => self.id,
-      :title => self.name,
+      :title =>  self.name,
       :description => self.description || "",
       :start => start_at.strftime('%Y-%m-%d %H:%M:00'),
       :end => end_at.nil? ? start_at.strftime('%Y-%m-%d %H:%M:00') : (end_at.strftime('%H:%M') == '23:59' ? '??' : end_at.strftime('%Y-%m-%d %H:%M:00')),
       :allDay => false, 
       :recurring => false,
       :temps => self.cost_bb,
+      :cancelled => self.cancelled,
       :url => Rails.application.routes.url_helpers.experiment_instance_path(experiment.slug, slug)
     }
     

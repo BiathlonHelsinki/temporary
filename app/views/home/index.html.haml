@@ -242,6 +242,12 @@
         return updateEvent(event);
       },
       eventAfterRender: function(event, element,view) {
+     
+        if (event.cancelled == true) {
+   
+          element.addClass('fc-cancelled');
+          element.find('.fc-title').prepend(" <span class='cancelled'>CANCELLED:</span> "); 
+        }
         if (moment(event.start).format('YYYY-M-D') == moment(new Date()).format('YYYY-M-D')) {
           element.parent().addClass('fc-today');
         } 
