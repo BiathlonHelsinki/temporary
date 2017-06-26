@@ -99,7 +99,7 @@
 
               %small
                 = t :needed_to_be_considered_for_scheduling
-                = t(:needed_total_from_users, amount: @proposal.needed_for_next.to_s + tsign)
+                = raw t(:needed_total_from_users, amount: @proposal.needed_for_next.to_s + tsign)
 
             - else
               - if !@proposal.scheduled?
