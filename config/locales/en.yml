@@ -204,3 +204,4 @@ en:
   edit_pledge: 'Edit pledge'
   cancelled: 'This experiment has been cancelled.'
   reschedule_info: 'Check back soon for information on when/if it will be rescheduled.'
+  cancelled_it: 'cancelled the experiment'
