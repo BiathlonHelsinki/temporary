@@ -205,3 +205,5 @@ en:
   cancelled: 'This experiment has been cancelled.'
   reschedule_info: 'Check back soon for information on when/if it will be rescheduled.'
   cancelled_it: 'cancelled the experiment'
+  your_email: 'Your email address:'
+  password: 'Password:'
