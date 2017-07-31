@@ -1,17 +1,9 @@
-/ - if @temporary_is_open == true
-/   .open_or_closed
-/     %strong= t :is_currently_open
-/
-/ - else
-/   .open_or_closed.closed
-/     %strong= t :is_not_currently_open
-/     %br/
-/     %small= link_to "(#{t :when_is_temporary_open})", '/pages/when-is-temporary-open'
-.open_or_closed
-  %p
-    = link_to 'Open Time', '/experiments/open-time'
-    is closed in July and will re-open on 1 August.
-  %p
-    Please see the 
-    = link_to 'calendar', '/experiments/calendar'
-    for other experiments occuring during July.
+- if @temporary_is_open == true
+  .open_or_closed
+    %strong= t :is_currently_open
+
+- else
+  .open_or_closed.closed
+    %strong= t :is_not_currently_open
+    %br/
+    %small= link_to "(#{t :when_is_temporary_open})", '/pages/when-is-temporary-open'

@@ -4,7 +4,7 @@
     %li.has-submenu
       = link_to t(:questions_and_answers), '#',class: [:first, controller.controller_name == 'pages' ? :active : false]
       
-      %ul.submenu.menu.vertical{"data-submenu" => ""}
+      %ul.submenu.menu.vertical{"data-submenu" => "", "data-auto-height" => "true"}
         %li= link_to t(:what_is_temporary), page_path('what-is-temporary')
         %li= link_to t(:how_does_it_work), page_path('how-does-it-work')
         %li= link_to t(:where_is_it), page_path('where-is-it')
@@ -28,7 +28,7 @@
           = raw (current_user.available_balance.to_s + tsign)
           - unless current_user.available_balance == current_user.latest_balance
             %small= raw "(#{current_user.latest_balance.to_s}#{tsign})"
-        %ul.submenu.menu.vertical{"data-submenu" => ""}
+        %ul.submenu.menu.vertical{"data-submenu" => "", "data-auto-height" => "true"}
           - if current_user.has_role? :admin
             %li= link_to 'Admin', '/admin'
           %li= link_to t(:your_details), user_activities_path(current_user.slug)
