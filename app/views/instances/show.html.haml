@@ -22,7 +22,8 @@
         .temps
           - if @instance.cancelled
             .cancelled
-              %h3= t :cancelled
+              %h3= t :experiment_has_been_cancelled
+              %br/
               %h4= t :reschedule_info
           - else
             - if @instance.in_future?
