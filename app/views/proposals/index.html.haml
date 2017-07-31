@@ -1,25 +1,25 @@
 .submenu
   %ul.menu
-    %li{class: (params[:filter] == false || params[:filter].nil?) && controller.action_name == 'index' ? :active : false}= link_to "All active proposals (#{Proposal.active.size.to_s})", proposals_path
-    %li{class: params[:filter] == 'needs_support' ? :active : false}= link_to raw("Needs more #{tsign} (#{@needs_support_count.to_s})"), proposals_path(filter: params[:filter] == 'needs_support' ? false : :needs_support)
-    %li{class: params[:filter] == 'scheduled' ? :active : false}= link_to "Scheduled (#{@scheduled_count.to_s})", proposals_path(filter: params[:filter] == 'scheduled' ? false :  :scheduled)
-    %li{class: params[:filter] == 'review' ? :active : false}= link_to "Awaiting review (#{@review_count.to_s})", proposals_path(filter: params[:filter] == 'review' ? false : :review)
-    %li{class: controller.action_name == 'archived' ? :active : false}= link_to "Archived (#{Proposal.archived.size.to_s})", archived_proposals_path
+    %li{class: (params[:filter] == false || params[:filter].nil?) && controller.action_name == 'index' ? :active : false}= link_to t(:all_active_proposals) + " (#{Proposal.active.size.to_s})", proposals_path
+    %li{class: params[:filter] == 'needs_support' ? :active : false}= link_to raw(t(:needs_more_t) + " (#{@needs_support_count.to_s})"), proposals_path(filter: params[:filter] == 'needs_support' ? false : :needs_support)
+    %li{class: params[:filter] == 'scheduled' ? :active : false}= link_to t(:scheduled) + " (#{@scheduled_count.to_s})", proposals_path(filter: params[:filter] == 'scheduled' ? false :  :scheduled)
+    %li{class: params[:filter] == 'review' ? :active : false}= link_to t(:awaiting_review) + " (#{@review_count.to_s})", proposals_path(filter: params[:filter] == 'review' ? false : :review)
+    %li{class: controller.action_name == 'archived' ? :active : false}= link_to t(:archived) + " (#{Proposal.archived.size.to_s})", archived_proposals_path
 .proposals_index
 
   .row.expanded
     .small-12.medium-6.columns.medium-uncentered
       %h1 
         - if !params[:by_string].nil?
-          Search results for:
+          = t(:search_results_for)
           %em= params[:by_string]
         - else
           - if @proposals.first.stopped == true
-            Archived
-          Proposals
+            = t :archived
+          = t :proposals
     .small-12.medium-4.columns.medium-right
       = form_tag '/search_proposals', :method => :post do
-        = text_field_tag 'by_string', params[:by_string],  placeholder: 'Search....'
+        = text_field_tag 'by_string', params[:by_string],  placeholder: t(:search_ellipses)
 
   - if user_signed_in?
     .row.expanded
@@ -31,16 +31,17 @@
   - else
     .row.expanded
       .small-8.columns.small-centered.medium-uncentered.medium-12
-        %p Log in (or join!) to propose an experiment.
+        %p
+          = t :log_in_or_join_to_propose
     
   .row.expanded
     .small-8.columns.small-centered.medium-uncentered.medium-12
       %p
          
-        = raw tsign
-        needed for an experiment to begin:
+        = t :t_needed_for_an_experiment_to_begin
+
         = raw (@current_rate.to_s + tsign)
-        %small= link_to "(why?)", "/pages/how-does-it-work#number_5", target: :_blank
+        %small= link_to t(:why), "/pages/how-does-it-work#number_5", target: :_blank
         
   - if @proposals.methods.include?(:total_pages)
     .row.expanded
@@ -55,13 +56,13 @@
     %table.proposals
       %thead
         %tr
-          %th Name
-          %th Proposed by
-          %th When?
+          %th= t :name
+          %th= t :proposed_by
+          %th= t :when
           %th.pledged
-            Pledged 
+            = t(:pledged).capitalize
 
-          %th Status
+          %th= t :status
       %tbody
         - @proposals.each do |proposal|
           - cache [proposal, current_user] do
@@ -76,40 +77,42 @@
                 - if user_signed_in?
                   - if current_user == proposal.user || current_user.has_role?(:admin)
                     %br/
-                    = link_to 'Edit proposal', edit_proposal_path(proposal), class: [:button, :tiny], style: 'float: left; font-size: 0.7em; margin: 0.5rem 0;'
+                    = link_to t(:edit_proposal), edit_proposal_path(proposal), class: [:button, :tiny], style: 'float: left; font-size: 0.7em; margin: 0.5rem 0;'
               %td
                 .recurrence
                   - if proposal.recurrence == 2
                     - if proposal.intended_sessions == 0
-                      Multiple meetings proposed
+                      = :multiple_meetings_proposed
                     - else  
                       %p= proposal.intended_sessions.to_s + " meetings proposed"
                       - unless proposal.intended_sessions == 0
                         %p
-                          = raw (proposal.total_needed_with_recurrence_cached.to_s + tsign)
-                          total needed to schedule the complete experiment
+
+                          = raw t(:x_total_needed_for_complete, number: proposal.total_needed_with_recurrence_cached.to_s)
                     
                   - if proposal.recurrence == 3
-                    Happens regularly
+                    = t :happens_regularly
+
                     - unless proposal.intended_sessions == 0
                       %p
                         = proposal.intended_sessions.to_s + " meetings proposed"
                       %p
-                        = raw (proposal.total_needed_with_recurrence_cached.to_s + tsign)
-                        total needed to schedule the complete experiment                      
+                        = raw t(:x_total_needed_for_complete, number: proposal.total_needed_with_recurrence_cached.to_s)
+                    
                   - if proposal.scheduled?    
                     - if proposal.recurrence != 1
                       - if proposal.instances.first.experiment.instances.future.or(proposal.instances.first.experiment.instances.current).empty?
                         - if proposal.stopped == true
-                          %p Experiment completed
+                          %p= t(:experiment_completed)
                         - else
-                          %p None currently upcoming
+                          %p= t(:none_currently_upcoming)
                       - else
                         %p
                           - if proposal.instances.first.experiment.instances.future.size > 1
                             = link_to fa_icon('calendar'), '#', onclick: "javascript:$('ul#upcoming_events_#{proposal.id.to_s}').slideToggle();return false;"
-                          = proposal.instances.first.experiment.instances.future.size.to_s
-                          upcoming, next at:
+                          
+                          = t(:x_upcoming_next_at, number: proposal.instances.first.experiment.instances.future.size.to_s)
+                     
 
 
                         %ul
@@ -140,32 +143,36 @@
                               %em= date_range(i.start_at, i.end_at)
                     - unless proposal.instances.past.empty?
                       %p &nbsp;
-                      %p Last meeting:
-                      = link_to proposal.instances.past.order(:end_at).last.name, [proposal.instances.first.experiment, proposal.instances.first]
+                      %p= t(:last_meeting)
+                      %span{class: proposal.instances.past.order(:end_at).last.cancelled ? :cancelled : false }= link_to proposal.instances.past.order(:end_at).last.name, [proposal.instances.first.experiment, proposal.instances.past.order(:end_at).last]
                       %br/
+                      
                       %em= date_range(proposal.instances.past.order(:end_at).last.start_at, proposal.instances.past.order(:end_at).last.end_at)
-                      .attended= pluralize(proposal.instances.past.order(:end_at).last.users.size + proposal.instances.past.order(:end_at).last.onetimers.unclaimed.size, 'person') + " participated" 
+                      - if proposal.instances.past.order(:end_at).last.cancelled == true
+                        .cancelled
+                          = t :cancelled
+                      - else
+                        .attended
+                          = (proposal.instances.past.order(:end_at).last.users.size + proposal.instances.past.order(:end_at).last.onetimers.unclaimed.size).to_s
+                          = t(:participant, count: proposal.instances.past.order(:end_at).last.users.size + proposal.instances.past.order(:end_at).last.onetimers.unclaimed.size )
+                          
               %td.pledge_info
                 - if proposal.stopped == true || (proposal.scheduled? && (!proposal.recurs? || proposal.intended_sessions == proposal.published_instances))
-                  = raw(proposal.pledged_cached.to_s + tsign)
+                  =  raw(proposal.pledged_cached.to_s + tsign)
                   %small
-                    out of 
-                    = proposal.total_needed_with_recurrence_cached
-                    -#- if proposal.recurrence == 2 || proposal.recurrence == 3 
-                    -#  = " / #{proposal.total_needed_with_recurrence_cached}"
+                    = raw t(:out_of_y, y: proposal.total_needed_with_recurrence_cached)
+
                 - else
                   = raw(proposal.remaining_pledges.to_s + tsign)
                   %small
-                    out of 
-                    - if proposal.recurrence == 2 && proposal.require_all == true
-                      = proposal.total_needed_with_recurrence
-                    - else
-                      = proposal.needed_for_next 
-                    -#- if (proposal.recurrence == 2 || proposal.recurrence == 3 ) &&  proposal.intended_sessions != 0
-                    -#  = " / #{proposal.total_needed_with_recurrence_cached - proposal.spent}"
+                    = raw t(:out_of_y, y: proposal.recurrence == 2 && proposal.require_all == true ?  proposal.total_needed_with_recurrence : proposal.needed_for_next)
+
                 %a{:"data-open" => "proposal_pledge_info_#{proposal.id.to_s}"}= fa_icon('info-circle')
                 .metadata
-                  %em= pluralize(proposal.pledges.map(&:user).uniq.size, 'person') + ' pledged' 
+                  %em
+                    = proposal.pledges.map(&:user).uniq.size
+                    = t(:person, count: proposal.pledges.map(&:user).uniq.size)
+                    = t(:pledged)
                 .reveal{id: 'proposal_pledge_info_' + proposal.id.to_s, :"data-reveal" => ''}= render partial: 'pledges_overlay', locals: {proposal: proposal}
 
 

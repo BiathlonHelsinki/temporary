@@ -207,3 +207,33 @@ en:
   cancelled_it: 'cancelled the experiment'
   your_email: 'Your email address:'
   password: 'Password:'
+  all_active_proposals: 'All active proposals'
+  needs_more_t: 'Needs more Ŧ'
+  awaiting_review: 'Awaiting review'
+  archived: 'Archived'
+  search_results_for: 'Search results for:'
+  search_ellipses: "Search ..."
+  t_needed_for_an_experiment_to_begin: 'Ŧ needed for an expermiment to begin:'
+  log_in_or_join_to_propose: 'Log in (or join!) to propose an experiment'
+  why: '(why?)'
+  name: 'Name'
+  proposed_by: 'Proposed by'
+  when: 'When?'
+  status: 'Status'
+  multiple_meetings_proposed: 'Multiple meetings proposed'
+  x_total_needed_for_complete: "%{number}Ŧ total needed to schedule the complete experiment"
+  happens_regularly: 'Happens regularly'
+  experiment_completed: 'Experiment completed'
+  none_currently_upcoming: 'None currently upcoming'
+  x_upcoming_next_at: "%{number} upcoming next at:"
+  last_meeting: 'Last meeting:'
+  participant:
+    zero: 'participants'
+    one: 'participant'
+    other: 'participants'
+  out_of_y: 'out of %{y}'
+  person:
+    zero: 'people'
+    one: 'person'
+    other: 'people'
+  

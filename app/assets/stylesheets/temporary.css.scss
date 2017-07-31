@@ -655,6 +655,12 @@ article.instance_single {
               clear: left;
             }
           }
+          span.cancelled {
+            text-decoration: line-through;
+            a {
+              color: red;
+            }
+          }
           a {
             color: $blue;
           }
