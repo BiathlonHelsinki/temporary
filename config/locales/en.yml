@@ -284,3 +284,6 @@ en:
   waiting_to_be_scheduled: 'Waiting to be scheduled'
   total: 'Total'
   pledges_spent: 'Pledges spent'
+  download: 'Download'
+  view_as_calendar: 'View as calendar'
+  view_as_list: 'View as list'

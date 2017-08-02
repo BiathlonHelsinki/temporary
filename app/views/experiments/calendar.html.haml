@@ -3,11 +3,13 @@
     .small-12.columns
       %h1
         = t :experiments
-        %small= link_to fa_icon('list'), experiments_path
+        
   .row.expanded
     .small-12.columns
-      = link_to fa_icon('download') + t(:calendar), calendar_experiments_path(format: 'ics'), class: [:button, :small]
+      = link_to fa_icon('list') + ' ' + t(:view_as_list), experiments_path, class: [:button]
+      = link_to fa_icon('download') + ' ' + t(:download), calendar_experiments_path(format: 'ics'), class: [:button, :small]
   .row.expanded
+
     #calendar.small-centered
   
   = content_for :jquery do

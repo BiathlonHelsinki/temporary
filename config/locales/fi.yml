@@ -439,3 +439,5 @@ fi:
   waiting_to_be_scheduled: 'Aikataulusta odotetaan'
   total: 'Yhteensä'
   pledges_spent: 'Lahjotettuja Tempsejä käytetty'
+  download: 'Download'
+  view_as_calendar: 'View as calendar'
