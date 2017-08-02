@@ -8,11 +8,11 @@
 .submenu.hide-for-small-only
   %ul.menu.page
     %li= link_to 'News', posts_path
-    %li{class: @page.slug == 'what-is-temporary' ? :active : false}= link_to 'What is Temporary?', page_path('what-is-temporary')
-    %li{class: @page.slug == 'how-does-it-work' ? :active : false}= link_to 'How does it work?', page_path('how-does-it-work')
-    %li{class: @page.slug == 'where-is-it' ? :active : false}= link_to 'Where is it?', page_path('where-is-it')
-    %li{class: @page.slug == 'what-is-this-t-everywhere' ? :active : false}= link_to raw("What's the #{tsign} mean?"), page_path('what-is-this-t-everywhere')
-    %li{class: @page.slug == 'donate-to-temporary' ? :active : false}= link_to raw("Donate to Temporary!"), page_path('donate-to-temporary')
+    %li{class: @page.slug == 'what-is-temporary' ? :active : false}= link_to t(:what_is_temporary), page_path('what-is-temporary')
+    %li{class: @page.slug == 'how-does-it-work' ? :active : false}= link_to t(:how_does_it_work), page_path('how-does-it-work')
+    %li{class: @page.slug == 'where-is-it' ? :active : false}= link_to t(:where_is_it), page_path('where-is-it')
+    %li{class: @page.slug == 'what-is-this-t-everywhere' ? :active : false}= link_to raw(t(:whats_the_t_mean, tsign: tsign)), page_path('what-is-this-t-everywhere')
+    %li{class: @page.slug == 'donate-to-temporary' ? :active : false}= link_to t(:donate_to_temporary), page_path('donate-to-temporary')
     
 .page{class: @page.slug}
   .row.expanded

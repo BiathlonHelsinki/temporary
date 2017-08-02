@@ -278,7 +278,6 @@ fi:
   edited: 'muokkasi'
   edited_their_pledge_to: 'muutti tuenmäärän'
   had_blockchain_balance_adjusted_by: 'blockchain saldoa muutettiin %{numerical_value}Ŧ'
-  is no longer registered for: 'ei ole enää rekistöröitynyt'
   is_no_longer_planning_to_attend: 'ei enää aio osallistua'
   joined: 'littyi!'
   linked: 'linkitti'
@@ -441,3 +440,4 @@ fi:
   pledges_spent: 'Lahjotettuja Tempsejä käytetty'
   download: 'Download'
   view_as_calendar: 'View as calendar'
+  is_no_longer_registered_for: 'ei ole enää rekistöröitynyt'

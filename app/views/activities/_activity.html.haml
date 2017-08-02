@@ -17,9 +17,10 @@
         = link_to activity.user.display_name, activity.user, target: :_blank
     %td
       - if activity.numerical_value.nil?
-        = raw t(activity.description.to_sym)
+
+        = raw t(activity.description.strip.to_sym)
       - else
-        
+
         = raw t(activity.description.to_sym, numerical_value: activity.numerical_value)
 
     %td
