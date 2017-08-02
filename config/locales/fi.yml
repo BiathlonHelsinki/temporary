@@ -315,6 +315,7 @@ fi:
   pledge_temps: 'Tue Ŧ!'
   pledge_more_temps: 'Tue lisää Ŧ!'
   meeting: 'tapaaminen'
+
   meetings_took_place_past: "%{amount} tapahtui:"
   recurring_experiment_meetings: 'Toistuva kokeilu. Tapaamiset:'
   this_proposal_needs_at_least_one_other_user_to_pledge_to_it: 'Tämä ehdotus tarvitsee vähintään yhden toisen käyttäjän tuen.'
@@ -477,4 +478,93 @@ fi:
   comments: 'Comments'
   pending: 'Pending'
   pledged_or_withdrawn: 'pledged/withdrawn'
-  transferred: 'transferred'    
+  transferred: 'transferred'
+  meeting:
+    zero: 'tapaaminenta'
+    one: 'tapaaminen'
+    other: 'tapaaminenta'
+  pledging_support_for: 'Pledging support for:'
+  amount_available_to_pledge: 'You have %{number}Ŧ available.'
+  multiday_experiments: 'This experiment is proposed to meet multiple times. At Temporary, multi-day experiments cost Temps for each day it meets, with a 10% discount applied to each successive day (until it gets down to 20Ŧ, the minimum cost in Temps).'
+  indefinite_proposal: 'This proposal does not specify how many times it will meet, so it will continue indefinitely.'
+  
+  # used in the phrase  'this experiment has happened 6 times'
+  meeting_time_instance:
+    zero: 'times'
+    one: 'time'
+    other: 'times'
+  experiment_scheduled_to_happen_x_times: 'This experiment has already happened (or been scheduled to happen) %{number_of_times}.'
+  more_meetings:
+    zero: 'meetings'
+    one: 'further meeting'
+    other: 'further meetings'
+  currently_enough_temps: "There are currently enough Temps pledged (%{number_of_temps}Ŧ) to schedule %{number} %{possible_meetings}."
+  needs_to_happen_again: 'This proposal needs %{number} more Ŧ pledged to happen%{again}.'
+  biathlon_api_offline: "We're sorry, the Biathlon API is currently offline. Please try again later."
+  no_temps_to_pledge: 'You do not currently have any Temps available to pledge.'
+  delete_your_pledge: 'Delete your pledge!'
+  confirm_pledge_withdrawal: "Are you sure? Your Ŧ will be restored to your full balance."
+  how_many_to_pledge: 'How many %{currency} (Ŧ) would you like to pledge?'
+  your_pledge_with_max: 'Your pledge (max. %{max}):'
+  comments_on_pledge: 'Any comments on your pledge?'
+  tagging: 'Tagging:'
+  people_tagging: "People: type '@' followed by someone's username [eg: @Jussi, @CucumberHead]"
+  experiment_tagging: "Experiments: type '#' followed by the name of the experiment [eg: #Open]"
+  proposal_form: 'Proposal form'
+  name_of_your_experiment: 'Name of your experiment'
+  short_description: 'Short description'
+  how_often_will_this_occur: 'How often will this occur?'
+  once: 'once'
+  show: 'show'
+  how_many_days_of_calendar: 'How many days (of the calendar) will this happen?'
+  how_many_estimated_total: "How many total meetings do you estimate? (Enter '0' to keep it going indefinitely)"
+  can_be_changed_give_commitment: "This can be changed later, but it's good to give people some idea of a committment."
+  one_time_only: 'One time only'
+  multiple_times_over_fixed_period: 'Multiple times over a fixed period'
+  recurring_regularly: 'Recurring regularly or indefinitely (eg. once per month, every other month, etc.)'
+  should_we_wait: 'Should we wait until there are enough pledges for the complete experiment before scheduling?'
+  should_we_wait_explanation: 'For example, if your proposal requires three consecutive days, then all 3 days will be need to get pledges and the entire expriment can then be scheduled at once instead of just the first day.'
+  total_t_needed: 'Total Ŧ needed'
+  proposed_times_and_duration: 'Proposed times and duration'
+  if_you_suggest_exact_date: '
+If you suggest an exact date, we will do our best when scheduling to co-exist with other experiments. We recommend planning experiments at least a few weeks from now to give more time to collect pledges, as well as to allow you to prepare for and promote your experiment after it is scheduled.'
+  goals_of_experiment: 'What are the goals of this experiment?'
+  intended_participants: 'Intended participants'
+  add_an_image: 'Add an image to this proposal +'
+  image: 'Image'
+  change_this_image: 'Change this image'
+  remove_this_image: 'Remove this image'
+  propose_it: 'Propose it!'
+  cancel_registration: 'Cancel registration'
+  registration_cancel_blurb: 'If you think you will not be able to attend, please cancel your registration, as a courtesy to others.'
+  coming_up: 'Coming up'
+  are_you_sure_you_want_to_cancel: 'Are you sure you want to cancel your registration?'
+  experiment_instigator: '(experiment instigator)'
+  waiting_list: 'Waiting list'
+  registered_you_must_register: 'Registered participants (you must register to participate):'
+  yes_i_plan_to_attend: 'Yes, I plan to attend'
+  organiser_requested_rsvp: 'The organiser of this experiment has requested that you RSVP if you are attending.'
+  you_have_rsvpd: 'You have RSVPd to this event. Thank you, and we will see you there!'
+  registration_is_closed: 'Sorry, registration is currently closed.'
+  experiment_already_took_place: 'This experiment already took place.'
+  registration_phone: 'Please enter your phone number so the experiment organiser can contact you if there are any issues or problems or last-minute changes'
+  phone_is_optional: 'This is optional, though.'
+  registration_form: 'Registration form'
+  registration_is_full_waiting_list: 'Registration is currently full. However, you may register for the waiting list and you will be notified if a space becomes available.'
+  you_will_earn_x_for_participating: "You will earn %{number}Ŧ for participating!"
+  for_the_waiting_list: ' for the waiting list'
+  register_x: 'Register%{waiting_list_option}'
+  i_plan_to_attend: 'I plan to attend!'
+  scheduled_from_proposal: 'Scheduled from proposal:'
+  supported_by: 'Supported by:'
+  download_to_calendar: ' Download to your calendar'
+  registrations: 'Registrations'
+  you_have_registered_see_you: 'You have registered for this event. Thank you, and we will see you there!'
+  there_are_x_places_left: "There %{is_number_place} left."
+  place_in_registration:
+    zero: 'are no places'
+    one: 'is one place'
+    other: 'are %{count} places'
+  register_me: 'Register me'
+  
+      

@@ -3,7 +3,7 @@
     .small-12.medium-9.columns
       %h1
         .sequence
-          = t :experiment
+          = t :experiment, count: 1
           = "##{@experiment.sequence}:"
         = @experiment.name
         -# = link_to fa_icon('calendar'), calendar_experiments_path
@@ -29,8 +29,7 @@
   - unless @future.empty?
     .row.expanded
       .small-12.columns
-        %h1
-          Coming up:
+        %h1= t :coming_up
   .row.expanded#expandme.small-up-1.medium-up-2.large-up-4.xxlarge-up-5{:"data-equalizer" => '', :"data-equalize-by-row" => "true"}
     - @future.each do |exp|
       = render partial: 'experiment_instance_column', locals: {exp: exp, experiment: @experiment}

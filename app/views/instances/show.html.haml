@@ -9,12 +9,12 @@
             - if @experiment.instances.size > 1
               = link_to @experiment.name, @experiment
             - else
-              = link_to "Experiment ", @experiment
+              = link_to t(:experiment, count: 1), @experiment
           = " // "
           - if @instance.cancelled == true
             %span.cancelled= t :cancelled
         .title
-          = "Experiment ##{@instance.sequence}:"
+          = t(:experiment, count: 1) + " ##{@instance.sequence}:"
           = @instance.name
           - if @instance.name =~ /open\stime/
             %br/
@@ -27,28 +27,28 @@
               %h4= t :reschedule_info
           - else
             - if @instance.in_future?
-              = raw "You will earn #{@instance.cost_bb}#{tsign} for participating!"
+              = raw t(:you_will_earn_x_for_participating, number: @instance.cost_bb)
               - if @instance.request_registration?
                 %p
-                  You must register for this experiment.
+                  = t :you_must_register_for_this_experiment
                   - unless @instance.max_attendees.blank?
-                    There 
-                    = @instance.max_attendees - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record? }.size == 1 ? 'is' : 'are' 
-                    = pluralize(@instance.max_attendees - @instance.registrations.not_waiting.size, 'place')
-                    left.
+                    = t(:there_are_x_places_left, is_number_place: t(:place_in_registration, count: @instance.max_attendees - @instance.registrations.not_waiting.size))
+                    
+
                   %br/
                   - if user_signed_in?
                     - if current_user.registered?(@instance)
-                      = link_to "Cancel registration!", '#', onclick:"javascript:$(document).scrollTo('#cancel_link', 800);return false;", class: [:button, :alert]
+                      - if @instance.start_at - Time.current >= 86400
+                        = link_to t(:cancel_registration), '#', onclick:"javascript:$(document).scrollTo('#cancel_link', 800);return false;", class: [:button, :alert]
                     - elsif !@instance.max_attendees.blank?
-                      = link_to "Register#{(@instance.max_attendees - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record? }.size < 1 ? ' for the waiting list' : '')}!", '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('.registration_form', 800);return false;", class: [:button]
+                      = link_to t(:register_x, waiting_list_option: (@instance.max_attendees - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record? }.size) < 1 ? t(:for_the_waiting_list) : '' ), '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('.registration_form', 800);return false;", class: [:button]
                     - else
-                      = link_to "Register!", '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('.registration_form', 800);return false;", class: [:button]
+                      = link_to t(:register), '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('.registration_form', 800);return false;", class: [:button]
                   - else
                     - if !@instance.max_attendees.blank?
-                      = link_to "Register#{(@instance.max_attendees - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record? }.size) < 1 ? ' for the waiting list' : ''}!", '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('#sign_in_to_register', 800);return false;", class: [:button]
+                      = link_to t(:register_x, waiting_list: (@instance.max_attendees - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record? }.size) < 1 ? t(:for_the_waiting_list) : '' ), '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('#sign_in_to_register', 800);return false;", class: [:button]
                     - else
-                      = link_to "Register!", '/users/sign_in', class: [:button]
+                      = link_to t(:register), '/users/sign_in', class: [:button]
               - else
                 - if user_signed_in?
 
@@ -57,24 +57,24 @@
                     %strong  You have RSVPd to this event.
                   - else
                     %br/
-                    = link_to 'I plan to attend!', rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button]
+                    = link_to t(:i_plan_to_attend), rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button]
             - else
               = link_to raw(pluralize((@instance.users.uniq + @instance.onetimers.unclaimed).size, 'person')), '#', onClick: "javascript:$(window).scrollTo('#participants', {duration: 1000});return false;"
               participated, earning
               = raw "#{@instance.users.uniq.size * @instance.cost_bb}#{tsign}." 
         - if @instance.proposal
           .proposal_info
-            Scheduled from proposal:
+            = t(:scheduled_from_proposal)
             = link_to @instance.proposal.name, @instance.proposal, target: :_blank
             with
             = raw (@instance.cost_in_temps.to_s + tsign)
             - unless @instance.pledges.empty?
               .pledge_info
               
-                Supported by:
+                = t :supported_by
                 = raw @instance.pledges.order(:created_at).group_by(&:user).map{|user| "#{link_to user.first.display_name, user.first} (#{user.last.sum(&:pledge).to_s})" }.join(', ')
               
-        .temps= link_to fa_icon('download') + " Calendar", experiment_instance_path(@instance.experiment, @instance, format: 'ics'), class: [:button, :small]
+        .temps= link_to fa_icon('download') + t(:download_to_calendar), experiment_instance_path(@instance.experiment, @instance, format: 'ics'), class: [:button, :small]
         - if @instance.image?
           = image_tag @instance.image.url.gsub(/development/, 'production')
         - elsif @experiment.image?
@@ -88,7 +88,7 @@
         - if current_user.has_role?(:admin) || current_user == @instance.experiment.primary_sponsor
           .row.expanded
             .small-10.medium-8.columns
-              %h3 Registrations:
+              %h3= t :registrations
           .row.expanded
             .small-10.medium-8.columns              
               %ol
@@ -110,18 +110,20 @@
             - if user_signed_in?
               - if current_user.registered?(@instance)
                 #cancel_link
-                  %h5 You have registered for this event. Thank you, and we will see you there!
-                  %h5 If you think you will not be able to attend, please cancel your registration, as a courtesy to others.
+                  %h5= t(:you_have_registered_see_you)
+                  
+
+                  - if @instance.start_at - Time.current >= 86400
+                    %h5= t :registration_cancel_blurb
                 
-                  = link_to 'Cancel registration', cancel_registration_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button, :alert], data: {confirm: 'Are you sure you want to cancel your registration?'}
+                    = link_to t(:cancel_registration), cancel_registration_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button, :alert], data: {confirm: t(:are_you_sure_you_want_to_cancel)}
               - else
                 %h4
-                  %strong You must register for this experiment.
+                  %strong= t(:you_must_register_for_this_experiment)
                   - unless @instance.max_attendees.blank?
-                    There
-                    = @instance.max_attendees - @instance.registrations.not_waiting.size == 1 ? 'is' : 'are'
-                    = pluralize(@instance.max_attendees - @instance.registrations.not_waiting.size, 'place')
-                    left.
+                    %br/
+                    = t(:there_are_x_places_left, is_number_place: t(:place_in_registration, count: @instance.max_attendees - @instance.registrations.not_waiting.size))
+
                     
             - else
               #sign_in_to_register
@@ -129,21 +131,21 @@
                   = t(:if_you_want_to_register, sign_in: link_to(t(:sign_in).downcase, '/users/sign_in'))
 
                   %br/
-                  = link_to 'Sign in (or join)', '/users/sign_in', class: [:button]
+                  = link_to t(:log_in_join), '/users/sign_in', class: [:button]
                   %br/
                   
         .row.expanded
           .small-10.medium-8.columns
             - if user_signed_in?
               -  unless current_user.registered?(@instance)
-                = link_to 'Register me', '#', onclick: 'javascript:$(".registration_form").slideToggle();return false;', class: [:button]
+                = link_to t(:register_me), '#', onclick: 'javascript:$(".registration_form").slideToggle();return false;', class: [:button]
                 .registration_form
                   .row.expanded
                     .small-10.medium-8.columns
-                      %h4 Registration form
+                      %h4= t :registration_form
                       - unless @instance.max_attendees.blank?
                         - if @instance.max_attendees.to_i - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record? }.size < 1
-                          %h5 Registration is currently full. However, you may register for the waiting list and you will be notified if a space becomes available.
+                          %h5= t(:registration_is_full_waiting_list)
                   = semantic_form_for  [ @instance.experiment, @instance,  @registration = @instance.registrations.build(user: current_user)], html: {:"data-abide" => '' } do |f|
                     = f.input :user_id, as: :hidden, data: {value: current_user.id}
 
@@ -167,18 +169,19 @@
                       .row.expanded
                         .small-10.medium-8.columns= f.input :boolean2, as: :boolean, label: @instance.boolean2_text                            
                     .row.expanded
-                      .small-10.medium-8.columns= f.input :phone, label: 'Please enter your phone number so the experiment organiser can contact you if there are any issues or problems or last-minute changes', hint: 'This is optional, though.'
+                      .small-10.medium-8.columns= f.input :phone, label: t(:registration_phone), hint: t(:phone_is_optional)
                     .row.expanded
                       .small-10.medium-8.columns= f.submit t(:register), :class => [:button, :round]                                                                                             
                         
       - elsif @instance.in_future?
         .row.expanded
           .small-10.medium-8.columns
-            %h5 Sorry, registration is currently closed.
+            %h5= t(:registration_is_closed)
+             
       - else
         .row.expanded
           .small-10.medium-8.columns
-            %h5 This experiment already took place.
+            %h5= t :experiment_already_took_place
     - else
       - if @instance.request_rsvp? && @instance.in_future?
         .row.expanded
@@ -186,20 +189,20 @@
             - if user_signed_in?
               - if current_user.rsvpd?(@instance)
               
-                %h5 You have RSVPd to this event. Thank you, and we will see you there!
-                = link_to 'Cancel RSVP', cancel_rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button, :alert], data: {confirm: 'Are you sure you want to cancel your RSVP?'}
+                %h5= t :you_have_rsvpd
+                = link_to t(:cancel_rsvp), cancel_rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button, :alert], data: {confirm: t(:confirm_cancel_rsvp)}
               - else
-                %h4 The organiser of this experiment has requested that you RSVP if you are attending.
+                %h4= t :organiser_requested_rsvp
             - else
               %h4
-                The organiser of this experiment has requested that you RSVP if you are attending.
-                = link_to 'RSVP!', '/users/sign_in', class: [:button]
+                = t(:organiser_requested_rsvp)
+                = link_to t(:rsvp), '/users/sign_in', class: [:button]
         .row.expanded
           .small-10.medium-8.columns
       
             - if user_signed_in?
               -  unless current_user.rsvpd?(@instance)
-                = link_to 'Yes, I plan to attend!', rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button]
+                = link_to t(:yes_i_plan_to_attend), rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button]
   
   
   - if @instance.users.empty? && @instance.onetimers.empty?
@@ -209,7 +212,7 @@
           - unless @instance.registrations.to_a.delete_if{|x| x.new_record? }.empty?
             .row.expanded
               .small-10.medium-6.columns
-                .participant_header Registered participants (you must register to participate):
+                .participant_header= t :registered_you_must_register
             .row.expanded.small-up-4.medium-up-6.large-up-8.xlarge-up-9  
               - @instance.registrations.to_a.delete_if{|x| x.new_record? }.each do |attended|
                 .column.participant_grid
@@ -223,13 +226,14 @@
                     = link_to attended.user.display_name, attended.user
                     - if @instance.experiment.primary_sponsor == attended.user
                       %br/
-                      = link_to "(experiment instigator)", @instance.proposal
+                      = link_to t(:experiment_instigator), @instance.proposal
                     - if attended.waiting_list == true
                       %br/
-                      Waiting list
+                      = t :waiting_list
                     - if user_signed_in?
-                      - if current_user == attended.user
-                        = link_to 'Cancel registration', cancel_registration_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button, :alert], data: {confirm: 'Are you sure you want to cancel your registration?'}
+                      - if @instance.start_at - Time.current >= 86400
+                        - if current_user == attended.user
+                          = link_to t(:cancel_registration), cancel_registration_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button, :alert], data: {confirm: t(:are_you_sure_you_want_to_cancel)}
                     - if @instance.allow_multiple_entry == true
                       = " (#{pluralize(@instance.users.select{|x| x == attended.user}.count, 'time')})"
                     

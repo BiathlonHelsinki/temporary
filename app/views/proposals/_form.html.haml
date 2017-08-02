@@ -1,32 +1,30 @@
 = semantic_nested_form_for @proposal, html: {multipart: true, :'data-abide' => ''} do |f|
   = f.input :user_id, data: {value: current_user.id}, as: :hidden 
   .row
-    .small-10.medium-6.columns= f.input :name, label: 'Name of your experiment', input_html: {required: ''}
+    .small-10.medium-6.columns= f.input :name,  input_html: {required: ''}, label: t(:name_of_your_experiment)
   .row
-    .small-10.medium-6.columns= f.input :short_description, input_html: {required: ''}
+    .small-10.medium-6.columns= f.input :short_description, input_html: {required: ''}, label: t(:short_description)
   .row
-    .small-10.medium-6.columns= f.input :recurrence, as: :select, collection: [['One time only', 1], ['Multiple times over fixed period',2], ['Recurring regularly, indefinitely (eg. once per month, every other month, etc.)', 3]], label: 'How often will this occur?', include_blank: false
-  .row#intended{class: f.object.new_record? ? 'once' : (f.object.intended_sessions.to_i > 1 ? 'show' : 'once')}
-    .small-10.medium-6.columns= f.input :intended_sessions, label: 'How many different meetings do you estimate?', hint: 'This can be changed later, but it\'s good to give people some idea of a committment.', input_html: {value: (f.object.new_record? ? "1" : f.object.intended_sessions.to_i ) }
+    .small-10.medium-6.columns= f.input :recurrence, as: :select, collection: [[t(:one_time_only), 1], [t(:multiple_times_over_fixed_period),2], [t(:recurring_regularly), 3]], label: t(:how_often_will_this_occur), include_blank: false
+  .row#intended{class: f.object.new_record? ? 'once' :  (f.object.intended_sessions.to_i > 1 ? 'show' : 'once')}
+    .small-10.medium-6.columns= f.input :intended_sessions, label: 'How many different meetings do you estimate?', hint: t(:can_be_changed_give_commitment), input_html: {value: (f.object.new_record? ? "1" : f.object.intended_sessions.to_i ) }
   .row#requireall{class: f.object.new_record? ? 'once' : (f.object.intended_sessions.to_i == 2 ? 'show' : 'once')}
-    .small-10.medium-6.columns= f.input :require_all, label: 'Should we wait until there are enough pledges for the complete experiment before scheduling?', hint: 'For example, if your proposal requires three consecutive days, then all 3 days will be need to get pledges and the entire expriment can then be scheduled at once instead of just the first day.'
+    .small-10.medium-6.columns= f.input :require_all, label: t(:should_we_wait), hint: t(:should_we_wait_explanation)
   .row
     .small-10.medium-6.columns
       %label.label
-        Total
-        = raw tsign
-        needed: 
+        = t(:total_t_needed)
       #needed
         - if f.object.new_record?
           = @current_rate
         - else
           = f.object.total_needed_with_recurrence.to_s
   .row
-    .small-10.medium-6.columns= f.input :timeframe, label: 'Proposed times and duration', input_html: {required: ''}, hint: 'If you suggest an exact date, we will do our best when scheduling to co-exist with other experiments. We recommend planning experiments at least a few weeks from now to give more time to collect pledges, as well as to allow you to prepare for and promote your experiment after it is scheduled.'
+    .small-10.medium-6.columns= f.input :timeframe, label: t(:proposed_times_and_duration), input_html: {required: ''}, hint: t(:if_you_suggest_exact_date)
   .row
-    .small-10.medium-6.columns= f.input :goals, label: 'What are the goals of this experiment?', input_html: {required: ''}
+    .small-10.medium-6.columns= f.input :goals, label: t(:goals_of_experiment), input_html: {required: ''}
   .row
-    .small-10.medium-6.columns= f.input :intended_participants, label: 'Intended participants', input_html: {required: ''}
+    .small-10.medium-6.columns= f.input :intended_participants, label: t(:intended_participants), input_html: {required: ''}
       
   .row
     .small-10.medium-8.columns
@@ -36,13 +34,13 @@
           %tr.fields
             - if image_form.object.image?
               %td{colspan: 2}= image_tag image_form.object.image.url(:small)
-            %td= image_form.input :image, label: image_form.object.image? ? 'Change this image' : 'Image'
-            %td= image_form.link_to_remove 'Remove this image', class: [:button, :tiny]
+            %td= image_form.input :image, label: image_form.object.image? ? t(:change_this_image) : t(:image)
+            %td= image_form.link_to_remove t(:remove_this_image), class: [:button, :tiny]
             
   .row
-    .small-10.medium-6.columns= f.link_to_add 'Add an image to this proposal +', :images, data: {target: '#images'}
+    .small-10.medium-6.columns= f.link_to_add t(:add_an_image), :images, data: {target: '#images'}
   .row
-    .small-10.medium-6.columns= f.submit f.object.new_record? ? 'Propose!' : 'Save edited proposal', class: [:button, :large]              
+    .small-10.medium-6.columns= f.submit f.object.new_record? ? t(:propose_it) : t(:save_edited_proposal), class: [:button, :large]              
   
 = content_for :jquery do
   :plain
@@ -81,11 +79,11 @@
     $('#proposal_recurrence').change(function(event) {
       var num = parseInt($('#proposal_recurrence').val());
       if (num == 2) {
-        $('li#proposal_intended_sessions_input label').text("How many days (of the calendar) will this happen?");
+        $('li#proposal_intended_sessions_input label').text("#{t(:how_many_days_of_calendar)}");
         $('#requireall').fadeIn();
       } 
       else if (num == 3) {
-        $('li#proposal_intended_sessions_input label').text("How many total meetings do you estimate? (Enter '0' to keep it going indefinitely)");
+        $('li#proposal_intended_sessions_input label').text("#{t(:how_many_estimated_total)}");
         $('#requireall').fadeOut();
       } else {
         $('#requireall').fadeOut();

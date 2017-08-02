@@ -2,20 +2,19 @@
   .row.expanded
     .small-10.medium-9.columns
       %p 
-        You have
-        = raw("#{current_user.available_balance + @pledge.pledge.to_i}#{tsign}")
-        available.
+        = t(:amount_available_to_pledge, number: current_user.available_balance + @pledge.pledge.to_i)
+
       - if @item.has_enough?
         - if @item.recurs?
           - if @item.total_needed_with_recurrence > @item.pledged
-            %p= raw "This experiment is proposed to meet multiple times. At Temporary, multi-day experiments cost per day, with a 10% discount applied to each successive meeting (until it gets down to 20#{tsign}, the minimum cost of any experiment)."
+            %p= t(:multiday_experiments)
             
             - if @item.intended_sessions == 0
-              %p This proposal does not specify how many times it will meet, so it will continue indefinitely.
+              %p= t(:indefinite_proposal)
               %p
                 - unless @item.instances.published.empty?
-                  This experiment has already happened (or been scheduled to happen)
-                  = pluralize(@item.instances.published.size, 'time') + "."
+                  = t(:experiment_scheduled_to_happen_x_times, number_of_times: @item.instances.published.size.to_s + " " + t(:meeting_time_instance, count: @item.instances.published.size))
+
                 There are currently enough Temps pledged 
                 = raw "(#{@item.remaining_pledges}#{tsign})"
                 to schedule
@@ -26,12 +25,10 @@
                 = @item.intended_sessions.to_s
                 times. 
                 - unless @item.instances.published.empty?
-                  This experiment has already happened (or been scheduled to happen)
-                  = pluralize(@item.instances.published.size, 'time') + "."
-                There are currently enough Temps pledged 
-                = raw "(#{@item.remaining_pledges}#{tsign})"
-                to schedule
-                = pluralize(@item.number_that_can_be_scheduled.to_s, @item.instances.published.empty? ? 'meeting' : 'more meeting') + "."
+                  = t(:experiment_scheduled_to_happen_x_times, number_of_times: @item.instances.published.size.to_s + " " + t(:meeting_time_instance, count: @item.instances.published.size))
+                  
+                = t(:currently_enough_temps, number_of_temps: @item.remaining_pledges, number: @item.number_that_can_be_scheduled.to_s, possible_meetings: t(:more_meetings, count: @item.number_that_can_be_scheduled.to_s))
+
                 
         - else
           - unless @next_meeting.nil?
@@ -48,16 +45,13 @@
               %p This proposal does not specify how many times it will meet, so it will continue indefinitely.
               %p
                 - unless @item.instances.published.empty?
-                  This experiment has already happened (or been scheduled to happen)
-                  = pluralize(@item.instances.published.size, 'time') + "."
-                There are currently enough Temps pledged 
-                = raw "(#{@item.remaining_pledges}#{tsign})"
-                to schedule
-                = pluralize(@item.number_that_can_be_scheduled.to_s, @item.published_instances == 0 ? 'meeting' : 'more meeting') + "."
+                  = t(:experiment_scheduled_to_happen_x_times, number_of_times: @item.instances.published.size.to_s + " " + t(:meeting_time_instance, count: @item.instances.published.size))
+                  
+                = t(:currently_enough_temps, number_of_temps: @item.remaining_pledges, number: @item.number_that_can_be_scheduled.to_s, possible_meetings: t(:more_meetings, count: @item.number_that_can_be_scheduled))  
+
                 - if @item.number_that_can_be_scheduled == 0
-                  This proposal needs 
-                  = raw "#{@item.needed_for_next - @item.remaining_pledges} more #{tsign}"
-                  = "pledged to happen#{@item.published_instances > 0 ? ' again.' : '.'}"
+                  = t(:needs_to_happen_again, number: @item.needed_for_next - @item.remaining_pledges, again: @item.published_instances > 0 ? ' again.' : '.' )
+
             - else
               %p
                 This experiment proposes to meet  
@@ -90,40 +84,38 @@
 
 
       - if @api_status == false
-        %p We're sorry, the Biathlon API is currently offline. Please try again later.
+        %p= t(:biathlon_api_offline)
+        
       - elsif current_user.available_balance < 1
-        %p You do not currently have any Temps available to pledge.
+        %p= t :no_temps_to_pledge
         - unless f.object.new_record?
-          = link_to 'Delete your pledge!', [f.object.item, f.object], method: :delete, class: [:button, :small, :alert], data: {confirm: "Are you sure? Your #{tsign} will be restored to your full balance."} 
+          = link_to t(:delete_your_pledge), [f.object.item, f.object], method: :delete, class: [:button, :small, :alert], data: {confirm: t(:confirm_pledge_withdrawal)} 
       - else
         = content_for :jquery do
           :plain
             $("#comment_input").mentionable("/users/mentions", {position: 'right'});
         %h3
-          How many 
-          = ENV['currency_full_name'].pluralize
-          = raw"(#{tsign})"
-          would you like to pledge?
+          = t(:how_many_to_pledge, currency: ENV['currency_full_name'].pluralize)
 
-        = f.input :pledge, label: "Your pledge (max. #{@item.maximum_pledgeable(current_user)}):", input_html: {required: '', :'data-validator' => 'less_than', :'data-less-than' => @item.maximum_pledgeable(current_user), type: :number}
+        = f.input :pledge, label: t(:your_pledge_with_max, max: @item.maximum_pledgeable(current_user)), input_html: {required: '', :'data-validator' => 'less_than', :'data-less-than' => @item.maximum_pledgeable(current_user), type: :number}
     
 
-        %label Any comments on your pledge?
+        %label= t(:comments_on_pledge)
         %p.small
-          %u Tagging: 
+          %u= t(:tagging)
           %br/
-          %em People: type '@' followed by someone's username [eg: @Jussi, @PsychoDog]
+          %em= t(:people_tagging)
           %br/
-          %em Experiments: type '#' followed by the name of the experiment [eg: #Open]
+          %em= t(:experiment_tagging) 
         #comment_wrapper
           #comment_input{contenteditable: true}= f.object.new_record? ? '' : raw(f.object.comment)
 
         -#= f.input :content, :label => false, input_html: {:required => '', id: :comment_input_textarea}
         
         = f.input :comment, label: false,  as: :text, input_html: { id: :comment_input_textarea }
-        = f.submit 'Pledge!', class: [:button]
+        = f.submit t(:pledge_verb), class: [:button]
         - unless f.object.new_record?
-          = link_to 'Delete your pledge!', [f.object.item, f.object], method: :delete, class: [:button, :small, :alert, :delete_pledge], data: {confirm: raw("Are you sure? Your #{tsign} will be restored to your full balance.")}
+          = link_to t(:delete_your_pledge), [f.object.item, f.object], method: :delete, class: [:button, :small, :alert, :delete_pledge], data: {confirm: raw(t(:confirm_pledge_withdrawal))}
   
 = content_for :jquery do
   :plain

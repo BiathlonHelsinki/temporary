@@ -52,11 +52,11 @@
                   %h3
                     = t :what_do_you_think_about_this
                   %p.small
-                    %u Tagging: 
+                    %u= t(:tagging)
                     %br/
-                    %em People: type '@' followed by someone's username [eg: @Jussi, @PsychoDog]
+                    %em= t(:people_tagging)
                     %br/
-                    %em Experiments: type '#' followed by the name of the experiment [eg: #Open] 
+                    %em= t(:experiment_tagging) 
                   = semantic_form_for [ @experiment,  @comment = @experiment.comments.build(user: current_user)], html: {onSubmit: "return getContent();", multipart: true, :"data-abide" => '' } do |f|
                     = f.input :user_id, as: :hidden, data: {value: current_user.id}
                     #comment_wrapper
