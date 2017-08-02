@@ -12,7 +12,7 @@
               = link_to fa_icon('twitter'), "http://twitter.com/#{@user.authentications.select{|x| x.provider == 'twitter'}.first.username}", target: :_blank
 
       .since
-        = "user since #{l @user.created_at.to_date, format: :long}"
+        = t(:user_since, when: l(@user.created_at.to_date, format: :long))
         = " (#{time_ago_in_words(@user.created_at)})"
   .row.expanded
     .small-10.medium-4.columns
@@ -24,44 +24,45 @@
     .small-10.medium-8.columns
       - unless @user.website.blank?
         %div
-          %strong Website:
+          %strong= t(:website) + ":"
           = link_to @user.website, @user.website, target: :_blank
           %br/
           %br/
-      %strong Balance:
+      %strong= t(:balance) + ":"
       = raw "#{@user.latest_balance}#{tsign}"
       %br/
       - if user_signed_in?
         - if current_user != @user && current_user.latest_balance > 0
           %br/
-          = link_to raw("Send #{tsign} to #{@user.username}"), send_temps_user_transfers_path(@user), class: [:button]
+          = link_to raw(t(:send_t_to_user, username: @user.username)), send_temps_user_transfers_path(@user), class: [:button]
       - unless @user.instances_users.empty?
         %br
         .ethereum
-          %strong Participated in:
-          = pluralize(@user.instances_users.size, 'experiment')
+          %strong= t(:participated_in)
+          = @user.instances.size.to_s
+          = t(:experiment, count: @user.instances.size)
       - unless @user.accounts.empty?
         %br/
         .ethereum
-          %strong Ethereum accounts:
+          %strong= t :ethereum_accounts
           - @user.accounts.each do |account|
             %p= link_to account.address, "https://#{Rails.env.development? ? 'testnet.' : ''}etherscan.io/token/#{Figaro.env.contract_address}?a=#{account.address}", target: :_blank
 
       .subsection
         %div
-          %strong ID cards:
+          %strong= t(:id_cards)
           .info
             - if @user.nfcs.empty?
-              %em No ID cards yet
+              %em= t(:no_id_cards_yet)
             - else
               .row
                 .small-12.columns
                   %table
                     %thead
-                      %th address
+                      %th= t :address
                       %th 
-                      %th created
-                      %th last used?
+                      %th= t :created
+                      %th= t :last_used
                     %tbody
                       - @user.nfcs.each do |card|
                         %tr
@@ -81,52 +82,61 @@
         - if current_user.has_role? :admin
           %br/
           .ethereum
-            %strong Email:
+            %strong= t :email
             = @user.email
             %br/ 
             %br/
-            %strong Authentications:
+            %strong= t :authentications
             - @user.authentications.each do |auth|
               %p= "provider: #{auth.provider}, username: #{auth.username}, uid: #{auth.uid}"
   .row.expanded
     .small-10.medium-8.large-4.columns
       - unless Experiment.where(primary_sponsor: @user).empty?
-        .title Experiments instigated
+        .title
+          = t :experiments_instigated
+          = "(#{Experiment.where(primary_sponsor: @user).size.to_s})"
         %ul
           - Experiment.where(primary_sponsor: @user).order(:id).each do |exp|
             %li= link_to exp.name, exp
             
       - if @user.proposals.empty?
-        %em No proposals made.
+        %em= t :no_proposals_made
       - else
-        .title Proposals
+        .title
+          = t :proposals
+          = "(#{@user.proposals.size.to_s})"
         %ul
           - @user.proposals.order(created_at: :desc).each do |proposal|
             %li= link_to proposal.name, proposal
+            
     .small-10.medium-8.large-4.columns
       - if @user.pledges.empty?
-        %em No pledges made.
+        %em= t :no_pledges_made
       - else
-        .title Pledges
+        .title
+          = t :pledges
+          = " (#{@user.pledges.size.to_s})"
         %ul.pledges
           - @user.pledges.group_by{|x| x.converted.to_i}.each do |group|
             %li.heading
-              = group.first == 1 ? 'Spent:' : 'Pending:'
+              = group.first == 1 ? t(:spent) + ":" : t(:pending) + ":"
               %ul
                 - group.last.group_by{|x| x.item}.each do |pledge|
                   %li
                     = link_to pledge.first.name, pledge.first
                     = raw "(#{pledge.last.sum(&:pledge).to_s}#{tsign})"
+                    
     .small-10.medium-8.large-4.columns
       - if @user.comments.empty?
-        %em No comments made.
+        %em= t :no_comments
       - else
-        .title Comments
+        .title
+          = t(:comments)
+          = "(#{@user.comments.size.to_s})"
         %ul
           - @user.comments.order(created_at: :desc).each do |comment|
             %li
-              commented on
-              = link_to comment.item.name, comment.item, target: :_blank
+              = raw t(:commented_on_item, item: link_to(comment.item.name, comment.item, target: :_blank))
               = ": "
               .subtext
                 ="'"
@@ -136,27 +146,27 @@
   - unless @user.all_activities.empty?
     .row.expanded
       .small-12.columns
-        .title Activity
+        .title= t :activity
     .row.expanded
       .small-12.columns
         %table#activities.activities
           %thead
             %tr
-              %th Date
-              %th Who
-              %th Activity
-              %th Subject
+              %th= t :the_date
+              %th= t :who
+              %th= t :activity
+              %th= t :subject
               %th
                 = raw tsign
                 %small= link_to '?', '#', onclick: "javascript:$('.occluded').slideToggle();return false"
                 .occluded
-                  = fa_icon('plus') + ": created"
+                  = fa_icon('plus') + ": " + t(:created)
                   %br/
-                  = fa_icon('minus') + ": spent"
+                  = fa_icon('minus') + ": " + t(:spent)
                   %br/
-                  = fa_icon('smile-o') + "/" + fa_icon('frown-o') + ': pledged/withdrawn'
+                  = fa_icon('smile-o') + "/" + fa_icon('frown-o') + ': ' + t(:pledged_or_withdrawn)
                   %br/
-                  = fa_icon('arrows-h') + ": transferred"
+                  = fa_icon('arrows-h') + ": " + t(:transferred)
               %th Info
           %tfoot
             %tr
@@ -172,43 +182,45 @@
         - total = 0
         = fa_icon 'plus'
         - plus = @user.all_activities.select{|x| x.addition == 1}.sum{|x| x.value.to_i} 
-        = plus
         - total += plus
-        earned
+        = t(:number_earned, number: plus)
+
         %br/
         = fa_icon 'minus'
         - minus =  @user.all_activities.select{|x| x.addition == -1}.sum{|x| x.value.to_i}
-        = minus
+        = t(:number_spent, number: minus)
         - total -= minus
-        spent
+
         %br/
         = fa_icon 'plus'
         - plus2 = @user.all_activities.select{|x| x.description =~ /received/ && x.user == @user }.sum{|x| x.value.to_i}
-        = plus2
         - total += plus2
-        transferred from other users
+        = t(:number_transferred_from, number: plus2)
         %br/
         = fa_icon 'minus'
         - minus2 = @user.all_activities.select{|x| x.description =~ /received/ && x.item == @user }.sum{|x| x.value.to_i}
-        = minus2
+
         - total -= minus2
-        transferred to other users
+        = t(:number_transferred_to, number: minus2)
+
         %hr/
         
         = fa_icon 'smile-o'
         - pending =  @user.pending_pledges.sum(&:pledge)
-        = pending
-        pledged
+        = t(:number_pledged, number: pending)
+
         
         %hr
-        %strong Totals:
+        %strong= t :totals
         %br/
-        = raw "#{total.to_s}#{tsign} in total"
+        = raw(t(:number_in_total, number: total))
+
         %br/
-        = raw "#{pending.to_s}#{tsign} in escow, pledged to pending proposals"
+        = raw(t(:number_held_in_pledges, number: pending))
+
         %br/
         %strong
-          %u= raw "#{total - pending}#{tsign} available"
+          %u= raw(t(:number_available, number: total - pending))
         
 
 = content_for :jquery do

@@ -33,13 +33,13 @@
               = raw tsign
               %small= link_to '?', '#', onclick: "javascript:$('.occluded').slideToggle();return false"
               .occluded
-                = fa_icon('plus') + ": created"
+                = fa_icon('plus') + ": " + t(:created)
                 %br/
-                = fa_icon('minus') + ": spent"
+                = fa_icon('minus') + ": " + t(:spent)
                 %br/
-                = fa_icon('smile-o') + "/" + fa_icon('frown-o') + ': pledged/withdrawn'
+                = fa_icon('smile-o') + "/" + fa_icon('frown-o') + ': ' + t(:pledged_or_withdrawn)
                 %br/
-                = fa_icon('arrows-h') + ": transferred"
+                = fa_icon('arrows-h') + ": " + t(:transferred)
             %th Info
         / %tfoot
         /   %tr
