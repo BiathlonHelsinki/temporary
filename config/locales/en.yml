@@ -406,5 +406,28 @@ If you suggest an exact date, we will do our best when scheduling to co-exist wi
     one: 'is one place'
     other: 'are %{count} places'
   register_me: 'Register me'
-  
-  
+  x_meetings_scheduled: '%{meeting_instance} scheduled.'
+  meeting_instance:
+    zero: 'No meetings'
+    one: 'One meeting'
+    other: '%{count} meetings'
+  x_people_participated: '%{count} %{people} participated'
+  x_people_participated_earning_x: '%{count} %{people} participated, earning %{temps_total}Ŧ.'
+  x_people_have_checked_in: "%{count} %{people} have checked in (%{distinct_count} %{distinct_people}), and %{guest_ticket_count} %{guest_tickets}."
+  distinct_person:
+    zero: 'distinct people'
+    one: 'distinct person'
+    other: 'distinct people'
+  guest_tickets:
+    zero: 'guest tickets'
+    one: 'guest ticket'
+    other: 'guest tickets'
+  original_proposal: 'Original proposal:'
+  past_occurrences: 'Past occurrences:'
+  earn_x_per_day_for_participating: 'Earn %{number}%{per_day} for participating!'
+  per_day: ' per day'
+  sorry_no_more_space_left: 'Sorry, there is no more space left.'
+  you_must_register_in_advance: 'You must register in advance!'
+  also_meets: 'Also meets:'
+  x_earned: "%{number} Ŧ earned"
+  anonymous_person_who_arrived_at_x: 'Anonymous person who arrived at %{time_of_arrival}'

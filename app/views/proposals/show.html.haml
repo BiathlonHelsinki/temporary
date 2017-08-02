@@ -81,11 +81,12 @@
           - if @proposal.stopped? ||  (@proposal.scheduled? && !@proposal.recurs?) 
             - if @proposal.is_valid?
               - if @proposal.instances.future.empty?
-                = t(:meetings_took_place_past, amount: pluralize(@proposal.instances.first.experiment.instances.size, t(:meeting)))
+                = t(:meetings_took_place_past, amount: t(:meeting, count: @proposal.instances.first.experiment.instances.size))
 
               - else
-                = pluralize(@proposal.instances.first.experiment.instances.size, t(:meeting)) + ":"
-                %br/
+                = @proposal.instances.first.experiment.instances.size
+                = t(:meeting, count: @proposal.instances.first.experiment.instances.size) + ": "
+
           - elsif (@proposal.scheduled? && @proposal.recurs?)
             = t :recurring_experiment_meetings
             %br/
@@ -195,7 +196,7 @@
           .small-12.columns
             .comment_count
               - if @proposal.is_valid?
-                = t(:this_proposal_has_x_comments, comments: pluralize(@proposal.discussion.size, t(:comment)))
+                = t(:this_proposal_has_x_comments, comments: t(:comment, count: @proposal.discussion.size))
               - else
                 = t(:this_proposal_had_x_comments, comments: pluralize(@proposal.discussion.size, t(:comment)))
       - @proposal.discussion.sort_by(&:created_at).each do |comment|

@@ -93,31 +93,29 @@
     .body.text-center= truncate_html(strip_tags(exp.description.gsub(/\s*(&nbsp;\s*)+/, " ")), length: 110)
 
     - unless exp.in_future?
-      .participants=  pluralize(exp.users.size + exp.onetimers.unclaimed.size, 'person') + " participated"
+      .participants
+        = t(:x_people_participated, count: exp.users.size + exp.onetimers.unclaimed.size, people: t(:person, count: exp.users.size + exp.onetimers.unclaimed.size))
+
       .temps
-        = raw("#{(exp.users.uniq.size * exp.cost_bb).to_s}#{tsign} earned") #, page_path('what-is-this-t-everywhere')
+        = t(:x_earned, number: (exp.users.uniq.size * exp.cost_bb)) #, page_path('what-is-this-t-everywhere')
     - else
       .earn_line
-        = raw "Earn #{exp.cost_bb}#{tsign} "
-        - if exp.allow_multiple_entry == true
-          = "per day "
-        = "for participating!"
+        = t(:earn_x_per_day_for_participating, number: exp.cost_bb, per_day: exp.allow_multiple_entry == true ? t(:per_day) : '')
+
         - if exp.request_registration == true
           .red
             
             - if exp.is_full?
-              Sorry, there is no more space left.
+              = t :sorry_no_more_space_left
             - else
-              You must register in advance!
+              = t :you_must_register_in_advance
               - unless exp.max_attendees.blank?
-                There
-                = exp.max_attendees - exp.registrations.not_waiting.size == 1 ? 'is' : 'are'
-                = pluralize(exp.max_attendees - exp.registrations.not_waiting.size, 'place')
-                left.
+                = t(:there_are_x_places_left, is_number_place: t(:place_in_registraton, count: exp.max_attendees - exp.registrations.not_waiting.size))
+
             
       - if controller.action_name == 'index'
         - if exp.experiment.collapse_in_website == true
           - unless exp.experiment.instances.future.published.to_a.delete_if{|i| i == exp}.empty?
             .collapsed
-              .also_meets Also meets:
+              .also_meets= t :also_meets
               = exp.experiment.instances.future.published.to_a.delete_if{|i| i == exp}.map{|x| l(x.start_at.to_date , format: :short)}.join(', ')

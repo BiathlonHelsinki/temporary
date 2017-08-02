@@ -16,15 +16,15 @@
       .small-12.columns
         
         %p
-          = pluralize(@experiment.instances.size, 'meeting') + ' scheduled.'
-          = pluralize(@experiment.instances.map(&:users).flatten.size, 'person') + ' have checked in '
-          = "(" + pluralize(@experiment.instances.map(&:users).flatten.uniq.size, 'distinct person') + "), and "
-          = pluralize(@experiment.instances.map{|x| x.onetimers.unclaimed}.flatten.size, 'anonymous guest ticket') + '.'
+          = t(:x_meetings_scheduled, meeting_instance: t(:meeting_instance, count: @experiment.instances.size))
+
+          = t(:x_people_have_checked_in, count: @experiment.instances.map(&:users).flatten.size, people: t(:person, count: @experiment.instances.map(&:users).flatten.size), distinct_count: @experiment.instances.map(&:users).flatten.uniq.size, distinct_people: t(:distinct_person, count: @experiment.instances.map(&:users).flatten.uniq.size), guest_ticket_count:  @experiment.instances.map{|x| x.onetimers.unclaimed}.flatten.size, guest_tickets: t(:guest_tickets, count: @experiment.instances.map{|x| x.onetimers.unclaimed}.flatten.size))
+
           
         %p
-          Original proposal:
+          = t(:original_proposal)
           = link_to @experiment.instances.first.proposal.name, @experiment.instances.first.proposal
-          by 
+          = " / " 
           = link_to @experiment.instances.first.proposal.user.display_name,  @experiment.instances.first.proposal.user
   - unless @future.empty?
     .row.expanded
@@ -37,8 +37,8 @@
   - unless @experiment.instances.past.empty?
     .row.expanded
       .small-12.columns
-        %h1
-          Past occurrences:
+        %h1= t(:past_occurrences)
+
     .row.expanded#expandme.small-up-1.medium-up-2.large-up-4.xlarge-up-5{:"data-equalizer" => '', :"data-equalize-by-row" => "true"}
       - @past.each do |exp|
         = render partial: 'experiment_instance_column', locals: {exp: exp, experiment: @experiment}

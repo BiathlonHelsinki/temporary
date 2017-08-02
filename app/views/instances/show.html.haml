@@ -59,9 +59,8 @@
                     %br/
                     = link_to t(:i_plan_to_attend), rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button]
             - else
-              = link_to raw(pluralize((@instance.users.uniq + @instance.onetimers.unclaimed).size, 'person')), '#', onClick: "javascript:$(window).scrollTo('#participants', {duration: 1000});return false;"
-              participated, earning
-              = raw "#{@instance.users.uniq.size * @instance.cost_bb}#{tsign}." 
+              = link_to raw(t(:x_people_participated_earning_x, count: (@instance.users.uniq + @instance.onetimers.unclaimed).size, people: t(:person, count: (@instance.users.uniq + @instance.onetimers.unclaimed).size), temps_total: @instance.users.uniq.size * @instance.cost_bb)), '#', onClick: "javascript:$(window).scrollTo('#participants', {duration: 1000});return false;"
+
         - if @instance.proposal
           .proposal_info
             = t(:scheduled_from_proposal)
@@ -293,7 +292,8 @@
           .column.participant_grid
             .image= image_tag image_path('user_missing_large.png')
             .participant_overlay
-              = raw "Anonymous person who arrived at #{onetimer.created_at.strftime('%H:%M')}"
+              = t(:anonymous_person_who_arrived_at_x, time_of_arrival: onetimer.created_at.strftime('%H:%M'))
+              
               - if @instance.allow_multiple_entry == true
                 = " on #{l onetimer.created_at.to_date, format: :short}"
 
