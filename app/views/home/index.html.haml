@@ -22,6 +22,7 @@
           = link_to t(:find_out_more), page_path('how-does-it-work')
 
 .news_container
+
   %article.calendar{class: cycle('odd', 'even')}
     .post
       .meta
@@ -202,7 +203,6 @@
             .body
               %span.quote= raw "&ldquo;"
               = truncate_html post.short_description, length: 300
-
             
 = content_for :jquery do
   :plain
@@ -215,7 +215,7 @@
       },
       defaultView: 'month',
       contentHeight: '400px',
-      lang: '#{I18n.locale.to_s}',
+      locale: '#{I18n.locale.to_s}',
       contentHeight: 'auto',
       firstDay: 1,
       fixedWeekCount: false,

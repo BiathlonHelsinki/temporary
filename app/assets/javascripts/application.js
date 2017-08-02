@@ -14,8 +14,10 @@
 //= require jquery_ujs
 //= require foundation
 //= require jquery_nested_form
-//= require moment 
+//= require moment
+//= require moment/en-gb.js
 //= require fullcalendar
+//= require fullcalendar/lang/en-gb  
 //= require fullcalendar/lang/fi
 //= require stacktable.min
 //= require jquery.infinitescroll
