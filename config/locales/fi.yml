@@ -213,11 +213,11 @@ fi:
   in_the_past: 'Menneet tapahtumat'
   questions_and_answers: 'Kysymykset ja vastaukset'
   what_is_temporary: 'Mikä on Temporary?'
-  how_does_it_work: 'Miten se toimii?'
-  where_is_it: 'Missä se sijaitsee?'
-  when_is_it_open: 'Milloin se on auki?'
-  whats_the_t_mean: "Mitä %{tsign} tarkoittaa?"
-  how_do_i_get_temps: 'Kuinka saan Temppejä?'
+  how_does_it_work: 'Kuinka se toimii?'
+  where_is_it: 'Missä se on?'
+  when_is_it_open: 'Milloin Temporary on auki?'
+  whats_the_t_mean: "Mitä ovat %{tsign}:t ja mikä on niiden tarkoitus?"
+  how_do_i_get_temps: 'Kuinka saan Tempsejä?'
   news: 'Uutiset'
   experiments: 'Kokeilut'
   activity_feed: 'Toiminta'
@@ -526,8 +526,7 @@ fi:
   should_we_wait_explanation: 'Esimerkiksi jos ehdotuksesi kattaa kolme peräkkäistä päivää, kaikkia kolmea päivää kohden pitää saada riittävästi tukea ennen kuin kokeilu voidaan aikatauluttaa kokonaisuudessaan (eikä vain esim. ensimmäinen päivä)'
   total_t_needed: 'Yhteensä Ŧ tarvitaan'
   proposed_times_and_duration: 'Ehdotetut ajat ja kesto'
-  if_you_suggest_exact_date: 
-'Jos ehdotat tarkkaa aikaa, teemme parhaamme, kun pohdimme aikataulutusta, jotta se sopisi muiden kokeilujen kanssa yhteen. Suosittelemme kokeilujen ehdottamista ja suunnittelua vähintää pari viikkoa ennen suunniteltua tapahtuma-aikaa, jotta jää enemmän aikaa kerätä tarvittava määr tukea ja jotta sinulla jää enemmän aikaa suunnitteluun ja kokeilun markkinointiin sitten, kun kokeilun tarkka aika on varmistunut.'
+  if_you_suggest_exact_date: 'Jos ehdotat tarkkaa aikaa, teemme parhaamme, kun pohdimme aikataulutusta, jotta se sopisi muiden kokeilujen kanssa yhteen. Suosittelemme kokeilujen ehdottamista ja suunnittelua vähintää pari viikkoa ennen suunniteltua tapahtuma-aikaa, jotta jää enemmän aikaa kerätä tarvittava määr tukea ja jotta sinulla jää enemmän aikaa suunnitteluun ja kokeilun markkinointiin sitten, kun kokeilun tarkka aika on varmistunut.'
   goals_of_experiment: 'Mitkä ovat tämän kokeilun tavoitteet?'
   intended_participants: 'Suunnitellut osallistujat'
   add_an_image: 'Lisää kuva tähän ehdotukseen +'
@@ -591,4 +590,10 @@ fi:
   also_meets: 'Myös tapaa:'
   x_earned: "%{number} Ŧ tienattu"
   anonymous_person_who_arrived_at_x: 'Anonyymi henkilö, joka saapui %{time_of_arrival}'  
-      
+  small_back_room_blurb: 'The small back room in Temporary can be reserved by any member at a cost of 25Ŧ per day.'
+  room_specs: 'This room (about 18m%{squared}) can be used for any private creative activities, meetings or other matters. Booking the room gives you access to it to use for the full 24 hours, though if there are other actvities taking in the main room, we ask that you coexist peacefully with them.'
+  room_blurb_2: "The room can be booked by any member for a maximum of 3 days per week. To book the room, click on the day you want in the calendar below, if it's free."
+  are_you_going: 'Are you going?'
+  you_are_going: 'You are going'
+  x_person_has_rsvpd: "%{number} %{people} has RSVPd"
+  experiment_news: 'Experiment news'

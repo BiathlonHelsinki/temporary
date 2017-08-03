@@ -20,7 +20,9 @@
     %li{class: controller.controller_name == 'roombookings' ? :active : false}= link_to t(:book_the_back_room), roombookings_path
 
 .top-bar-right
+
   %ul.vertical.medium-horizontal.menu{"data-responsive-menu" => "drilldown medium-dropdown"}
+    
     %li.has-submenu
       - if user_signed_in?
         = link_to '#' do

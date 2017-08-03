@@ -7,13 +7,10 @@
   .row.expanded
     .small-12.columns
       %p
-        = raw "The small back room in Temporary can be reserved by any member at a cost of 25#{tsign} per day."
-        = link_to '(How do I get Temps?)', page_path('how-do-i-get-temps')  
-      %p
-        This room (about 18m
-        %sup> 2
-        ) can be used for any private creative activities, meetings or other matters. Booking the room gives you access to it to use for the full 24 hours, though if there are other actvities taking in the main room, we ask that you coexist peacefully with them.
-      %p The room can be booked by any member for a maximum of 3 days per week. To book the room, click on the day you want in the calendar below, if it's free.
+        = raw t(:small_back_room_blurb)
+        = raw link_to("(#{t(:how_do_i_get_temps)})", page_path('how-do-i-get-temps')  )
+      %p= raw t(:room_specs, squared: raw("<sup>2</sup>"))
+      %p= raw t(:room_blurb_2)
         
   .row.expanded
     .small-12.columns

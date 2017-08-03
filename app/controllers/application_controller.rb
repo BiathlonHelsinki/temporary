@@ -64,20 +64,18 @@ class ApplicationController < ActionController::Base
   end
   
   def get_locale 
-    if Rails.env.development?
-      if params[:locale]
-        session[:locale] = params[:locale]
-      end
-    
-      if session[:locale].blank?
-        available  = %w{en fi}
-        I18n.locale = http_accept_language.compatible_language_from(available)
-        session[:locale] = I18n.locale
-      else
-        I18n.locale = session[:locale]
-      end
-    else
-      I18n.locale = :en
+  
+    if params[:locale]
+      session[:locale] = params[:locale]
     end
+  
+    if session[:locale].blank?
+      available  = %w{en fi}
+      I18n.locale = http_accept_language.compatible_language_from(available)
+      session[:locale] = I18n.locale
+    else
+      I18n.locale = session[:locale]
+    end
+
   end
 end

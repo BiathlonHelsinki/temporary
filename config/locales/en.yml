@@ -431,3 +431,10 @@ If you suggest an exact date, we will do our best when scheduling to co-exist wi
   also_meets: 'Also meets:'
   x_earned: "%{number} Ŧ earned"
   anonymous_person_who_arrived_at_x: 'Anonymous person who arrived at %{time_of_arrival}'
+  small_back_room_blurb: 'The small back room in Temporary can be reserved by any member at a cost of 25Ŧ per day.'
+  room_specs: 'This room (about 18m%{squared}) can be used for any private creative activities, meetings or other matters. Booking the room gives you access to it to use for the full 24 hours, though if there are other actvities taking in the main room, we ask that you coexist peacefully with them.'
+  room_blurb_2: "The room can be booked by any member for a maximum of 3 days per week. To book the room, click on the day you want in the calendar below, if it's free."
+  are_you_going: 'Are you going?'
+  you_are_going: 'You are going'
+  x_person_has_rsvpd: "%{number} %{people} has RSVPd"
+  experiment_news: 'Experiment news'

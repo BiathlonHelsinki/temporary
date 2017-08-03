@@ -2,6 +2,17 @@
   .home_header{style: @page.image? ? "background: url(#{@page.image.url}) no-repeat top center; background-size: cover" : false}
     = link_to  image_tag('temporary_logo.png'), '/', class: :logo
     = render partial: 'layouts/open_or_closed'
+    .text-right.home-lang
+      - if I18n.locale.to_s != 'fi'
+        = link_to 'FIN', :controller => controller.controller_name, :action => controller.action_name, :id => params[:id], :locale => 'fi'
+      - else
+        %strong FIN
+      |
+  
+      - if I18n.locale.to_s != 'en'
+        = link_to 'ENG', :controller => controller.controller_name, :action => controller.action_name, :id => params[:id], :locale => 'en'
+      - else
+        %strong ENG
   .top-bar
     = render partial: 'layouts/top_bar'
     

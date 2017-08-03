@@ -24,11 +24,23 @@
           %strong= raw value
     #outer_container      
       %header
-        / Small Navigation
+        
         .title-bar{"data-hide-for" => "medium", "data-responsive-toggle" => "nav-menu"}
           %a.logo-small.show-for-small-only{:href => "#"}
             = image_tag(image_path('temporary_logo.png'))
             = render partial: 'layouts/open_or_closed'
+            .top-bar-left.lang
+              - if I18n.locale.to_s != 'fi'
+                = link_to 'FIN', :controller => controller.controller_name, :action => controller.action_name, :id => params[:id], :locale => 'fi'
+              - else
+                %strong FIN
+              |
+              
+              - if I18n.locale.to_s != 'en'
+                = link_to 'ENG', :controller => controller.controller_name, :action => controller.action_name, :id => params[:id], :locale => 'en'
+              - else
+                %strong ENG
+           
           %button.menu-icon{"data-toggle" => "", :type => "button"}
           .title-bar-title
         / Medium-Up Navigation
@@ -36,6 +48,17 @@
           .row.expanded.logo.hide-for-small-only
             = link_to image_tag(image_path('temporary_logo.png')), '/', class: :logo
             = render partial: 'layouts/open_or_closed'
+            .top-bar-right.lang
+              - if I18n.locale.to_s != 'fi'
+                = link_to 'FIN', :controller => controller.controller_name, :action => controller.action_name, :id => params[:id], :locale => 'fi'
+              - else
+                %strong FIN
+              |
+              
+              - if I18n.locale.to_s != 'en'
+                = link_to 'ENG', :controller => controller.controller_name, :action => controller.action_name, :id => params[:id], :locale => 'en'
+              - else
+                %strong ENG
           / Left Nav Section
           = render partial: 'layouts/top_bar'
       %section.main_container= yield 

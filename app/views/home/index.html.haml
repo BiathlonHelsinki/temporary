@@ -2,6 +2,17 @@
   -#.home_header
   = link_to image_tag('temporary_logo.png'), '/', class: :logo
   = render partial: 'layouts/open_or_closed'
+  .text-right.home-lang
+    - if I18n.locale.to_s != 'fi'
+      = link_to 'FIN', :controller => controller.controller_name, :action => controller.action_name, :id => params[:id], :locale => 'fi'
+    - else
+      %strong FIN
+    |
+  
+    - if I18n.locale.to_s != 'en'
+      = link_to 'ENG', :controller => controller.controller_name, :action => controller.action_name, :id => params[:id], :locale => 'en'
+    - else
+      %strong ENG
   .top-bar
     = render partial: 'layouts/top_bar'
 
@@ -141,7 +152,7 @@
               %span.date= date_range(post.start_at, post.end_at)
               = "//"
               %span
-                = t(:experiment)
+                = t(:experiment, count: 1)
                 = "##{post.sequence}"
               = "//"
           
@@ -158,19 +169,20 @@
                 .rsvp
                   - if user_signed_in?
                     - if current_user.rsvpd?(post)
-                      You are going!
+                      = t :you_are_going
                     - else
-                      Are you going?
+                      = t :are_you_going
                       = link_to t(:rsvp), rsvp_experiment_instance_path(post.experiment, post), method: :post, class: [:button]
                   - else
-                    Are you going?
+                    = t :are_you_going
                     = link_to t(:rsvp),  [post.experiment, post], class: [:button]
                 - unless post.rsvps.empty?
                   .participants
-                    = pluralize(post.rsvps.size, 'person') +  (post.rsvps.size == 1 ? ' has ' : ' have ' ) + 'RSVPd'
+                    = t(:x_person_has_rsvpd, number: post.rsvps.size, people: t(:person, count: post.rsvps.size) )
+
             .body
               = truncate_html post.description, length: 500
-              = link_to 'Read more...', [post.experiment, post], class: [:button]
+              = link_to t(:read_more), [post.experiment, post], class: [:button]
             
       - if post.class == Proposal
         %article.proposal{class: cycle('odd', 'even')}
