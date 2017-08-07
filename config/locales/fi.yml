@@ -597,3 +597,4 @@ fi:
   you_are_going: 'You are going'
   x_person_has_rsvpd: "%{number} %{people} has RSVPd"
   experiment_news: 'Experiment news'
+  pledge_verb: 'Pledge'

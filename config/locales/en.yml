@@ -438,3 +438,5 @@ If you suggest an exact date, we will do our best when scheduling to co-exist wi
   you_are_going: 'You are going'
   x_person_has_rsvpd: "%{number} %{people} has RSVPd"
   experiment_news: 'Experiment news'
+  unregistered: 'Thank you for letting us know that you cannot make it. You have been un-registered from this experiment.'
+  pledge_verb: 'Pledge!'
