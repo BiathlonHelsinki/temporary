@@ -46,7 +46,7 @@
                       = link_to t(:register), '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('.registration_form', 800);return false;", class: [:button]
                   - else
                     - if !@instance.max_attendees.blank?
-                      = link_to t(:register_x, waiting_list: (@instance.max_attendees - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record? }.size) < 1 ? t(:for_the_waiting_list) : '' ), '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('#sign_in_to_register', 800);return false;", class: [:button]
+                      = link_to t(:register_x, waiting_list_option: (@instance.max_attendees - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record? }.size) < 1 ? t(:for_the_waiting_list) : '' ), '#', onclick:"javascript:$('.registration_form').slideToggle();$(document).scrollTo('#sign_in_to_register', 800);return false;", class: [:button]
                     - else
                       = link_to t(:register), '/users/sign_in', class: [:button]
               - else
@@ -127,7 +127,7 @@
             - else
               #sign_in_to_register
                 %h4
-                  = t(:if_you_want_to_register, sign_in: link_to(t(:sign_in).downcase, '/users/sign_in'))
+                  = raw t(:if_you_want_to_register, sign_in: link_to(t(:sign_in).downcase, '/users/sign_in'))
 
                   %br/
                   = link_to t(:log_in_join), '/users/sign_in', class: [:button]
@@ -233,7 +233,7 @@
                       - if @instance.start_at - Time.current >= 86400
                         - if current_user == attended.user
                           = link_to t(:cancel_registration), cancel_registration_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button, :alert], data: {confirm: t(:are_you_sure_you_want_to_cancel)}
-                    - if @instance.allow_multiple_entry == true
+                    - if @instance.allow_multiple_entry == true && !@instance.in_future?
                       = " (#{pluralize(@instance.users.select{|x| x == attended.user}.count, 'time')})"
                     
         - else
