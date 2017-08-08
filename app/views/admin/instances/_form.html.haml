@@ -55,6 +55,15 @@
     .small-10.medium-4.columns= f.input :request_rsvp, label: 'Ask people to RSVP', as: :boolean
   .row
     .small-10.medium-4.columns= f.input :request_registration, label: 'Require people to register', hint: 'Not yet functional', as: :boolean
+
+  .row
+    .small-10.medium-4.columns
+      = f.fields_for :experiment do |exp|
+        = exp.input :primary_sponsor, collection: User.all,  input_html: {disabled: :disabled, class: :chosen_select},  label: 'Experiment instigator', hint: 'You cannot change this'
+        = exp.input :secondary_sponsor, collection: User.all, input_html: {disabled: exp.object.secondary_sponsor.nil? ? false : :disabled, class: :chosen_select},  label: 'Experiment co-instigator', hint: exp.object.secondary_sponsor.nil? ? 'You can set this for the whole experiment and all meetings. For a one-time organiser, choose that below instead.' :  'You cannot change this' 
+  .row
+    .small-10.medium-7.columns
+      = f.input :organiser_ids, collection: User.all, input_html: {class: :chosen_select, multiple: true}, label: 'Organisers for this meeting', hint: 'Choose as many as you like; they will only be set as organisers for this particular meeting of the experiment.'
   .row
     .small-10.medium-10.columns
       %fieldset
@@ -94,5 +103,5 @@
 = content_for :jquery do
   :plain
     
-    
+     $('.chosen_select').chosen();
     $('.datetimepicker').fdatetimepicker({ weekStart: 1 });

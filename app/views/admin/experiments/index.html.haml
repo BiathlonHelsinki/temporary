@@ -44,6 +44,8 @@
                         = instance.sequence
                         %br/
                         = link_to 'Edit instance', edit_admin_experiment_instance_path(exp, instance), class: [:button, :tiny, :secondary]
+                        %br/
+                        = link_to 'View', experiment_instance_path(exp, instance), class: [:button, :tiny, :secondary], target: :_blank
                       %td
                         = instance.name
                         = " (session #{instance.session_number.to_s})"

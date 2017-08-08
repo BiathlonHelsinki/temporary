@@ -6,6 +6,7 @@ class Instance < ApplicationRecord
   belongs_to :place
   translates :name, :description, :fallbacks_for_empty_translations => false
   accepts_nested_attributes_for :translations, :reject_if => proc {|x| x['name'].blank? && x['description'].blank? }
+  accepts_nested_attributes_for :experiment
   extend FriendlyId
   friendly_id :name_en , :use => [ :slugged, :finders, :history]
   mount_uploader :image, ImageUploader

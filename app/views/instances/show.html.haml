@@ -84,7 +84,8 @@
   .rsvp_container      
     - if @instance.request_registration == true
       - if user_signed_in?
-        - if current_user.has_role?(:admin) || current_user == @instance.experiment.primary_sponsor
+
+        - if @instance.responsible_people.include?(current_user) || current_user.has_role?(:admin) 
           .row.expanded
             .small-10.medium-8.columns
               %h3= t :registrations
