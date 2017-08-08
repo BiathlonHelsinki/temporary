@@ -236,7 +236,11 @@ fi:
   why_join: 'Miksi liittyä?'
   temporary_is_open_blurb: "Temporary on aina avoinna oleva luova tila leikkimiseen, työskentelyyn, tapaamisiin tai mihin tahansa muuhun."
   come_and_visit: 'Tervetuloa!'
-  evenings_and_weekends:
+  evenings_and_weekends: 'Me autamme sinua järjestämään %{event_link} yhteisöllisesti ehdotuksesta käytännön toteutukseen'
+  experimental_event:
+    zero: 'kokeellisia tapahtumia'
+    one: 'kokeellinen tapahtuma'
+    other: 'kokeellisia tapahtumia'
   find_out_more: 'Lisätietoa...'
   calendar: 'Kalenteri'
   view_full_calendar: 'Tarkastele koko kalenteria'

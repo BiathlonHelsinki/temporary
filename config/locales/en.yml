@@ -79,7 +79,7 @@ en:
   why_join: 'Why join?'
   temporary_is_open_blurb: "Temporary is open continuously as a free creative space for playing, working, socialising, or whatever else you'd like it to be."
   come_and_visit: 'Come and visit!'
-  evenings_and_weekends: 'We regularly host special %{link}, proposed and organised by you.'
+  evenings_and_weekends: 'We regularly host special %{event_link}, proposed and organised by you.'
   find_out_more: 'Find out more...'
   calendar: 'Calendar'
   view_full_calendar: 'View full calendar'
@@ -108,7 +108,10 @@ en:
   is_not_currently_open: 'is not currently open.'
   current: 'Current'
   next: 'Next'
-  experiment: 'Experiment'
+  experiment:
+    zero: 'Experiments'
+    one: 'Experiment'
+    other: 'experiments'
   read_more: 'Read more ...'
   temporary_biathlon_is_powered_by: 'Temporary/Biathlon is powered by:'
   no_comments_yet: 'No comments yet.'
@@ -164,6 +167,10 @@ en:
     zero: 'meetings'
     one: 'meeting'
     other: 'meetings'
+  experimental_event:
+    zero: 'experimental events'
+    one: 'experimental event'
+    other: 'experimental events'
   meetings_took_place_past: "%{amount} took place:"
   recurring_experiment_meetings: 'Recurring experiment. Meetings:'
   this_proposal_needs_at_least_one_other_user_to_pledge_to_it: 'This proposal needs at least one other user to pledge to it.'
