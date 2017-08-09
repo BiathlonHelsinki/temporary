@@ -27,7 +27,7 @@
       = raw activity.linked_name
       - if activity.extra && !activity.extra_info.blank?
         - if activity.extra.class == Instance
-          = activity.extra_info
+          = t activity.extra_info.to_sym
           = link_to activity.extra.name, experiment_instance_path(activity.extra.experiment, activity.extra)
 
     %td.temps

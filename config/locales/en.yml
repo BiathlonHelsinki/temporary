@@ -447,3 +447,7 @@ If you suggest an exact date, we will do our best when scheduling to co-exist wi
   experiment_news: 'Experiment news'
   unregistered: 'Thank you for letting us know that you cannot make it. You have been un-registered from this experiment.'
   pledge_verb: 'Pledge!'
+  make_organiser: 'Make an organiser!'
+  related_experiments: 'Related experiments'
+  past: 'past'
+  future: 'future'

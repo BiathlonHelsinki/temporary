@@ -224,9 +224,17 @@
                   .participant_overlay
 
                     = link_to attended.user.display_name, attended.user
-                    - if @instance.experiment.primary_sponsor == attended.user
+                    - if @instance.responsible_people.include?(attended.user)
                       %br/
-                      = link_to t(:experiment_instigator), @instance.proposal
+                      = t(:organiser)
+                      - if @instance.experiment.primary_sponsor == attended.user || @instance.experiment.secondary_sponsor == attended.user
+                        %br/
+                        = link_to t(:experiment_instigator_brackets), @instance.proposal
+                      - else
+                        = link_to t(:remove_organiser), '#', class: [:button, :secondary, :tiny]
+                    - else
+                      = link_to t(:make_organiser), '#', class: [:button, :secondary, :tiny]
+
                     - if attended.waiting_list == true
                       %br/
                       = t :waiting_list
@@ -258,7 +266,10 @@
                     - if @instance.experiment.primary_sponsor == attended || @instance.experiment.secondary_sponsor == attended
                       %br/
                       = link_to t(:experiment_instigator_brackets), @instance.proposal
-
+                    - else
+                      = link_to t(:remove_organiser), '#', class: [:button, :tiny]
+                  - else
+                    = link_to t(:make_organiser), '#', class: [:button, :tiny]
                   - if user_signed_in?
                     - if current_user == attended
                       = link_to t(:cancel_rsvp), cancel_rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button, :alert], data: {confirm: t(:confirm_cancel_rsvp) }
@@ -270,7 +281,7 @@
       .row.expanded
         .small-10.medium-6.columns
           .participant_header 
-            Participants
+            = t(:participants)
             = "(#{(@instance.users.uniq + @instance.onetimers.unclaimed).size.to_s}):"
       .row.expanded{class: (@instance.users.uniq.size > 12) ? 'small-up-6 medium-up-8 large-up-11 xlarge-up-13' : 'small-up-3 medium-up-4 large-up-6 xlarge-up-7' }
         - @instance.users.uniq.each do |attended|
@@ -302,14 +313,18 @@
     - unless @instance.experiment.instances.current.or(@instance.experiment.instances.future).select{|x| x != @instance}.empty?
       .row.expanded
         .small-10.medium-10.large-7.columns
-          %h3 Related experiments: future
+          %h3
+            = t(:related_experiments) + ": "
+            = t(:future)
       .row.expanded#expandme.small-up-1.medium-up-2.large-up-4.xxlarge-up-5{:"data-equalizer" => '', :"data-equalize-by-row" => "true"}
         - @instance.experiment.instances.current.or(@instance.experiment.instances.future).select{|x| x != @instance}.sort_by(&:start_at).each do |exp|
           = render partial: 'instances/experiment_instance_column', locals: {exp: exp, :"@experiment" =>  exp.experiment}
     - unless @instance.experiment.instances.past.select{|x| x != @instance}.empty?
       .row.expanded
         .small-10.medium-10.large-7.columns
-          %h3 Related experiments: past
+          %h3
+            = t(:related_experiments) + ": "
+            = t(:past)
       .row.expanded#expandme.small-up-1.medium-up-2.large-up-4.xxlarge-up-5{:"data-equalizer" => '', :"data-equalize-by-row" => "true"}
         - @instance.experiment.instances.past.select{|x| x != @instance}.sort_by(&:start_at).each do |exp|
           = render partial: 'instances/experiment_instance_column', locals: {exp: exp, :"@experiment" =>  exp.experiment}

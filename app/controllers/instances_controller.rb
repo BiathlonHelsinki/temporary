@@ -20,6 +20,11 @@ class InstancesController < ApplicationController
     end
   end
   
+  def make_organiser
+    @experiment = Experiment.friendly.find(params[:experiment_id])
+    @instance = @experiment.instances.friendly.find(params[:id])
+  end
+      
   def cancel_rsvp
     if params[:experiment_id]
       @experiment = Experiment.friendly.find(params[:experiment_id])

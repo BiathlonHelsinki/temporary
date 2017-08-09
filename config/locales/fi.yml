@@ -602,3 +602,4 @@ fi:
   x_person_has_rsvpd: "%{number} %{people} has RSVPd"
   experiment_news: 'Experiment news'
   pledge_verb: 'Pledge'
+  make_organiser: 'Make an organiser!'
