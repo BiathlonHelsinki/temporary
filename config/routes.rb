@@ -112,6 +112,7 @@ Rails.application.routes.draw do
     end
         
   end
+  get '/events/:id', to: 'experiments#redirect_event'
   get '/category/:id', to: "postcategories#show"
   get '/announcements/:id' => 'emails#show'
   match '/link_temporary' => 'onetimers#link', via: :get

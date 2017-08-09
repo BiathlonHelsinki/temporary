@@ -6,6 +6,10 @@ class ExperimentsController < ApplicationController
     set_meta_tags title: 'Experiment archive'
   end
 
+  def redirect_event
+    redirect_to "/experiments/" + params[:id] and return
+  end
+  
   def calendar
     experiments = Experiment.where(nil)
     experiments = Experiment.published.between(params['start'], params['end']) if (params['start'] && params['end'])
