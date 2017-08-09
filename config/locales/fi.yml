@@ -587,7 +587,7 @@ fi:
     other: 'vieraslippua'
   original_proposal: 'Alkuperäinen ehdotus:'
   past_occurrences: 'Aiemmat toteutukset:'
-  earn_x_per_day_for_participating: 'Tienaa %{number}%{per_day} osallistumisesta!'
+  earn_x_per_day_for_participating: 'Tienaa %{number}Ŧ%{per_day} osallistumisesta!'
   per_day: ' per päivä'
   sorry_no_more_space_left: 'Pahoittelut, tapahtuma on täynä.'
   you_must_register_in_advance: 'Rekisteröityminen täytyy tehdä ennakkoon!'

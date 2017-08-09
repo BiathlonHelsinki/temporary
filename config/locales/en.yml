@@ -431,7 +431,7 @@ If you suggest an exact date, we will do our best when scheduling to co-exist wi
     other: 'guest tickets'
   original_proposal: 'Original proposal:'
   past_occurrences: 'Past occurrences:'
-  earn_x_per_day_for_participating: 'Earn %{number}%{per_day} for participating!'
+  earn_x_per_day_for_participating: 'Earn %{number}Ŧ%{per_day} for participating!'
   per_day: ' per day'
   sorry_no_more_space_left: 'Sorry, there is no more space left.'
   you_must_register_in_advance: 'You must register in advance!'

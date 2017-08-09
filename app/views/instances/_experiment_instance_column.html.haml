@@ -110,7 +110,7 @@
             - else
               = t :you_must_register_in_advance
               - unless exp.max_attendees.blank?
-                = t(:there_are_x_places_left, is_number_place: t(:place_in_registraton, count: exp.max_attendees - exp.registrations.not_waiting.size))
+                = t(:there_are_x_places_left, is_number_place: t(:place_in_registration, count: exp.max_attendees - exp.registrations.not_waiting.size))
 
             
       - if controller.action_name == 'index'
