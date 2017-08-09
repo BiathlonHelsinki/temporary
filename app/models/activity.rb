@@ -38,7 +38,7 @@ class Activity < ApplicationRecord
       "<a href='/roombookings/'>#{item.day.strftime('%-d %B %Y')}</a> " + extra_info.to_s || ''
     when 'User'
       if value
-        "#{item.display_name}  <br /><small>#{(extra_info)}</small>"
+        "#{item.display_name}  <br /><small>#{extra_info}</small>"
       elsif extra
         "<a href='/users/" + item.slug + "'>" + item.display_name + "</a> #{I18n.t(extra_info.to_sym)} <a href='/" + extra.class.table_name + "/#{extra.id.to_s}'>" + extra.name + "</a>"
       elsif description =~ /joined/
