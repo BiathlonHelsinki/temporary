@@ -122,15 +122,14 @@ class InstancesController < ApplicationController
   def index
     if params[:experiment_id]
       @experiment = Experiment.friendly.find(params[:experiment_id])
-      redirect_to action: action_name, experiment_id: @experiment.friendly_id, status: 301 unless @experiment.friendly_id == params[:experiment_id]
+      redirect_to action: action_name, experiment_id: @experiment.friendly_id, status: 301 and return unless @experiment.friendly_id == params[:experiment_id] 
       @future = @experiment.instances.current.or(@experiment.instances.future).order(:start_at).uniq
-      @past = @experiment.instances.past.order(:start_at).uniq.reverse
-    
+      @past = @experiment.instances.past.order(:start_at).uniq.reverse  
     end
     set_meta_tags title: @experiment.name
     @instance = @experiment.instances.published.first
     if @experiment.instances.published.size == 1
-       render template: 'instances/show'
+       render template: 'instances/show' 
     end
   end
   
