@@ -48,6 +48,7 @@ Rails.application.routes.draw do
     end
     resources :instances, path: '' do
       resources :registrations, controller: :experiment_registrations
+      resources :userphotos, controller: :viewpoints
       member do
         post :rsvp
         post :register
@@ -97,6 +98,9 @@ Rails.application.routes.draw do
   resources :users do
     collection do
       get :mentions
+    end
+    member do
+      get :buy_photoslot
     end
     resources :activities
     resources :transfers  do

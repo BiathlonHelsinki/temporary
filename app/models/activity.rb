@@ -34,6 +34,12 @@ class Activity < ApplicationRecord
       else
         item_type.constantize.with_deleted.find(item_id).name
       end
+    when 'Userphotoslot'
+      unless item.userphoto.nil?
+        if item.userphoto.instance
+          I18n.t(:used_on_experiment, instance: "<a href='/experiments/#{item.userphoto.instance.experiment.slug}/#{item.userphoto.instance.slug}'>#{item.userphoto.instance.name}</a>" )
+        end
+      end
     when 'Roombooking' 
       "<a href='/roombookings/'>#{item.day.strftime('%-d %B %Y')}</a> " + extra_info.to_s || ''
     when 'User'

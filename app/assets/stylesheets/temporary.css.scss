@@ -1414,6 +1414,7 @@ td.fc-list-item-title {
 }
 
 .transfer_dialogue {
+  padding-top: 2.5rem;
   h1 {
     text-transform: uppercase;
   }
@@ -1631,4 +1632,28 @@ span.fc-time {
  top: -4px;
  right: 10px;
   
+}
+
+.ajax_loading, #new_form {
+  display: none;
+}
+
+#viewpoints {
+  .credit {
+    font-size: 0.8em;
+  }
+  .credit_line {
+    font-family: $inconsolata;
+    line-height: 1.2;
+    margin-bottom: 0.4rem;
+  }
+}
+.white-popup {
+  
+  position: relative;
+  background: #FFF;
+  padding: 20px;
+  width: auto;
+  max-width: 500px;
+  margin: 20px auto;
 }

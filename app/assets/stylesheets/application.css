@@ -24,6 +24,7 @@
  *= require posts
  *= require mobile
  *= require jquery.mentionable
+ *= require magnific-popup
  */
 
 .row.expanded {

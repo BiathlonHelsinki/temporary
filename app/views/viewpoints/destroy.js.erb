@@ -1,0 +1,6 @@
+$('#userphoto_<%= @u.id.to_s %>').remove();
+<% if @instance.userphotos.by_user(current_user).size < 2 %>
+  $('#new_form').html("<%= escape_javascript (render partial: 'viewpoints/userphoto_form') %>");
+<% end %>
+$('#new_form').fadeIn();
+$('input#userphoto_image').val(null);

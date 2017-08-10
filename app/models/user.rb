@@ -40,7 +40,10 @@ class User < ActiveRecord::Base
   validates_presence_of :geth_pwd
   has_many :rsvps
   has_many :registrations
-
+  has_many :userlinks
+  has_many :userphotos
+  has_many :userphotoslots
+  
   def as_mentionable
     {
       created_at: self.created_at,

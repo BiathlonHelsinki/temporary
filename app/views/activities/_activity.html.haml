@@ -29,7 +29,8 @@
         - if activity.extra.class == Instance
           = t activity.extra_info.to_sym
           = link_to activity.extra.name, experiment_instance_path(activity.extra.experiment, activity.extra)
-
+      - if activity.extra_type == 'Userphoto' && activity.item.class == User
+        = raw t(:in_appreciation_for_a_photo, instance: link_to(activity.extra.instance.name, experiment_instance_path(activity.extra.instance.experiment, activity.extra.instance)))
     %td.temps
       - unless activity.value.nil?
         - if activity.addition == 1
@@ -45,6 +46,7 @@
           = fa_icon('minus')
 
         = raw ("#{activity.value}#{activity.value.class == Fixnum ? tsign : ''}")
+
     %td
       - if activity.ethtransaction
         = link_to activity.ethtransaction.txaddress[0..5] + "...", "https://#{Rails.env.development? ? 'ropsten.' : ''}etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank
@@ -59,3 +61,11 @@
           - if activity.item.attachment?
             %br/
             = link_to fa_icon('sticky-note-o'), activity.item.attachment.url, target: :_blank
+      - if activity.extra_type == 'Userphoto'
+        - if activity.extra
+          - if activity.extra.image?
+            - if activity.item.class == Instance
+              = link_to image_tag(activity.extra.image.url(:thumb)), experiment_instance_path(activity.item.experiment, activity.item)
+            - elsif activity.extra.class == Userphoto
+              = link_to(image_tag(activity.extra.image.url(:thumb)), experiment_instance_path(activity.extra.instance.experiment, activity.extra.instance))
+              

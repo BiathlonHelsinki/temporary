@@ -12,6 +12,8 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.remotipart
+//= require best_in_place
 //= require foundation
 //= require jquery_nested_form
 //= require moment
@@ -26,7 +28,8 @@
 //= require jquery.mentionable
 //= require readmore.min
 //= require jquery.scrollTo.min
-  
+//= require magnific-popup
+
 function getContent(){
   var div_val=document.getElementById("comment_input").innerHTML;
           document.getElementById("comment_input_textarea").value =div_val;
@@ -41,7 +44,7 @@ function getContentEmptyOK(){
           document.getElementById("comment_input_textarea").value =div_val;
 
 }
-    
+
 $(function(){ 
   
   $(document).foundation();

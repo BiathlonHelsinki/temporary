@@ -78,6 +78,13 @@
                                 = link_to card.keyholder? ? 'remove access' : 'grant access', "/admin/nfcs/#{card.id.to_s}/toggle", class: [:button, :tiny, :secondary]
                                 = link_to 'delete card', "/admin/nfcs/#{card.id.to_s}", method: :delete, class: [:button, :alert, :tiny]
 
+      %br/
+      .ethereum
+        %strong= t(:extra_documentation_slots) + ":"
+        = @user.userphotoslots.size
+        - unless @user.userphotoslots.empty.empty?
+          = t(:x_unused, count: @user.userphotoslots.empty.size)
+      
       - if user_signed_in?
         - if current_user.has_role? :admin
           %br/

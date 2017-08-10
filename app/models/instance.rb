@@ -21,6 +21,8 @@ class Instance < ApplicationRecord
   has_many :pledges
   has_many :rsvps
   has_many :registrations, dependent: :destroy
+  has_many :userphotos
+  has_many :userlinks
   
   #validate :name_present_in_at_least_one_locale
   scope :between, -> (start_time, end_time) { 
@@ -131,6 +133,11 @@ class Instance < ApplicationRecord
     end
 
 
+  end
+  
+  
+  def viewpoints
+    [userphotos, userlinks].flatten.compact
   end
   
   def is_full?

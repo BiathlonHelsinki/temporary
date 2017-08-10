@@ -39,6 +39,7 @@ group :development do
   gem 'thin'
 end
 
+gem 'best_in_place', '~> 3.0.1'
 gem 'capistrano'
 gem 'capistrano-rails'#, '1.1.3'
 gem 'capistrano-rvm'
@@ -68,6 +69,7 @@ gem 'http_accept_language'
 gem 'httmultiparty'
 gem 'icalendar'
 gem 'kaminari'
+gem 'magnific-popup-rails', '~> 1.1.0'
 gem 'meta-tags'
 gem 'migration_data'
 gem 'mimemagic'
@@ -89,6 +91,7 @@ gem "rails-observers", github: 'rails/rails-observers'
 gem 'redis-rails', '~> 5.0.1'
 gem 'redis'
 gem "recaptcha", require: "recaptcha/rails"
+gem 'remotipart', '1.3.1', github: 'mshibuya/remotipart'
 gem 'rolify'
 gem 'simple_token_authentication', git: 'https://github.com/gonzalo-bulnes/simple_token_authentication.git', branch: 'master'
 gem 'skylight'

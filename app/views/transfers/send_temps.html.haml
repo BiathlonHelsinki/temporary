@@ -2,21 +2,18 @@
   .row.expanded
     .small-10.medium-6.columns
       %h1
-        Transfer 
-        = raw tsign
+        = t(:transfer_t)
+
         
       %p
-        You can transfer up to  
-        = raw "#{current_user.available_balance}#{tsign}."
+        = t(:you_can_transfer_up_to, number: current_user.available_balance)
+
         
       = form_tag post_temps_user_transfers_path(@recipient), method: :post do
         %label.label
-          How many 
-          = raw tsign
-          to send to
-          = @recipient.display_name
-          ?
+          = t(:how_many_temps_to_tip, user: @recipient.display_name)
+
         = text_field_tag :temps_to_send
-        %label.label Enter a reason for why you are sending them? (optional)
+        %label.label= t(:reason_for_transfer)
         = text_field_tag :reason
-        = submit_tag 'Send !', class: [:button]
+        = submit_tag t(:send), class: [:button]

@@ -7,6 +7,12 @@ GIT
       orm_adapter (~> 0.5.0)
 
 GIT
+  remote: git://github.com/mshibuya/remotipart.git
+  revision: cd653ddc43bb09767b8f2802d6e27b3e00ef992f
+  specs:
+    remotipart (1.3.1)
+
+GIT
   remote: git://github.com/rails/rails-observers.git
   revision: 206cb17bc14f4f5ac6f83da4204013a69549b9dc
   specs:
@@ -130,6 +136,9 @@ GEM
       babel-source (>= 4.0, < 6)
       execjs (~> 2.0)
     bcrypt (3.1.11)
+    best_in_place (3.0.3)
+      actionpack (>= 3.2)
+      railties (>= 3.2)
     bindex (0.5.0)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
@@ -288,6 +297,7 @@ GEM
       rb-inotify (~> 0.9, >= 0.9.7)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
+    magnific-popup-rails (1.1.0)
     mail (2.6.6)
       mime-types (>= 1.16, < 4)
     meta-tags (2.4.1)
@@ -473,6 +483,7 @@ DEPENDENCIES
   activemodel-serializers-xml
   audited (~> 4.5)
   awesome_nested_set
+  best_in_place (~> 3.0.1)
   better_errors!
   binding_of_caller
   bullet
@@ -512,6 +523,7 @@ DEPENDENCIES
   kaminari
   letter_opener
   listen (~> 3.0.5)
+  magnific-popup-rails (~> 1.1.0)
   meta-tags
   migration_data
   mimemagic
@@ -535,6 +547,7 @@ DEPENDENCIES
   recaptcha
   redis
   redis-rails (~> 5.0.1)
+  remotipart (= 1.3.1)!
   rolify
   ruby_parser (>= 3.0.1)
   sass-rails (~> 5.0)

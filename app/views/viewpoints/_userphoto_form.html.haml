@@ -1,0 +1,23 @@
+
+- if @instance.userphotos.by_user(current_user).to_a.delete_if{|x| !x.userphotoslot.nil? }.size < 2 || !current_user.userphotoslots.empty.empty?
+  %p= t(:x_photo_upload_slots_remaining, count: 2 - @instance.userphotos.by_user(current_user).to_a.delete_if{|x| !x.userphotoslot.nil? }.size + current_user.userphotoslots.empty.size, photo: t(:photo, count: 2 - @instance.userphotos.by_user(current_user).to_a.delete_if{|x| !x.userphotoslot.nil? }.size))
+  - if current_user.userphotoslots.empty.empty?
+    %p= t(:additional_slots_cost_1_temp)
+- else
+  %p= t(:no_photo_slots_left)
+  %p= t(:additional_slots_cost_1_temp)
+  
+  - if @api_status == false
+    %p= t(:biathlon_api_offline)
+  - else
+    - if current_user.latest_balance > 0
+      = link_to fa_icon('camera') + t(:buy_extra_photo_slot), buy_photoslot_user_path(current_user), remote: true, class: [:button, :small], data: {confirm: t(:confirm_buy_photo_slot) }
+    - else
+      %p= t(:you_need_at_least_1_temp)
+        
+
+  
+- if @instance.userphotos.by_user(current_user).to_a.delete_if{|x| !x.userphotoslot.nil? }.size < 2 || !current_user.userphotoslots.empty.empty?
+  = semantic_form_for [@instance.experiment, @instance, userphoto = @instance.userphotos.build],  html: {multipart: true }, remote: true do |v|
+    = v.input :image, label: t(:upload_an_image) , input_html: {onchange: "$(this).closest('form').trigger('submit.rails');"}
+    -#= v.submit t(:upload), class: [:button, :small]
