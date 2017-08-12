@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :authenticate_user!, except: [:mentions]
+  before_action :authenticate_user!, except: [:mentions]
   
   
   def buy_photoslot
@@ -39,6 +39,19 @@ class UsersController < ApplicationController
     set_meta_tags title: 'Edit your profile'
   end
   
+  def make_organiser
+    @experiment = Experiment.friendly.find(params[:experiment_id])
+    @instance = @experiment.instances.friendly.find(params[:id])
+    @user = User.friendly.find(params[:user_id])
+    if @instance.responsible_people.include?(current_user) || current_user.has_role?(:admin)
+      @instance.organisers << @user
+      @instance.save
+      @success = true
+    else
+      @success = false
+    end
+  end
+  
   def mentions
     if params[:mentioning][0] == '@'
       @users = User.where("lower(username) LIKE '%" +  params[:mentioning][1..-1].downcase + "%'")
@@ -52,6 +65,19 @@ class UsersController < ApplicationController
       render json: @experiments.uniq.map(&:as_mentionable).to_json            
     else
       logger.warn('params is ' + params[:mentioning][0])
+    end
+  end
+  
+  def remove_organiser
+    @experiment = Experiment.friendly.find(params[:experiment_id])
+    @instance = @experiment.instances.friendly.find(params[:id])
+    @user = User.friendly.find(params[:user_id])
+    if @instance.responsible_people.include?(current_user) || current_user.has_role?(:admin)
+      @instance.organisers.delete(@user)
+      @instance.save
+      @success = true
+    else
+      @success = false
     end
   end
   

@@ -5,7 +5,9 @@
         %h1= t :discussion
       - if @experiment.discussion.size > 0
         .small-12.columns
-          .comment_count= "This experiment has #{pluralize(@experiment.discussion.size, 'comment')}."
+          .comment_count
+            = t(:this_experiment_has_x_comments, count:@experiment.discussion.size, comment: t(:comment, count: @experiment.discussion.size) )
+
     - @experiment.discussion.sort_by(&:created_at).each do |comment|
       .row.expanded
         .small-12.columns
@@ -18,7 +20,7 @@
 
                     - if user_signed_in?
                       - if can? :destroy, comment
-                        = link_to 'Delete this comment', comment, method: :delete, data: {confirm: 'Are you sure? If someone has replied to this comment and you delete it, it might be confusing.'}, class: [:button, :tiny, :secondary]
+                        = link_to t(:delete_this_comment), comment, method: :delete, data: {confirm: t(:are_you_sure_delete_comment)}, class: [:button, :tiny, :secondary]
                   .small-10.columns
                     .comment_type
                       = raw t(:user_says, :user => comment.user.display_name)

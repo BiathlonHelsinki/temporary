@@ -6,7 +6,8 @@ class Experiment < ApplicationRecord
   belongs_to :secondary_sponsor, class_name: 'User'
   translates :name, :description, :fallbacks_for_empty_translations => true
   accepts_nested_attributes_for :translations, :reject_if => proc {|x| x['name'].blank? && x['description'].blank? }
-  belongs_to :place  
+  belongs_to :place
+  has_many :notifications, as: :item
   has_many :activities, as: :item,  dependent: :destroy, source_type: 'Event'
   resourcify
 

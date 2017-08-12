@@ -16,6 +16,7 @@ class Proposal < ApplicationRecord
   after_create :add_to_activity_feed
   after_update :add_to_activity_feed_edited
   belongs_to :proposalstatus
+  has_many :notifications, as: :item
   
   scope :archived, -> () { where("stopped = true OR proposalstatus_id is not null") }
   scope :active, -> () { where(stopped: false, proposalstatus: nil)}

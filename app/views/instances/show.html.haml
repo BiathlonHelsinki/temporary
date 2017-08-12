@@ -222,18 +222,23 @@
                     - else
                       = image_tag image_path('user_missing_large.png')
                   .participant_overlay
-
+                    
                     = link_to attended.user.display_name, attended.user
-                    - if @instance.responsible_people.include?(attended.user)
-                      %br/
-                      = t(:organiser)
-                      - if @instance.experiment.primary_sponsor == attended.user || @instance.experiment.secondary_sponsor == attended.user
+                    %div{id: "organiser_info_#{attended.user.id.to_s}"}
+                      - if @instance.responsible_people.include?(attended.user)
                         %br/
-                        = link_to t(:experiment_instigator_brackets), @instance.proposal
+                        = t(:organiser)
+                        - if @instance.experiment.primary_sponsor == attended.user || @instance.experiment.secondary_sponsor == attended.user
+                          %br/
+                          = link_to t(:experiment_instigator_brackets), @instance.proposal
+                        - else
+                          - if user_signed_in?
+                            - if @instance.responsible_people.include?(current_user) || current_user.has_role?(:admin)
+                              = link_to t(:remove_organiser), experiment_user_remove_organiser_path(@instance.experiment, @instance, attended.user), remote: true,  class: [:button, :alert, :tiny]
                       - else
-                        = link_to t(:remove_organiser), '#', class: [:button, :secondary, :tiny]
-                    - else
-                      = link_to t(:make_organiser), '#', class: [:button, :secondary, :tiny]
+                        - if user_signed_in?
+                          - if @instance.responsible_people.include?(current_user) || current_user.has_role?(:admin)
+                            = link_to t(:make_organiser), experiment_user_make_organiser_path(@instance.experiment, @instance, attended.user), remote: true,  class: [:button, :secondary, :tiny]
 
                     - if attended.waiting_list == true
                       %br/
@@ -260,18 +265,26 @@
                 .participant_overlay
 
                   = link_to attended.display_name, attended 
-                  - if @instance.responsible_people.include?(attended)
-                    %br/
-                    = t(:organiser)
-                    - if @instance.experiment.primary_sponsor == attended || @instance.experiment.secondary_sponsor == attended
-                      %br/
-                      = link_to t(:experiment_instigator_brackets), @instance.proposal
+                  %div{id: "organiser_info_#{attended.id.to_s}"}
+                     
+                    - if @instance.responsible_people.include?(attended)
+                      = t(:organiser)
+              
+                  
+                      - if @instance.experiment.primary_sponsor == attended || @instance.experiment.secondary_sponsor == attended
+                        %br/
+                        = link_to t(:experiment_instigator_brackets), @instance.proposal
+                      - else
+                        - if user_signed_in?
+                          - if @instance.responsible_people.include?(current_user) || current_user.has_role?(:admin)
+                            = link_to t(:remove_organiser), experiment_user_remove_organiser_path(@instance.experiment, @instance, attended), remote: true, class: [:button, :alert, :tiny]
                     - else
-                      = link_to t(:remove_organiser), '#', class: [:button, :tiny]
-                  - else
-                    = link_to t(:make_organiser), '#', class: [:button, :tiny]
+                      - if user_signed_in?
+                        - if @instance.responsible_people.include?(current_user) || current_user.has_role?(:admin)
+                          = link_to t(:make_organiser), experiment_user_make_organiser_path(@instance.experiment, @instance, attended), remote: true, class: [:button, :secondary, :tiny]
+                        
                   - if user_signed_in?
-                    - if current_user == attended
+                    - if current_user == attended 
                       = link_to t(:cancel_rsvp), cancel_rsvp_experiment_instance_path(@instance.experiment, @instance), method: :post, class: [:button, :alert], data: {confirm: t(:confirm_cancel_rsvp) }
                   - if @instance.allow_multiple_entry == true
                     = " (#{pluralize(@instance.users.select{|x| x == attended}.count, 'time')})"

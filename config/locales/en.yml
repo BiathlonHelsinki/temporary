@@ -492,3 +492,6 @@ If you suggest an exact date, we will do our best when scheduling to co-exist wi
   reason_for_transfer: 'Enter a reason for why you are sending them? (optional)'
   send: 'Send!'
   you_can_transfer_up_to: 'You can transfer up to %{number}Ŧ.'
+  this_experiment_has_x_comments: 'This experiment has %{count} %{comment}.'
+  ex_organiser: "(ex-organiser)"
+  remove_organiser: 'Remove as organiser'

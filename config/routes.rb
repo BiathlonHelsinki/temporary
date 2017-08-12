@@ -55,6 +55,10 @@ Rails.application.routes.draw do
         post :cancel_rsvp
         post :cancel_registration
         get :stats
+        resources :users do
+          get :make_organiser
+          get :remove_organiser
+        end
       end
     end
 
