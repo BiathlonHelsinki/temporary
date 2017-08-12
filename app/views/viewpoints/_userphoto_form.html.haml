@@ -11,7 +11,7 @@
     %p= t(:biathlon_api_offline)
   - else
     - if current_user.latest_balance > 0
-      = link_to fa_icon('camera') + t(:buy_extra_photo_slot), buy_photoslot_user_path(current_user), remote: true, class: [:button, :small], data: {confirm: t(:confirm_buy_photo_slot) }
+      = link_to fa_icon('camera') + t(:buy_extra_photo_slot), buy_photoslot_user_path(current_user), remote: true, id: :buy_photoslot_button, class: [:button, :small], data: {confirm: t(:confirm_buy_photo_slot) }
     - else
       %p= t(:you_need_at_least_1_temp)
         
@@ -21,3 +21,4 @@
   = semantic_form_for [@instance.experiment, @instance, userphoto = @instance.userphotos.build],  html: {multipart: true }, remote: true do |v|
     = v.input :image, label: t(:upload_an_image) , input_html: {onchange: "$(this).closest('form').trigger('submit.rails');"}
     -#= v.submit t(:upload), class: [:button, :small]
+

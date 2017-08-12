@@ -619,7 +619,7 @@ fi:
   max_100_chars: 'max. 100 merkkiä'
   credit_form: 'Kuvan krediitit (jos et itse ottanut)'
   are_you_sure: 'Oletko varma?'
-  x_photo_upload_slots_remaining: 'Voit kadata kuvan kokeilusta. Voit ladata maksimissaan %{count} %{photo}.
+  x_photo_upload_slots_remaining: 'Voit kadata kuvan kokeilusta. Voit ladata maksimissaan %{count} %{photo}.'
   additional_slots_cost_1_temp: 'Maksamalla 1Ŧ per kuva, voit halutessasi ladata lisää kuvia'
   photo:
     zero: 'kuvaa'
