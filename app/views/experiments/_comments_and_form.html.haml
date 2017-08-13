@@ -1,37 +1,52 @@
-- unless @experiment.comments.empty?
-  #comments_list
+
+#comments_list
+  .row.expanded
+    .small-12.columns
+      %h1= t :discussion
+    - if @experiment.discussion.size > 0
+      .small-12.columns
+        .comment_count
+          = t(:this_experiment_has_x_comments, count:@experiment.discussion.size, comment: t(:comment, count: @experiment.discussion.size) )
+    - if user_signed_in?
+      .small-12.columns.notification_form
+        .notification_question= t(:receive_email_notifications_question)
+  
+        = semantic_form_for [@experiment, current_user, @experiment.notifications.by_user(current_user.id).empty? ? @experiment.notifications.build : @experiment.notifications.by_user(current_user.id).first], remote: true do |f|
+          %small= t(:send_me_an_email_when_there_is_a_new, email_address: current_user.email)
+          %br/
+          -#= f.input :pledges, label: t(:pledge, count: 1)
+          = f.input :comments, label: t(:comment, count: 1)
+          = f.input :scheduling, label: t(:scheduled_meeting)
+          - label = capture do
+            = fa_icon 'envelope'
+            = t(:update_email_preferences)
+          = f.button label, type: :submit, class: [:button, :small]
+        #notifications_result
+        
+  - @experiment.discussion.sort_by(&:created_at).each do |comment|
     .row.expanded
       .small-12.columns
-        %h1= t :discussion
-      - if @experiment.discussion.size > 0
-        .small-12.columns
-          .comment_count
-            = t(:this_experiment_has_x_comments, count:@experiment.discussion.size, comment: t(:comment, count: @experiment.discussion.size) )
+        .entry{class: [comment.class.to_s.downcase, comment == @experiment.discussion.sort_by(&:created_at).last ? :last : false]}
+          .row
+            .sma11-12.medium-8.columns.end
+              .row
+                .small-2.columns
+                  = link_to image_tag(comment.user.avatar.url(:box)), comment.user, target: :_blank, class: :comment_avatar
 
-    - @experiment.discussion.sort_by(&:created_at).each do |comment|
-      .row.expanded
-        .small-12.columns
-          .entry{class: [comment.class.to_s.downcase, comment == @experiment.discussion.sort_by(&:created_at).last ? :last : false]}
-            .row
-              .sma11-12.medium-8.columns.end
-                .row
-                  .small-2.columns
-                    = link_to image_tag(comment.user.avatar.url(:box)), comment.user, target: :_blank, class: :comment_avatar
-
-                    - if user_signed_in?
-                      - if can? :destroy, comment
-                        = link_to t(:delete_this_comment), comment, method: :delete, data: {confirm: t(:are_you_sure_delete_comment)}, class: [:button, :tiny, :secondary]
-                  .small-10.columns
-                    .comment_type
-                      = raw t(:user_says, :user => comment.user.display_name)
-                    .date= l comment.created_at, format: :long
-                    .comment_content
-                      = simple_format(comment.content_linked)
-                      - if comment.image?
-                        %br/
-                        .image_attached= image_tag comment.image.url(:medium)
-                      - if comment.attachment?
-                        %p= link_to t(:download) + ' ' + File.basename(URI.parse(comment.attachment.url).path), comment.attachment.url, class: [:button, :round, :tiny]
+                  - if user_signed_in?
+                    - if can? :destroy, comment
+                      = link_to t(:delete_this_comment), comment, method: :delete, data: {confirm: t(:are_you_sure_delete_comment)}, class: [:button, :tiny, :secondary]
+                .small-10.columns
+                  .comment_type
+                    = raw t(:user_says, :user => comment.user.display_name)
+                  .date= l comment.created_at, format: :long
+                  .comment_content
+                    = simple_format(comment.content_linked)
+                    - if comment.image?
+                      %br/
+                      .image_attached= image_tag comment.image.url(:medium)
+                    - if comment.attachment?
+                      %p= link_to t(:download) + ' ' + File.basename(URI.parse(comment.attachment.url).path), comment.attachment.url, class: [:button, :round, :tiny]
                   
 - if user_signed_in?
   

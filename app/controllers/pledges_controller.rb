@@ -24,6 +24,12 @@ class PledgesController < ApplicationController
         @pledge.user = current_user
         @pledge.converted = false
         if @pledge.save
+          unless @proposal.notifications.empty?
+            @proposal.notifications.each do |n|
+              next unless n.pledges == true
+              NotificationMailer.new_pledge(@proposal, @pledge, n.user).deliver_later
+            end
+          end
           render template: 'pledges/after_pledge'
         else
           flash[:error] = 'There was an error saving your pledge: ' + @pledge.errors.messages.values.join('; ')

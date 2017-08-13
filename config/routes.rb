@@ -39,6 +39,11 @@ Rails.application.routes.draw do
   resources :opensessions
   resources :experiments do
     resources :comments
+
+    resources :users do
+      resources :notifications
+    end
+
     collection do
       get :tree
       get :radial
@@ -86,6 +91,10 @@ Rails.application.routes.draw do
   resources :proposals do
     resources :comments
     resources :pledges
+    resources :users do
+      resources :notifications
+    end
+    
     collection do
       get :archived
       get :active

@@ -199,6 +199,23 @@
                 = t(:this_proposal_has_x_comments, comments: t(:comment, count: @proposal.discussion.size))
               - else
                 = t(:this_proposal_had_x_comments, comments: pluralize(@proposal.discussion.size, t(:comment)))
+        - if user_signed_in?
+          .small-12.columns.notification_form
+            .notification_question= t(:receive_email_notifications_question_proposal)
+  
+            = semantic_form_for [@proposal, current_user, @proposal.notifications.by_user(current_user.id).empty? ? @proposal.notifications.build : @proposal.notifications.by_user(current_user.id).first], remote: true do |f|
+              %small= t(:send_me_an_email_when_there_is_a_new, email_address: current_user.email)
+              %br/
+              = f.input :pledges, label: t(:pledge, count: 1)
+              = f.input :comments, label: t(:comment, count: 1)
+              
+              - label = capture do
+                = fa_icon 'envelope'
+                = t(:update_email_preferences)
+              = f.button label, type: :submit, class: [:button, :small]
+            #notifications_result
+        
+                        
       - @proposal.discussion.sort_by(&:created_at).each do |comment|
         .row.expanded
           .small-12.columns

@@ -294,7 +294,7 @@ fi:
   was_credited_for: 'sai tunnustusta'
   was_mentioned_by: 'mainittiin'
   withdrew_a_pledge: 'veti takasin tukensa'
-  pledge: 'tue'
+  pledge_verb: 'tue'
   anonymous person: 'nimetön henkilö'
   in_a_comment_on: 'kommentissa'
   unregistered: 'Kiitos, että kerroit meille. Harmi, että et pääse paikalle tällä kertaa.'
@@ -648,3 +648,8 @@ fi:
   reason_for_transfer: 'Anna syy miksi lähetät niitä? (vapaaehtoinen)'
   send: 'Lähetetty!'
   you_can_transfer_up_to: 'Voit lähettää enintään %{number}Ŧ:tä.'
+  scheduled_meeting: 'meeting added to the calendar'
+  pledge:
+    zero: 'tukea'
+    one: 'tuki'
+    other: 'tukea'

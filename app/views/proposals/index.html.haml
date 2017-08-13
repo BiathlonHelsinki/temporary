@@ -395,8 +395,8 @@
                       - else
                         = t(:comments_on_proposal, number: proposal.comments.size, comment: t(:comment, count: proposal.comments.size) )
                       %br/
-                      = raw t(:last_pledge_or_comment_by, item_type: t(proposal.comments_and_pledges.last.class.to_s.downcase.to_sym), person: link_to(proposal.comments_and_pledges.last.user.display_name, proposal.comments_and_pledges.last.user, target: :_blank))
-                      = time_ago_in_words(proposal.comments_and_pledges.last.created_at) + t(:ago)
+                      = raw t(:last_pledge_or_comment_by, item_type: t(proposal.comments_and_pledges.last.class.to_s.downcase.to_sym, count: 1), person: link_to(proposal.comments_and_pledges.last.user.display_name, proposal.comments_and_pledges.last.user, target: :_blank))
+                      = time_ago_in_words(proposal.comments_and_pledges.last.created_at) + ' '  + t(:ago)
                   
                   
             .reveal.occluded[proposal]{:"data-reveal" => ''}= render partial: 'proposal_overlay', locals: {proposal: proposal}

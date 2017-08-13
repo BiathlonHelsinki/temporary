@@ -93,7 +93,7 @@ en:
   will_be_reviewed: "Will be reviewed for scheduling at next organisational meeting"
   view: 'View'
   still_needed: '%{amount} still needed'
-  pledge: 'Pledge!'
+  pledge_verb: 'Pledge!'
   must_enter_valid_email: 'You must enter a valid email address to propose (or pledge towards) an experiment.'
   donate_to_temporary: 'Donate to Temporary!'
   no_matching_proposals: 'Sorry, no proposals match these search terms.'
@@ -495,3 +495,14 @@ If you suggest an exact date, we will do our best when scheduling to co-exist wi
   this_experiment_has_x_comments: 'This experiment has %{count} %{comment}.'
   ex_organiser: "(ex-organiser)"
   remove_organiser: 'Remove as organiser'
+  receive_email_notifications_question: 'Would you like to receive email notifications when this experiment is updated?'
+  receive_email_notifications_question_proposal: 'Would you like to receive email notifications when this proposal has new activity?'
+  send_me_an_email_when_there_is_a_new: 'Send an email to %{email_address} when there is a new: '
+  scheduled_meeting: 'meeting added to the calendar'
+  pledge:
+    zero: 'pledges'
+    one: 'pledge'
+    other: 'pledges'
+  update_email_preferences: 'Update email preferences'
+  email_notifications_updated: 'Your email notifications have been updated.'
+  email_spam_filter: 'Please ensure that admin@temporary.fi is whitelisted in your email client.'

@@ -27,10 +27,19 @@ class Admin::InstancesController < Admin::BaseController
         if @instance.published == true
           @instance.pledges.each do |pledge|
             next if pledge.user.opt_in != true
-            InstancesMailer.pledge_was_scheduled(@instance.proposal, pledge.user).deliver_now
+            InstancesMailer.pledge_was_scheduled(@instance.proposal, pledge.user).deliver_later
           end
         end
       end
+      
+      # send scheduling notifications
+      unless @instance.experiment.notifications.empty?
+        @instance.experiment.notifications.each do |n|
+          next unless n.scheduling == true
+          NotificationMailer.new_scheduling(@instance, n.user).deliver_later
+        end
+      end
+      
       flash[:notice] = 'Your instance was accepted, thank you!'
       redirect_to admin_experiments_path
     end                        

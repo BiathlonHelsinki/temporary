@@ -8,9 +8,7 @@ class CommentsController < ApplicationController
     if params[:proposal_id]
       @master = Proposal.find(params[:proposal_id])
     end
-    if params[:opencallsubmission_id]
-      @master = Opencallsubmission.find(params[:opencallsubmission_id])
-    end
+
     if params[:experiment_id]
       @master= Experiment.friendly.find(params[:experiment_id])
       if comment_params[:frontpage] == "1"
@@ -20,7 +18,12 @@ class CommentsController < ApplicationController
       end
     end
     @master.comments << c
-    
+    unless @master.notifications.empty?
+      @master.notifications.each do |n|
+        next unless n.comments == true
+        NotificationMailer.new_comment(@master, c, n.user).deliver_later
+      end
+    end
     if @master.save!
       flash[:notice] = t(:your_comment_was_added)
     else

@@ -100,6 +100,8 @@ class Activity < ApplicationRecord
       "#{usertext} #{description} by the TempsBot"
     elsif item.class == Roombooking
       "#{usertext} #{description}"
+    elsif item.class == Userphotoslot
+      "#{usertext} #{description}"
     else
       "#{usertext} #{description} <a href='/experiments/#{item.experiment.slug}/#{item.slug}'>#{item.name}</a> and received #{item.cost_bb}#{ENV['currency_symbol']}"    
     end

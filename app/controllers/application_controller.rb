@@ -14,14 +14,16 @@ class ApplicationController < ActionController::Base
   private
   
   def are_we_open?
-    Opensession.uncached do
+    unless request.xhr?
+      Opensession.uncached do
+        sesh = Opensession.by_node(1).find_by(closed_at: nil)
+      end
       sesh = Opensession.by_node(1).find_by(closed_at: nil)
-    end
-    sesh = Opensession.by_node(1).find_by(closed_at: nil)
-    if sesh.nil?
-      @temporary_is_open = false
-    else
-      @temporary_is_open = true
+      if sesh.nil?
+        @temporary_is_open = false
+      else
+        @temporary_is_open = true
+      end
     end
   end
   

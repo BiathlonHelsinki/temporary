@@ -1231,6 +1231,16 @@ td.fc-list-item-title {
 }
 
 #comments_list {
+  .notification_question {
+    font-size: 1.15em;
+    margin: 0;
+  }
+  .notification_form {
+    li.boolean {
+      float: left;
+      margin-right: 1.2rem;
+    }
+  }
   h1 {
     text-transform: uppercase;
   }
