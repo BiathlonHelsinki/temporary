@@ -54,6 +54,7 @@ Rails.application.routes.draw do
     resources :instances, path: '' do
       resources :registrations, controller: :experiment_registrations
       resources :userphotos, controller: :viewpoints
+      resources :userthoughts, controller: :viewpoints
       member do
         post :rsvp
         post :register

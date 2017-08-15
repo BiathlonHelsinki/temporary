@@ -94,6 +94,7 @@ class InstancesController < ApplicationController
         redirect_to experiment_path(@experiment.slug)
       end
       set_meta_tags title: @instance.name
+
       if params[:format] == 'ics'
         require 'icalendar/tzinfo'
         @cal = Icalendar::Calendar.new
@@ -111,6 +112,9 @@ class InstancesController < ApplicationController
         end
         @cal.publish
       end
+
+      
+      
       respond_to do |format|
         format.html # index.html.erb
         format.ics { send_data @cal.to_ical, type: 'text/calendar', disposition: 'attachment', filename: @instance.slug + ".ics" }

@@ -5,8 +5,8 @@ class ViewpointsController < ApplicationController
   def create
     @experiment = Experiment.friendly.find(params[:experiment_id])
     @instance = @experiment.instances.friendly.find(params[:instance_id])
-    if @instance.userphotos.by_user(current_user).to_a.delete_if{|x| !x.userphotoslot.nil? }.size < 2 || !current_user.userphotoslots.empty.empty?
-      if params[:userphoto]
+    if params[:userphoto]
+      if @instance.userphotos.by_user(current_user).to_a.delete_if{|x| !x.userphotoslot.nil? }.size < 2 || !current_user.userphotoslots.empty.empty?
         @u = Userphoto.new(userphoto_params)
         @u.user = current_user
         if @instance.userphotos.by_user(current_user).to_a.delete_if{|x| !x.userphotoslot.nil? }.size == 2
@@ -18,7 +18,15 @@ class ViewpointsController < ApplicationController
       end
 
     end
-      
+    if params[:userthought]
+      @u = Userthought.new(userthought_params)
+      @u.user = current_user
+      @instance.userthoughts << @u
+      if @u.save
+        redirect_to experiment_instance_path(@instance.experiment, @instance)
+        flash[:notice] = t(:your_viewpoint_has_been_saved)
+      end
+    end
   end
   
   def destroy
@@ -54,5 +62,8 @@ class ViewpointsController < ApplicationController
     params.require(:userphoto).permit(:image, :caption, :credit)
   end
   
-    
+  def userthought_params
+    params.require(:userthought).permit(:thoughts)
+  end
+   
 end

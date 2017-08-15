@@ -22,6 +22,7 @@ class Instance < ApplicationRecord
   has_many :rsvps
   has_many :registrations, dependent: :destroy
   has_many :userphotos
+  has_many :userthoughts
   has_many :userlinks
   
   #validate :name_present_in_at_least_one_locale
@@ -137,7 +138,7 @@ class Instance < ApplicationRecord
   
   
   def viewpoints
-    [userphotos, userlinks].flatten.compact
+    [userphotos, userlinks, userthoughts].flatten.compact
   end
   
   def is_full?

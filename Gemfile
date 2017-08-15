@@ -91,6 +91,7 @@ gem "rails-observers", github: 'rails/rails-observers'
 gem 'redis-rails', '~> 5.0.1'
 gem 'redis'
 gem "recaptcha", require: "recaptcha/rails"
+gem 'redcarpet'
 gem 'remotipart', '1.3.1', github: 'mshibuya/remotipart'
 gem 'rolify'
 gem 'simple_token_authentication', git: 'https://github.com/gonzalo-bulnes/simple_token_authentication.git', branch: 'master'

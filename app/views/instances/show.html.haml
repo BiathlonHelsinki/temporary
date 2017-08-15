@@ -335,11 +335,15 @@
             %h5= t :no_viewpoints_yet
         .row.expanded.small-up-1.medium-up-2.large-up-4.xxlarge-up-5#viewpoints_row{:"data-equalizer" => '', :"data-equalize-by-row" => "true"}            
       - else
+        - unless @instance.userthoughts.empty?
+          - markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML.new, extensions = {})
+
         .row.expanded.small-up-1.medium-up-2.large-up-4.xxlarge-up-5#viewpoints_row{:"data-equalizer" => '', :"data-equalize-by-row" => "true"}
           - @instance.viewpoints.each do |viewpoint|
             - if viewpoint.class == Userphoto
               = render partial: 'viewpoints/captioned_photo', locals: {viewpoint: viewpoint}
-                
+            - if viewpoint.class == Userthought
+              = render partial: 'viewpoints/userthought', locals: {viewpoint: viewpoint, markdown: markdown}
                       
       - if user_signed_in?
         - if @instance.users.include?(current_user)
@@ -348,7 +352,7 @@
               %p= link_to t(:add_a_viewpoint), '#', class: [:button], onclick: '$("#new_form").slideToggle();return false;'
           
           #user_viewpoint_form.row.expanded
-            .small-12.columns
+            .small-12.medium-8.columns
              
               #new_form= render partial: 'viewpoints/userphoto_form'
               #ajax_area
