@@ -702,3 +702,6 @@ fi:
   allow_survey_identity: 'Is it OK to quote your answers not-anonymously? We will contact you if this is going to happen.'
   save_answers: 'Save answers'
   complete: 'Send completed survey'
+  you_have_started_the_survey: 'You have started the survey. Please complete it before the closing party!'
+  answers_were_saved: 'Your answers have been saved. You can go back to finish up until the party starts.'
+  you_can_save_answers: 'You can save your answers at any time to go back later. When you are finished, click SEND COMPLETED SURVEY to finish.'  
