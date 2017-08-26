@@ -86,4 +86,10 @@
     $('#save_progress').on('click', function() {
       $('[required]').attr('required', false);
       $('form').submit();
-    })
+    });
+    $(document).on('forminvalid.zf.abide', function(evt, form) {
+
+      var badel = $('label.is-invalid-label')[0];
+      $('html, body').animate({scrollTop: $(badel).offset().top});
+    });
+  
