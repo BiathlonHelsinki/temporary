@@ -186,8 +186,15 @@
                         = t :are_you_going
                         = link_to t(:rsvp), rsvp_event_instance_path(post.event, post), method: :post, class: [:button]
                   - else
-                    = t :are_you_going
-                    = link_to t(:rsvp),  [post.event, post], class: [:button]
+                    - if post.survey_locked
+                      .survey_banner
+                        = link_to t(:must_complete_survey), '/surveys/new'
+                        .smaller
+                          = t(:survey_explanation)
+                          = link_to t(:take_the_survey), '/surveys/new'
+                    - else
+                      = t :are_you_going
+                      = link_to t(:rsvp),  [post.event, post], class: [:button]
                 - unless post.rsvps.empty?
                   .participants
                     = t(:x_person_has_rsvpd, number: post.rsvps.size, people: t(:person, count: post.rsvps.size) )
