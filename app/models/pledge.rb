@@ -1,5 +1,7 @@
 class Pledge < ApplicationRecord
   belongs_to :item, polymorphic: true, touch: true
+  belongs_to :event, foreign_key: :item_id, foreign_type: 'Event'
+  belongs_to :proposal,  foreign_key: :item_id, foreign_type: 'Proposal'
   has_many :activities, as: :item
   belongs_to :user
   after_save :update_activity_feed
@@ -14,6 +16,8 @@ class Pledge < ApplicationRecord
   scope :unconverted, -> () { where('converted = 0 OR converted is null')}
   scope :converted, -> () { where(converted: true)}
   
+
+
   def check_balance
     user.update_balance_from_blockchain
     if pledge < 1 || pledge > user.latest_balance
@@ -42,16 +46,18 @@ class Pledge < ApplicationRecord
   def notify_if_enough
     
     if (item.pledged + pledge ) >= Rate.get_current.experiment_cost
-      if item.notified != true
+      if item.class == Proposal
+        if item.notified != true
         
-        begin
-          ProposalMailer.proposal_for_review(self.item).deliver 
-          item.update_attribute(:notified, true)
+          begin
+            ProposalMailer.proposal_for_review(self.item).deliver 
+            item.update_attribute(:notified, true)
 
-        rescue
+          rescue
 
-          item.notified = false
+            item.notified = false
 
+          end
         end
       end
     end
@@ -72,8 +78,10 @@ class Pledge < ApplicationRecord
     else
       Activity.create(user: user, item: self, description: "edited_their_pledge_to", extra_info: pledge, addition: 0)
     end
-    item.update_column_caches
-    item.save
+    if item.class == Proposal
+      item.update_column_caches
+      item.save
+    end
 
   end
   

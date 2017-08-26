@@ -1,0 +1,20 @@
+.row.expanded
+  .small-12.columns
+    %h2 Completed surveys
+
+.row.expanded
+  .small-10.columns
+    %table
+      %thead
+        %th User
+        %th Date completed
+        %th
+      %tbody
+        - @surveys.each do |survey|
+          %tr
+            %td= link_to survey.user.display_name, [:admin, survey]
+            %td= l survey.created_at
+            %td
+              - if can? :destroy, survey  
+                = link_to 'Delete', [:admin, survey], method: :delete, class: [:button, :alert, :small], data: {confirm: 'Are you sure?'}
+          

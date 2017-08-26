@@ -24,10 +24,10 @@
 
   
     - if @instance.userphotos.by_user(current_user).to_a.delete_if{|x| !x.userphotoslot.nil? }.size < 2 || !current_user.userphotoslots.empty.empty?
-      = semantic_form_for [@instance.experiment, @instance, userphoto = @instance.userphotos.build],  html: {multipart: true }, remote: true do |v|
+      = semantic_form_for [@instance.event, @instance, userphoto = @instance.userphotos.build],  html: {multipart: true }, remote: true do |v|
         = v.input :image, label: t(:upload_an_image) , input_html: {onchange: "$(this).closest('form').trigger('submit.rails');"}
         -#= v.submit t(:upload), class: [:button, :small]
   .tabs-panel#viewpoint_words
-    = semantic_form_for [@instance.experiment, @instance, userthought = @instance.userthoughts.build],  html: {multipart: true } do |v|
+    = semantic_form_for [@instance.event, @instance, userthought = @instance.userthoughts.build],  html: {multipart: true } do |v|
       = v.input :thoughts, label: t(:enter_thought), hint: raw(t(:markdown_is_ok, markdown_link: link_to('markdown syntax', 'https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet', target: :_blank)))
       = v.submit t(:save), class: [:button, :small]

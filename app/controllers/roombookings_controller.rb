@@ -5,7 +5,7 @@ class RoombookingsController < ApplicationController
   def calendar
     @roombookings = Roombooking.between(params['start'], params['end']) if (params['start'] && params['end'])
 
-    # @experiments += experiments.reject{|x| !x.one_day? }
+    # @events += events.reject{|x| !x.one_day? }
     if params[:format] == 'ics'
       require 'icalendar/tzinfo'
       @cal = Icalendar::Calendar.new

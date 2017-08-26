@@ -123,17 +123,25 @@ table {
 }
 
 table.experiments {
-  tr {
-    border-top: 3px solid black;
+  tr:nth-child(even) {
+    td {
+      border-bottom: 3px solid black;
+    }
   }
   tr.instance {
     border: none;
-    table {
+    table.instances {
       thead {
         font-size: 0.8em;
+        th {
+          font-size: 0.7rem;
+        }
       }
       tr{
         border: none;
+        td {
+          border-bottom: none;
+        }
       }
     }
     td {

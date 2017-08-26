@@ -1,10 +1,10 @@
-class ExperimentRegistrationsController < ApplicationController
+class EventRegistrationsController < ApplicationController
   before_action :authenticate_user!
   
   def create
-    if params[:experiment_id]
-      @experiment = Experiment.friendly.find(params[:experiment_id])
-      @instance = @experiment.instances.friendly.find(params[:instance_id])
+    if params[:event_id]
+      @event = Event.friendly.find(params[:event_id])
+      @instance = @event.instances.friendly.find(params[:instance_id])
       r = Registration.new(instance: @instance, user: current_user)
       if @instance.max_attendees
         if @instance.max_attendees - @instance.registrations.not_waiting.to_a.delete_if{|x| x.new_record?}.size < 1
@@ -20,7 +20,7 @@ class ExperimentRegistrationsController < ApplicationController
         flash[:error] = 'There was an error registering: ' + r.errors.inspect
       end
       Activity.create(user: current_user, addition: 0, item: @instance, description: 'registered_for')
-      redirect_to [@experiment, @instance]
+      redirect_to [@event, @instance]
     else
       flash[:error] = 'Error'
       redirect_to '/'

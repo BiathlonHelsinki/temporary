@@ -22,7 +22,7 @@
                         = p.extra_info.gsub(/\s\+\d{4}$/, '')
                       - if p.instance
                         = t(:scheduling)
-                        = link_to p.instance.name, experiment_instance_path(p.instance.experiment, p.instance), target: :_blank
+                        = link_to p.instance.name, event_instance_path(p.instance.event, p.instance), target: :_blank
 
               - if @proposal.pledges.where(user: current_user).size > 5
                 = content_for :jquery do
@@ -36,7 +36,7 @@
         - if @proposal.is_valid?
           - if @proposal.scheduled?
             .yellow 
-              - if @proposal.stopped? || (@proposal.scheduled? && !@proposal.recurs? && @proposal.instances.future.empty?)
+              - if @proposal.stopped? || (@proposal.scheduled? && !@proposal.recurs? && @proposal.instances.published.future.empty?)
                 = t(:completed)
               - else
                 %span.pledge_box_text Scheduled!
@@ -79,13 +79,14 @@
         %p
 
           - if @proposal.stopped? ||  (@proposal.scheduled? && !@proposal.recurs?) 
+
             - if @proposal.is_valid?
-              - if @proposal.instances.future.empty?
-                = t(:meetings_took_place_past, amount: t(:meeting, count: @proposal.instances.first.experiment.instances.size))
+              - if @proposal.instances.published.future.published.empty?
+                = t(:meetings_took_place_past, count: @proposal.instances.first.event.instances.size, amount: t(:meeting, count: @proposal.instances.first.event.instances.size))
 
               - else
-                = @proposal.instances.first.experiment.instances.size
-                = t(:meeting, count: @proposal.instances.first.experiment.instances.size) + ": "
+                = @proposal.instances.published.first.event.instances.size
+                = t(:meeting, count: @proposal.instances.first.event.instances.size) + ": "
 
           - elsif (@proposal.scheduled? && @proposal.recurs?)
             = t :recurring_experiment_meetings
@@ -109,18 +110,18 @@
                 - if @next_meeting.nil?
                   %em= t :none_currently_scheduled
                 - else
-                  = link_to @next_meeting.name, experiment_instance_path(@next_meeting.experiment, @next_meeting), target: :_blank
+                  = link_to @next_meeting.name, event_instance_path(@next_meeting.event, @next_meeting), target: :_blank
               - else
                 %strong= t :come_to_this_experiment
           - unless @proposal.instances.published.empty?
             %br/
-            - if @proposal.instances.first.experiment.instances.published.size > 6
-              = @proposal.instances.first.experiment.instances.published.size.to_s
+            - if @proposal.instances.first.event.instances.published.size > 6
+              = @proposal.instances.first.event.instances.published.size.to_s
               meetings. 
-              = link_to t(:see_all), @proposal.instances.first.experiment
+              = link_to t(:see_all), @proposal.instances.first.event
             - else 
-              - @proposal.instances.first.experiment.instances.published.sort_by(&:start_at).each do |k|
-                = link_to k.name, experiment_instance_path(k.experiment, k)
+              - @proposal.instances.first.event.instances.published.sort_by(&:start_at).each do |k|
+                = link_to k.name, event_instance_path(k.event, k)
                 %br/
                 %small
                   - unless k.in_future?
@@ -183,7 +184,12 @@
                 = link_to raw(t(:pledge_temps)), new_proposal_pledge_path(@proposal), class: [:button, :tiny]
             - if current_user == @proposal.user || current_user.has_role?(:admin)
               %br/
-              = link_to t(:edit_proposal), edit_proposal_path(@proposal), class: [:button, :tiny], style: 'float: left; font-size: 0.7em; margin: 0.5rem 0;'  
+              - if @proposal.still_proposal?
+                = link_to t(:edit_proposal), edit_proposal_path(@proposal), class: [:button, :tiny], style: 'float: left; font-size: 0.7em; margin: 0.5rem 0;'
+              - else
+                %br/
+                = t(:proposal_is_closed)
+                = raw(t(:proposal_became_experiment, experiment_link: link_to(@proposal.instances.first.event.name, event_path(@proposal.instances.first.event))))
             
   - unless @proposal.comments.empty? && @proposal.pledges.empty?
 
@@ -260,45 +266,53 @@
                         = image_tag comment.image.url(:small)
                       - if comment.attachment?
                         %p= link_to t(:download) + ' ' + File.basename(URI.parse(comment.attachment.url).path), comment.attachment.url, class: [:button, :round, :tiny]
-  - if @proposal.is_valid?                
-    - if user_signed_in?
+                        
+  - if @proposal.still_proposal?
+    - if @proposal.is_valid?                
+      - if user_signed_in?
   
-      - if can? :create, Comment
-        = content_for :jquery do
-          :plain
-            $("#comment_input").mentionable("/users/mentions", {position: 'right'});
+        - if can? :create, Comment
+          = content_for :jquery do
+            :plain
+              $("#comment_input").mentionable("/users/mentions", {position: 'right'});
         
-        .row.expanded
-          .small-12.columns
-            #comment_form
-              .row
-                .small-12.medium-8.columns.end
-                  .row
-                    .small-2.columns
-                      = image_tag current_user.avatar.url(:box)
+          .row.expanded
+            .small-12.columns
+              #comment_form
+                .row
+                  .small-12.medium-8.columns.end
+                    .row
+                      .small-2.columns
+                        = image_tag current_user.avatar.url(:box)
                   
-                      %p.small= link_to t(:edit_profile), edit_user_path(current_user), class: [:button, :tiny, :secondary, :round]
-                    .small-10.columns
-                      %h3
-                        = t :what_do_you_think_about_this
-                      %p.small
-                        %u= t(:tagging) + ":"
-                        %br/
-                        %em= t(:tagging_people) 
-                        %br/
-                        %em= t(:tagging_experiments) 
-                      = semantic_form_for [ @proposal,  @comment = @proposal.comments.build(user: current_user)], html: {onSubmit: "return getContent();", multipart: true, :"data-abide" => '' } do |f|
-                        = f.input :user_id, as: :hidden, data: {value: current_user.id}
-                        #comment_wrapper
-                          #comment_input{contenteditable: true}
+                        %p.small= link_to t(:edit_profile), edit_user_path(current_user), class: [:button, :tiny, :secondary, :round]
+                      .small-10.columns
+                        %h3
+                          = t :what_do_you_think_about_this
+                        %p.small
+                          %u= t(:tagging) + ":"
+                          %br/
+                          %em= t(:tagging_people) 
+                          %br/
+                          %em= t(:tagging_experiments) 
+                        = semantic_form_for [ @proposal,  @comment = @proposal.comments.build(user: current_user)], html: {onSubmit: "return getContent();", multipart: true, :"data-abide" => '' } do |f|
+                          = f.input :user_id, as: :hidden, data: {value: current_user.id}
+                          #comment_wrapper
+                            #comment_input{contenteditable: true}
 
-                        = f.input :content, :label => false, input_html: {:required => '', id: :comment_input_textarea}
-                        = f.input :image, :label => t(:attach_image_to_comment)
-                        = f.input :attachment, :label => t(:attach_attachment_to_comment)
-                        = f.submit t(:save), :class => [:button, :round]
-    - else
-      .row.expanded
-        .small-12.columns                
-          %h3
-            = link_to 'Log in', '/users/sign_in'
-            to comment on this proposal.
+                          = f.input :content, :label => false, input_html: {:required => '', id: :comment_input_textarea}
+                          = f.input :image, :label => t(:attach_image_to_comment)
+                          = f.input :attachment, :label => t(:attach_attachment_to_comment)
+                          = f.submit t(:save), :class => [:button, :round]
+      - else
+        .row.expanded
+          .small-12.columns                
+            %h3
+              = raw t(:sign_in_to_comment, sign_in_link: link_to(t(:sign_in), '/users/sign_in'))
+
+
+  - else
+    .row.expanded
+      .small-12.columns
+        %h5= t(:proposal_is_closed)
+        = raw(t(:proposal_became_experiment, experiment_link: link_to(@proposal.instances.first.event.name, event_path(@proposal.instances.first.event))))

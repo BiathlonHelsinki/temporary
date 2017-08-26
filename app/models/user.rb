@@ -24,10 +24,10 @@ class User < ActiveRecord::Base
   has_many :activities
   has_many :onetimers
   has_many :nfcs
-  has_and_belongs_to_many :experiments  
+  has_and_belongs_to_many :events  
   scope :untagged, -> () { includes(:nfcs).where( nfcs: {user_id: nil}) }
-  has_many :event_users
-  has_many :experiments, through: :events_users, foreign_key: 'event_id'
+  # has_many :event_users
+  has_many :events,  foreign_key: 'primary_sponsor_id'
   has_many :pledges
   has_many :proposals
   has_many :instances_users
@@ -43,6 +43,7 @@ class User < ActiveRecord::Base
   has_many :userlinks
   has_many :userphotos
   has_many :userphotoslots
+  has_one :survey
   
   def as_mentionable
     {
@@ -201,8 +202,8 @@ class User < ActiveRecord::Base
      self.email && self.email !~ TEMP_EMAIL_REGEX
    end
    
-   def has_pledged?(proposal)
-     pledges.where(item: proposal).any?
+   def has_pledged?(item)
+     pledges.where(item: item).any?
    end
    
    def active_pledge?(proposal)

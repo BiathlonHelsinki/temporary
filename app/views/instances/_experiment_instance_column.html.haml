@@ -1,28 +1,31 @@
-= link_to experiment_instance_path(exp.experiment, exp), class: [:experiment, :column] do
+= link_to event_instance_path(exp.event, exp), class: [:experiment, :column, exp.survey_locked == true ? :locked : ''] do
   .content{:"data-equalizer-watch" => '', class: exp.cancelled == true ? 'cancelled' : false}
+    - if exp.survey_locked == true
+      .locked_overlay
+        .text_overlay= t(:must_complete_survey)
     - if exp.cancelled == true
       .cancelled_header
         .cancelled_title= t :experiment_has_been_cancelled
         .cancelled_meta= t :reschedule_info
-    .meta{class: exp.experiment.slug}
+    .meta{class: exp.event.slug}
       %span.date= exp.start_at.year.to_s
       = "//"
       %span
-        - if exp.experiment.instances.size > 1
-          = exp.experiment.name
+        - if exp.event.instances.size > 1
+          = exp.event.name
         - else
           = "Experiment "
         = "##{exp.sequence}"
       -#= "//"
     .dates.text-center
-      - if exp.experiment.slug == 'open-time'
+      - if exp.event.slug == 'open-time' && exp.survey_locked == false
         .ongoing Ongoing
 
-        - n = exp.experiment.instances.current
+        - n = exp.event.instances.current
         - unless n.empty?
           - n = n.first
           - if exp == n
-            - if exp.experiment.slug == 'open-time'
+            - if exp.event.slug == 'open-time' && exp.survey_locked == false
               - if @temporary_is_open == true
                 .next Open now!
               - else
@@ -37,20 +40,20 @@
 
           
         .ongoing_month
-          - if exp.experiment.slug == 'open-time'
+          - if exp.event.slug == 'open-time' && exp.survey_locked == false
             - if @temporary_is_open == true
               = l exp.start_at, format: '%B'
           - else
             = l exp.start_at, format: '%B'
         .days
-          - if exp.experiment.slug == 'open-time'
+          - if exp.event.slug == 'open-time' && exp.survey_locked == false
             - if @temporary_is_open == true
               .day= Time.current.to_date.day.to_s
             - else
               every day!
           - else
             .day= exp.start_at.day
-          - if exp.experiment.slug == 'open-time'  
+          - if exp.event.slug == 'open-time'   && exp.survey_locked == false
             .times
               
               - if @temporary_is_open == true
@@ -66,7 +69,7 @@
       - else
         .month= l exp.start_at, format: "%B"
         .days
-          - if exp.experiment.instances.size == 1
+          - if exp.event.instances.size == 1
             - if exp.start_at.to_date == exp.end_at.to_date
               .day= exp.start_at.day
               .times= exp.start_at.strftime("%H:%M") + " - " + exp.end_at.strftime("%H:%M")
@@ -75,14 +78,14 @@
               .divider= fa_icon('angle-down')
               .range_day= exp.end_at.day
           - else
-            - if exp.start_at.to_date == exp.end_at.to_date
+            - if exp.start_at.to_date == exp.end_at.to_date || exp.survey_locked == true
               .day= exp.start_at.day
               .times
                 - if exp.end_at.strftime("%H:%M") == '23:59'
                   = exp.start_at.strftime('%H:%M') + " - ??"
                 - else
                   = exp.start_at.strftime("%H:%M") + " - " + exp.end_at.strftime("%H:%M")
-            - else
+            - else 
               .range_day= exp.start_at.day.to_s
               .divider= fa_icon('angle-down')
               - if exp.start_at.month != exp.end_at.month
@@ -91,7 +94,7 @@
 
     .title.text-center=  exp.name
     .body.text-center= truncate_html(strip_tags(exp.description.gsub(/\s*(&nbsp;\s*)+/, " ")), length: 110)
-
+    
     - unless exp.in_future?
       .participants
         = t(:x_people_participated, count: exp.users.size + exp.onetimers.unclaimed.size, people: t(:person, count: exp.users.size + exp.onetimers.unclaimed.size))
@@ -100,6 +103,7 @@
         = t(:x_earned, number: (exp.users.uniq.size * exp.cost_bb)) #, page_path('what-is-this-t-everywhere')
     - else
       .earn_line
+
         = t(:earn_x_per_day_for_participating, number: exp.cost_bb, per_day: exp.allow_multiple_entry == true ? t(:per_day) : '')
 
         - if exp.request_registration == true
@@ -114,8 +118,8 @@
 
             
       - if controller.action_name == 'index'
-        - if exp.experiment.collapse_in_website == true
-          - unless exp.experiment.instances.future.published.to_a.delete_if{|i| i == exp}.empty?
+        - if exp.event.collapse_in_website == true
+          - unless exp.event.instances.future.published.to_a.delete_if{|i| i == exp}.empty?
             .collapsed
               .also_meets= t :also_meets
-              = exp.experiment.instances.future.published.to_a.delete_if{|i| i == exp}.map{|x| l(x.start_at.to_date , format: :short)}.join(', ')
+              = exp.event.instances.future.published.to_a.delete_if{|i| i == exp}.map{|x| l(x.start_at.to_date , format: :short)}.join(', ')

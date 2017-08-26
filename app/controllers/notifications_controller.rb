@@ -6,8 +6,8 @@ class NotificationsController < ApplicationController
     if @user != current_user
       @error = 'You cannot edit another user\'s email notifications.'
     else
-      if params[:experiment_id]
-        @item = Experiment.friendly.find(params[:experiment_id])
+      if params[:event_id]
+        @item = Event.friendly.find(params[:event_id])
       elsif params[:proposal_id]
         @item = Proposal.find(params[:proposal_id])
       end
@@ -31,8 +31,8 @@ class NotificationsController < ApplicationController
     if @user != current_user
       @error = 'You cannot edit another user\'s email notifications.'
     else
-      if params[:experiment_id]
-        @item = Experiment.friendly.find(params[:experiment_id])
+      if params[:event_id]
+        @item = Event.friendly.find(params[:event_id])
       elsif params[:proposal_id]
         @item = Proposal.find(params[:proposal_id])
       end

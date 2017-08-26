@@ -1,6 +1,7 @@
 .row
   .small-12.columns
-    = link_to 'Make new', new_admin_experiment_path, class: [:button]
+
+    = link_to 'Make new', new_admin_event_path, class: [:button]
 .row
   .small-12.columns
     %h4 All experiments
@@ -19,7 +20,7 @@
             %td
               = exp.sequence
               %br/
-              = link_to 'Edit master experiment', edit_admin_experiment_path(exp), class: [:button, :tiny]
+              = link_to 'Edit master experiment', edit_admin_event_path(exp), class: [:button, :tiny]
             %td= exp.name
             %td= date_range(exp.start_at, exp.end_at)
             %td
@@ -29,7 +30,7 @@
           %tr.instance
             %td &nbsp;
             %td{colspan: 3 }
-              %table
+              %table.instances
                 %thead
                   %th Instance id#
                   %th biathlon experiment #
@@ -37,15 +38,15 @@
                   %th When?
                   %th &nbsp;
                 %tbody
-                  - exp.instances.sort_by(&:start_at).each do |instance|
+                  - exp.instances.sort_by(&:start_at).each_with_index do |instance, index|
                     %tr
                       %td= instance.id.to_s
                       %td
                         = instance.sequence
                         %br/
-                        = link_to 'Edit instance', edit_admin_experiment_instance_path(exp, instance), class: [:button, :tiny, :secondary]
+                        = link_to 'Edit instance', edit_admin_event_instance_path(exp, instance), class: [:button, :tiny, :secondary]
                         %br/
-                        = link_to 'View', experiment_instance_path(exp, instance), class: [:button, :tiny, :secondary], target: :_blank
+                        = link_to 'View', event_instance_path(exp, instance), class: [:button, :tiny, :secondary], target: :_blank
                       %td
                         = instance.name
                         = " (session #{instance.session_number.to_s})"
@@ -76,4 +77,5 @@
                           = link_to 'Delete', [:admin, exp, instance], method: :delete, data: {confirm: 'Are you sure?'}, class: [:button, :alert, :tiny]
                         
                   %tr
-                    %td{colspan: 4}= link_to 'Add new instance', new_admin_experiment_instance_path(exp), class: [:button, :small]
+                    %td{colspan: 4}= link_to 'Add new instance', new_admin_event_instance_path(exp), class: [:button, :small]
+

@@ -171,7 +171,7 @@ en:
     zero: 'experimental events'
     one: 'experimental event'
     other: 'experimental events'
-  meetings_took_place_past: "%{amount} took place:"
+  meetings_took_place_past: "%{count} %{amount} took place:"
   recurring_experiment_meetings: 'Recurring experiment. Meetings:'
   this_proposal_needs_at_least_one_other_user_to_pledge_to_it: 'This proposal needs at least one other user to pledge to it.'
   needed_to_be_considered_for_scheduling: 'Needed to be considered for scheduling:'
@@ -317,6 +317,7 @@ en:
   number_transferred_from: '%{number} transferred from other users'
   number_transferred_to: "%{number} transferred to other users"
   number_pledged: "%{number} pledged"
+  number_currently_pledged: "%{number}Ŧ currently pledged"
   number_held_in_pledges: "%{number} currently held in escrow, pledged to pending proposals"
   totals: 'Totals'
   website: 'Website'
@@ -397,7 +398,7 @@ If you suggest an exact date, we will do our best when scheduling to co-exist wi
   registration_phone: 'Please enter your phone number so the experiment organiser can contact you if there are any issues or problems or last-minute changes'
   phone_is_optional: 'This is optional, though.'
   registration_form: 'Registration form'
-  registration_is_full_waiting_list: 'Registration is currently full. However, you may register for the waiting list and you will be notified if a space becomes available.'
+  registration_is_full_waiting_list: 'Registration is currently full. However, you may register for the waiting list and you will be notified if a space is available.'
   you_will_earn_x_for_participating: "You will earn %{number}Ŧ for participating!"
   for_the_waiting_list: ' for the waiting list'
   register_x: 'Register%{waiting_list_option}'
@@ -513,3 +514,59 @@ If you suggest an exact date, we will do our best when scheduling to co-exist wi
   enter_thought: 'Enter your thoughts about this experiment meeting:'
   markdown_is_ok: 'You can use %{markdown_link}.'
   remove_this_thought: ' Remove this viewpoint'
+  sign_in_to_comment: '%{sign_in_link} to comment on this proposal.'
+  proposal_is_closed: 'This proposal is now archived and can no longer be edited or commented on.'
+  proposal_became_experiment: 'This proposal became the experiment %{experiment_link}, and further information and activity can be found there.'
+  current_experiment_status: 'Current experiment status'
+  to_next_meeting: '%{number}% to next meeting'
+  x_total_needed_to_schedule_next: "%{amount}Ŧ needed to schedule next meeting (#%{meeting_number})"
+  save_edited_proposal: 'Save edited proposal'
+  see_pledges: 'See pledges'
+  proposal_needs_x_for_review: 'This proposal currently needs %{number} more Ŧ to be scheduled.'
+  thanks_for_survey: 'Thank you for completing Temporary''s survey. You are now invited to the Closing Time party on 1 September.'
+  thanks_for_survey_after_september: 'Thank you for completing Temporary''s survey. Your feedback is very important.'
+  temporary_closing_survey: 'Temporary Closing Survey'
+  temporary_survey_explanation_future: 'Temporary will close its doors on 2 September 2017, making the entire experiment exactly one year in length. But this is only a beginning, not the end. The next experiment will be collectively designed by a larger working group and will hopefully launch in January 2018.'
+
+  temporary_survey_explanation_past: 'Temporary ran from September 2016 to September 2017. There are plans to continue the core ideas of an open 24/7 workspace, decentralised programming and a participation-based model beginning in 2018. This next experiment will be collectively designed by a larger working group and will be designed with longevity in mind.'
+    
+  why_this_survey: 'To assist in this design, Temporary has designed this short questionnaire. We are very curious to hear your feedback: how you felt about Temporary (whether you participated zero, once or 200 times), what you are seeking from culture, and other factors. Please answer as honestly and as detailed as possible. Positive feedback is nice, but we are really interested in different perspectives and ideas, so write as much as you would like!'
+  
+  never_visited: 'You have never visited or participated in anything at Temporary.'
+  what_could_have_brought_you: 'What could Temporary have done differently to have brought you in, either as a participant or producer?'
+  
+  you_participated_in_x_experiments: 'You participated in %{number} %{experiment}.'
+  experiment_mihin:
+    zero: 'experiments'
+    one: 'experiment'
+    other: 'experiments'
+    
+  wanted_to_contribute_differently: 'Would you have wanted to contribute to Temporary in a different manner than you did? If so, how?'
+  you_organised_x: 'You instigated %{number}.'
+  why_experiments_at_temporary: 'Why did you want your experiment/s to happen at Temporary?'
+  offer_other_benefits: 'Did Temporary''s platform offer any benefits to your project that a different venue would not have provided?'
+  welcoming_concept: 'Did you feel that Temporary''s concept was welcoming, intimidating, annoying, inspiring, stupid, or anything else?'
+  physical_environment: 'What did you like and not like about the physical environment of Temporary?'
+  website_feedback: 'How about the website, proposal system, Temporaries currency, check-in kiosk and ID cards?'
+  other_helsinki: 'Did you feel differently about participating in activities at Temporary than at other locations in Helsinki?  If so, in what ways?'
+  your_space_and_relationship: "Did you feel like it was 'your' space to use? Please elaborate on how you felt about your relationship to Temporary."
+  platform_benefits: 'In what way, if any, did the features of Temporary (a platform for your own creative practice, Open Time as a 24/7 shared work/social space, the ability to rent the back room, etc.) benefit you?'
+  what_could_be_better: 'What could have been better?'
+  what_the_mission_was: "Temporary's mission was to experiment with a different structure for creating participation-based cultural activities - to spread traditionally centralised roles such as curator, producer and administrator across everyone who used the space."
+  mission_clear: "Was this approach clear to you? How, if at all, was this reflected in your experiences at Temporary and/or your attitudes and sense of responsibility regarding Temporary?"
+  want_from_culture: "What do you want from culture? What are you satisfied with about existing cultural institutions, and what more do you still want?"
+  must_complete_survey: 'You must complete a survey to attend.'
+  survey_explanation: 'Temporary''s last event is a party for members only. Admission is free if you complete a short survey about your feelings and experiences at Temporary. Even if you have never been to Temporary before, you are welcome to complete the survey and attend the party. No one will be admitted who does not complete this survey.'
+  take_the_survey: 'Take the survey...'
+  temporary_ends_1_september: 'Temporary ends on 1 September 2017.'
+  more_info: 'More info...'
+  you_should_join_to_pledge: 'To participate in and support this experiment, join the Temporary website now!'
+  join: 'Join!'
+  temporary_closed: 'Temporary is closing on 1 September 2017. No further experiments will be scheduled, though you can still pledge Temps as supported experiments may form a starting programme for the post-Temporary project.'
+  thanks_for_taking_survey: 'Thank you for completing the survey.'
+  experiment_is_inactive: 'This experiment is not active.'
+  inactive_explanation: 'There has been no activity towards this experiment during the past %{timeframe}. The experiment is assumed to be completed or abandoned.'
+  please_take_our_survey: 'Take the Temporary closing survey and help plan the future!'
+  allow_survey_excerpt: 'Is it OK to quote your answers (anonymously) in anything that might be published?'
+  allow_survey_identity: 'Is it OK to quote your answers not-anonymously? We will contact you if this is going to happen.'
+  

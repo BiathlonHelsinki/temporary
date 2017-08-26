@@ -3,13 +3,13 @@ class ProposalsController < ApplicationController
   before_filter :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
 
   def archived
-    @needs_support_count = Proposal.active.to_a.delete_if{|x| x.has_enough_cached == true }.size
+    # @needs_support_count = Proposal.active.to_a.delete_if{|x| x.has_enough_cached == true }.size
     @scheduled_count = Instance.future.or(Instance.current).map(&:proposal).uniq.size
     @review_count = Proposal.active.schedulable.delete_if{|x| !x.instances.current.or(x.instances.future).empty? }.count
 
     @next_meeting = Instance.next_meeting
     @current_rate = Rate.get_current.experiment_cost
-    @proposals = Proposal.includes([:user, :proposalstatus, :comments => [:user], :instances => [:experiment, :translations, :pledges], :pledges => [:user]]).archived.order(updated_at: :desc).page(params[:page]).per(10)
+    @proposals = Proposal.includes([:user, :proposalstatus, :comments => [:user], :instances => [:event, :translations, :pledges], :pledges => [:user]]).archived.order(updated_at: :desc).page(params[:page]).per(10)
     set_meta_tags title: 'Archived proposals'
     # render text: 'the error is in the template'
     render template: 'proposals/index'
@@ -52,28 +52,29 @@ class ProposalsController < ApplicationController
   
   def index
     if params[:filter].nil? || params[:filter] == 'false'
-      @proposals = Proposal.active.includes([:user, :proposalstatus, :comments => [:user], :instances => [:experiment, :translations, :pledges], :pledges => [:user]]).order(updated_at: :desc) #.sort_by { |x| (x.has_enough? ? (x.recurs? ? (x.intended_sessions == 0 && (x.pledged < x.total_needed_with_recurrence) ? 2 : 1 ) : 4 ) :         (x.instances.empty? ? 0 : 1) ) }
-    elsif params[:filter] == 'needs_support'
-      @proposals = Proposal.active.includes([:instances, :pledges]).order(updated_at: :desc).to_a.delete_if{|x| x.has_enough? } #.sort_by { |x| (x.has_enough? ? (x.recurs? ? (x.intended_sessions == 0 && (x.pledged < x.total_needed_with_recurrence) ? 2 : 1 ) : 4 ) :      (x.instances.empty? ? 0 : 1) ) }
+      @proposals = Proposal.active.still_in_proposal_form.includes([:user, :proposalstatus, :comments => [:user], :instances => [:event, :translations, :pledges], :pledges => [:user]]).order(updated_at: :desc) #.sort_by { |x| (x.has_enough? ? (x.recurs? ? (x.intended_sessions == 0 && (x.pledged < x.total_needed_with_recurrence) ? 2 : 1 ) : 4 ) :         (x.instances.empty? ? 0 : 1) ) }
+    # elsif params[:filter] == 'needs_support'
+#       @proposals = Proposal.active.still_in_proposal_form.includes([:instances, :pledges]).order(updated_at: :desc).to_a.delete_if{|x| x.has_enough? } #.sort_by { |x| (x.has_enough? ? (x.recurs? ? (x.intended_sessions == 0 && (x.pledged < x.total_needed_with_recurrence) ? 2 : 1 ) : 4 ) :      (x.instances.empty? ? 0 : 1) ) }
     elsif params[:filter] == 'scheduled'
       @proposals = Instance.includes(:translations).future.or(Instance.includes([:translations]).current).map(&:proposal).uniq.sort_by{|x| x.updated_at }.reverse # x.next_instance.start_at }
     elsif params[:filter] == 'review'
-      @proposals = Proposal.includes([:user, :proposalstatus, :comments => [:user], :instances => [:experiment, :translations, :pledges], :pledges => [:user]]).active.schedulable.sort_by(&:updated_at).reverse.to_a.delete_if{|x| !x.instances.current.or(x.instances.future).empty? }  #to_a.delete_if{|x| !x.has_enough? }.delete_if{|x| !x.instances.published.future.empty? }
+      @proposals = Proposal.still_in_proposal_form.includes([:user, :proposalstatus, :comments => [:user], :instances => [:event, :translations, :pledges], :pledges => [:user]]).active.schedulable.sort_by(&:updated_at).reverse.to_a.delete_if{|x| !x.instances.current.or(x.instances.future).empty? }  #to_a.delete_if{|x| !x.has_enough? }.delete_if{|x| !x.instances.published.future.empty? }
     end
     
-    @next_meeting = Instance.includes(:experiment, :pledges).next_meeting
+    @next_meeting = Instance.includes(:event, :pledges).next_meeting
     @current_rate = Rate.get_current.experiment_cost
     
-    @needs_support_count = Proposal.active.to_a.delete_if{|x| x.has_enough_cached == true }.size
+    # @needs_support_count = Proposal.still_in_proposal_form.active.to_a.delete_if{|x| x.has_enough_cached == true }.size
     @scheduled_count = Instance.future.includes(:proposal).or(Instance.current.includes(:proposal)).map(&:proposal).uniq.size
-    @review_count = Proposal.active.schedulable.delete_if{|x| !x.instances.current.or(x.instances.future).empty? }.count #to_a.delete_if{|x| !x.has_enough? }.delete_if{|x| !x.instances.published.empty? }.size
+    @review_count = Proposal.still_in_proposal_form.active.schedulable.delete_if{|x| !x.instances.current.or(x.instances.future).empty? }.count #to_a.delete_if{|x| !x.has_enough? }.delete_if{|x| !x.instances.published.empty? }.size
+ 
     
-    set_meta_tags title: 'Proposals'
+    set_meta_tags title: t(:proposals)
   end
 
   def new
     if current_user.email =~ /change@me/
-      flash[:error] = 'You must enter a valid email address in order to propose an experiment.'
+      flash[:error] = 'You must enter a valid email address in order to propose an event.'
       redirect_to proposals_path
     else
       current_user.update_balance_from_blockchain if @api_status
@@ -95,11 +96,24 @@ class ProposalsController < ApplicationController
     render template: 'proposals/index'
   end
   
+  def original_proposal
+    @proposal = Proposal.find(params[:id])
+    set_meta_tags title: @proposal.name
+    if @proposal.still_proposal?
+      redirect_to @proposal
+    else
+      render template: 'proposals/show'
+    end
+    
+  end
   
   def show
     @current_rate = Rate.get_current.experiment_cost
      @next_meeting = Instance.next_meeting
     @proposal = Proposal.find(params[:id])
+    unless @proposal.still_proposal?
+      redirect_to @proposal.instances.first.event
+    end
     set_meta_tags title: @proposal.name
   end
   

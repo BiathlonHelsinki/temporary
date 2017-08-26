@@ -4,6 +4,7 @@ class Proposal < ApplicationRecord
   pg_search_scope :search_all_text, :against => [:name, :short_description, :timeframe, :goals, :intended_participants],  :associated_against => {
     :comments => [:content], :pledges => [:comment] }
   belongs_to :user
+  has_one :event
   has_many :images, as: :item, :dependent => :destroy
   has_many :pledges, as: :item, :dependent => :destroy
   accepts_nested_attributes_for :images, :reject_if => proc {|attributes| attributes['image'].blank? && attributes['image_cache'].blank?}, :allow_destroy => true
@@ -20,9 +21,12 @@ class Proposal < ApplicationRecord
   
   scope :archived, -> () { where("stopped = true OR proposalstatus_id is not null") }
   scope :active, -> () { where(stopped: false, proposalstatus: nil)}
+  scope :still_in_proposal_form, -> () {includes(:instances).where("instances.id" => nil)}
   before_save :update_column_caches
 
-
+  def still_proposal?
+    instances.published.empty?
+  end
 
   def update_column_caches
     self.total_needed_with_recurrence_cached = total_needed_with_recurrence
@@ -54,6 +58,7 @@ class Proposal < ApplicationRecord
   end
   
   def self.schedulable
+    # active.still_in_proposal_form.includes(:pledges).to_a.delete_if{|x| x.remaining_pledges == 0}.delete_if{ |x| x.remaining_pledges == 0  }.sort_by(&:name)
     active.includes(:pledges).to_a.delete_if{|x| x.remaining_pledges == 0}.delete_if{ |x| x.remaining_pledges < x.needed_for_next  }.sort_by(&:name)
   end
   
@@ -442,10 +447,10 @@ class Proposal < ApplicationRecord
   
   def next_instance
     if scheduled?
-      if instances.first.experiment.instances.current.or(instances.first.experiment.instances.future).order(:start_at).empty?
+      if instances.first.event.instances.current.or(instances.first.event.instances.future).order(:start_at).empty?
         nil
       else
-       instances.first.experiment.instances.current.or(instances.first.experiment.instances.future).order(:start_at).first
+       instances.first.event.instances.current.or(instances.first.event.instances.future).order(:start_at).first
         
       end
     else

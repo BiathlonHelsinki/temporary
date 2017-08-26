@@ -21,7 +21,11 @@ class Activity < ApplicationRecord
     when 'Credit'
       item.name
     when 'Pledge'
-      "<a href='/proposals/#{item.item.id}'>#{item.item.name}</a>"
+      if item.item.class == Proposal
+        "<a href='/proposals/#{item.item.id}'>#{item.item.name}</a>"
+      else
+        "<a href='/events/#{item.item.slug}'>#{item.item.name}</a>"
+      end
     when 'Proposal'
       out = "<a href='/proposals/#{item.id}'>#{item.name}</a>"
       if description =~ /status/ && description =~ /changed/
@@ -37,7 +41,7 @@ class Activity < ApplicationRecord
     when 'Userphotoslot'
       unless item.userphoto.nil?
         if item.userphoto.instance
-          I18n.t(:used_on_experiment, instance: "<a href='/experiments/#{item.userphoto.instance.experiment.slug}/#{item.userphoto.instance.slug}'>#{item.userphoto.instance.name}</a>" )
+          I18n.t(:used_on_event, instance: "<a href='/events/#{item.userphoto.instance.event.slug}/#{item.userphoto.instance.slug}'>#{item.userphoto.instance.name}</a>" )
         end
       end
     when 'Roombooking' 
@@ -54,12 +58,12 @@ class Activity < ApplicationRecord
 
       end
     when 'Instance'
-      "<a href='/experiments/#{item.experiment.slug}/#{item.slug}'>#{item.name}</a>"
+      "<a href='/events/#{item.event.slug}/#{item.slug}'>#{item.name}</a>"
     when 'Nfc'
       "an ID card"
     when 'Post'
       "<a href='/posts/#{item.slug}'>by the #{ENV['currency_symbol']}empsBot</a>"
-    when 'Experiment'
+    when 'Event'
       "<a href='/experiments/#{item.slug}'>#{item.name}</a>"
     end
   end
@@ -102,8 +106,10 @@ class Activity < ApplicationRecord
       "#{usertext} #{description}"
     elsif item.class == Userphotoslot
       "#{usertext} #{description}"
+    elsif item.class == Event
+       "#{usertext} #{description}"
     else
-      "#{usertext} #{description} <a href='/experiments/#{item.experiment.slug}/#{item.slug}'>#{item.name}</a> and received #{item.cost_bb}#{ENV['currency_symbol']}"    
+      "#{usertext} #{description} <a href='/events/#{item.event.slug}/#{item.slug}'>#{item.name}</a> and received #{item.cost_bb}#{ENV['currency_symbol']}"    
     end
   end
   

@@ -40,8 +40,8 @@ class UsersController < ApplicationController
   end
   
   def make_organiser
-    @experiment = Experiment.friendly.find(params[:experiment_id])
-    @instance = @experiment.instances.friendly.find(params[:id])
+    @event = Event.friendly.find(params[:event_id])
+    @instance = @event.instances.friendly.find(params[:id])
     @user = User.friendly.find(params[:user_id])
     if @instance.responsible_people.include?(current_user) || current_user.has_role?(:admin)
       @instance.organisers << @user
@@ -59,18 +59,18 @@ class UsersController < ApplicationController
       logger.warn('mentions are ' + @users.uniq.map(&:as_mentionable).to_json )
       render json: @users.uniq.map(&:as_mentionable).to_json
     elsif params[:mentioning][0] == '#'
-      @experiments = Experiment.joins(:translations).where("lower(event_translations.name) LIKE '%" +  params[:mentioning][1..-1].downcase + "%'")
-      @experiments += Instance.joins(:translations).where("lower(instance_translations.name) LIKE '%" +  params[:mentioning][1..-1].downcase + "%'").map(&:experiment)
-      logger.warn('mentions are ' + @experiments.uniq.map(&:as_mentionable).to_json )
-      render json: @experiments.uniq.map(&:as_mentionable).to_json            
+      @events = Event.joins(:translations).where("lower(event_translations.name) LIKE '%" +  params[:mentioning][1..-1].downcase + "%'")
+      @events += Instance.joins(:translations).where("lower(instance_translations.name) LIKE '%" +  params[:mentioning][1..-1].downcase + "%'").map(&:event)
+      logger.warn('mentions are ' + @events.uniq.map(&:as_mentionable).to_json )
+      render json: @events.uniq.map(&:as_mentionable).to_json            
     else
       logger.warn('params is ' + params[:mentioning][0])
     end
   end
   
   def remove_organiser
-    @experiment = Experiment.friendly.find(params[:experiment_id])
-    @instance = @experiment.instances.friendly.find(params[:id])
+    @event = Event.friendly.find(params[:event_id])
+    @instance = @event.instances.friendly.find(params[:id])
     @user = User.friendly.find(params[:user_id])
     if @instance.responsible_people.include?(current_user) || current_user.has_role?(:admin)
       @instance.organisers.delete(@user)

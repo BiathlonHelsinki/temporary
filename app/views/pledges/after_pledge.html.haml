@@ -8,7 +8,10 @@
       You have pledged
       = raw "#{@pledge.pledge}#{tsign}"
       towards
-      %em= link_to @pledge.item.name, @pledge.item
+      - if @pledge.item.class == Proposal
+        %em= link_to @pledge.item.name, @pledge.item
+      - elsif @pledge.item.class == Event
+        %em= link_to @pledge.item.name, experiment_path(@pledge.item.slug)
 
     
 .row.expanded

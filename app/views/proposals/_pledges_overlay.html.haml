@@ -22,9 +22,9 @@
           %li
             = "##{instance.session_number}: "
             - if instance.in_future?
-              %strong= link_to t(:scheduled).upcase, experiment_instance_path(instance.experiment, instance)
+              %strong= link_to t(:scheduled).upcase, event_instance_path(instance.event, instance)
             - else
-              = link_to t(:took_place_on, date: instance.start_at.to_date.to_s), experiment_instance_path(instance.experiment, instance)
+              = link_to t(:took_place_on, date: instance.start_at.to_date.to_s), event_instance_path(instance.event, instance)
             = " : "
             = proposal.has_for(instance.session_number - 1).to_s
             of 
@@ -81,9 +81,9 @@
                 = link_to t(:accepting_more_pledges_now).upcase, new_proposal_pledge_path(proposal)
 
             - elsif proposal.instances.published.order(:start_at)[num-1].in_future?
-              %strong= link_to t(:scheduled), experiment_instance_path(proposal.instances.published.order(:start_at)[num-1].experiment, proposal.instances.published.order(:start_at)[num-1])
+              %strong= link_to t(:scheduled), event_instance_path(proposal.instances.published.order(:start_at)[num-1].event, proposal.instances.published.order(:start_at)[num-1])
             - else
-              = link_to t(:took_place_on, date: proposal.instances.published.order(:start_at)[num-1].start_at.to_date.to_s), experiment_instance_path(proposal.instances.published.order(:start_at)[num-1].experiment, proposal.instances.published.order(:start_at)[num-1])
+              = link_to t(:took_place_on, date: proposal.instances.published.order(:start_at)[num-1].start_at.to_date.to_s), event_instance_path(proposal.instances.published.order(:start_at)[num-1].event, proposal.instances.published.order(:start_at)[num-1])
             = " : "
             - if proposal.instances.published.order(:start_at)[num-1].nil?
               = proposal.has_for(num - 1).to_s
@@ -102,9 +102,9 @@
   %ul.table_right
     %li
     - if proposal.scheduled?
-      %strong= link_to t(:scheduled).upcase, experiment_instance_path(proposal.instances.first.experiment, proposal.instances.first)
+      %strong= link_to t(:scheduled).upcase, event_instance_path(proposal.instances.first.event, proposal.instances.first)
     - elsif proposal.has_enough_cached
-      %strong= link_to t(:awaiting_review).upcase, experiment_instance_path(@next_meeting.experiment, @next_meeting), target: :_blank rescue t(:awaiting_review).upcase
+      %strong= link_to t(:awaiting_review).upcase, event_instance_path(@next_meeting.event, @next_meeting), target: :_blank rescue t(:awaiting_review).upcase
     - else
       = link_to t(:accepting_more_pledges_now).upcase,  new_proposal_pledge_path(proposal)
     = proposal.remaining_pledges_cached.to_s

@@ -10,7 +10,10 @@
       - if @experiment.image?
         .image= image_tag @experiment.image.url(:medium)
       %p= raw @experiment.description
-      
+    .small-12.medium-3.columns
+      = render partial: 'pledge_panel'
+            
+            
   - unless @experiment.instances.empty?
     .row.expanded
       .small-12.columns
@@ -23,7 +26,7 @@
           
         %p
           = t(:original_proposal)
-          = link_to @experiment.instances.first.proposal.name, @experiment.instances.first.proposal
+          = link_to @experiment.instances.first.proposal.name, original_proposal_proposal_path(@experiment.instances.first.proposal)
           = " / " 
           = link_to @experiment.instances.first.proposal.user.display_name,  @experiment.instances.first.proposal.user
   - unless @future.empty?
@@ -45,4 +48,4 @@
       
 
 
-  = render partial: 'experiments/comments_and_form'
+  = render partial: 'events/comments_and_form'

@@ -1,7 +1,7 @@
 .submenu
   %ul.menu
-    %li{class: (params[:filter] == false || params[:filter].nil?) && controller.action_name == 'index' ? :active : false}= link_to t(:all_active_proposals) + " (#{Proposal.active.size.to_s})", proposals_path
-    %li{class: params[:filter] == 'needs_support' ? :active : false}= link_to raw(t(:needs_more_t) + " (#{@needs_support_count.to_s})"), proposals_path(filter: params[:filter] == 'needs_support' ? false : :needs_support)
+    %li{class: (params[:filter] == false || params[:filter].nil?) && controller.action_name == 'index' ? :active : false}= link_to t(:all_active_proposals) + " (#{Proposal.active.still_in_proposal_form.size.to_s})", proposals_path
+    -# %li{class: params[:filter] == 'needs_support' ? :active : false}= link_to raw(t(:needs_more_t) + " (#{@needs_support_count.to_s})"), proposals_path(filter: params[:filter] == 'needs_support' ? false : :needs_support)
     %li{class: params[:filter] == 'scheduled' ? :active : false}= link_to t(:scheduled) + " (#{@scheduled_count.to_s})", proposals_path(filter: params[:filter] == 'scheduled' ? false :  :scheduled)
     %li{class: params[:filter] == 'review' ? :active : false}= link_to t(:awaiting_review) + " (#{@review_count.to_s})", proposals_path(filter: params[:filter] == 'review' ? false : :review)
     %li{class: controller.action_name == 'archived' ? :active : false}= link_to t(:archived) + " (#{Proposal.archived.size.to_s})", archived_proposals_path
@@ -101,50 +101,50 @@
                     
                   - if proposal.scheduled?    
                     - if proposal.recurrence != 1
-                      - if proposal.instances.first.experiment.instances.future.or(proposal.instances.first.experiment.instances.current).empty?
+                      - if proposal.instances.first.event.instances.future.or(proposal.instances.first.event.instances.current).empty?
                         - if proposal.stopped == true
                           %p= t(:experiment_completed)
                         - else
                           %p= t(:none_currently_upcoming)
                       - else
                         %p
-                          - if proposal.instances.first.experiment.instances.future.size > 1
+                          - if proposal.instances.first.event.instances.future.size > 1
                             = link_to fa_icon('calendar'), '#', onclick: "javascript:$('ul#upcoming_events_#{proposal.id.to_s}').slideToggle();return false;"
                           
-                          = t(:x_upcoming_next_at, number: proposal.instances.first.experiment.instances.future.size.to_s)
+                          = t(:x_upcoming_next_at, number: proposal.instances.first.event.instances.future.size.to_s)
                      
 
 
                         %ul
-                          - a = proposal.instances.first.experiment.instances.future.or(proposal.instances.first.experiment.instances.current).order(:start_at).first
+                          - a = proposal.instances.first.event.instances.future.or(proposal.instances.first.event.instances.current).order(:start_at).first
                           %li
-                            = link_to a.name, experiment_instance_path(a.experiment, a)
+                            = link_to a.name, event_instance_path(a.event, a)
                             %br/
                             %em= date_range(a.start_at, a.end_at)
                       
                     
                         %ul.hidden_list{id: "upcoming_events_#{proposal.id.to_s}"}
-                          - proposal.instances.first.experiment.instances.future.or(proposal.instances.first.experiment.instances.current).order(:start_at).each do |i|
+                          - proposal.instances.first.event.instances.future.or(proposal.instances.first.event.instances.current).order(:start_at).each do |i|
                             %li
-                              = link_to i.name, experiment_instance_path(i.experiment, i)
+                              = link_to i.name, event_instance_path(i.event, i)
                               %br/
                               %em= date_range(i.start_at, i.end_at)
                           
                           
                     - else 
-                      - unless proposal.instances.first.experiment.instances.published.future.empty?
+                      - unless proposal.instances.first.event.instances.published.future.empty?
           
                         %br/
                         %em Next at:
                         %ul
-                          - proposal.instances.first.experiment.instances.published.future.order(:start_at).each do |i|
+                          - proposal.instances.first.event.instances.published.future.order(:start_at).each do |i|
                             %li
-                              = link_to i.name, experiment_instance_path(i.experiment, i)
+                              = link_to i.name, event_instance_path(i.event, i)
                               %em= date_range(i.start_at, i.end_at)
                     - unless proposal.instances.past.empty?
                       %p &nbsp;
                       %p= t(:last_meeting)
-                      %span{class: proposal.instances.past.order(:end_at).last.cancelled ? :cancelled : false }= link_to proposal.instances.past.order(:end_at).last.name, [proposal.instances.first.experiment, proposal.instances.past.order(:end_at).last]
+                      %span{class: proposal.instances.past.order(:end_at).last.cancelled ? :cancelled : false }= link_to proposal.instances.past.order(:end_at).last.name, [proposal.instances.first.event, proposal.instances.past.order(:end_at).last]
                       %br/
                       
                       %em= date_range(proposal.instances.past.order(:end_at).last.start_at, proposal.instances.past.order(:end_at).last.end_at)
@@ -282,7 +282,7 @@
                         
 
                     - else 
-                      - if proposal.instances.first.experiment.end_date < Time.current && proposal.instances.first.experiment.instances.future.empty?
+                      - if proposal.instances.first.event.end_date < Time.current && proposal.instances.first.event.instances.future.empty?
                         - if proposal.recurs?
                           - if true == true
                             -#= link_to proposal do
@@ -302,7 +302,7 @@
                                 = raw t(:x_total_needed_for_y, number: (proposal.total_needed_with_recurrence_cached - proposal.spent - proposal.remaining_pledges_cached), proposed: proposal.intended_sessions)
                                
                         
-                      - elsif proposal.instances.first.experiment.instances.future.empty?
+                      - elsif proposal.instances.first.event.instances.future.empty?
                         - if proposal.stopped
                           = link_to proposal do
                             .status= t :completed
@@ -347,7 +347,7 @@
                         - if @next_meeting.nil?
                           %em= t :none_currently_scheduled
                         - else
-                          = link_to @next_meeting.name, experiment_instance_path(@next_meeting.experiment, @next_meeting), target: :_blank
+                          = link_to @next_meeting.name, event_instance_path(@next_meeting.event, @next_meeting), target: :_blank
                     - else
                       = link_to proposal do
                         .status= t :needs_more_support

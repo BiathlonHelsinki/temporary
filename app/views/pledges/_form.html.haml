@@ -1,3 +1,8 @@
+
+.row.expanded
+  .small-10.medium-8.panel.callout.small-centered
+    %p
+      %strong= t(:temporary_closed)
 = semantic_form_for [@item, @pledge], html: {onSubmit: "return getContentEmptyOK();", multipart: true, :"data-abide" => '' } do |f|
   .row.expanded
     .small-10.medium-9.columns
@@ -68,17 +73,18 @@
                 to schedule
                 = pluralize(@item.number_that_can_be_scheduled.to_s, 'meeting') + "."
         - else
-          %p
-            This proposal needs 
-            = raw "#{@item.needed_for_next - @item.remaining_pledges} more #{tsign}"
-            to be reviewed for scheduling.
+          - if @item.class == Proposal
+            = t(:proposal_needs_x_for_review, number: @item.needed_for_next - @item.remaining_pledges)
+          - else
+            = t(:x_needed_to_schedule_next, amount:@item.needed_for_next - @item.remaining_pledges, meeting_number: @item.instances.published.size + 1 )
+
           
         / %p
         /
         /   You may pledge a maximum of
         /   = raw "#{@item.maximum_pledgeable(current_user)}#{tsign}"
         /   to this proposal.
-        - if @item.pledges.map(&:user).uniq.compact.size < 2
+        - if @item.pledges.map(&:user).uniq.compact.size < 2 && @item.class == Proposal
           %p 
             %em (All proposals require at least two supporters before they can be scheduled).
 

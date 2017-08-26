@@ -1,0 +1,70 @@
+.row.expanded
+  .small-12.columns
+    %h2 
+      Survey from:
+      = link_to @survey.user.display_name, @survey.user, target: :_blank
+    
+    - if @survey.user.instances.empty?
+      .row.expanded
+        .small-10.medium-9.columns
+          %p= t(:what_could_have_brought_you)
+          %blockquote= @survey.never_visited
+        
+        
+    - elsif @survey.user.events.empty?
+      .row.expanded
+        .small-10.medium-9.columns
+          %p= t(:wanted_to_contribute_differently)
+          %blockquote= @survey.different_contribution
+          
+    - else
+      .row.expanded
+        .small-10.medium-9.columns
+          %p= t(:why_experiments_at_temporary)
+          %blockquote= @survey.experiment_why
+          
+      .row.expanded
+        .small-10.medium-9.columns  
+          %p= t(:offer_other_benefits)
+          %blockquote= @survey.platform_benefits
+          
+    .row.expanded
+      .small-10.medium-9.columns
+        %p= t(:welcoming_concept)
+        %blockquote= @survey.welcoming_concept
+    .row.expanded
+      .small-10.medium-9.columns
+        %p= t(:physical_environment)
+        %blockquote= @survey.physical_environment
+    .row.expanded
+      .small-10.medium-9.columns
+        %p= t(:website_feedback)
+        %blockquote= @survey.website_etc
+    .row.expanded
+      .small-10.medium-9.columns
+        %p= t(:other_helsinki)
+        %blockquote= @survey.different_than_others
+    .row.expanded
+      .small-10.medium-9.columns
+        %p= t(:your_space_and_relationship)
+        %blockquote= @survey.your_space
+    .row.expanded
+      .small-10.medium-9.columns
+        %p= t(:platform_benefits)
+        %blockquote= @survey.features_benefit
+    .row.expanded
+      .small-10.medium-9.columns
+        %p= t(:what_could_be_better)
+        %blockquote= @survey.improvements
+    .row.expanded
+      .small-10.medium-9.columns
+        %p= t(:mission_clear)
+        %label.label.no_border= t(:what_the_mission_was)
+        %blockquote= @survey.clear_structure
+    .row.expanded
+      .small-10.medium-9.columns
+        %p= t(:want_from_culture)
+        %blockquote= @survey.want_from_culture  
+        
+.row.expanded
+  .small-12.columns= link_to "<--- back to surveys", admin_surveys_path, class: [:button]

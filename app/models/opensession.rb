@@ -42,9 +42,9 @@ class Opensession < ApplicationRecord
   end
   
   def parent_instance
-    i = Experiment.friendly.find('open-time').instances.where(["start_at <= ? AND end_at >= ?", opened_at, closed_at]).first
+    i = Event.friendly.find('open-time').instances.where(["start_at <= ? AND end_at >= ?", opened_at, closed_at]).first
     if i.nil?
-      i = Experiment.friendly.find('open-time').instances.where(["start_at <= ? ", opened_at ]).first
+      i = Event.friendly.find('open-time').instances.where(["start_at <= ? ", opened_at ]).first
     end
     return i
   end

@@ -1,5 +1,5 @@
 class Onetimer < ApplicationRecord
-  # belongs_to :experiment, foreign_key: "event_id"
+  # belongs_to :event, foreign_key: "event_id"
   belongs_to :instance
   belongs_to :user
   before_validation :generate_code

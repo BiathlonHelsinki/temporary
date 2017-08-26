@@ -1,9 +1,9 @@
-class ExperimentsController < ApplicationController
+class EventsController < ApplicationController
   include ActionView::Helpers::SanitizeHelper
   
   def archive
     @past = Instance.includes([:translations, :users, :onetimers]).past.published.order(start_at: :desc).uniq
-    set_meta_tags title: 'Experiment archive'
+    set_meta_tags title: 'Event archive'
   end
 
   def redirect_event
@@ -11,10 +11,10 @@ class ExperimentsController < ApplicationController
   end
   
   def calendar
-    experiments = Experiment.where(nil)
-    experiments = Experiment.published.between(params['start'], params['end']) if (params['start'] && params['end'])
+    experiments = Event.where(nil)
+    experiments = Event.published.between(params['start'], params['end']) if (params['start'] && params['end'])
     @experiments = []
-    @experiments += experiments.map(&:instances).flatten
+    @experiments += experiments.map{|x| x.instances.published}.flatten
     @experiments += Instance.published.between(params['start'], params['end']) if (params['start'] && params['end'])
     @experiments.uniq!
     @experiments.flatten!
@@ -26,7 +26,8 @@ class ExperimentsController < ApplicationController
 
       tzid = "Europe/Helsinki"
       tz = TZInfo::Timezone.get tzid
-      @experiments.each do |event|
+      @experiments.delete_if{|x| x.cancelled == true }.each do |event|
+      
         @cal.event do |e|
           e.dtstart     = Icalendar::Values::DateTime.new(event.start_at, 'tzid' => tzid)
           e.dtend       = Icalendar::Values::DateTime.new(event.end_at, 'tzid' => tzid)
@@ -34,7 +35,7 @@ class ExperimentsController < ApplicationController
           e.location  = 'Temporary, Kolmas linja 7, Helsinki'
           e.description = strip_tags event.description
           e.ip_class = 'PUBLIC'
-          e.url = e.uid = 'https://temporary.fi/experiments/' + event.experiment.slug + '/' + event.slug
+          e.url = e.uid = 'https://temporary.fi/experiments/' + event.event.slug + '/' + event.slug
         end
       end
       @cal.publish
@@ -50,11 +51,11 @@ class ExperimentsController < ApplicationController
   
   
   def hierarchy
-    # @experiments = Experiment.roots.order(sequence: :asc)
+    # @experiments = Event.roots.order(sequence: :asc)
 #     respond_to do |format|
 #       format.json
 #     end
-    render json: {name: "0 : Biathlon ", children: [name: "1 : Temporary" , children:  Experiment.collection_to_json ] }
+    render json: {name: "0 : Biathlon ", children: [name: "1 : Temporary" , children:  Event.collection_to_json ] }
   end
   
   def index
@@ -62,7 +63,7 @@ class ExperimentsController < ApplicationController
     # @experiments = Instance.future.published.order(sequence: :asc).group_by(&:experiment)
     @experiments = Instance.includes(:translations).current.published.or(Instance.future.published.includes(:translations)).order(:start_at).uniq
     @past = Instance.includes([:translations, :users, :onetimers]).past.published.order(start_at: :desc).limit(8).uniq
-    set_meta_tags title: 'Experiments'
+    set_meta_tags title: 'Events'
   end
   
 
@@ -72,18 +73,18 @@ class ExperimentsController < ApplicationController
   end
   
   def show
-    @experiment = Experiment.friendly.find(params[:id])
+    @experiment = Event.friendly.find(params[:id])
     set_meta_tags title: @experiment.name
   end
   
   def tree
-    @experiments = Experiment.published.order(sequence: :asc).to_json
+    @experiments = Event.published.order(sequence: :asc).to_json
   end
   
   private
 
   def set_item
-    @experiment = Experiment.friendly.find(params[:id])
+    @experiment = Event.friendly.find(params[:id])
     redirect_to action: action_name, id: @experiment.friendly_id, status: 301 unless @experiment.friendly_id == params[:id]
   end
 end

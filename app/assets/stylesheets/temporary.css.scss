@@ -182,14 +182,48 @@ section.main_container {
   }
   a.experiment {
     border: none;
+    &.locked {
+      .content {
+        border: 3px solid red;
+        .locked_overlay {
+          display: block;
+          opacity: 0.9;
+        }
+      }
+    }
     &:hover {
       color: black;
       text-decoration: none;
     }
     padding:  0.9375rem;
     .content {
+      position: relative;
       background-color: $grey;
-
+      .locked_overlay { 
+        display: none;
+        .text_overlay {
+          font-family: $heebo;
+          color: black;
+          font-size: 2.5rem;
+          position: absolute;
+          text-align: center;
+          opacity: 1;
+          bottom: 2px;
+          line-height: 3rem;
+          
+        }
+      }
+      
+      .locked_overlay:before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba(255, 0, 0, .5);
+      } 
       padding: 0.563em;
       .cancelled_header {
         color: red;
@@ -345,6 +379,26 @@ section.main_container {
 article.instance_single {
   padding-top: 2.438rem;
   
+  .survey_banner {
+    background-color: red;
+    width: 100%;
+    padding: 1.5rem;
+    font-family: $heebo;
+    text-align:center;
+    a {
+      color: white;
+    }
+    color: white;
+   
+    font-size: 2.4rem;
+    .smaller {
+      font-family: $ptsans;
+      font-size: 1rem;
+      text-align: left;
+      color: black;
+      font-weight: bold;
+    }
+  }
   .temps {
     margin: 1rem 0;
     font-family: $heebo;
@@ -1712,6 +1766,111 @@ span.fc-time {
         color: black;
         font-family: $inconsolata;
       }
+    }
+  }
+}
+
+.pledge-panel {
+  .pledge_list {
+    display: none;
+    li {
+      list-style-type: none;
+      font-size: 0.8rem;
+      
+    }
+  }
+  .title {
+    font-family: $inconsolata;
+    text-transform: uppercase;
+    font-size: 1rem;
+    font-weight: bold;
+    border-bottom: 2px solid black;
+    margin-bottom: 0.4rem;
+  }
+  p {
+    font-size: 0.9rem;
+  }
+}
+
+article.survey_form {
+  padding: 2rem 0;
+  background-color: white;
+  h1, h3 {
+    padding: 0 ; margin: 0 0 1rem 0;
+    text-transform: uppercase;
+    float: left;
+    font-weight: 900;
+  }
+  h1 {
+    border-bottom: 8px solid black;
+    .sequence {
+      font-size: .5em;
+    }
+  }
+  form {
+    li {
+      margin-top: 2rem;
+    }
+    label.label {
+      font-family: "Heebo Black", sans-serif;
+      font-size: 1.375rem;
+      font-weight: 900;
+      padding: 0.688rem 0;
+      margin: 0.9rem 0;
+      border-bottom: 8px solid black;
+      white-space: initial;
+      line-height: 2rem;
+      &.no_border {
+        border-bottom: none;
+        margin-top: 2rem;
+      }
+    }
+    #survey_clear_structure_input {
+      margin-top: -1rem;
+    }
+    textarea {
+      border: 2px solid $yellow;
+      height: 240px;
+      &:focus {
+        outline: 1px solid $yellow;
+        background-color: rgba(253, 237, 87, 0.4);
+      }
+    }
+  }
+}
+
+section.closing_banner {
+  background-color: red;
+  padding: 0.6rem 0;
+  color: white;
+  h3 {
+    font-weight: bold;
+  }
+   a {
+    color: white;
+    font-size: 1.25rem;
+    &:visited {
+      color: white;
+    }
+  }
+}
+
+section.survey_top_banner {
+  padding: 0.8rem 0;
+  background-color: black;
+  color: $yellow;
+  a {
+    color: $yellow;
+  }
+}
+
+.panel {
+  &.larger {
+    background-color: rgba(253, 237, 87, 0.4);
+
+    font-size: 1.2rem;
+    a {
+      color: $blue;
     }
   }
 }

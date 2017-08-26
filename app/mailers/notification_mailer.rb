@@ -26,7 +26,7 @@ class NotificationMailer < ActionMailer::Base
     @item = item
     @user = recipient
     unless recipient =~ /^change@me/ || recipient.opt_in != true
-      mail(to: recipient.email,  subject: "A new meeting of #{@item.experiment.name} has been scheduled") 
+      mail(to: recipient.email,  subject: "A new meeting of #{@item.event.name} has been scheduled") 
     end
     
   end

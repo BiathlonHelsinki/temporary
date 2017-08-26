@@ -24,7 +24,7 @@ Rails.application.routes.draw do
     end
     resources :ethtransactions
     resources :instances_users
-    resources :experiments do
+    resources :events do
       resources :instances
 
     end
@@ -33,13 +33,14 @@ Rails.application.routes.draw do
     resources :proposals
     resources :proposalstatuses
     resources :roombookings
+    resources :surveys
     resources :users
   end
   
   resources :opensessions
-  resources :experiments do
+  resources :events, path: 'experiments' do
     resources :comments
-
+    resources :pledges
     resources :users do
       resources :notifications
     end
@@ -77,6 +78,7 @@ Rails.application.routes.draw do
     end
   end
   
+  resources :surveys
   
   resources :onetimers do
     collection do
@@ -94,6 +96,10 @@ Rails.application.routes.draw do
     resources :pledges
     resources :users do
       resources :notifications
+    end
+    
+    member do
+      get :original_proposal
     end
     
     collection do
@@ -130,7 +136,8 @@ Rails.application.routes.draw do
     end
         
   end
-  get '/events/:id', to: 'experiments#redirect_event'
+  get '/events/:id', to: 'events#redirect_event'
+  get '/events/:event_id/:id', to: 'instances#show'
   get '/category/:id', to: "postcategories#show"
   get '/announcements/:id' => 'emails#show'
   match '/link_temporary' => 'onetimers#link', via: :get

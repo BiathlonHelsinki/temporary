@@ -23,12 +23,12 @@
       .row.expanded
         .small-12.medium-9.columns.medium-centered
           = t(:temporary_is_open_blurb) 
-          = link_to t(:come_and_visit), experiment_path('open-days')
+          = link_to t(:come_and_visit), event_path('open-days')
 
       .row.expanded
         .small-12.medium-9.columns.medium-centered
           %br/
-          = raw t(:evenings_and_weekends, event_link: link_to(t(:experimental_event, count: 2 ).downcase, experiments_path)) 
+          = raw t(:evenings_and_weekends, event_link: link_to(t(:experimental_event, count: 2 ).downcase, events_path)) 
 
           = link_to t(:find_out_more), page_path('how-does-it-work')
 
@@ -40,11 +40,11 @@
         %span.date= Time.now.strftime("%B %Y")
         = "//"
         %span
-          = link_to t(:calendar),  calendar_experiments_path
+          = link_to t(:calendar),  calendar_events_path
         = "//"
       #calendar.small-centered
         
-      = link_to t(:view_full_calendar), calendar_experiments_path, class: [:button]
+      = link_to t(:view_full_calendar), calendar_events_path, class: [:button]
       
   - unless @sticky.empty?
     %article.sizer{class: cycle('odd', 'even')}
@@ -69,10 +69,10 @@
           .meta
             %span.date= @open_day.start_at.strftime('%d.%m.%Y')
             = " // "
-            %span.category= link_to t(:experiments), experiments_path
+            %span.category= link_to t(:events), events_path
             = " // "
-          .title= link_to (@open_day.start_at.to_date == Time.now.to_date ? t(:current) : t(:next)) + ' open day:', experiment_instance_path(@open_day.experiment, @open_day)
-          = link_to experiment_instance_path(@open_day.experiment, @open_day) do
+          .title= link_to (@open_day.start_at.to_date == Time.now.to_date ? t(:current) : t(:next)) + ' open day:', event_instance_path(@open_day.event, @open_day)
+          = link_to event_instance_path(@open_day.event, @open_day) do
             .dates.text-center
               .month= l @open_day.start_at, format: "%B"
               .days
@@ -146,7 +146,7 @@
             .body= raw post.body
 
       - if post.class == Instance
-        %article.experiment_front{class: cycle('odd', 'even')}
+        %article.event_front{class: cycle('odd', 'even')}
           .post
             .meta
               %span.date= date_range(post.start_at, post.end_at)
@@ -156,33 +156,45 @@
                 = "##{post.sequence}"
               = "//"
           
-            .title= link_to post.name, [post.experiment, post]
+            .title= link_to post.name, [post.event, post]
             - if post.image?
               .image= image_tag post.image.url(:medium)
-            - elsif post.experiment.image?
-              %p= image_tag post.experiment.image.url(:medium)
+            - elsif post.event.image?
+              %p= image_tag post.event.image.url(:medium)
             - if post.in_future?
               - if post.request_registration == true
                 .rsvp
-                  = link_to t(:you_must_register_for_this_experiment),[post.experiment, post]
+                  = link_to t(:you_must_register_for_this_event),[post.event, post]
               - else
                 .rsvp
                   - if user_signed_in?
                     - if current_user.rsvpd?(post)
                       = t :you_are_going
                     - else
-                      = t :are_you_going
-                      = link_to t(:rsvp), rsvp_experiment_instance_path(post.experiment, post), method: :post, class: [:button]
+                      - if post.survey_locked
+                        - if current_user.survey.nil? 
+                          .survey_banner
+                            = link_to t(:must_complete_survey), '/surveys/new'
+                            .smaller
+                              = t(:survey_explanation)
+                              = link_to t(:take_the_survey), '/surveys/new'
+                        - else
+                          = t(:thanks_for_taking_survey)
+                          = t :are_you_going
+                          = link_to t(:rsvp), rsvp_event_instance_path(post.event, post), method: :post, class: [:button]
+                      - else
+                        = t :are_you_going
+                        = link_to t(:rsvp), rsvp_event_instance_path(post.event, post), method: :post, class: [:button]
                   - else
                     = t :are_you_going
-                    = link_to t(:rsvp),  [post.experiment, post], class: [:button]
+                    = link_to t(:rsvp),  [post.event, post], class: [:button]
                 - unless post.rsvps.empty?
                   .participants
                     = t(:x_person_has_rsvpd, number: post.rsvps.size, people: t(:person, count: post.rsvps.size) )
 
             .body
               = truncate_html post.description, length: 500
-              = link_to t(:read_more), [post.experiment, post], class: [:button]
+              = link_to t(:read_more), [post.event, post], class: [:button]
             
       - if post.class == Proposal
         %article.proposal{class: cycle('odd', 'even')}
@@ -211,7 +223,7 @@
               - else
                 = raw t(:still_needed, amount: raw("#{post.needed_for_next - post.remaining_pledges}#{tsign}"))
                 %br/
-                = link_to t(:pledge), post, class: [:button, :small]
+                = link_to t(:pledge_verb), post, class: [:button, :small]
             .body
               %span.quote= raw "&ldquo;"
               = truncate_html post.short_description, length: 300
@@ -234,7 +246,7 @@
       slotMinutes: 30,
       eventSources: [
         {
-          url: '/experiments/calendar.json', 
+          url: '/events/calendar.json', 
           complete: function() {
             $grid.masonry('layout');
           }
@@ -269,7 +281,7 @@
 
     var updateEvent = function(the_event) {
 
-    return $.update("/experiments/calendar/" + the_event.id, {
+    return $.update("/events/calendar/" + the_event.id, {
       event: {
         title: the_event.title,
         starts_at: "" + the_event.start,

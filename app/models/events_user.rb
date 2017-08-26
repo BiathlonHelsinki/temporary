@@ -1,5 +1,5 @@
 class EventsUser < ActiveRecord::Base
-  belongs_to :experiment
+  belongs_to :event
   belongs_to :user
   
 

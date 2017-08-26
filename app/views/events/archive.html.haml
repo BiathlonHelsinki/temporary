@@ -5,11 +5,11 @@
         = t(:in_the_past) + '...'
   .row.expanded
     .small-12.columns
-      %h2= link_to 'See current experiments', experiments_path, class: [:button]    
+      %h2= link_to 'See current experiments', events_path, class: [:button]    
   .row.expanded#expandme.small-up-1.medium-up-2.large-up-4.xxlarge-up-5{:"data-equalizer" => '', :"data-equalize-by-row" => "true"}
     - @past.each do |exp|
       - cache  exp do
-        = render partial: 'instances/experiment_instance_column', locals: {exp: exp, :"@experiment" =>  exp.experiment}
+        = render partial: 'instances/experiment_instance_column', locals: {exp: exp, :"@experiment" =>  exp.event}
   .row.expanded
     .small-12.columns
-      %h2= link_to 'See current experiments', experiments_path, class: [:button]
+      %h2= link_to 'See current experiments', events_path, class: [:button]

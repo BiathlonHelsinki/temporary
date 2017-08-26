@@ -320,7 +320,7 @@ fi:
   pledge_more_temps: 'Tue lisää Ŧ!'
   meeting: 'tapaaminen'
 
-  meetings_took_place_past: "%{amount} tapahtui:"
+  meetings_took_place_past: "%{count} %{amount} tapahtui:"
   recurring_experiment_meetings: 'Toistuva kokeilu. Tapaamiset:'
   this_proposal_needs_at_least_one_other_user_to_pledge_to_it: 'Tämä ehdotus tarvitsee vähintään yhden toisen käyttäjän tuen.'
   needed_to_be_considered_for_scheduling: 'Puuttuu vielä hyväksymistä varten:'
@@ -653,3 +653,47 @@ fi:
     zero: 'tukea'
     one: 'tuki'
     other: 'tukea'
+  number_currently_pledged: "%{number} lahjoitettu"
+  thanks_for_survey: 'Thank you for completing Temporary\''s survey. You are now invited to the Closing Time party on 1 September.'
+  thanks_for_survey_after_september: 'Thank you for completing Temporary\''s survey. Your feedback is very important.'
+  temporary_closing_survey: 'Temporary Closing Survey'
+  temporary_survey_explanation_future: 'Temporary will close its doors on 2 September 2017, making the entire experiment exactly one year in length. But this is only a beginning, not the end. The next experiment will be collectively designed by a larger working group and will hopefully launch in January 2018.'
+
+  temporary_survey_explanation_past: 'Temporary ran from September 2016 to September 2017. There are plans to continue the core ideas of an open 24/7 workspace, decentralised programming and a participation-based model beginning in 2018. This next experiment will be collectively designed by a larger working group and will be designed with longevity in mind.'
+    
+  why_this_survey: 'To assist in this design, Temporary has designed this short questionnaire. We are very curious to hear your feedback: how you felt about Temporary (whether you participated zero, once or 200 times), what you are seeking from culture, and other factors. Please answer as honestly and as detailed as possible. Positive feedback is nice, but we are really interested in different perspectives and ideas, so write as much as you would like!'
+  
+  never_visited: 'Et ole koskaan käynyt tai osallistunut mihinkään Temporaryssä.'
+  what_could_have_brought_you: 'Mitä Temporary olisi voinut tehdä toisin, että olisit osallistunut sen toimintaan, joko osallistujana tai tuottajana?'
+  
+  you_participated_in_x_experiments: 'Osallistuit %{number} %{experiment}.'
+  experiment_mihin:
+    zero: 'kokeiluun'
+    one: 'kokeiluun'
+    other: 'kokeiluun'
+  you_organised_x: 'Järjestit %{number}.'
+  wanted_to_contribute_differently: 'Olisitko halunnut osallistua Temporaryn toimintaan toisella tavalla kuin millä osallistuit. Jos kyllä, miten?'
+  why_experiments_at_temporary: 'Miksi halusit kokeilusi/tapahtumasi Temporaryyn?'
+  offer_other_benefits: 'Tarjosiko Temporary alustana minkäänlaisia hyötyjä projektillesi, joita muut paikat eivät olisi voineet tarjota?'
+  welcoming_concept: 'Tuntuiko sinusta, että Temporaryn idea oli kutsuva, pelottava, ärsyttävä, innostava, typerä tai jotain muuta?'
+  physical_environment: 'Mistä pidit ja mistä et pitänyt Temporaryn fyysisessä ympäristössä?'
+  website_feedback: 'Mitä mieltä olet verkkosivusta, ehdotusjärjestelmästä, Temporaries-valuutasta, check-in-automaatista ja henkilökorteista?'
+  other_helsinki: 'Tuntuiko Temporaryn toimintaan osallistuminen erilaiselta kuin muihin helsinkiläisiin kohteisiin? Jos kyllä, miten?'
+  your_space_and_relationship: "Tuntuiko, Temporary 'sinun' tilaltasi? Täsmennä suhdettasi Temporaryyn."
+  platform_benefits: 'Millä tavalla, jos millään, Temporaryn toiminnot (alusta omalla luovalle toiminnalle, Open Time 24/7 jaettuna työ-/sosiaalisena tilana, mahdollisuus vuokrata takahuone jne.)  hyödyttivät sinua?'
+  what_could_be_better: 'Mikä olisi voinut olla paremmin?'
+  what_the_mission_was: "Temporary:n missio oli testata toisenlaista rakennetta osallistumiseen perustuvien kulttuuristen aktiviteettien luomiseksi - jotta yleensa keskitetyssä asemassa olevat roolit, kuten kuraattori, tuottaja ja valvoja jakautuisivat kaikkien tilan käyttäjien kesken."
+  mission_clear: "Tuliko tämä lähestymistapa selväksi sinulle osallistumisesi aikana? Millä tavalla tämä heijastui kokemuksissasi Temporary:ssä, tai asenteissasi ja vastuuntunnossasi Temporary:ä kohtaan?"
+  want_from_culture: "Mitä haluat kulttuurilta? Mihin olet tyytyväinen jo olemassaolevissa kulttuuri-instituutioissa ja mitä haluaisit enemmän?"
+  must_complete_survey: 'You must complete the survey to attend.'
+  survey_explanation: 'Temporary''s last event is a party for members only. Admission is free if you complete a short survey about your feelings and experiences at Temporary. Even if you have never been to Temporary before, you are welcome to complete the survey and attend the party. No one will be admitted who does not complete this survey.'
+  take_the_survey: 'Take the survey...'
+  temporary_ends_1_september: 'Temporary ends on 1 September 2017.'
+  more_info: 'More info...'
+  you_should_join_to_pledge: 'To participate in and support this experiment, join the Temporary website now!'
+  join: 'Join!'
+  temporary_closed: 'Temporary is closing on 1 September 2017. No further experiments will be scheduled, though you can still pledge Temps as supported experiments may form a starting programme for the post-Temporary project.'
+  thanks_for_taking_survey: 'Thank you for completing the survey.'
+  experiment_is_inactive: 'This experiment is not active.'
+  inactive_explanation: 'There has been no activity towards this experiment during the past %{timeframe}. The experiment is assumed to be completed or abandoned.'
+  

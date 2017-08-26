@@ -3,8 +3,8 @@ class ViewpointsController < ApplicationController
   before_action :authenticate_user!, except: :index
   
   def create
-    @experiment = Experiment.friendly.find(params[:experiment_id])
-    @instance = @experiment.instances.friendly.find(params[:instance_id])
+    @event = Event.friendly.find(params[:event_id])
+    @instance = @event.instances.friendly.find(params[:instance_id])
     if params[:userphoto]
       if @instance.userphotos.by_user(current_user).to_a.delete_if{|x| !x.userphotoslot.nil? }.size < 2 || !current_user.userphotoslots.empty.empty?
         @u = Userphoto.new(userphoto_params)
@@ -23,15 +23,15 @@ class ViewpointsController < ApplicationController
       @u.user = current_user
       @instance.userthoughts << @u
       if @u.save
-        redirect_to experiment_instance_path(@instance.experiment, @instance)
+        redirect_to event_instance_path(@instance.event, @instance)
         flash[:notice] = t(:your_viewpoint_has_been_saved)
       end
     end
   end
   
   def destroy
-    @experiment = Experiment.friendly.find(params[:experiment_id])
-    @instance = @experiment.instances.friendly.find(params[:instance_id])
+    @event = Event.friendly.find(params[:event_id])
+    @instance = @event.instances.friendly.find(params[:instance_id])
     @u = Userphoto.find(params[:id])
     if @u.user == current_user || current_user.has_role?(:admin)
       @u.destroy
@@ -40,13 +40,13 @@ class ViewpointsController < ApplicationController
   
   def index
     @instance = Instance.friendly.find(params[:id])
-    @experiment = @instance.experiment
+    @event = @instance.event
     @viewpoints = @instance.viewpoints
   end
   
   def update
-    @experiment = Experiment.friendly.find(params[:experiment_id])
-    @instance = @experiment.instances.friendly.find(params[:instance_id])
+    @event = Event.friendly.find(params[:event_id])
+    @instance = @event.instances.friendly.find(params[:instance_id])
     if params[:userphoto]
       @u = Userphoto.find(params[:id])
       if @u.update_attributes(userphoto_params)

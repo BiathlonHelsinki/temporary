@@ -9,8 +9,8 @@ class CommentsController < ApplicationController
       @master = Proposal.find(params[:proposal_id])
     end
 
-    if params[:experiment_id]
-      @master= Experiment.friendly.find(params[:experiment_id])
+    if params[:event_id]
+      @master= Event.friendly.find(params[:event_id])
       if comment_params[:frontpage] == "1"
         if current_user != @master.primary_sponsor && current_user != @master.secondary_sponsor
           comment_params[:frontpage] = ''

@@ -3,8 +3,8 @@ class InstancesController < ApplicationController
   before_action :authenticate_user!, only: [:rsvp]
 
   def cancel_registration
-    if params[:experiment_id]
-      @experiment = Experiment.friendly.find(params[:experiment_id])
+    if params[:event_id]
+      @experiment = Event.friendly.find(params[:event_id])
       @instance = @experiment.instances.friendly.find(params[:id])
       if @instance.in_future?
         registration = Registration.find_or_create_by(instance: @instance, user: current_user)
@@ -21,13 +21,13 @@ class InstancesController < ApplicationController
   end
   
   def make_organiser
-    @experiment = Experiment.friendly.find(params[:experiment_id])
+    @experiment = Event.friendly.find(params[:event_id])
     @instance = @experiment.instances.friendly.find(params[:id])
   end
       
   def cancel_rsvp
-    if params[:experiment_id]
-      @experiment = Experiment.friendly.find(params[:experiment_id])
+    if params[:event_id]
+      @experiment = Event.friendly.find(params[:event_id])
       @instance = @experiment.instances.friendly.find(params[:id])
       if @instance.in_future?
         rsvp = Rsvp.find_or_create_by(instance: @instance, user: current_user)
@@ -44,8 +44,8 @@ class InstancesController < ApplicationController
   end
     
   def rsvp
-    if params[:experiment_id]
-      @experiment = Experiment.friendly.find(params[:experiment_id])
+    if params[:event_id]
+      @experiment = Event.friendly.find(params[:event_id])
       @instance = @experiment.instances.friendly.find(params[:id])
       Rsvp.find_or_create_by(instance: @instance, user: current_user)
       Activity.create(user: current_user, addition: 0, item: @instance, description: 'plans_to_attend')
@@ -58,8 +58,8 @@ class InstancesController < ApplicationController
   end
 
   def stats
-    if params[:experiment_id]
-      @experiment = Experiment.friendly.find(params[:experiment_id])
+    if params[:event_id]
+      @experiment = Event.friendly.find(params[:event_id])
       @instance = @experiment.instances.friendly.find(params[:id])
       if @instance.slug =~ /open\-time/ || @instance.name =~ /open time/i 
         if params['start'] && params['end']
@@ -74,8 +74,8 @@ class InstancesController < ApplicationController
           @potential_minutes = ((Time.current - @instance.start_at.beginning_of_month) / 60).to_i
         end
       else
-        flash[:notice] = 'No statistics available for regular experiments.'
-        redirect_to experiment_instance_path(@experiment, @instance)
+        flash[:notice] = 'No statistics available for regular events.'
+        redirect_to event_instance_path(@experiment, @instance)
       end
     end
     set_meta_tags title: 'Stats'
@@ -87,11 +87,11 @@ class InstancesController < ApplicationController
   end
     
   def show
-    if params[:experiment_id]
-      @experiment = Experiment.friendly.find(params[:experiment_id])
+    if params[:event_id]
+      @experiment = Event.friendly.find(params[:event_id])
       @instance = @experiment.instances.friendly.find(params[:id])
       if @instance.slug == @experiment.slug && @experiment.instances.published.size == 1
-        redirect_to experiment_path(@experiment.slug)
+        redirect_to event_path(@experiment.slug)
       end
       set_meta_tags title: @instance.name
 
@@ -108,7 +108,7 @@ class InstancesController < ApplicationController
           e.location  = 'Temporary, Kolmas linja 7, Helsinki'
           e.description = strip_tags @instance.description
           e.ip_class = 'PUBLIC'
-          e.url = e.uid = 'https://temporary.fi/experiments/' + @instance.experiment.slug + '/' + @instance.slug
+          e.url = e.uid = 'https://temporary.fi/events/' + @instance.event.slug + '/' + @instance.slug
         end
         @cal.publish
       end
@@ -124,9 +124,9 @@ class InstancesController < ApplicationController
   end
   
   def index
-    if params[:experiment_id]
-      @experiment = Experiment.friendly.find(params[:experiment_id])
-      redirect_to action: action_name, experiment_id: @experiment.friendly_id, status: 301 and return unless @experiment.friendly_id == params[:experiment_id] 
+    if params[:event_id]
+      @experiment = Event.friendly.find(params[:event_id])
+      redirect_to action: action_name, event_id: @experiment.friendly_id, status: 301 and return unless @experiment.friendly_id == params[:event_id] 
       @future = @experiment.instances.current.or(@experiment.instances.future).order(:start_at).uniq
       @past = @experiment.instances.past.order(:start_at).uniq.reverse  
     end

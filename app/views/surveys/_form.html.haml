@@ -1,0 +1,80 @@
+%article.survey_form
+  .row.expanded
+    .small-10.medium-9.columns
+      %h1= t(:temporary_closing_survey)
+
+  .row.expanded
+    .small-10.medium-9.columns.body
+      %p
+        - if Time.current <  "2017-09-02".to_date
+          = t(:temporary_survey_explanation_future)
+        - else
+          = t(:temporary_survey_explanation_past)
+  
+      %p= t(:why_this_survey)   
+
+
+  = semantic_form_for @survey , html: {:'data-abide' => ''} do |f|
+
+    = f.input :user_id, input_html: {value: current_user.id}, as: :hidden 
+    - if current_user.instances.empty?
+      .row.expanded
+        .small-10.medium-9.columns
+          %p= t(:never_visited)
+          = f.input :never_visited, label: t(:what_could_have_brought_you), input_html: {required: ''}
+        
+        
+    - elsif current_user.events.empty?
+      .row.expanded
+        .small-10.medium-9.columns
+          %p= t(:you_participated_in_x_experiments, number: current_user.instances.size, experiment: t(:experiment_mihin, count: current_user.instances.size))
+          = f.input :different_contribution, label: t(:wanted_to_contribute_differently), input_html: {required: ''}
+          
+    - else
+      .row.expanded
+        .small-10.medium-9.columns
+          %p
+            = t(:you_participated_in_x_experiments, number: current_user.instances.size, experiment: t(:experiment_mihin, count: current_user.instances.size))
+            = t(:you_organised_x,  number: current_user.events.size)
+          = f.input :experiment_why, label: t(:why_experiments_at_temporary), input_html: {required: ''}
+      .row.expanded
+        .small-10.medium-9.columns  
+          = f.input :platform_benefits, label: t(:offer_other_benefits), input_html: {required: ''}
+          
+    .row.expanded
+      .small-10.medium-9.columns
+        = f.input :welcoming_concept, label: t(:welcoming_concept), input_html: {required: ''}
+    .row.expanded
+      .small-10.medium-9.columns
+        = f.input :physical_environment, label: t(:physical_environment), input_html: {required: ''}
+    .row.expanded
+      .small-10.medium-9.columns
+        = f.input :website_etc, label: t(:website_feedback), input_html: {required: ''}
+    .row.expanded
+      .small-10.medium-9.columns
+        = f.input :different_than_others, label: t(:other_helsinki), input_html: {required: ''}
+    .row.expanded
+      .small-10.medium-9.columns
+        = f.input :your_space, label: t(:your_space_and_relationship), input_html: {required: ''}
+    .row.expanded
+      .small-10.medium-9.columns
+        = f.input :features_benefit, label: t(:platform_benefits), input_html: {required: ''}
+    .row.expanded
+      .small-10.medium-9.columns
+        = f.input :improvements, label: t(:what_could_be_better), input_html: {required: ''}
+    .row.expanded
+      .small-10.medium-9.columns
+        %label.label.no_border= t(:what_the_mission_was)
+        = f.input :clear_structure, label: t(:mission_clear), input_html: {required: ''}
+    .row.expanded
+      .small-10.medium-9.columns
+        = f.input :want_from_culture, label: t(:want_from_culture), input_html: {required: ''}
+    .row.expanded
+      .small-10.medium-9.columns
+        = f.input :allow_excerpt, label: t(:allow_survey_excerpt), as: :boolean
+    .row.expanded
+      .small-10.medium-9.columns
+        = f.input :allow_identity, label: t(:allow_survey_identity), as: :boolean        
+    .row.expanded
+      .small-10.medium-9.columns
+        = f.submit t(:send), class: [:button]

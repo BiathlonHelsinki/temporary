@@ -2,11 +2,11 @@ class Instance < ApplicationRecord
   include PgSearch
   has_many :instance_translations
   multisearchable against: [:name, :description]
-  belongs_to :experiment, foreign_key: 'event_id'
+  belongs_to :event, foreign_key: 'event_id'
   belongs_to :place
   translates :name, :description, :fallbacks_for_empty_translations => false
   accepts_nested_attributes_for :translations, :reject_if => proc {|x| x['name'].blank? && x['description'].blank? }
-  accepts_nested_attributes_for :experiment
+  accepts_nested_attributes_for :event
   extend FriendlyId
   friendly_id :name_en , :use => [ :slugged, :finders, :history]
   mount_uploader :image, ImageUploader
@@ -33,7 +33,7 @@ class Instance < ApplicationRecord
   scope :published, -> () { where(published: true) }
   scope :not_cancelled, -> { where('cancelled is not true') }
   scope :meetings, -> () {where(is_meeting: true)}
-  scope :future, -> () {where(["end_at >=  ?", Time.now.utc.strftime('%Y/%m/%d %H:%M')]) }
+  scope :future, -> () {where(["published is true and cancelled is not true and end_at >=  ?", Time.now.utc.strftime('%Y/%m/%d %H:%M')]) }
   scope :past, -> () {where(["end_at <  ?", Time.now.utc.strftime('%Y/%m/%d %H:%M')]) }
   scope :current, -> () { where(["start_at <=  ? and end_at >= ?", Time.current.utc.strftime('%Y/%m/%d %H:%M'), Time.current.utc.strftime('%Y/%m/%d %H:%M') ]) }
   scope :not_open_day,  -> ()  { where("event_id != 1")}
@@ -46,12 +46,12 @@ class Instance < ApplicationRecord
       :title =>  self.name,
       :description => self.description || "",
       :start => start_at.strftime('%Y-%m-%d %H:%M:00'),
-      :end => end_at.nil? ? start_at.strftime('%Y-%m-%d %H:%M:00') : (end_at.strftime('%H:%M') == '23:59' ? '??' : end_at.strftime('%Y-%m-%d %H:%M:00')),
+      :end => end_at.nil? || survey_locked == true ? start_at.strftime('%Y-%m-%d %H:%M:00') : (end_at.strftime('%H:%M') == '23:59' ? '??' : end_at.strftime('%Y-%m-%d %H:%M:00')),
       :allDay => false, 
       :recurring => false,
       :temps => self.cost_bb,
       :cancelled => self.cancelled,
-      :url => Rails.application.routes.url_helpers.experiment_instance_path(experiment.slug, slug)
+      :url => Rails.application.routes.url_helpers.event_instance_path(event.slug, slug)
     }
     
   end
@@ -73,21 +73,21 @@ class Instance < ApplicationRecord
   end
   
   def responsible_people
-    [experiment.primary_sponsor, experiment.secondary_sponsor, organisers].flatten.compact.uniq
+    [event.primary_sponsor, event.secondary_sponsor, organisers].flatten.compact.uniq
   end
   
   
   def session_number
     if new_record?
-      experiment.instances.order(:start_at).size + 1
+      event.instances.order(:start_at).size + 1
     else 
-      experiment.instances.order(:start_at).find_index(self) + 1
+      event.instances.order(:start_at).find_index(self) + 1
     end
   end
   
   def show_on_website?
-    experiment.collapse_in_website == true ? 
-      (experiment.instances.published.current.or(experiment.instances.published.future).sort_by(&:start_at).first == self ? true : false) 
+    event.collapse_in_website == true ? 
+      (event.instances.published.current.or(event.instances.published.future).sort_by(&:start_at).first == self ? true : false) 
       : true
   end
   
@@ -169,7 +169,7 @@ class Instance < ApplicationRecord
   end
   
   def name_en
-    self.name(:en).blank? ? experiment.name(:en) : self.name(:en)
+    self.name(:en).blank? ? event.name(:en) : self.name(:en)
   end
   
   def name_present_in_at_least_one_locale

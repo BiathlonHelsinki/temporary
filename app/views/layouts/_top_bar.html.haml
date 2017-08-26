@@ -13,12 +13,12 @@
         %li= link_to t(:how_do_i_get_temps), page_path('how-do-i-get-temps')
         %li= link_to t(:donate_to_temporary), page_path('donate-to-temporary')
         %li= link_to t(:news), posts_path
-    %li{class: ['experiments', 'instances'].include?(controller.controller_name) ?  :active : false}= link_to t(:experiments), experiments_path
+    %li{class: ['events', 'instances'].include?(controller.controller_name) ?  :active : false}= link_to t(:experiments), events_path
     %li{class: controller.controller_name == 'activities' ? :active : false}= link_to t(:activity_feed), activities_path
     %li{class: controller.controller_name == 'proposals' ? :active : false}= link_to t(:proposals), proposals_path
     %li= link_to t(:visit_us), page_path('where-is-it')
     %li{class: controller.controller_name == 'roombookings' ? :active : false}= link_to t(:book_the_back_room), roombookings_path
-
+    
 .top-bar-right
 
   %ul.vertical.medium-horizontal.menu{"data-responsive-menu" => "drilldown medium-dropdown"}

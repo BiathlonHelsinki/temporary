@@ -61,6 +61,18 @@
                 %strong ENG
           / Left Nav Section
           = render partial: 'layouts/top_bar'
+      %section.closing_banner
+        .row.expanded
+          .small-12.columns.text-center
+            %h3
+              = t(:temporary_ends_1_september)
+              = link_to t(:more_info), '/announcements/it-was-called-temporary-for-a-reason'
+      - if user_signed_in? && controller.controller_name != 'surveys'
+        - if current_user.survey.nil?
+          %section.survey_top_banner
+            .row.expanded
+              .small-12.columns.small-centered.text-center
+                %h4= link_to t(:please_take_our_survey), '/surveys/new'
       %section.main_container= yield 
       %footer= render partial: 'layouts/footer'
     :javascript
