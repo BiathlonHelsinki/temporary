@@ -221,7 +221,31 @@
                     %h5= t :you_have_rsvpd
                     = link_to t(:cancel_rsvp), cancel_rsvp_event_instance_path(@instance.event, @instance), method: :post, class: [:button, :alert], data: {confirm: t(:confirm_cancel_rsvp)}
                   - else
-                    %h4= t :organiser_requested_rsvp
+                  
+                  
+
+                    - if current_user.rsvpd?(@instance)
+                    
+                      %strong  You have RSVPd to this event.
+                    - else
+                      %br/
+                      - if @instance.survey_locked
+                        - if current_user.survey.nil?
+                          .survey_banner
+                            = link_to t(:must_complete_survey), '/surveys/new'
+                            .smaller
+                              = t(:survey_explanation)
+                              = link_to t(:take_the_survey), '/surveys/new'
+                        - else
+                          %p= t(:thanks_for_taking_survey)
+                          = link_to t(:i_plan_to_attend), rsvp_event_instance_path(@instance.event, @instance), method: :post, class: [:button]
+                      - else
+                        %h4= t :organiser_requested_rsvp
+                        = link_to t(:i_plan_to_attend), rsvp_event_instance_path(@instance.event, @instance), method: :post, class: [:button]
+                  
+                  
+                  
+                    
                 - else
                   %h4
                     = t(:organiser_requested_rsvp)
@@ -231,7 +255,12 @@
   
                 - if user_signed_in?
                   -  unless current_user.rsvpd?(@instance)
-                    = link_to t(:yes_i_plan_to_attend), rsvp_event_instance_path(@instance.event, @instance), method: :post, class: [:button]
+                    - if @instance.survey_locked
+                      - unless current_user.survey.nil?
+                        = link_to t(:yes_i_plan_to_attend), rsvp_event_instance_path(@instance.event, @instance), method: :post, class: [:button]
+                    - else
+                      = link_to t(:yes_i_plan_to_attend), rsvp_event_instance_path(@instance.event, @instance), method: :post, class: [:button]
+                      
 
 
   - if @instance.users.empty? && @instance.onetimers.empty?
