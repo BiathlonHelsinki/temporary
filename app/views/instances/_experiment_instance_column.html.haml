@@ -1,8 +1,9 @@
 = link_to event_instance_path(exp.event, exp), class: [:experiment, :column, exp.survey_locked == true ? :locked : ''] do
   .content{:"data-equalizer-watch" => '', class: exp.cancelled == true ? 'cancelled' : false}
     - if exp.survey_locked == true
-      .locked_overlay
-        .text_overlay= t(:must_complete_survey)
+      - if current_user.nil? || current_user.survey.nil? || current_user.survey.completed == false
+        .locked_overlay
+          .text_overlay= t(:must_complete_survey)
     - if exp.cancelled == true
       .cancelled_header
         .cancelled_title= t :experiment_has_been_cancelled

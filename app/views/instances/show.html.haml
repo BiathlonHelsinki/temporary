@@ -66,7 +66,7 @@
                     - else
                       %br/
                       - if @instance.survey_locked
-                        - if current_user.survey.nil?
+                        - if current_user.survey.nil? || current_user.survey.completed == false
                           .survey_banner
                             = link_to t(:must_complete_survey), '/surveys/new'
                             .smaller
@@ -236,7 +236,7 @@
                     - else
                       %br/
                       - if @instance.survey_locked
-                        - if current_user.survey.nil?
+                        - if current_user.survey.nil? || current_user.survey.completed != true
                           .survey_banner
                             = link_to t(:must_complete_survey), '/surveys/new'
                             .smaller
@@ -262,7 +262,7 @@
                 - if user_signed_in?
                   -  unless current_user.rsvpd?(@instance)
                     - if @instance.survey_locked
-                      - unless current_user.survey.nil?
+                      - unless current_user.survey.nil? || current_user.survey.completed != true
                         = link_to t(:yes_i_plan_to_attend), rsvp_event_instance_path(@instance.event, @instance), method: :post, class: [:button]
                     - else
                       = link_to t(:yes_i_plan_to_attend), rsvp_event_instance_path(@instance.event, @instance), method: :post, class: [:button]

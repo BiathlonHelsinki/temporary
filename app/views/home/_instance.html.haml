@@ -54,5 +54,5 @@
         = t(:x_person_has_rsvpd, number: post.rsvps.size, people: t(:person, count: post.rsvps.size) )
 
 .body
-  = truncate_html post.description, length: 500
+  = truncate_html post.description, length: 600
   = link_to t(:read_more), [post.event, post], class: [:button]
