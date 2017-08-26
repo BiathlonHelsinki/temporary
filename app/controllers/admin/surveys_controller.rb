@@ -1,4 +1,5 @@
-class Admin::SurveysController < ApplicationController
+class Admin::SurveysController < Admin::BaseController
+  
   
   def index
     @surveys = Survey.all
