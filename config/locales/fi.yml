@@ -696,4 +696,9 @@ fi:
   thanks_for_taking_survey: 'Thank you for completing the survey.'
   experiment_is_inactive: 'This experiment is not active.'
   inactive_explanation: 'There has been no activity towards this experiment during the past %{timeframe}. The experiment is assumed to be completed or abandoned.'
-  
+  saved_answers: 'Your survey answers have been saved. Be sure to click "Send completed survey" when finished.'
+  please_take_our_survey: 'Take the Temporary closing survey and help plan the future!'
+  allow_survey_excerpt: 'Is it OK to quote your answers (anonymously) in anything that might be published?'
+  allow_survey_identity: 'Is it OK to quote your answers not-anonymously? We will contact you if this is going to happen.'
+  save_answers: 'Save answers'
+  complete: 'Send completed survey'

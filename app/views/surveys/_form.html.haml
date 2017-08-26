@@ -13,8 +13,9 @@
   
       %p= t(:why_this_survey)   
 
-
-  = semantic_form_for @survey , html: {:'data-abide' => ''} do |f|
+      .panel.callout.larger
+        %h5= t(:you_can_save_answers)
+  = semantic_form_for @survey , html: {:'data-abide' => 'ajax'} do |f|
 
     = f.input :user_id, input_html: {value: current_user.id}, as: :hidden 
     - if current_user.instances.empty?
@@ -77,4 +78,12 @@
         = f.input :allow_identity, label: t(:allow_survey_identity), as: :boolean        
     .row.expanded
       .small-10.medium-9.columns
-        = f.submit t(:send), class: [:button]
+        = f.submit t(:save_answers),name: 'save',  class: [:button, :secondary] , id: :save_progress
+        = f.submit t(:complete), class: [:button], confirm: 'Are you sure?'
+        
+= content_for :jquery do
+  :plain
+    $('#save_progress').on('click', function() {
+      $('[required]').attr('required', false);
+      $('form').submit();
+    })

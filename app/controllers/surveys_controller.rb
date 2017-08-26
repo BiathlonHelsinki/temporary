@@ -5,7 +5,11 @@ class SurveysController < ApplicationController
   
   def create
     @survey = Survey.new(survey_params)
-    @survey.completed = true
+    if params[:commit] != 'save'
+      @survey.completed = true
+    else
+      @survey.completed = false
+    end
     if @survey.save
       flash[:notice] = t(:thanks_for_survey)
       redirect_to '/'
@@ -28,9 +32,14 @@ class SurveysController < ApplicationController
   
   def update
     @survey = Survey.find(params[:id])
-    @survey.completed = true
+ 
+    if params[:commit]
+      @survey.completed = true
+    elsif params[:save]
+      @survey.completed = false
+    end
     if @survey.update_attributes(survey_params)
-      flash[:notice] = t(:thanks_for_survey)
+      flash[:notice] = @survey.completed == true ? t(:thanks_for_survey) : t(:answers_were_saved)
       redirect_to '/'
     end
   end
