@@ -225,6 +225,13 @@ header {
         small {
           display: none;
         }
+        .panel.larger {
+          ol {
+            li {
+              font-size: 1rem;
+            }
+          }
+        }
         span.quote {
           font-family: serif;
           padding-top: 0.4rem;

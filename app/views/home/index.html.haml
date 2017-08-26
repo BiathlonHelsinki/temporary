@@ -52,6 +52,8 @@
         - if @feed.first.class == Instance
           = render partial: 'home/instance', locals: {post: @feed.first}
         - elsif @feed.first.class == Post
+        - elsif @feed.first.class == Email
+          = render partial: 'home/announcement', locals: {post: @feed.first }
   
   - else
     %article.sizer{class: cycle('odd', 'even')}
@@ -107,16 +109,8 @@
       - if post.class == Email
       
         %article{class: cycle('odd', 'even')}
-          .post{class: post.class.to_s.downcase}
-            .meta
-              %span.date= post.feed_date.strftime('%d.%m.%Y')
-              = " // "
-              %span.category= t(:announcements)
-              = " // "
-            .title= link_to post.subject, "/announcements/#{post.slug}"
-            .body
-              = raw truncate_html(sanitize(post.body, tags: %w{a b div bold small strong i em br p blockquote img}, attributes: %w{src class href}), length: 750)
-              = link_to t(:read_more), "/announcements/#{post.slug}", class: [:button]
+          .post{class: post.class.to_s.downcase}= render partial: 'home/announcement', locals: {post: post}
+              
 
       - if post.class == Comment
         %article{class: cycle('odd', 'even')}
