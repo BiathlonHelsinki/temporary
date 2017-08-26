@@ -222,6 +222,9 @@ header {
         font-family: $ptsans;
         font-size: 0.881em;
         padding-top: 1rem;
+        small {
+          display: none;
+        }
         span.quote {
           font-family: serif;
           padding-top: 0.4rem;

@@ -31,6 +31,7 @@
                         moreLink: '<a href="#">See more</a>', 
                         lessLink: '<a href="#">See fewer</a>'
                         });
+                     
     .small-10.medium-4.columns.pledge_info
       .box
         - if @proposal.is_valid?
@@ -130,6 +131,11 @@
                 %br/
                 %br/
 
+  .row.expanded
+    .small-8.columns.small-centered
+      .panel.callout.larger
+        %p
+          %strong= t(:temporary_closed)   
 
 
   .row.expanded

@@ -34,19 +34,26 @@
 
 .news_container
 
-  %article.calendar{class: cycle('odd', 'even')}
-    .post
-      .meta
-        %span.date= Time.now.strftime("%B %Y")
-        = "//"
-        %span
-          = link_to t(:calendar),  calendar_events_path
-        = "//"
-      #calendar.small-centered
-        
-      = link_to t(:view_full_calendar), calendar_events_path, class: [:button]
+  / %article.calendar{class: cycle('odd', 'even')}
+  /   .post
+  /     .meta
+  /       %span.date= Time.now.strftime("%B %Y")
+  /       = "//"
+  /       %span
+  /         = link_to t(:calendar),  calendar_events_path
+  /       = "//"
+  /     #calendar.small-centered
+  /
+  /     = link_to t(:view_full_calendar), calendar_events_path, class: [:button]
       
-  - unless @sticky.empty?
+  - if @sticky.empty?
+    %article.sizer{class: cycle('odd', 'even')}
+      .post
+        - if @feed.first.class == Instance
+          = render partial: 'home/instance', locals: {post: @feed.first}
+        - elsif @feed.first.class == Post
+  
+  - else
     %article.sizer{class: cycle('odd', 'even')}
       .post
         .meta
@@ -95,20 +102,20 @@
           .body= raw post.body
 
     
-  - @feed.each do |post|
+  - @feed.drop(1).each do |post|
     - cache ["front_post", post, current_user] do
       - if post.class == Email
       
         %article{class: cycle('odd', 'even')}
           .post{class: post.class.to_s.downcase}
             .meta
-              %span.date= post.sent_at.strftime('%d.%m.%Y')
+              %span.date= post.feed_date.strftime('%d.%m.%Y')
               = " // "
               %span.category= t(:announcements)
               = " // "
             .title= link_to post.subject, "/announcements/#{post.slug}"
             .body
-              = raw truncate_html(sanitize(post.body, tags: %w{a b bold strong i em br p blockquote img}, attributes: %w{src href}), length: 750)
+              = raw truncate_html(sanitize(post.body, tags: %w{a b div bold small strong i em br p blockquote img}, attributes: %w{src class href}), length: 750)
               = link_to t(:read_more), "/announcements/#{post.slug}", class: [:button]
 
       - if post.class == Comment
@@ -147,61 +154,8 @@
 
       - if post.class == Instance
         %article.event_front{class: cycle('odd', 'even')}
-          .post
-            .meta
-              %span.date= date_range(post.start_at, post.end_at)
-              = "//"
-              %span
-                = t(:experiment, count: 1)
-                = "##{post.sequence}"
-              = "//"
-          
-            .title= link_to post.name, [post.event, post]
-            - if post.image?
-              .image= image_tag post.image.url(:medium)
-            - elsif post.event.image?
-              %p= image_tag post.event.image.url(:medium)
-            - if post.in_future?
-              - if post.request_registration == true
-                .rsvp
-                  = link_to t(:you_must_register_for_this_event),[post.event, post]
-              - else
-                .rsvp
-                  - if user_signed_in?
-                    - if current_user.rsvpd?(post)
-                      = t :you_are_going
-                    - else
-                      - if post.survey_locked
-                        - if current_user.survey.nil? 
-                          .survey_banner
-                            = link_to t(:must_complete_survey), '/surveys/new'
-                            .smaller
-                              = t(:survey_explanation)
-                              = link_to t(:take_the_survey), '/surveys/new'
-                        - else
-                          = t(:thanks_for_taking_survey)
-                          = t :are_you_going
-                          = link_to t(:rsvp), rsvp_event_instance_path(post.event, post), method: :post, class: [:button]
-                      - else
-                        = t :are_you_going
-                        = link_to t(:rsvp), rsvp_event_instance_path(post.event, post), method: :post, class: [:button]
-                  - else
-                    - if post.survey_locked
-                      .survey_banner
-                        = link_to t(:must_complete_survey), '/surveys/new'
-                        .smaller
-                          = t(:survey_explanation)
-                          = link_to t(:take_the_survey), '/surveys/new'
-                    - else
-                      = t :are_you_going
-                      = link_to t(:rsvp),  [post.event, post], class: [:button]
-                - unless post.rsvps.empty?
-                  .participants
-                    = t(:x_person_has_rsvpd, number: post.rsvps.size, people: t(:person, count: post.rsvps.size) )
-
-            .body
-              = truncate_html post.description, length: 500
-              = link_to t(:read_more), [post.event, post], class: [:button]
+          .post= render partial: 'home/instance', locals: {post: post}
+            
             
       - if post.class == Proposal
         %article.proposal{class: cycle('odd', 'even')}

@@ -1,0 +1,58 @@
+.meta
+  %span.date
+    - if post.survey_locked
+      = l post.start_at, format: :short
+    - else
+      = date_range(post.start_at, post.end_at)
+  = "//"
+  %span
+    = t(:experiment, count: 1)
+    = "##{post.sequence}"
+  = "//"
+
+.title= link_to post.name, [post.event, post]
+- if post.image?
+  .image= image_tag post.image.url(:medium)
+- elsif post.event.image?
+  %p= image_tag post.event.image.url(:medium)
+- if post.in_future?
+  - if post.request_registration == true
+    .rsvp
+      = link_to t(:you_must_register_for_this_experiment),[post.event, post]
+  - else
+    .rsvp
+      - if user_signed_in?
+        - if current_user.rsvpd?(post)
+          = t :you_are_going
+        - else
+          - if post.survey_locked
+            - if current_user.survey.nil? 
+              .survey_banner
+                = link_to t(:must_complete_survey), '/surveys/new'
+                .smaller
+                  = t(:survey_explanation)
+                  = link_to t(:take_the_survey), '/surveys/new'
+            - else
+              = t(:thanks_for_taking_survey)
+              = t :are_you_going
+              = link_to t(:rsvp), rsvp_event_instance_path(post.event, post), method: :post, class: [:button]
+          - else
+            = t :are_you_going
+            = link_to t(:rsvp), rsvp_event_instance_path(post.event, post), method: :post, class: [:button]
+      - else
+        - if post.survey_locked
+          .survey_banner
+            = link_to t(:must_complete_survey), '/surveys/new'
+            .smaller
+              = t(:survey_explanation)
+              = link_to t(:take_the_survey), '/surveys/new'
+        - else
+          = t :are_you_going
+          = link_to t(:rsvp),  [post.event, post], class: [:button]
+    - unless post.rsvps.empty?
+      .participants
+        = t(:x_person_has_rsvpd, number: post.rsvps.size, people: t(:person, count: post.rsvps.size) )
+
+.body
+  = truncate_html post.description, length: 500
+  = link_to t(:read_more), [post.event, post], class: [:button]

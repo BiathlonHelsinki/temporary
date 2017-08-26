@@ -5,7 +5,13 @@
       .row
         .small-12.colums
           .meta
-            %span.date= date_range(@instance.start_at, @instance.end_at)
+            %span.date
+              - if @instance.survey_locked
+                = l @instance.start_at, format: :short
+                = " - "
+                = l @instance.end_at, format: :short
+              - else
+                = date_range(@instance.start_at, @instance.end_at)
             = " // "
             %span.category 
               - if @experiment.instances.size > 1

@@ -7,7 +7,7 @@ class Email < ApplicationRecord
   scope :published, -> () { where('sent_at is not null') }
   
   def feed_date
-    sent_at
+    sent_at.nil? ? updated_at : sent_at
   end
   
 end

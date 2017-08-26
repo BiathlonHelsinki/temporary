@@ -5,19 +5,20 @@ class HomeController < ApplicationController
   def index
     @feed = Post.not_sticky.published.order(published_at: :desc)
     @sticky = Post.sticky.published.order(published_at: :desc)
-    @open_day = Event.friendly.find('open-days').instances.published.current.first rescue nil
-    if @open_day.nil? 
-      @open_day = Event.friendly.find('open-days').instances.published.future.order(:start_at).first
-    end
-    @feed += Instance.published.current.not_open_day.not_cancelled.or(Instance.published.future.not_cancelled.not_open_day).order(:start_at).to_a.delete_if{|x| !x.show_on_website?}
+    # @open_day = Event.friendly.find('open-days').instances.published.current.first rescue nil
+    # if @open_day.nil?
+    #   @open_day = Event.friendly.find('open-days').instances.published.future.order(:start_at).first
+    # end
+
     # @next_other = Event
     # @feed += Proposal.active.order(created_at: :desc).to_a.delete_if{|x| x.scheduled? }
     @feed += Proposal.active.includes([:instances, :pledges]).order(updated_at: :desc).to_a.delete_if{|x| x.has_enough? }
-    announcements =  Email.published.order(sent_at: :desc).limit(2)
+    announcements =  Email.order(sent_at: :desc).limit(2)
     announcements.each do |a|
       a.body = ERB.new(a.body).result(binding).html_safe
       @feed << a
     end
+        @feed += Instance.published.current.not_open_day.not_cancelled.or(Instance.published.future.not_cancelled.not_open_day).order(:start_at).to_a.delete_if{|x| !x.show_on_website?}
     @feed += Comment.frontpage
     @current_rate = Rate.get_current.experiment_cost
     
