@@ -575,3 +575,4 @@ If you suggest an exact date, we will do our best when scheduling to co-exist wi
   you_have_started_the_survey: 'You have started the survey. Please complete it before the closing party!'
   answers_were_saved: 'Your answers have been saved. You can go back to finish up until the party starts.'
   you_can_save_answers: 'You can save your answers at any time to go back later. When you are finished, click SEND COMPLETED SURVEY to finish.'
+  save_answers: 'Save answers to finish later'
