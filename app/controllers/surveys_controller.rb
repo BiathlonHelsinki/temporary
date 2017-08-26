@@ -5,13 +5,13 @@ class SurveysController < ApplicationController
   
   def create
     @survey = Survey.new(survey_params)
-    if params[:commit] != 'save'
+    if params[:commit]
       @survey.completed = true
-    else
+    elsif params[:save]
       @survey.completed = false
     end
     if @survey.save
-      flash[:notice] = t(:thanks_for_survey)
+      flash[:notice] = @survey.completed == true ? t(:thanks_for_survey) : t(:answers_were_saved)
       redirect_to '/'
     end
   end
