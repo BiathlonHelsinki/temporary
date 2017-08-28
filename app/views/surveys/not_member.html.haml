@@ -1,0 +1,12 @@
+%article.survey_form
+  .row.expanded
+    .small-10.medium-9.columns
+      %h1= t(:temporary_closing_survey)
+      
+  .row.expanded
+    .small-10.medium-9.columns
+      %p You must be a member of the Temporary website to complete the survey. Joining is easy, fast and free.
+      
+  .row.expanded
+    .small-10.medium-9.columns
+      = link_to t(:join), '/users/sign_in', class: [:button, :large]
