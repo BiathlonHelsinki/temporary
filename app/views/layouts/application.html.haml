@@ -8,21 +8,24 @@
     %link{:href => "https://fonts.googleapis.com/css?family=Inconsolata|Heebo|Noto+Sans", :rel => "stylesheet"}/
     %meta{property: 'fb:app_id', content: "#{ENV['facebook_app_id']}"}
     - if controller.controller_name == 'surveys'
-      %meta{:content => image_url('closing.jpg'), :property => "og:image"}/
+      %meta{:content => image_url('closing.jpg').gsub(/^http/, 'https'), :property => "og:image"}/
+      %meta{:content => image_url('closing.jpg').gsub(/^http/, 'https'), :property => "og:image:secure_url"}/
       %meta{property: 'og:url', content: 'https://temporary.fi/surveys/'}
       %meta{property: 'og:image:width', content: 1200}
       %meta{property: 'og:image:height', content: 628}
       %meta{:content => "Complete this survey about your experiences with culture in Helsinki and then attend Temporary's closing party, Friday, 1 September 2017.", :property => "og:description"}/
       %meta{:content => "Temporary closing survey", property: "og:title"  }/
     - elsif controller.controller_name == 'instances' && @instance.slug == 'closing-time'
-      %meta{:content => image_url('closing.jpg'), :property => "og:image"}/
+      %meta{:content => image_url('closing.jpg').gsub(/^http/, 'https'), :property => "og:image"}/
+      %meta{:content => image_url('closing.jpg').gsub(/^http/, 'https'), :property => "og:image:secure_url"}/
       %meta{property: 'og:url', content: 'https://temporary.fi/experiments/open-time/closing-time'}
       %meta{property: 'og:image:width', content: 1200}
       %meta{property: 'og:image:height', content: 628}
       %meta{:content => "Temporary closes after one year. Come to the closing party, open to all members of the website who have completed our questionnaire about Temporary and cultural experiences in Helsinki. And help us design the next experiment, for early 2018!", :property => "og:description"}/
       %meta{:content => "Temporary: Closing Time 1.9.2017", property: "og:title"  }/
     - else
-      %meta{:content => "http://temporary.fi/icons/ms-icon-310x310.png", :property => "og:image"}/
+      %meta{:content => "https://temporary.fi/icons/ms-icon-310x310.png", :property => "og:image"}/
+      %meta{:content => "https://temporary.fi/icons/ms-icon-310x310.png", :property => "og:image:secure_url"}/
       %meta{property: 'og:image:width', content: 310}
       %meta{property: 'og:image:height', content: 310}
       %meta{property: 'og:url', content: 'https://temporary.fi/'}
