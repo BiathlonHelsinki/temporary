@@ -1,6 +1,6 @@
 class SurveysController < ApplicationController
   
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:index]
   
   
   def create
@@ -27,7 +27,11 @@ class SurveysController < ApplicationController
   
   
   def index
-    redirect_to new_survey_path
+    if user_signed_in?
+      redirect_to new_survey_path
+    else
+      render template: 'surveys/not_member'
+    end
   end
   
   
