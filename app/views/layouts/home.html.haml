@@ -6,11 +6,13 @@
     %meta{:content => "width=device-width, initial-scale=1.0", :name => "viewport"}/
     = display_meta_tags site: 'Temporary'
     %link{:href => "https://fonts.googleapis.com/css?family=Inconsolata|Heebo|Noto+Sans", :rel => "stylesheet"}/
+    %meta{property: 'fb:app_id', content: "#{ENV['facebook_app_id']}"}
     %meta{:content => "http://temporary.fi/icons/ms-icon-310x310.png", :property => "og:image"}/
     %meta{property: 'og:image:width', content: 310}
     %meta{property: 'og:image:height', content: 310}
-    %meta{:content => "Dear Facebook user, instead of clicking LIKE, why don't you actually visit the Temporary website and create an account and participate there?", :property => "og:description"}/
-    %meta{:content => "Temporary is not on Facebook.", property: "og:title"  }/
+    %meta{property: 'og:url', content: 'https://temporary.fi/'}
+    %meta{:content => "Temporary closes on 1 September 2017. A followup project is planned for 2018 that will continue being a decentralised platform for culture production and open workspace. See the Temporary site for info on how to become part of it.", :property => "og:description"}/
+    %meta{:content => "Temporary did not maintain a centralised Facebook page.", property: "og:title"  }/
     = render partial: 'layouts/favicon'
     = stylesheet_link_tag   "application" 
     = javascript_include_tag "application"
