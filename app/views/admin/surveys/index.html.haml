@@ -13,7 +13,7 @@
         - @surveys.each do |survey|
           %tr
             %td= link_to survey.user.display_name, [:admin, survey]
-            %td= l survey.created_at, format: :short
+            %td= l survey.updated_at, format: :short
             %td
               = survey.completed == true ?  'yes' : 'no'
               -# if can? :destroy, survey  

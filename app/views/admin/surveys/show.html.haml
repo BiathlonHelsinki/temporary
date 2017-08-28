@@ -29,6 +29,10 @@
           = "(#{@survey.user.proposals.size}):"
           = raw @survey.user.proposals.map{ |p|  link_to(p.name, p, target: :_blank) }.join(', ')
       %hr
+      - if @survey.allow_excerpt == true
+        %p YES - is ok to quote anonymously
+      - if @survey.allow_identity == true
+        %p YES - OK to quote by name and be contacted
   .row.expanded
     .small-12.columns      
                     
