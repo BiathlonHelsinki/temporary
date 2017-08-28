@@ -6,11 +6,27 @@
     %meta{:content => "width=device-width, initial-scale=1.0", :name => "viewport"}/
     = display_meta_tags site: 'Temporary'
     %link{:href => "https://fonts.googleapis.com/css?family=Inconsolata|Heebo|Noto+Sans", :rel => "stylesheet"}/
-    %meta{:content => "http://temporary.fi/icons/ms-icon-310x310.png", :property => "og:image"}/
-    %meta{property: 'og:image:width', content: 310}
-    %meta{property: 'og:image:height', content: 310}
-    %meta{:content => "Dear Facebook user, instead of clicking LIKE, why don't you actually visit the Temporary website and create an account and participate there?", :property => "og:description"}/
-    %meta{:content => "Temporary is not on Facebook.", property: "og:title"  }/
+    - if controller.controller_name == 'surveys'
+      %meta{:content => image_url('closing.jpg'), :property => "og:image"}/
+      
+      %meta{property: 'og:image:width', content: 1200}
+      %meta{property: 'og:image:height', content: 628}
+      %meta{:content => "Complete this survey about your experiences with culture in Helsinki and then attend Temporary's closing party, Friday, 1 September 2017.", :property => "og:description"}/
+      %meta{:content => "Temporary closing survey", property: "og:title"  }/
+    - elsif controller.controller_name == 'instances' && @instance.slug == 'closing-time'
+      %meta{:content => image_url('closing.jpg'), :property => "og:image"}/
+      
+      %meta{property: 'og:image:width', content: 1200}
+      %meta{property: 'og:image:height', content: 628}
+      %meta{:content => "Temporary closes after one year. Come to the closing party, open to all members of the website who have completed our questionnaire about Temporary and cultural experiences in Helsinki. And help us design the next experiment, for early 2018!", :property => "og:description"}/
+      %meta{:content => "Temporary: Closing Time", property: "og:title"  }/
+    - else
+      %meta{:content => "http://temporary.fi/icons/ms-icon-310x310.png", :property => "og:image"}/
+      %meta{property: 'og:image:width', content: 310}
+      %meta{property: 'og:image:height', content: 310}
+      %meta{:content => "Temporary closes on 1 September 2017. It is hoped that in in early 2018 a new project can begin which will continue Temporary's decentralised platform for culture production and open workspace. The design and operation of this project is open to everyone; see the website for more information.", :property => "og:description"}/
+      %meta{:content => "Temporary did not maintain a centralised Facebook page.", property: "og:title"  }/
+      
     = render partial: 'layouts/favicon'
     = stylesheet_link_tag   "application" 
     = javascript_include_tag "application"

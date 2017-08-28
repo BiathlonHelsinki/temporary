@@ -1,71 +1,99 @@
-.row.expanded
-  .small-12.columns
-    %h2 
-      Survey from:
-      = link_to @survey.user.display_name, @survey.user, target: :_blank
+.admin_survey
+  .row.expanded
+    .small-12.columns
+      %h2 
+        Survey from:
+        %strong= link_to @survey.user.display_name, @survey.user, target: :_blank
     
-    - if @survey.user.instances.empty?
+  .row.expanded
+    .small-12.columns
+      - unless @survey.user.events.empty?
+        %p 
+          Instigated
+          = "(#{@survey.user.events.size}):"
+          = raw @survey.user.events.map{ |event|  link_to(event.name, event, target: :_blank) + (event.instances.published.size > 1 ? " (" + event.instances.published.size.to_s + " meeting/s)" : '') }.join(', ')
+          
+      - unless @survey.user.instances.empty?
+        %p 
+          Attended
+          = "(#{@survey.user.instances.size}):"
+          = raw @survey.user.instances.uniq(&:name).map{ |event|  link_to(event.name, event_instance_path(event.event, event), target: :_blank) }.join(', ')            
+      %p
+        Temps balance:
+        = @survey.user.latest_balance.to_s
+        = raw tsign
+        
+      - unless @survey.user.proposals.empty?
+        %p 
+          Proposed
+          = "(#{@survey.user.proposals.size}):"
+          = raw @survey.user.proposals.map{ |p|  link_to(p.name, p, target: :_blank) }.join(', ')
+      %hr
+  .row.expanded
+    .small-12.columns      
+                    
+      - if @survey.user.instances.empty?
+        .row.expanded
+          .small-10.medium-9.columns
+            %p= t(:what_could_have_brought_you)
+            %blockquote= simple_format  @survey.never_visited
+        
+        
+      - elsif @survey.user.events.empty?
+        .row.expanded
+          .small-10.medium-9.columns
+            %p= t(:wanted_to_contribute_differently)
+            %blockquote= simple_format  @survey.different_contribution
+          
+      - else
+        .row.expanded
+          .small-10.medium-9.columns
+            %p= t(:why_experiments_at_temporary)
+            %blockquote= simple_format  @survey.experiment_why
+          
+        .row.expanded
+          .small-10.medium-9.columns  
+            %p= t(:offer_other_benefits)
+            %blockquote= simple_format  @survey.platform_benefits
+          
       .row.expanded
         .small-10.medium-9.columns
-          %p= t(:what_could_have_brought_you)
-          %blockquote= simple_format  @survey.never_visited
-        
-        
-    - elsif @survey.user.events.empty?
+          %p= t(:welcoming_concept)
+          %blockquote= simple_format  @survey.welcoming_concept
       .row.expanded
         .small-10.medium-9.columns
-          %p= t(:wanted_to_contribute_differently)
-          %blockquote= simple_format  @survey.different_contribution
-          
-    - else
+          %p= t(:physical_environment)
+          %blockquote= simple_format  @survey.physical_environment
       .row.expanded
         .small-10.medium-9.columns
-          %p= t(:why_experiments_at_temporary)
-          %blockquote= simple_format  @survey.experiment_why
-          
+          %p= t(:website_feedback)
+          %blockquote= simple_format  @survey.website_etc
       .row.expanded
-        .small-10.medium-9.columns  
-          %p= t(:offer_other_benefits)
-          %blockquote= simple_format  @survey.platform_benefits
-          
-    .row.expanded
-      .small-10.medium-9.columns
-        %p= t(:welcoming_concept)
-        %blockquote= simple_format  @survey.welcoming_concept
-    .row.expanded
-      .small-10.medium-9.columns
-        %p= t(:physical_environment)
-        %blockquote= simple_format  @survey.physical_environment
-    .row.expanded
-      .small-10.medium-9.columns
-        %p= t(:website_feedback)
-        %blockquote= simple_format  @survey.website_etc
-    .row.expanded
-      .small-10.medium-9.columns
-        %p= t(:other_helsinki)
-        %blockquote= simple_format  @survey.different_than_others
-    .row.expanded
-      .small-10.medium-9.columns
-        %p= t(:your_space_and_relationship)
-        %blockquote= simple_format  @survey.your_space
-    .row.expanded
-      .small-10.medium-9.columns
-        %p= t(:platform_benefits)
-        %blockquote= simple_format  @survey.features_benefit
-    .row.expanded
-      .small-10.medium-9.columns
-        %p= t(:what_could_be_better)
-        %blockquote= simple_format  @survey.improvements
-    .row.expanded
-      .small-10.medium-9.columns
+        .small-10.medium-9.columns
+          %p= t(:other_helsinki)
+          %blockquote= simple_format  @survey.different_than_others
+      .row.expanded
+        .small-10.medium-9.columns
+          %p= t(:your_space_and_relationship)
+          %blockquote= simple_format  @survey.your_space
+      .row.expanded
+        .small-10.medium-9.columns
+          %p= t(:platform_benefits)
+          %blockquote= simple_format  @survey.features_benefit
+      .row.expanded
+        .small-10.medium-9.columns
+          %p= t(:what_could_be_better)
+          %blockquote= simple_format  @survey.improvements
+      .row.expanded
+        .small-10.medium-9.columns
         
-        %p= t(:what_the_mission_was)
-        %p= t(:mission_clear)
-        %blockquote= simple_format  @survey.clear_structure
-    .row.expanded
-      .small-10.medium-9.columns
-        %p= t(:want_from_culture)
-        %blockquote= simple_format  @survey.want_from_culture  
+          %p= t(:what_the_mission_was)
+          %p= t(:mission_clear)
+          %blockquote= simple_format  @survey.clear_structure
+      .row.expanded
+        .small-10.medium-9.columns
+          %p= t(:want_from_culture)
+          %blockquote= simple_format  @survey.want_from_culture  
         
-.row.expanded
-  .small-12.columns= link_to "<--- back to surveys", admin_surveys_path, class: [:button]
+  .row.expanded
+    .small-12.columns= link_to "<--- back to surveys", admin_surveys_path, class: [:button]

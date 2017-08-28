@@ -22,6 +22,7 @@ class SurveysController < ApplicationController
     else
       @survey = current_user.survey
     end
+    set_meta_tags title: 'Temporary closing survey'
   end
   
   

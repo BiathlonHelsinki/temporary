@@ -7,14 +7,15 @@
     %table
       %thead
         %th User
-        %th Date completed
-        %th
+        %th Last edited
+        %th Completed?
       %tbody
         - @surveys.each do |survey|
           %tr
             %td= link_to survey.user.display_name, [:admin, survey]
-            %td= l survey.created_at
+            %td= l survey.created_at, format: :short
             %td
+              = survey.completed == true ?  'yes' : 'no'
               -# if can? :destroy, survey  
               -# = link_to 'Delete', [:admin, survey], method: :delete, class: [:button, :alert, :small], data: {confirm: 'Are you sure?'}
           
