@@ -10,7 +10,7 @@
         %th Last edited
         %th Completed?
       %tbody
-        - @surveys.sort_by{|x| x.user.display_name.downcase }.each do |survey|
+        - @surveys.each do |survey|
           %tr
             %td= link_to survey.user.display_name, [:admin, survey]
             %td= l survey.updated_at, format: :short
