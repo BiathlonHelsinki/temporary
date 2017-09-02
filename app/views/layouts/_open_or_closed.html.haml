@@ -1,9 +1,15 @@
-- if @temporary_is_open == true
-  .open_or_closed
-    %strong= t :is_currently_open
+-#- if @temporary_is_open == true
+-#  .open_or_closed
+-#    %strong= t :is_currently_open
+-#
+-#- else
+-#  .open_or_closed.closed
+-#    %strong= t :is_not_currently_open
+-#    %br/
+-#    %small= link_to "(#{t :when_is_temporary_open})", '/pages/when-is-temporary-open'
 
-- else
-  .open_or_closed.closed
-    %strong= t :is_not_currently_open
-    %br/
-    %small= link_to "(#{t :when_is_temporary_open})", '/pages/when-is-temporary-open'
+.open_or_closed
+  .closed= t(:temporary_one_year)
+  .next
+    =  t(:temporary_the_future)
+    = link_to t(:become_part_of_it), '/announcements/it-was-called-temporary-for-a-reason'

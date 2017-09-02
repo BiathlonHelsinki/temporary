@@ -10,10 +10,21 @@ header {
     float: left;
   }
   .open_or_closed {
+    color: #000;
     float: left;
-    font-size: 3.7rem;
-    font-weight: bold;
-    line-height: 1;
+    .closed {
+      font-size: 1.7rem;
+      font-weight: bold;
+      line-height: 1;
+    }
+    .next {
+      
+      a {
+        text-decoration: underline;
+        color: $blue;
+
+      }
+    }
     padding-left: 1.2rem;
     padding-top: 0.8rem;
     font-family: $inconsolata;

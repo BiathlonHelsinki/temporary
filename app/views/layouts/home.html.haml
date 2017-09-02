@@ -43,12 +43,7 @@
           .alert.text-center{ :class => "alert-#{key}" }
             %strong= raw value
       %header.home= yield :header
-      %section.closing_banner
-        .row.expanded
-          .small-12.columns.text-center
-            %h3
-              = t(:temporary_ends_1_september)
-              = link_to t(:more_info),  '/announcements/it-was-called-temporary-for-a-reason'
+
       - if controller.controller_name != 'surveys'
         - unless user_signed_in? && !current_user.survey.nil?
           %section.survey_top_banner

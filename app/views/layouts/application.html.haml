@@ -49,45 +49,41 @@
         .title-bar{"data-hide-for" => "medium", "data-responsive-toggle" => "nav-menu"}
           %a.logo-small.show-for-small-only{:href => "#"}
             = image_tag(image_path('temporary_logo.png'))
-            = render partial: 'layouts/open_or_closed'
-            .top-bar-left.lang
-              - if I18n.locale.to_s != 'fi'
-                = link_to 'FIN', :controller => controller.controller_name, :action => controller.action_name, :id => params[:id], :locale => 'fi'
-              - else
-                %strong FIN
-              |
-              
-              - if I18n.locale.to_s != 'en'
-                = link_to 'ENG', :controller => controller.controller_name, :action => controller.action_name, :id => params[:id], :locale => 'en'
-              - else
-                %strong ENG
+          = render partial: 'layouts/open_or_closed'
+          .top-bar-left.lang
+            - if I18n.locale.to_s != 'fi'
+              = link_to 'FIN', :controller => controller.controller_name, :action => controller.action_name, :id => params[:id], :locale => 'fi'
+            - else
+              %strong FIN
+            |
+            
+            - if I18n.locale.to_s != 'en'
+              = link_to 'ENG', :controller => controller.controller_name, :action => controller.action_name, :id => params[:id], :locale => 'en'
+            - else
+              %strong ENG
            
           %button.menu-icon{"data-toggle" => "", :type => "button"}
           .title-bar-title
         / Medium-Up Navigation
         %nav#nav-menu.top-bar
+          .top-bar-right.lang
+            - if I18n.locale.to_s != 'fi'
+              = link_to 'FIN', :controller => controller.controller_name, :action => controller.action_name, :id => params[:id], :locale => 'fi'
+            - else
+              %strong FIN
+            |
+            
+            - if I18n.locale.to_s != 'en'
+              = link_to 'ENG', :controller => controller.controller_name, :action => controller.action_name, :id => params[:id], :locale => 'en'
+            - else
+              %strong ENG
           .row.expanded.logo.hide-for-small-only
             = link_to image_tag(image_path('temporary_logo.png')), '/', class: :logo
             = render partial: 'layouts/open_or_closed'
-            .top-bar-right.lang
-              - if I18n.locale.to_s != 'fi'
-                = link_to 'FIN', :controller => controller.controller_name, :action => controller.action_name, :id => params[:id], :locale => 'fi'
-              - else
-                %strong FIN
-              |
-              
-              - if I18n.locale.to_s != 'en'
-                = link_to 'ENG', :controller => controller.controller_name, :action => controller.action_name, :id => params[:id], :locale => 'en'
-              - else
-                %strong ENG
+
           / Left Nav Section
           = render partial: 'layouts/top_bar'
-      %section.closing_banner
-        .row.expanded
-          .small-12.columns.text-center
-            %h3
-              = t(:temporary_ends_1_september)
-              = link_to t(:more_info), '/announcements/it-was-called-temporary-for-a-reason'
+
       - if user_signed_in? && controller.controller_name != 'surveys'
         - if current_user.survey.nil?
           %section.survey_top_banner
