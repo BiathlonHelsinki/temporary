@@ -654,7 +654,7 @@ fi:
     one: 'tuki'
     other: 'tukea'
   number_currently_pledged: "%{number} lahjoitettu"
-  thanks_for_survey: 'Thank you for completing Temporary\''s survey. You are now invited to the Closing Time party on 1 September.'
+  thanks_for_survey: 'Thank you for completing Temporary\''s survey. '
   thanks_for_survey_after_september: 'Thank you for completing Temporary\''s survey. Your feedback is very important.'
   temporary_closing_survey: 'Temporary Closing Survey'
   temporary_survey_explanation_future: 'Temporary will close its doors on 2 September 2017, making the entire experiment exactly one year in length. But this is only a beginning, not the end. The next experiment will be collectively designed by a larger working group and will hopefully launch in January 2018.'
