@@ -841,6 +841,7 @@ form.pledge, form {
     max-width: 15%;
   }
   #comment_input {
+    overflow-y: scroll;
     background-color: $grey;
     white-space: pre-wrap;
     height: 250px; 
