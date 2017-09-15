@@ -50,11 +50,12 @@
             .row.expanded
               .small-12.columns.small-centered.text-center
                 %h4= link_to t(:please_take_our_survey), '/surveys'
-        - if user_signed_in? && !current_user.survey.completed 
-          %section.survey_top_banner
-            .row.expanded
-              .small-12.columns.small-centered.text-center
-                %h4= link_to t(:you_have_started_the_survey), '/surveys'
+        - if user_signed_in? && !current_user.survey.nil?
+          - !if current_user.survey.completed 
+            %section.survey_top_banner
+              .row.expanded
+                .small-12.columns.small-centered.text-center
+                  %h4= link_to t(:you_have_started_the_survey), '/surveys'
       %section.main_container= yield 
       %footer= render partial: 'layouts/footer'
       :javascript
