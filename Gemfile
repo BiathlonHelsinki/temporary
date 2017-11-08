@@ -57,7 +57,7 @@ gem 'ckeditor', github: 'galetahub/ckeditor'
 gem 'country_select'
 gem 'delayed_job_active_record'
 gem 'devise'
-gem 'doorkeeper'
+
 gem 'figaro'
 gem 'font-awesome-rails', '4.6.3.0'
 gem 'friendly_id', '~> 5.1.0'
