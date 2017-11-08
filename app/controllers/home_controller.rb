@@ -1,10 +1,10 @@
 class HomeController < ApplicationController
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
-  
+
   def index
-    @feed = Post.not_sticky.published.order(published_at: :desc)
-    @sticky = Post.sticky.published.order(published_at: :desc)
+    @feed = Post.not_sticky.published.by_era(1).order(published_at: :desc)
+    @sticky = Post.sticky.published.by_era(1).order(published_at: :desc)
     # @open_day = Event.friendly.find('open-days').instances.published.current.first rescue nil
     # if @open_day.nil?
     #   @open_day = Event.friendly.find('open-days').instances.published.future.order(:start_at).first
@@ -21,7 +21,7 @@ class HomeController < ApplicationController
         @feed += Instance.published.current.not_open_day.not_cancelled.or(Instance.published.future.not_cancelled.not_open_day).order(:start_at).to_a.delete_if{|x| !x.show_on_website?}
     @feed += Comment.frontpage
     @current_rate = Rate.get_current.experiment_cost
-    
+
     cal = Event.where(nil)
     cal = Event.published.between(params['start'], params['end']) if (params['start'] && params['end'])
     @calendar = []
@@ -31,5 +31,5 @@ class HomeController < ApplicationController
     @calendar.flatten!
     @feed.sort_by!(&:feed_date).reverse!
   end
-  
+
 end

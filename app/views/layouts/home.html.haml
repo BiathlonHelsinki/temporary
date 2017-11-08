@@ -44,18 +44,17 @@
             %strong= raw value
       %header.home= yield :header
 
-      - if controller.controller_name != 'surveys'
-        - unless user_signed_in? && !current_user.survey.nil?
+      - if user_signed_in? && controller.controller_name != 'surveys'
+        - if current_user.survey.nil?
           %section.survey_top_banner
             .row.expanded
               .small-12.columns.small-centered.text-center
-                %h4= link_to t(:please_take_our_survey), '/surveys'
-        - if user_signed_in? && !current_user.survey.nil?
-          - !if current_user.survey.completed 
-            %section.survey_top_banner
-              .row.expanded
-                .small-12.columns.small-centered.text-center
-                  %h4= link_to t(:you_have_started_the_survey), '/surveys'
+                %h4= link_to t(:please_take_our_survey), '/surveys/new'
+        - elsif !current_user.survey.completed 
+          %section.survey_top_banner
+            .row.expanded
+              .small-12.columns.small-centered.text-center
+                %h4= link_to t(:you_have_started_the_survey), '/surveys/new' 
       %section.main_container= yield 
       %footer= render partial: 'layouts/footer'
       :javascript

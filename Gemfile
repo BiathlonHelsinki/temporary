@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.3.3'
+ruby '2.4.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '5.0.3'
@@ -57,6 +57,7 @@ gem 'ckeditor', github: 'galetahub/ckeditor'
 gem 'country_select'
 gem 'delayed_job_active_record'
 gem 'devise'
+gem 'doorkeeper'
 gem 'figaro'
 gem 'font-awesome-rails', '4.6.3.0'
 gem 'friendly_id', '~> 5.1.0'

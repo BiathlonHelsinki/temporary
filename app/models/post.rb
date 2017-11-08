@@ -11,12 +11,34 @@ class Post < ApplicationRecord
   scope :published, -> () { where(published: true) }
   scope :sticky, -> () { where(sticky: true) }
   scope :not_sticky, -> () { where("sticky is not true") }
+  scope :by_era, ->(era_id) { where(era_id: era_id)}
   belongs_to :postcategory
-    
+
+  def all_comments
+    comments + comments.map(&:all_comments)
+  end
+
+  def total_comment_count
+    all_comments.flatten.uniq.size
+  end
+
+  def name
+    title
+  end
+
+  def root_comment
+    self
+  end
+
+  def discussion
+    comments
+  end
+
+
   def title_en
     self.title(:en)
   end
-  
+
   def category_text
     'news'
   end
@@ -25,7 +47,7 @@ class Post < ApplicationRecord
       self.published_at ||= Time.now
     end
   end
-  
+
   def feed_date
     published_at
   end
@@ -39,11 +61,11 @@ class Post < ApplicationRecord
       end
     end
   end
-  
+
   private
-  
+
   def should_generate_new_friendly_id?
     changed?
   end
-  
+
 end

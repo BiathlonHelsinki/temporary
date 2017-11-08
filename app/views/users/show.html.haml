@@ -18,7 +18,7 @@
     .small-10.medium-4.columns
       - if @user.avatar?
         = image_tag @user.avatar.url(:medium)
-        
+
       -else
         = image_tag 'user_missing_large.png'
     .small-10.medium-8.columns
@@ -60,7 +60,7 @@
                   %table
                     %thead
                       %th= t :address
-                      %th 
+                      %th
                       %th= t :created
                       %th= t :last_used
                     %tbody
@@ -84,14 +84,14 @@
         = @user.userphotoslots.size
         - unless @user.userphotoslots.empty.empty?
           = t(:x_unused, count: @user.userphotoslots.empty.size)
-      
+
       - if user_signed_in?
         - if current_user.has_role? :admin
           %br/
           .ethereum
             %strong= t :email
             = @user.email
-            %br/ 
+            %br/
             %br/
             %strong= t :authentications
             - @user.authentications.each do |auth|
@@ -105,7 +105,7 @@
         %ul
           - Event.where(primary_sponsor: @user).order(:id).each do |exp|
             %li= link_to exp.name, exp
-            
+
       - if @user.proposals.empty?
         %em= t :no_proposals_made
       - else
@@ -115,7 +115,7 @@
         %ul
           - @user.proposals.order(created_at: :desc).each do |proposal|
             %li= link_to proposal.name, proposal
-            
+
     .small-10.medium-8.large-4.columns
       - if @user.pledges.empty?
         %em= t :no_pledges_made
@@ -132,7 +132,7 @@
                   %li
                     = link_to pledge.first.name, pledge.first
                     = raw "(#{pledge.last.sum(&:pledge).to_s}#{tsign})"
-                    
+
     .small-10.medium-8.large-4.columns
       - if @user.comments.empty?
         %em= t :no_comments
@@ -149,7 +149,7 @@
                 ="'"
                 = truncate_html sanitize(comment.content, tags: %w{strong b bold italic em u}), length: 80
                 = "'"
-              
+
   - unless @user.all_activities.empty?
     .row.expanded
       .small-12.columns
@@ -182,13 +182,13 @@
               %td
           %tbody.page
             = render @user.all_activities.sort_by(&:created_at).reverse
-      
+
 
     .row.expanded
       .small-5.columns.right.end
         - total = 0
         = fa_icon 'plus'
-        - plus = @user.all_activities.select{|x| x.addition == 1}.sum{|x| x.value.to_i} 
+        - plus = @user.all_activities.select{|x| x.addition == 1}.sum{|x| x.value.to_i}
         - total += plus
         = t(:number_earned, number: plus)
 
@@ -211,12 +211,12 @@
         = t(:number_transferred_to, number: minus2)
 
         %hr/
-        
+
         = fa_icon 'smile-o'
         - pending =  @user.pending_pledges.sum(&:pledge)
         = t(:number_pledged, number: pending)
 
-        
+
         %hr
         %strong= t :totals
         %br/
@@ -228,7 +228,7 @@
         %br/
         %strong
           %u= raw(t(:number_available, number: total - pending))
-        
+
 
 = content_for :jquery do
   :plain

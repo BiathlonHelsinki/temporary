@@ -1,7 +1,7 @@
 class Activity < ApplicationRecord
   include PgSearch
   pg_search_scope :search_activity_feed, :against => [:description], associated_against: {user: [:name, :username], ethtransaction: :txaddress }
-  
+
   include Rails.application.routes.url_helpers
 
   belongs_to :user
@@ -12,14 +12,22 @@ class Activity < ApplicationRecord
   belongs_to :onetimer
   has_one :instances_user
   validates_presence_of :item_id, :item_type
-  
+
   scope :by_user, ->(user_id) { where(user_id: user_id) }
-  
+
   def linked_name
 
     case item.class.to_s
+    when 'Meeting'
+      "<a href='http://experiment2.biathlon.io/meetings/#{item.slug}' target='_blank'>#{item.name}</a>"
     when 'Credit'
       item.name
+    when 'Comment'
+      if item.root_comment.era_id == 1
+        "<a href='/posts/#{item.root_comment.slug}'>#{item.root_comment.name}</a>"
+      elsif item.root_comment.era_id == 2
+        "<a href='http://experiment2.biathlon.io/posts/#{item.root_comment.slug}' target='_blank'>#{item.root_comment.name}</a>"
+      end
     when 'Pledge'
       if item.item.class == Proposal
         "<a href='/proposals/#{item.item.id}'>#{item.item.name}</a>"
@@ -44,7 +52,7 @@ class Activity < ApplicationRecord
           I18n.t(:used_on_event, instance: "<a href='/events/#{item.userphoto.instance.event.slug}/#{item.userphoto.instance.slug}'>#{item.userphoto.instance.name}</a>" )
         end
       end
-    when 'Roombooking' 
+    when 'Roombooking'
       "<a href='/roombookings/'>#{item.day.strftime('%-d %B %Y')}</a> " + extra_info.to_s || ''
     when 'User'
       if value
@@ -62,7 +70,11 @@ class Activity < ApplicationRecord
     when 'Nfc'
       "an ID card"
     when 'Post'
-      "<a href='/posts/#{item.slug}'>by the #{ENV['currency_symbol']}empsBot</a>"
+      if item.era_id == 1
+        "<a href='/posts/#{item.slug}'>by the #{ENV['currency_symbol']}empsBot</a>"
+      else
+        "<a href='http://experiment2.biathlon.io/posts/#{item.root_comment.slug}' target='_blank'>#{item.root_comment.name}</a>"
+      end
     when 'Event'
       "<a href='/experiments/#{item.slug}'>#{item.name}</a>"
     end
@@ -109,10 +121,10 @@ class Activity < ApplicationRecord
     elsif item.class == Event
        "#{usertext} #{description}"
     else
-      "#{usertext} #{description} <a href='/events/#{item.event.slug}/#{item.slug}'>#{item.name}</a> and received #{item.cost_bb}#{ENV['currency_symbol']}"    
+      "#{usertext} #{description} <a href='/events/#{item.event.slug}/#{item.slug}'>#{item.name}</a> and received #{item.cost_bb}#{ENV['currency_symbol']}"
     end
   end
-  
+
   def value
     if item.class == Pledge
       item.pledge.to_i
@@ -125,7 +137,7 @@ class Activity < ApplicationRecord
     else
       nil
     end
-      
+
   end
-  
+
 end

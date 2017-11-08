@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170812082656) do
+ActiveRecord::Schema.define(version: 20171107154608) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -180,6 +180,13 @@ ActiveRecord::Schema.define(version: 20170812082656) do
     t.integer  "sent_number"
   end
 
+  create_table "eras", id: :bigserial, force: :cascade do |t|
+    t.string   "name"
+    t.boolean  "active",     default: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
   create_table "ethtransactions", force: :cascade do |t|
     t.integer  "transaction_type_id",                                null: false
     t.string   "txaddress",               limit: 66,                 null: false
@@ -233,6 +240,7 @@ ActiveRecord::Schema.define(version: 20170812082656) do
     t.string   "sequence"
     t.integer  "proposal_id"
     t.boolean  "collapse_in_website",  default: false, null: false
+    t.boolean  "stopped"
     t.index ["place_id"], name: "index_events_on_place_id", using: :btree
   end
 
@@ -335,6 +343,7 @@ ActiveRecord::Schema.define(version: 20170812082656) do
     t.integer  "max_attendees"
     t.boolean  "registration_open",      default: true,  null: false
     t.boolean  "cancelled",              default: false, null: false
+    t.boolean  "survey_locked"
     t.index ["event_id"], name: "index_instances_on_event_id", using: :btree
     t.index ["place_id"], name: "index_instances_on_place_id", using: :btree
     t.index ["proposal_id"], name: "index_instances_on_proposal_id", using: :btree
@@ -358,6 +367,36 @@ ActiveRecord::Schema.define(version: 20170812082656) do
     t.datetime "updated_at",  null: false
     t.index ["activity_id"], name: "index_instances_users_on_activity_id", using: :btree
     t.index ["user_id", "instance_id", "visit_date"], name: "index_instances_users_on_user_id_and_instance_id_and_visit_date", unique: true, using: :btree
+  end
+
+  create_table "meeting_translations", id: :bigserial, force: :cascade do |t|
+    t.integer  "meeting_id",  null: false
+    t.string   "locale",      null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.string   "name"
+    t.text     "description"
+    t.index ["locale"], name: "index_meeting_translations_on_locale", using: :btree
+    t.index ["meeting_id"], name: "index_meeting_translations_on_meeting_id", using: :btree
+  end
+
+  create_table "meetings", id: :bigserial, force: :cascade do |t|
+    t.bigint   "place_id"
+    t.datetime "start_at"
+    t.datetime "end_at"
+    t.bigint   "era_id"
+    t.string   "image"
+    t.string   "image_content_type"
+    t.integer  "image_size"
+    t.integer  "image_width"
+    t.integer  "image_height"
+    t.string   "slug"
+    t.boolean  "published"
+    t.boolean  "cancelled"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.index ["era_id"], name: "index_meetings_on_era_id", using: :btree
+    t.index ["place_id"], name: "index_meetings_on_place_id", using: :btree
   end
 
   create_table "nfcs", force: :cascade do |t|
@@ -385,13 +424,51 @@ ActiveRecord::Schema.define(version: 20170812082656) do
     t.string   "item_type"
     t.integer  "item_id"
     t.integer  "user_id"
-    t.boolean  "pledges",    default: false, null: false
-    t.boolean  "comments",   default: true,  null: false
-    t.boolean  "scheduling", default: true,  null: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.boolean  "pledges"
+    t.boolean  "comments"
+    t.boolean  "scheduling"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["item_type", "item_id"], name: "index_notifications_on_item_type_and_item_id", using: :btree
     t.index ["user_id"], name: "index_notifications_on_user_id", using: :btree
+  end
+
+  create_table "oauth_access_grants", force: :cascade do |t|
+    t.integer  "resource_owner_id", null: false
+    t.integer  "application_id",    null: false
+    t.string   "token",             null: false
+    t.integer  "expires_in",        null: false
+    t.text     "redirect_uri",      null: false
+    t.datetime "created_at",        null: false
+    t.datetime "revoked_at"
+    t.string   "scopes"
+    t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true, using: :btree
+  end
+
+  create_table "oauth_access_tokens", force: :cascade do |t|
+    t.integer  "resource_owner_id"
+    t.integer  "application_id"
+    t.string   "token",                               null: false
+    t.string   "refresh_token"
+    t.integer  "expires_in"
+    t.datetime "revoked_at"
+    t.datetime "created_at",                          null: false
+    t.string   "scopes"
+    t.string   "previous_refresh_token", default: "", null: false
+    t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true, using: :btree
+    t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id", using: :btree
+    t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true, using: :btree
+  end
+
+  create_table "oauth_applications", force: :cascade do |t|
+    t.string   "name",                      null: false
+    t.string   "uid",                       null: false
+    t.string   "secret",                    null: false
+    t.text     "redirect_uri",              null: false
+    t.string   "scopes",       default: "", null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
   end
 
   create_table "onetimers", force: :cascade do |t|
@@ -529,6 +606,8 @@ ActiveRecord::Schema.define(version: 20170812082656) do
     t.boolean  "sticky"
     t.integer  "instance_id"
     t.integer  "postcategory_id"
+    t.integer  "era_id"
+    t.integer  "meeting_id"
     t.index ["user_id"], name: "index_posts_on_user_id", using: :btree
   end
 
@@ -635,11 +714,12 @@ ActiveRecord::Schema.define(version: 20170812082656) do
   end
 
   create_table "rsvps", force: :cascade do |t|
-    t.integer  "instance_id", null: false
+    t.integer  "instance_id"
     t.integer  "user_id",     null: false
     t.text     "comment"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "meeting_id"
     t.index ["instance_id", "user_id"], name: "index_rsvps_on_instance_id_and_user_id", unique: true, using: :btree
     t.index ["instance_id"], name: "index_rsvps_on_instance_id", using: :btree
     t.index ["user_id"], name: "index_rsvps_on_user_id", using: :btree
@@ -649,6 +729,29 @@ ActiveRecord::Schema.define(version: 20170812082656) do
     t.hstore   "options"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "surveys", force: :cascade do |t|
+    t.integer  "user_id"
+    t.text     "never_visited"
+    t.text     "experiment_why"
+    t.text     "platform_benefits"
+    t.text     "different_contribution"
+    t.text     "welcoming_concept"
+    t.text     "physical_environment"
+    t.text     "website_etc"
+    t.text     "different_than_others"
+    t.text     "your_space"
+    t.boolean  "allow_excerpt"
+    t.boolean  "allow_identity"
+    t.boolean  "completed"
+    t.text     "features_benefit"
+    t.text     "improvements"
+    t.text     "clear_structure"
+    t.text     "want_from_culture"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.index ["user_id"], name: "index_surveys_on_user_id", using: :btree
   end
 
   create_table "transaction_types", force: :cascade do |t|
@@ -752,6 +855,17 @@ ActiveRecord::Schema.define(version: 20170812082656) do
     t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id", using: :btree
   end
 
+  create_table "userthoughts", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "user_id"
+    t.text     "thoughts"
+    t.integer  "karma"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["instance_id"], name: "index_userthoughts_on_instance_id", using: :btree
+    t.index ["user_id"], name: "index_userthoughts_on_user_id", using: :btree
+  end
+
   add_foreign_key "accounts", "users"
   add_foreign_key "activities", "ethtransactions"
   add_foreign_key "authentications", "users"
@@ -768,8 +882,12 @@ ActiveRecord::Schema.define(version: 20170812082656) do
   add_foreign_key "instances", "events"
   add_foreign_key "instances", "places"
   add_foreign_key "instances_organisers", "instances"
+  add_foreign_key "meetings", "eras"
+  add_foreign_key "meetings", "places"
   add_foreign_key "nfcs", "users"
   add_foreign_key "notifications", "users"
+  add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
+  add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "onetimers", "users"
   add_foreign_key "opensessions", "nodes"
   add_foreign_key "pledges", "users"
@@ -783,6 +901,7 @@ ActiveRecord::Schema.define(version: 20170812082656) do
   add_foreign_key "roombookings", "users"
   add_foreign_key "rsvps", "instances"
   add_foreign_key "rsvps", "users"
+  add_foreign_key "surveys", "users"
   add_foreign_key "userlinks", "instances"
   add_foreign_key "userlinks", "users"
   add_foreign_key "userphotos", "instances"
@@ -791,4 +910,6 @@ ActiveRecord::Schema.define(version: 20170812082656) do
   add_foreign_key "userphotoslots", "ethtransactions"
   add_foreign_key "userphotoslots", "userphotos"
   add_foreign_key "userphotoslots", "users"
+  add_foreign_key "userthoughts", "instances"
+  add_foreign_key "userthoughts", "users"
 end

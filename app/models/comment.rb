@@ -14,7 +14,7 @@ class Comment < ApplicationRecord
     end
   }
   scope :frontpage, -> () { where(frontpage: true) }
-  
+
   def update_activity_feed
     Activity.create(user: user, item: self.item, description: "commented_on",  addition: 0)
     matches = content.scan(/rel=\"\/users\/(\d*)\"/)
@@ -27,24 +27,44 @@ class Comment < ApplicationRecord
       end
     end
   end
+
+  def all_comments
+    comments + comments.map(&:all_comments)
+  end
+
+  def discussion
+    comments
+  end
   
+  def name
+    root_comment.name
+  end
+
+  def root_comment
+    if item.class == Comment
+      item.root_comment
+    else
+      item
+    end
+  end
+
   def feed_date
     created_at
   end
-  
+
   def title
     item.name
   end
-  
+
   def body
     content_linked
   end
-  
+
   def content_linked
     content.gsub(/href="#"/, '').gsub(/\srel="/, ' href="')
     # content.gsub(/href="(.*)#"/, '').gsub(/\srel="/, ' href="')
   end
-  
+
   def update_image_attributes
     if image.present? && image_changed?
       if image.file.exists?
@@ -54,7 +74,7 @@ class Comment < ApplicationRecord
       end
     end
   end
-  
+
   def update_attachment_attributes
     if attachment.present? && attachment_changed?
       if attachment.file.exists?
@@ -64,5 +84,5 @@ class Comment < ApplicationRecord
     end
   end
 
-  
+
 end

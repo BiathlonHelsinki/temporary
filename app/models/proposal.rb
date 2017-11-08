@@ -234,7 +234,7 @@ class Proposal < ApplicationRecord
   
   def needed_for_next
     if is_month_long == true
-      20 * Time.days_in_month(instances.published.order(:start_at).last.end_at.month + 1, instances.published.order(:start_at).last.end_at.month == 12 ? instances.published.order(:start_at).last.end_at.year + 1 : instances.published.order(:start_at).last.end_at.year)
+      20 * Time.days_in_month(instances.published.order(:start_at).last.end_at.month + 1, instances.published.order(:start_at).last.end_at.month == 12 ? instances.published.order(:start_at).last.end_at.year + 1 : instances.published.order(:start_at).last.end_at.year) rescue 600
     else
       rate = Rate.get_current.experiment_cost
       if recurs?
