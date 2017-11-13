@@ -26,7 +26,7 @@ class Activity < ApplicationRecord
       if item.root_comment.era_id == 1
         "<a href='/posts/#{item.root_comment.slug}'>#{item.root_comment.name}</a>"
       elsif item.root_comment.era_id == 2
-        "<a href='http://experiment2.biathlon.io/posts/#{item.root_comment.slug}' target='_blank'>#{item.root_comment.name}</a>"
+        "<a href='http://experiment2.biathlon.io/#{item.root_comment.class.to_s.tableize}/#{item.root_comment.slug}' target='_blank'>#{item.root_comment.name}</a>"
       end
     when 'Pledge'
       if item.item.class == Proposal
