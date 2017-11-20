@@ -9,7 +9,7 @@
           - if activity.onetimer.user.nil?
             = activity.onetimer.inspect
           - else
-          
+
             = link_to activity.onetimer.user.display_name, activity.onetimer.user, target: :_blank
         - else
           anonymous person
@@ -29,6 +29,9 @@
         - if activity.extra.class == Instance
           = t activity.extra_info.to_sym
           = link_to activity.extra.name, event_instance_path(activity.extra.event, activity.extra)
+        - elsif activity.extra.class == Group
+          - unless activity.description == 'privately_left_the_group'
+            %small= "(#{t(:reason)}: '#{activity.extra_info}')"
       - if activity.extra_type == 'Userphoto' && activity.item.class == User
         = raw t(:in_appreciation_for_a_photo, instance: link_to(activity.extra.instance.name, event_instance_path(activity.extra.instance.event, activity.extra.instance)))
     %td.temps
@@ -36,7 +39,7 @@
         - if activity.addition == 1
           = fa_icon('plus')
         - if activity.addition == 0
-          - if activity.description =~ /received/ 
+          - if activity.description =~ /received/
             = fa_icon('arrows-h')
           - if activity.description =~ /pledged/
             = fa_icon('smile-o')
@@ -50,7 +53,7 @@
     %td
       - if activity.ethtransaction
         = link_to activity.ethtransaction.txaddress[0..5] + "...", "https://#{Rails.env.development? ? 'ropsten.' : ''}etherscan.io/tx/#{activity.ethtransaction.txaddress}", target: :_blank
-      
+
         - if activity.ethtransaction.confirmed != true
           - if activity.ethtransaction.created_at < 1.hour.ago
             %span.error= fa_icon 'warning'
@@ -68,4 +71,3 @@
               = link_to image_tag(activity.extra.image.url(:thumb)), event_instance_path(activity.item.event, activity.item)
             - elsif activity.extra.class == Userphoto
               = link_to(image_tag(activity.extra.image.url(:thumb)), event_instance_path(activity.extra.instance.event, activity.extra.instance))
-              

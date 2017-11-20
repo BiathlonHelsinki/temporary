@@ -22,6 +22,8 @@ class Activity < ApplicationRecord
       "<a href='http://experiment2.biathlon.io/meetings/#{item.slug}' target='_blank'>#{item.name}</a>"
     when 'Credit'
       item.name
+    when 'Group'
+      "<a href='http://experiment2.biathlon.io/groups/#{item.slug}' target='_blank'>#{item.display_name}</a>"
     when 'Comment'
       if item.root_comment.era_id == 1
         "<a href='/posts/#{item.root_comment.slug}'>#{item.root_comment.name}</a>"
@@ -43,6 +45,10 @@ class Activity < ApplicationRecord
     when 'NilClass'
       if item_type == 'Nfc'
         'erased an ID card'
+      elsif item_type == 'Member'
+        if extra.class == Group
+          "<a href='http://experiment2.biathlon.io/groups/#{extra.slug}' target='_blank'>#{extra.long_name}</a>"
+        end
       else
         item_type.constantize.with_deleted.find(item_id).name
       end

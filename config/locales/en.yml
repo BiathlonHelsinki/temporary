@@ -36,7 +36,7 @@ en:
       same_day_no_time: "%{from_day} %{from_month} %{year}"
       different_months_same_year: "%{from_day} %{from_month} %{sep} %{until_day} %{until_month} %{year}"
       different_years: "%{from_day} %{from_month} %{from_year} %{sep} %{until_day} %{until_month} %{until_year}"
-      same_month: "%{from_day} %{sep} %{until_day} %{month} %{year}"  
+      same_month: "%{from_day} %{sep} %{until_day} %{month} %{year}"
       same_month_no_time: "%{from_day} %{sep} %{until_day} %{month} %{year}"
   what_do_you_think_about_this: 'What do you think about this?'
   discussion: 'Discussion:'
@@ -210,7 +210,7 @@ en:
   cancel_rsvp: 'Cancel RSVP'
   confirm_cancel_rsvp: 'Are you sure you want to cancel your RSVP?'
   when_is_temporary_open: 'When is Temporary open?'
-  pending_scheduling: 'Pending scheduling'      
+  pending_scheduling: 'Pending scheduling'
   edit_pledge: 'Edit pledge'
   cancelled: 'cancelled'
   experiment_has_been_cancelled: 'This experiment has been cancelled.'
@@ -335,7 +335,7 @@ en:
   amount_available_to_pledge: 'You have %{number}Ŧ available.'
   multiday_experiments: 'This experiment is proposed to meet multiple times. At Temporary, multi-day experiments cost Temps for each day it meets, with a 10% discount applied to each successive day (until it gets down to 20Ŧ, the minimum cost in Temps).'
   indefinite_proposal: 'This proposal does not specify how many times it will meet, so it will continue indefinitely.'
-  
+
   # used in the phrase  'this experiment has happened 6 times'
   meeting_time_instance:
     zero: 'times'
@@ -530,18 +530,18 @@ If you suggest an exact date, we will do our best when scheduling to co-exist wi
   temporary_survey_explanation_future: 'Temporary will close its doors on 2 September 2017, making the entire experiment exactly one year in length. But this is only a beginning, not the end. The next experiment will be collectively designed by a larger working group and will hopefully launch in January 2018.'
 
   temporary_survey_explanation_past: 'Temporary ran from September 2016 to September 2017. There are plans to continue the core ideas of an open 24/7 workspace, decentralised programming and a participation-based model beginning in 2018. This next experiment will be collectively designed by a larger working group and will be designed with longevity in mind.'
-    
+
   why_this_survey: 'To assist in this design, Temporary has designed this short questionnaire. We are very curious to hear your feedback: how you felt about Temporary (whether you participated zero, once or 200 times), what you are seeking from culture, and other factors. Please answer as honestly and as detailed as possible. Positive feedback is nice, but we are really interested in different perspectives and ideas, so write as much as you would like!'
-  
+
   never_visited: 'You have never visited or participated in anything at Temporary.'
   what_could_have_brought_you: 'What could Temporary have done differently to have brought you in, either as a participant or producer?'
-  
+
   you_participated_in_x_experiments: 'You participated in %{number} %{experiment}.'
   experiment_mihin:
     zero: 'experiments'
     one: 'experiment'
     other: 'experiments'
-    
+
   wanted_to_contribute_differently: 'Would you have wanted to contribute to Temporary in a different manner than you did? If so, how?'
   you_organised_x: 'You instigated %{number}.'
   why_experiments_at_temporary: 'Why did you want your experiment/s to happen at Temporary?'
@@ -580,3 +580,9 @@ If you suggest an exact date, we will do our best when scheduling to co-exist wi
   temporary_the_future: 'It is now closed, but a venture continuing much of the concept is planned for 2018.'
   become_part_of_it: 'Come and be part of it!'
   where_was_it: 'Where was it?'
+  left_the_group: 'left the group '
+  reason: 'reason'
+  privately_left_the_group: 'left the group '
+  created_the_group: 'created the group '
+  edited_the_group: 'edited the description of the group '
+  was_added_to_the_group: 'was added to the group '
