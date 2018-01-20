@@ -23,14 +23,14 @@
       .row.expanded
         .small-12.medium-9.columns.medium-centered
           = t(:temporary_is_open_blurb) 
-          = link_to t(:come_and_visit), event_path('open-days')
+         
 
       .row.expanded
         .small-12.medium-9.columns.medium-centered
           %br/
           = raw t(:evenings_and_weekends, event_link: link_to(t(:experimental_event, count: 2 ).downcase, events_path)) 
-
-          = link_to t(:find_out_more), page_path('how-does-it-work')
+          = link_to t(:come_and_visit), event_path('open-days')
+          = link_to t(:find_out_more), 'https://kuusipalaa.fi'
 
 .news_container
 

@@ -14,7 +14,7 @@
         - else
           anonymous person
       - else
-        = link_to activity.user.display_name, activity.user, target: :_blank
+        = link_to activity.user.display_name, "https://kuusipalaa.fi/users/#{activity.user.slug}", target: :_blank
     %td
       - if activity.numerical_value.nil?
 
@@ -64,6 +64,9 @@
           - if activity.item.attachment?
             %br/
             = link_to fa_icon('sticky-note-o'), activity.item.attachment.url, target: :_blank
+      - if activity.item_type == 'Stake'
+        - unless activity.extra.blank?
+          = raw "for <a href='https://kuusipalaa.fi/groups/#{activity.extra.slug}' target='_blank'>#{activity.extra.display_name}</a>"
       - if activity.extra_type == 'Userphoto'
         - if activity.extra
           - if activity.extra.image?

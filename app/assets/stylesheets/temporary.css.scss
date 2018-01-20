@@ -14,8 +14,12 @@ header {
     float: left;
     .closed {
       font-size: 1.7rem;
-      font-weight: bold;
+      font-weight: normal;
       line-height: 1;
+      a {
+        font-weight: bold;
+        text-decoration: underline;
+      }
     }
     .next {
       

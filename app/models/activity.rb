@@ -19,16 +19,18 @@ class Activity < ApplicationRecord
 
     case item.class.to_s
     when 'Meeting'
-      "<a href='http://experiment2.biathlon.io/meetings/#{item.slug}' target='_blank'>#{item.name}</a>"
+      "<a href='https://kuusipalaa.fi/meetings/#{item.slug}' target='_blank'>#{item.name}</a>"
     when 'Credit'
       item.name
+    when 'Stake'
+      item.amount.to_s +  ' stake' + (item.amount > 1 ? 's' : '')
     when 'Group'
-      "<a href='http://experiment2.biathlon.io/groups/#{item.slug}' target='_blank'>#{item.display_name}</a>"
+      "<a href='https://kuusipalaa.fi/groups/#{item.slug}' target='_blank'>#{item.display_name}</a>"
     when 'Comment'
       if item.root_comment.era_id == 1
         "<a href='/posts/#{item.root_comment.slug}'>#{item.root_comment.name}</a>"
       elsif item.root_comment.era_id == 2
-        "<a href='http://experiment2.biathlon.io/#{item.root_comment.class.to_s.tableize}/#{item.root_comment.slug}' target='_blank'>#{item.root_comment.name}</a>"
+        "<a href='https://kuusipalaa.fi/#{item.root_comment.class.to_s.tableize}/#{item.root_comment.slug}' target='_blank'>#{item.root_comment.name}</a>"
       end
     when 'Pledge'
       if item.item.class == Proposal
@@ -47,7 +49,7 @@ class Activity < ApplicationRecord
         'erased an ID card'
       elsif item_type == 'Member'
         if extra.class == Group
-          "<a href='http://experiment2.biathlon.io/groups/#{extra.slug}' target='_blank'>#{extra.long_name}</a>"
+          "<a href='https://kuusipalaa.fi/groups/#{extra.slug}' target='_blank'>#{extra.long_name}</a>"
         end
       else
         item_type.constantize.with_deleted.find(item_id).name
@@ -79,7 +81,7 @@ class Activity < ApplicationRecord
       if item.era_id == 1
         "<a href='/posts/#{item.slug}'>by the #{ENV['currency_symbol']}empsBot</a>"
       else
-        "<a href='http://experiment2.biathlon.io/posts/#{item.root_comment.slug}' target='_blank'>#{item.root_comment.name}</a>"
+        "<a href='https://kuusipalaa.fi/posts/#{item.root_comment.slug}' target='_blank'>#{item.root_comment.name}</a>"
       end
     when 'Event'
       "<a href='/experiments/#{item.slug}'>#{item.name}</a>"
