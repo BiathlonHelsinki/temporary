@@ -14,7 +14,15 @@
         - else
           anonymous person
       - else
-        = link_to activity.user.display_name, "https://kuusipalaa.fi/users/#{activity.user.slug}", target: :_blank
+        - if activity.contributor
+          - if activity.contributor != activity.user
+            = link_to activity.user.display_name, "https://kuusipalaa.fi/users/#{activity.user.slug}", target: :_blank
+            = t :on_behalf_of
+            = link_to activity.contributor.display_name, "https://kuusipalaa.fi/#{activity.contributor_type.tableize}/#{activity.contributor.slug}"
+          - else
+            = link_to activity.user.display_name, "https://kuusipalaa.fi/users/#{activity.user.slug}", target: :_blank
+        - else
+          = link_to activity.user.display_name, "https://kuusipalaa.fi/users/#{activity.user.slug}", target: :_blank
     %td
       - if activity.numerical_value.nil?
 

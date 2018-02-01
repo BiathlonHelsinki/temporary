@@ -12,7 +12,8 @@ class Group < ApplicationRecord
   process_in_background :avatar
   validates_presence_of :name
   validate :uniqueness_of_a_name
-
+  has_many :activities, as: :contributor
+  
   def uniqueness_of_a_name
     self.errors.add(:name, 'is already taken') if User.where("lower(username) = ?", self.name).exists?
     self.errors.add(:name, 'is already taken') if Group.where("lower(name) = ? and id <> ?", self.name, self.id).exists?
