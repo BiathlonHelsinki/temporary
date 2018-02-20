@@ -11,7 +11,7 @@ class EventsController < ApplicationController
   end
   
   def calendar
-    experiments = Event.where(nil)
+    experiments = Event.none
     experiments = Event.published.between(params['start'], params['end']) if (params['start'] && params['end'])
     @experiments = []
     @experiments += experiments.map{|x| x.instances.published}.flatten

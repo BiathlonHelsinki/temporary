@@ -18,6 +18,8 @@ class Activity < ApplicationRecord
   def linked_name
 
     case item.class.to_s
+    when 'Idea'
+      "<a href='https://kuusipalaa.fi/ideas/#{item.slug}' target='_blank'>#{item.name}</a>"
     when 'Question'
       "<a href='https://kuusipalaa.fi/pages/#{item.page.slug}' target='_blank'>#{item.question}</a>"
     when 'Answer'
