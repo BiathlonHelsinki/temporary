@@ -591,3 +591,4 @@ If you suggest an exact date, we will do our best when scheduling to co-exist wi
   answered_the_question: 'answered the question '
   on_behalf_of: ' on behalf of '
   migrated_temps_from_temporary: 'had their Temps migrated to Kuusi Palaa points because'
+  received_stake_points: 'received points for '

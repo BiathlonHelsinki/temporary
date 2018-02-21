@@ -31,6 +31,8 @@
             %th= t :subject
             %th
               = raw tsign
+              = " / "
+              = raw "&#7549;"
               %small= link_to '?', '#', onclick: "javascript:$('.occluded').slideToggle();return false"
               .occluded
                 = fa_icon('plus') + ": " + t(:created)
