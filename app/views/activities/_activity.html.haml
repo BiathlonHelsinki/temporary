@@ -28,15 +28,21 @@
 
         = raw t(activity.description.strip.to_sym)
       - else
+        - if activity.created_at > '2018-01-01'.to_date
+          = raw t(activity.description.to_sym, numerical_value: activity.numerical_value).gsub(/Ŧ/, 'ᵽ')
+        - else
+          = raw t(activity.description.to_sym, numerical_value: activity.numerical_value)
 
-        = raw t(activity.description.to_sym, numerical_value: activity.numerical_value)
 
     %td
       = raw activity.linked_name
       - if activity.extra && !activity.extra_info.blank?
         - if activity.extra.class == Instance
           = t activity.extra_info.to_sym
-          = link_to activity.extra.name, event_instance_path(activity.extra.event, activity.extra)
+          - if activity.extra.start_at > '2018-01-01'.to_date
+            = link_to activity.extra.name, "https://kuusipalaa.fi/events/#{activity.extra.event.slug}"
+          - else
+            = link_to activity.extra.name, event_instance_path(activity.extra.event, activity.extra)
         - elsif activity.extra.class == Group
           - unless activity.description == 'privately_left_the_group'
             %small= "(#{t(:reason)}: '#{activity.extra_info}')"

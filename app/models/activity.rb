@@ -80,7 +80,11 @@ class Activity < ApplicationRecord
 
       end
     when 'Instance'
-      "<a href='/events/#{item.event.slug}/#{item.slug}'>#{item.name}</a>"
+      if item.start_at > '2018-01-01'.to_date
+        "<a href='https://kuusipalaa.fi/events/#{item.event.slug}/#{item.slug}'>#{item.name}</a>"
+      else
+        "<a href='/events/#{item.event.slug}/#{item.slug}'>#{item.name}</a>"
+      end
     when 'Nfc'
       "an ID card"
     when 'Post'
@@ -90,7 +94,11 @@ class Activity < ApplicationRecord
         "<a href='https://kuusipalaa.fi/posts/#{item.root_comment.slug}' target='_blank'>#{item.root_comment.name}</a>"
       end
     when 'Event'
-      "<a href='/experiments/#{item.slug}'>#{item.name}</a>"
+      if item.start_at > '2018-01-01'.to_date
+        "https://kuusipalaa.fi/<a href='/experiments/#{item.slug}'>#{item.name}</a>"  
+      else
+        "<a href='/experiments/#{item.slug}'>#{item.name}</a>"
+      end
     end
   end
   #
