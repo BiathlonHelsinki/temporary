@@ -58,7 +58,7 @@ class Activity < ApplicationRecord
           "<a href='https://kuusipalaa.fi/groups/#{extra.slug}' target='_blank'>#{extra.long_name}</a>"
         end
       else
-        item_type.constantize.with_deleted.find(item_id).name
+        item_type.constantize.with_deleted.find(item_id).name rescue ''
       end
     when 'Userphotoslot'
       unless item.userphoto.nil?
@@ -81,7 +81,11 @@ class Activity < ApplicationRecord
       end
     when 'Instance'
       if item.start_at > '2018-01-01'.to_date
-        "<a href='https://kuusipalaa.fi/events/#{item.event.slug}/#{item.slug}'>#{item.name}</a>"
+        if item.open_time == true
+          item.name
+        else
+          "<a href='https://kuusipalaa.fi/events/#{item.event.slug}/#{item.slug}'>#{item.name}</a>"
+        end
       else
         "<a href='/events/#{item.event.slug}/#{item.slug}'>#{item.name}</a>"
       end
@@ -89,7 +93,9 @@ class Activity < ApplicationRecord
       "an ID card"
     when 'Post'
       if item.era_id == 1
-        "<a href='/posts/#{item.slug}'>by the #{ENV['currency_symbol']}empsBot</a>"
+
+          "<a href='/posts/#{item.slug}'>by the #{ENV['currency_symbol']}empsBot</a>"
+
       else
         "<a href='https://kuusipalaa.fi/posts/#{item.root_comment.slug}' target='_blank'>#{item.root_comment.name}</a>"
       end

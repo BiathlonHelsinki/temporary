@@ -25,8 +25,13 @@
           = link_to activity.user.display_name, "https://kuusipalaa.fi/users/#{activity.user.slug}", target: :_blank
     %td
       - if activity.numerical_value.nil?
-
-        = raw t(activity.description.strip.to_sym)
+        - if activity.description.strip.to_sym == :attended && activity.item.respond_to?(:open_time)
+          - if activity.item.open_time == true
+            = t :visited
+          - else
+            = raw t(activity.description.strip.to_sym)
+        - else
+          = raw t(activity.description.strip.to_sym)
       - else
         - if activity.created_at > '2018-01-01'.to_date
           = raw t(activity.description.to_sym, numerical_value: activity.numerical_value).gsub(/Ŧ/, 'ᵽ')
