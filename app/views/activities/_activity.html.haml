@@ -15,7 +15,7 @@
           anonymous person
       - else
         - if activity.contributor
-          - if activity.contributor != activity.user
+          - if activity.contributor != activity.user && activity.description != 'received_from'
             = link_to activity.user.display_name, "https://kuusipalaa.fi/users/#{activity.user.slug}", target: :_blank
             = t :on_behalf_of
             = link_to activity.contributor.display_name, "https://kuusipalaa.fi/#{activity.contributor_type.tableize}/#{activity.contributor.slug}"
@@ -31,7 +31,10 @@
           - else
             = raw t(activity.description.strip.to_sym)
         - else
-          = raw t(activity.description.strip.to_sym)
+          - if activity.created_at > '2018-01-01'.to_date
+            = raw t(activity.description.to_sym).gsub(/Ŧ/, 'ᵽ')
+          - else
+            = raw t(activity.description.strip.to_sym)
       - else
         - if activity.created_at > '2018-01-01'.to_date
           = raw t(activity.description.to_sym, numerical_value: activity.numerical_value).gsub(/Ŧ/, 'ᵽ')
@@ -40,7 +43,8 @@
 
 
     %td
-      = raw activity.linked_name
+      = raw activity.linked_name 
+      
       - if activity.extra && !activity.extra_info.blank?
         - if activity.extra.class == Instance
           = t activity.extra_info.to_sym

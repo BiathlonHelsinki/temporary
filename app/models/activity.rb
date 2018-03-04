@@ -41,8 +41,8 @@ class Activity < ApplicationRecord
     when 'Pledge'
       if item.item.class == Proposal
         "<a href='/proposals/#{item.item.id}'>#{item.item.name}</a>"
-      else
-        "<a href='/events/#{item.item.slug}'>#{item.item.name}</a>"
+      elsif item.item.class == Idea
+        "<a href='http://kuusipalaa.fi/ideas/#{item.item.slug}'>#{item.item.name}</a>"
       end
     when 'Proposal'
       out = "<a href='/proposals/#{item.id}'>#{item.name}</a>"
@@ -69,8 +69,13 @@ class Activity < ApplicationRecord
     when 'Roombooking'
       "<a href='/roombookings/'>#{item.day.strftime('%-d %B %Y')}</a> " + extra_info.to_s || ''
     when 'User'
+
       if value
-        "#{item.display_name}  <br /><small>#{extra_info}</small>"
+        if description == 'received_from' && contributor != item
+          "<a href='https://kuusipalaa.fi/users/#{item.slug}'>#{item.display_name}</a> #{I18n.t(:on_behalf_of)} <a href='https://kuusipalaa.fi/groups/#{contributor.slug}'>#{contributor.display_name}</a><br /><small>#{extra_info}</small>"
+        else 
+          "#{item.display_name}  <br /><small>#{extra_info}</small>"
+        end
       elsif extra
         "<a href='/users/" + item.slug + "'>" + item.display_name + "</a> #{I18n.t(extra_info.to_sym)} <a href='/" + extra.class.table_name + "/#{extra.id.to_s}'>" + extra.name + "</a>"
       elsif description =~ /joined/
