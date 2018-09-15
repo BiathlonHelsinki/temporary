@@ -1,6 +1,9 @@
 class EmailsController < ApplicationController
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
+  
+
+  
   def show
     @email = Email.friendly.find(params[:id])
     if user_signed_in?
