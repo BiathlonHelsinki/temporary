@@ -1,10 +1,10 @@
 source 'https://rubygems.org'
 
-ruby '2.3.3'
+ruby '2.6.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '5.0.3'
-gem "pg", git: "https://github.com/ged/ruby-pg"
+gem 'rails', '5.0.7'
+gem "pg" #, git: "https://github.com/ged/ruby-pg"
 # Use Puma as the app server
 gem 'puma', group: :production
 
@@ -29,7 +29,7 @@ group :development do
   gem 'bullet'
   gem 'binding_of_caller'
   gem 'letter_opener'
-  gem 'listen', '~> 3.0.5'
+  # gem 'listen', '~> 3.0.5'
   gem 'ruby_parser', '>= 3.0.1'
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
   gem 'web-console'
@@ -39,14 +39,14 @@ group :development do
   gem 'thin'
 end
 
-gem 'best_in_place', '~> 3.0.1'
+gem 'best_in_place' #, '~> 3.0.1'
 gem 'capistrano'
 gem 'capistrano-rails'#, '1.1.3'
 gem 'capistrano-rvm'
 gem 'capistrano-bundler'#, '1.1.4'
 gem 'capistrano3-puma'
 gem 'activemodel-serializers-xml'
-gem "audited", "~> 4.5"
+gem "audited" #, "~> 4.5"
 gem 'awesome_nested_set'
 gem 'cancancan'
 gem 'carrierwave'
@@ -60,7 +60,7 @@ gem 'devise'
 
 gem 'figaro'
 gem 'font-awesome-rails', '4.6.3.0'
-gem 'friendly_id', '~> 5.1.0'
+gem 'friendly_id', '~> 5.2.4'
 gem 'fullcalendar-rails'
 gem 'geocoder'
 gem 'globalize', git: 'https://github.com/globalize/globalize'
@@ -85,15 +85,15 @@ gem 'omniauth-facebook'
 gem 'omniauth-github'
 gem 'omniauth-twitter'
 gem "omniauth-google-oauth2"
-gem "paranoia", github: "rubysherpas/paranoia", branch: "rails5"
+gem "paranoia" #, github: "rubysherpas/paranoia", branch: "rails5"
 gem 'pg_search'
 gem 'rack-utf8_sanitizer'
 gem "rails-observers", github: 'rails/rails-observers'
-gem 'redis-rails', '~> 5.0.1'
-gem 'redis'
+# gem 'redis-rails', '~> 5.0.1'
+# gem 'redis'
 gem "recaptcha", require: "recaptcha/rails"
 gem 'redcarpet'
-gem 'remotipart', '1.3.1', github: 'mshibuya/remotipart'
+gem 'remotipart' #, '1.3.1', github: 'mshibuya/remotipart'
 gem 'rolify'
 gem 'simple_token_authentication', git: 'https://github.com/gonzalo-bulnes/simple_token_authentication.git', branch: 'master'
 gem 'skylight'
@@ -104,7 +104,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 #  front-end specific stuff
 gem 'formtastic'
-gem 'foundation-rails'#, "6.3.0.0"
+gem 'foundation-rails', "6.3.1.0"
 gem 'foundation-datetimepicker-rails', '0.2.4'
 gem 'haml'
 gem "haml-rails"#, "~> 0.9"

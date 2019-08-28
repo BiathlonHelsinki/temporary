@@ -90,37 +90,38 @@ class InstancesController < ApplicationController
     if params[:event_id]
       @experiment = Event.friendly.find(params[:event_id])
       @instance = @experiment.instances.friendly.find(params[:id])
-      if @instance.slug == @experiment.slug && @experiment.instances.published.size == 1
-        redirect_to event_path(@experiment.slug)
-      end
-      set_meta_tags title: @instance.name
-
-      if params[:format] == 'ics'
-        require 'icalendar/tzinfo'
-        @cal = Icalendar::Calendar.new
-        @cal.prodid = '-//Temporary, Helsinki//NONSGML ExportToCalendar//EN'
-
-        tzid = "Europe/Helsinki"
-        @cal.event do |e|
-          e.dtstart     = Icalendar::Values::DateTime.new(@instance.start_at, 'tzid' => tzid)
-          e.dtend       = Icalendar::Values::DateTime.new(@instance.end_at, 'tzid' => tzid)
-          e.summary     = @instance.name
-          e.location  = 'Temporary, Kolmas linja 7, Helsinki'
-          e.description = strip_tags @instance.description
-          e.ip_class = 'PUBLIC'
-          e.url = e.uid = 'https://temporary.fi/events/' + @instance.event.slug + '/' + @instance.slug
+      if @instance.place_id != 1
+        redirect_to "https://kuusipalaa.fi/events/#{@experiment.slug}/#{@instance.slug}"
+      else
+        if @instance.slug == @experiment.slug && @experiment.instances.published.size == 1
+          redirect_to event_path(@experiment.slug)
         end
-        @cal.publish
-      end
+        set_meta_tags title: @instance.name
 
-      
-      
-      respond_to do |format|
-        format.html # index.html.erb
-        format.ics { send_data @cal.to_ical, type: 'text/calendar', disposition: 'attachment', filename: @instance.slug + ".ics" }
+        if params[:format] == 'ics'
+          require 'icalendar/tzinfo'
+          @cal = Icalendar::Calendar.new
+          @cal.prodid = '-//Temporary, Helsinki//NONSGML ExportToCalendar//EN'
+
+          tzid = "Europe/Helsinki"
+          @cal.event do |e|
+            e.dtstart     = Icalendar::Values::DateTime.new(@instance.start_at, 'tzid' => tzid)
+            e.dtend       = Icalendar::Values::DateTime.new(@instance.end_at, 'tzid' => tzid)
+            e.summary     = @instance.name
+            e.location  = 'Temporary, Kolmas linja 7, Helsinki'
+            e.description = strip_tags @instance.description
+            e.ip_class = 'PUBLIC'
+            e.url = e.uid = 'https://temporary.fi/events/' + @instance.event.slug + '/' + @instance.slug
+          end
+          @cal.publish
+        end
+
+        respond_to do |format|
+          format.html # index.html.erb
+          format.ics { send_data @cal.to_ical, type: 'text/calendar', disposition: 'attachment', filename: @instance.slug + ".ics" }
+        end
       end
     end
-    
   end
   
   def index
