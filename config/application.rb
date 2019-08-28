@@ -18,7 +18,7 @@ module Temporary
     config.action_view.embed_authenticity_token_in_remote_forms = true
      # config.active_record.default_timezone = :local
     config.active_record.time_zone_aware_types = [:datetime, :time]
-    config.cache_store = :redis_cache_store
+    config.cache_store = :memory_store
     #, "redis://localhost:6379/0/cache", { expires_in: 8.hours }
     config.autoload_paths += %w(#{config.root}/app/models/ckeditor)
   end
