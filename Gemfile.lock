@@ -293,7 +293,7 @@ GEM
     migration_data (0.3.1)
     mime-types (2.99.3)
     mimemagic (0.3.3)
-    mini_magick (4.9.3)
+    mini_magick (4.9.5)
     mini_mime (1.0.1)
     mini_portile2 (2.4.0)
     minitest (5.13.0)
