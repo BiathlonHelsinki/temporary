@@ -6,7 +6,7 @@ ruby '2.6.2'
 gem 'rails', '5.0.7'
 gem "pg" #, git: "https://github.com/ged/ruby-pg"
 # Use Puma as the app server
-gem 'puma', '~> 4.3.5', group: :production
+gem 'puma', '~> 4.3.12', group: :production
 
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
