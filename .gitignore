@@ -78,4 +78,4 @@ lib/tasks/temporary.rake
 biathlon.sql
 app/controllers/api/v1/api_controller.rb
 app/controllers/api/v1/credentials_controller.rb
-public/cached_pages/
+public/cached_pages/*
