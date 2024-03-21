@@ -1,7 +1,7 @@
 class InstancesController < ApplicationController
   include ActionView::Helpers::SanitizeHelper
   before_action :authenticate_user!, only: [:rsvp]
-  caches_page :show
+  caches_page :show, :index
   def cancel_registration
     if params[:event_id]
       @experiment = Event.friendly.find(params[:event_id])
