@@ -1,6 +1,6 @@
 class Comment < ApplicationRecord
   include PgSearch
-  multisearchable :against => :content
+  multisearchable against: :content
   belongs_to :item, polymorphic: true, touch: true
   belongs_to :user
   mount_uploader :image, ImageUploader
@@ -9,22 +9,18 @@ class Comment < ApplicationRecord
   before_save :update_image_attributes, :update_attachment_attributes
   after_create :update_activity_feed
   after_create -> {
-    if item.class == Proposal
-      ActiveRecord::Base.connection.execute "UPDATE proposals SET updated_at=now() WHERE id=#{item.id}"
-    end
+    ActiveRecord::Base.connection.execute("UPDATE proposals SET updated_at=now() WHERE id=#{item.id}") if item.class == Proposal
   }
-  scope :frontpage, -> () { where(frontpage: true) }
+  scope :frontpage, -> { where(frontpage: true) }
+  scope :temporary, -> { where("id < 160") }
 
   def update_activity_feed
-    Activity.create(user: user, item: self.item, description: "commented_on",  addition: 0)
-    matches = content.scan(/rel=\"\/users\/(\d*)\"/)
-    unless matches.empty?
-      matches.flatten.each do |uu|
-        u = User.find(uu.to_i)
-        unless u.nil?
-          Activity.create(user: u, description: 'was_mentioned_by', item: user, extra: self.item, extra_info: 'in_a_comment_on', addition: 0)
-        end
-      end
+    Activity.create(user: user, item: item, description: "commented_on", addition: 0)
+    matches = content.scan(%r{rel="/users/(\d*)"})
+    return if matches.empty?
+    matches.flatten.each do |uu|
+      u = User.find(uu.to_i)
+      Activity.create(user: u, description: 'was_mentioned_by', item: user, extra: item, extra_info: 'in_a_comment_on', addition: 0) unless u.nil?
     end
   end
 
@@ -35,10 +31,8 @@ class Comment < ApplicationRecord
   def discussion
     comments
   end
-  
-  def name
-    root_comment.name
-  end
+
+  delegate :name, to: :root_comment
 
   def root_comment
     if item.class == Comment
@@ -66,23 +60,17 @@ class Comment < ApplicationRecord
   end
 
   def update_image_attributes
-    if image.present? && image_changed?
-      if image.file.exists?
-        self.image_content_type = image.file.content_type
-        self.image_size = image.file.size
-        self.image_width, self.image_height = `identify -format "%wx%h" #{image.file.path}`.split(/x/)
-      end
-    end
+    return unless image.present? && image_changed?
+    return unless image.file.exists?
+    self.image_content_type = image.file.content_type
+    self.image_size = image.file.size
+    self.image_width, self.image_height = %x(identify -format "%wx%h" #{image.file.path}).split(/x/)
   end
 
   def update_attachment_attributes
-    if attachment.present? && attachment_changed?
-      if attachment.file.exists?
-        self.attachment_content_type = attachment.file.content_type
-        self.attachment_size = attachment.file.size
-      end
-    end
+    return unless attachment.present? && attachment_changed?
+    return unless attachment.file.exists?
+    self.attachment_content_type = attachment.file.content_type
+    self.attachment_size = attachment.file.size
   end
-
-
 end

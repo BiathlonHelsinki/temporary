@@ -15,12 +15,11 @@
  *= require variables
  *= require forms
  *= require _settings
- *= require chosen
  *= require font-awesome
 
  */
 
-@import 'foundation-datetimepicker';
+@import "foundation-datetimepicker";
 
 a.button {
   background-color: green;
@@ -29,7 +28,6 @@ a.button {
   }
 }
 header.admin {
-  
   nav#nav-menu {
     &.top-bar {
       ul li a {
@@ -45,7 +43,7 @@ header.admin {
       }
       .status_bar {
         float: right;
-        div{  
+        div {
           float: left;
           padding: 0.4rem;
           margin: 0 0.4rem;
@@ -62,11 +60,13 @@ header.admin {
     }
   }
 }
-.datetimepicker .switch, .datetimepicker th i {
+.datetimepicker .switch,
+.datetimepicker th i {
   color: black !important;
 }
 .datetimepicker {
-  i.fi-arrow-left, i.fi-arrow-right {
+  i.fi-arrow-left,
+  i.fi-arrow-right {
     display: inline-block;
     font: normal normal normal 14px/1 FontAwesome;
     font-size: inherit;
@@ -74,7 +74,7 @@ header.admin {
     -webkit-font-smoothing: antialiased;
   }
   i.fi-arrow-left:before {
-   content: "\f060";
+    content: "\f060";
   }
   i.fi-arrow-right:before {
     content: "\f061";
@@ -88,8 +88,7 @@ form {
   a {
     color: green;
   }
-  
-  
+
   input.datetimepicker {
     width: inherit;
     position: relative;
@@ -105,7 +104,7 @@ form {
     color: #666;
     font-weight: italic;
   }
-  input[type=submit] {
+  input[type="submit"] {
     background-color: green;
     color: yellow;
   }
@@ -137,7 +136,7 @@ table.experiments {
           font-size: 0.7rem;
         }
       }
-      tr{
+      tr {
         border: none;
         td {
           border-bottom: none;
@@ -177,7 +176,7 @@ nav.pagination {
 .admin_survey {
   padding: 2rem 0;
   a {
-    color: #3888B9;
+    color: #3888b9;
   }
   a.button {
     color: #fded57;

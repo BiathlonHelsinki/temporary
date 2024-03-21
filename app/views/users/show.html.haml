@@ -130,8 +130,13 @@
               %ul
                 - group.last.group_by{|x| x.item}.each do |pledge|
                   %li
-                    = link_to pledge.first.name, pledge.first
-                    = raw "(#{pledge.last.sum(&:pledge).to_s}#{tsign})"
+                    - if pledge.first.class == Idea
+                      = link_to pledge.first.name, "https://kuusipalaa.fi/ideas/#{pledge.first.slug}", target: :_blank
+                      = raw "(#{pledge.last.sum(&:pledge).to_s}ᵽ)"
+                      %small [Kuusi Palaa]
+                    - else
+                      = link_to pledge.first.name, "/proposals/#{pledge.first.id}"
+                      = raw "(#{pledge.last.sum(&:pledge).to_s}#{tsign})"
 
     .small-10.medium-8.large-4.columns
       - if @user.comments.empty?
@@ -139,9 +144,9 @@
       - else
         .title
           = t(:comments)
-          = "(#{@user.comments.size.to_s})"
+          = "(#{@user.comments.temporary.size.to_s})"
         %ul
-          - @user.comments.order(created_at: :desc).each do |comment|
+          - @user.comments.temporary.order(created_at: :desc).each do |comment|
             %li
               = raw t(:commented_on_item, item: link_to(comment.item.name, comment.item, target: :_blank))
               = ": "

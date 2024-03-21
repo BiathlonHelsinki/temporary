@@ -71,7 +71,7 @@
         - if activity.addition == -1
           = fa_icon('minus')
 
-        = raw ("#{activity.value}#{activity.value.class == Fixnum ? (activity.created_at.to_date > '2018-02-01'.to_date ? '&#7549;' : tsign) : ''}")
+        = raw ("#{activity.value}#{activity.value.class == Integer ? (activity.created_at.to_date > '2018-02-01'.to_date ? '&#7549;' : tsign) : ''}")
 
     %td
       - if activity.ethtransaction

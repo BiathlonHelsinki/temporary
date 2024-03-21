@@ -38,8 +38,6 @@
           %li= link_to t(:redeem_guest_ticket), '/link_temporary'
           %li= link_to t(:sign_out),  destroy_user_session_path, :method => :delete
       - else 
-        = link_to t(:log_in_join), new_session_path(:user)
         %ul.submenu.menu.vertical{"data-submenu" => ""}
-          %li= link_to t(:sign_in), new_session_path(:user)
           %li= link_to t(:why_join), page_path('why-join')
 

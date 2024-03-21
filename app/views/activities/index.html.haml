@@ -50,7 +50,7 @@
         /       = @activities.where(addition: 1).sum{|x| x.value.to_i} - @activities.where(addition: -1).sum{|x| x.value.to_i}
         /     %td
         %tbody.page
-          = render @activities, cached: true
+          = render @activities
   .row.expanded
     .small-12.columns= paginate @activities
 

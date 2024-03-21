@@ -9,7 +9,6 @@
 -#    %small= link_to "(#{t :when_is_temporary_open})", '/pages/when-is-temporary-open'
 
 .open_or_closed
-  .next= t(:temporary_one_year)
+  .next= t(:temporary_one_year).html_safe
   .closed
     =  t(:temporary_the_future)
-    = link_to t(:become_part_of_it), 'https://kuusipalaa.fi'

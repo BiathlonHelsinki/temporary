@@ -15,6 +15,7 @@ var options = {
     firstDay: 1,
     fixedWeekCount: false,
     slotMinutes: 30,
+    defaultDate: "2016-09-15",
     eventSources: [
       {
         url: '/experiments/calendar.json'
@@ -98,8 +99,10 @@ var mobileOptions = {
 
 if (screenWidth < 700) {
   $fc.fullCalendar(mobileOptions);
+  $fc.fullCalendar('gotoDate', '2016-09-01');
   } else {
     $fc.fullCalendar(options);
+
   };
 
 
@@ -119,6 +122,7 @@ return $.update("/experiments/calendar/" + the_event.id, {
 $(window).resize(function() {
   screenWidth = $(window).width(); 
   $fc.fullCalendar('destroy');
+
   if (screenWidth < 700) {
     $fc.fullCalendar(mobileOptions);
     } else {

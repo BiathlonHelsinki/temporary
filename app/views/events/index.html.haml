@@ -33,6 +33,6 @@
     - @past.each do |exp|
       - cache  exp do
         = render partial: 'instances/experiment_instance_column', locals: {exp: exp, :"@experiment" =>  exp.event}
-  .row.expanded
-    .small-12.columns
-      %h2= link_to 'See all past experiments....', archive_events_path
+  -# .row.expanded
+  -#   .small-12.columns
+  -#     %h2= link_to 'See all past experiments....', archive_events_path

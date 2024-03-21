@@ -1,6 +1,6 @@
 class Activity < ApplicationRecord
   include PgSearch
-  pg_search_scope :search_activity_feed, :against => [:description], associated_against: {user: [:name, :username], ethtransaction: :txaddress }
+  pg_search_scope :search_activity_feed, against: [:description], associated_against: { user: %i[name username], ethtransaction: :txaddress }
 
   include Rails.application.routes.url_helpers
   belongs_to :contributor, polymorphic: true
@@ -13,10 +13,11 @@ class Activity < ApplicationRecord
   has_one :instances_user
   validates_presence_of :item_id, :item_type
 
-  scope :by_user, ->(user_id) { where(user_id: user_id) }
+  scope :by_user, ->(user_id) { where(user_id:) }
+  scope :temporary, -> { where("id <= 6705") }
+  scope :kuusipalaa, -> { where("id > 6705") }
 
   def linked_name
-
     case item.class.to_s
     when 'Idea'
       "<a href='https://kuusipalaa.fi/ideas/#{item.slug}' target='_blank'>#{item.name}</a>"
@@ -29,7 +30,7 @@ class Activity < ApplicationRecord
     when 'Credit'
       item.name
     when 'Stake'
-      item.amount.to_s +  ' stake' + (item.amount > 1 ? 's' : '')
+      item.amount.to_s + ' stake' + (item.amount > 1 ? 's' : '')
     when 'Group'
       "<a href='https://kuusipalaa.fi/groups/#{item.slug}' target='_blank'>#{item.display_name}</a>"
     when 'Comment'
@@ -46,38 +47,34 @@ class Activity < ApplicationRecord
       end
     when 'Proposal'
       out = "<a href='/proposals/#{item.id}'>#{item.name}</a>"
-      if description =~ /status/ && description =~ /changed/
-        out += extra_info
-      end
+      out += extra_info if description =~ /status/ && description =~ /changed/
       out
     when 'NilClass'
       if item_type == 'Nfc'
         'erased an ID card'
       elsif item_type == 'Member'
-        if extra.class == Group
-          "<a href='https://kuusipalaa.fi/groups/#{extra.slug}' target='_blank'>#{extra.long_name}</a>"
-        end
+        "<a href='https://kuusipalaa.fi/groups/#{extra.slug}' target='_blank'>#{extra.long_name}</a>" if extra.class == Group
       else
-        item_type.constantize.with_deleted.find(item_id).name rescue ''
+        begin
+          item_type.constantize.with_deleted.find(item_id).name
+        rescue StandardError
+          ''
+        end
       end
     when 'Userphotoslot'
-      unless item.userphoto.nil?
-        if item.userphoto.instance
-          I18n.t(:used_on_event, instance: "<a href='/events/#{item.userphoto.instance.event.slug}/#{item.userphoto.instance.slug}'>#{item.userphoto.instance.name}</a>" )
-        end
-      end
+      I18n.t(:used_on_event, instance: "<a href='/events/#{item.userphoto.instance.event.slug}/#{item.userphoto.instance.slug}'>#{item.userphoto.instance.name}</a>") if !item.userphoto.nil? && item.userphoto.instance
     when 'Roombooking'
-      "<a href='/roombookings/'>#{item.day.strftime('%-d %B %Y')}</a> " + extra_info.to_s || ''
+      ("<a href='/roombookings/'>#{item.day.strftime('%-d %B %Y')}</a> " + extra_info.to_s) || ''
     when 'User'
 
       if value
         if description == 'received_from' && contributor != item
           "<a href='https://kuusipalaa.fi/users/#{item.slug}'>#{item.display_name}</a> #{I18n.t(:on_behalf_of)} <a href='https://kuusipalaa.fi/groups/#{contributor.slug}'>#{contributor.display_name}</a><br /><small>#{extra_info}</small>"
-        else 
+        else
           "#{item.display_name}  <br /><small>#{extra_info}</small>"
         end
       elsif extra
-        "<a href='/users/" + item.slug + "'>" + item.display_name + "</a> #{I18n.t(extra_info.to_sym)} <a href='/" + extra.class.table_name + "/#{extra.id.to_s}'>" + extra.name + "</a>"
+        "<a href='/users/" + item.slug + "'>" + item.display_name + "</a> #{I18n.t(extra_info.to_sym)} <a href='/" + extra.class.table_name + "/#{extra.id}'>" + extra.name + "</a>"
       elsif description =~ /joined/
         ''
       else
@@ -99,14 +96,14 @@ class Activity < ApplicationRecord
     when 'Post'
       if item.era_id == 1
 
-          "<a href='/posts/#{item.slug}'>by the #{ENV['currency_symbol']}empsBot</a>"
+        "<a href='/posts/#{item.slug}'>by the #{ENV['currency_symbol']}empsBot</a>"
 
       else
         "<a href='https://kuusipalaa.fi/posts/#{item.root_comment.slug}' target='_blank'>#{item.root_comment.name}</a>"
       end
     when 'Event'
       if item.start_at > '2018-01-01'.to_date
-        "https://kuusipalaa.fi/<a href='/experiments/#{item.slug}'>#{item.name}</a>"  
+        "https://kuusipalaa.fi/<a href='/experiments/#{item.slug}'>#{item.name}</a>"
       else
         "<a href='/experiments/#{item.slug}'>#{item.name}</a>"
       end
@@ -123,12 +120,12 @@ class Activity < ApplicationRecord
   # end
 
   def sentence
-    if user_id == 0
-      usertext= 'Somebody'
+    usertext = if user_id == 0
+      'Somebody'
     elsif user.nil?
-      usertext = 'Someone who does not exist with id ' + user_id.to_s
+      'Someone who does not exist with id ' + user_id.to_s
     else
-      usertext = "#{user.display_name} (<a href='/users/#{user.slug}/activities'>#{user.display_name}</a>)"
+      "#{user.display_name} (<a href='/users/#{user.slug}/activities'>#{user.display_name}</a>)"
     end
     if item.class == Proposal
       "#{usertext} #{description} <a href='/proposals/#{item.id}'>#{item.name}</a> #{extra_info}"
@@ -141,7 +138,11 @@ class Activity < ApplicationRecord
         "#{usertext} #{description} <a href='credits/#{item.id}'>#{item.description}</a> and received  #{item.value}#{ENV['currency_symbol']}"
       end
     elsif item.class == NilClass
-      dead_item = item_type.constantize.with_deleted.find(item_id) rescue 'something is not right here'
+      dead_item = begin
+        item_type.constantize.with_deleted.find(item_id)
+      rescue StandardError
+        'something is not right here'
+      end
       "#{usertext} #{description} #{dead_item.description} and #{dead_item.value}#{ENV['currency_symbol']} were returned to the blockchain"
     elsif item.class == Pledge
       "#{usertext} #{description} #{linked_name} #{extra_info}"
@@ -152,7 +153,7 @@ class Activity < ApplicationRecord
     elsif item.class == Userphotoslot
       "#{usertext} #{description}"
     elsif item.class == Event
-       "#{usertext} #{description}"
+      "#{usertext} #{description}"
     else
       "#{usertext} #{description} <a href='/events/#{item.event.slug}/#{item.slug}'>#{item.name}</a> and received #{item.cost_bb}#{ENV['currency_symbol']}"
     end
@@ -170,7 +171,5 @@ class Activity < ApplicationRecord
     else
       nil
     end
-
   end
-
 end

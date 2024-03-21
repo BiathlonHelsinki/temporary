@@ -1,10 +1,9 @@
 Rails.application.routes.draw do
-
   mount Ckeditor::Engine => '/ckeditor'
-  devise_for :users, :controllers => { registrations: "registrations", omniauth_callbacks: 'omniauth_callbacks' } do
+  devise_for :users, controllers: { registrations: "registrations", omniauth_callbacks: 'omniauth_callbacks' } do
     get "logout", to: "devise/sessions#destroy"
   end
-  
+
   namespace :admin do
     root to: 'base#home'
     get :reports, to: 'base#reports'
@@ -26,7 +25,6 @@ Rails.application.routes.draw do
     resources :instances_users
     resources :events do
       resources :instances
-
     end
     resources :pages
     resources :posts
@@ -36,7 +34,7 @@ Rails.application.routes.draw do
     resources :surveys
     resources :users
   end
-  
+
   resources :opensessions
   resources :events, path: 'experiments' do
     resources :comments
@@ -68,53 +66,69 @@ Rails.application.routes.draw do
         end
       end
     end
-
   end
-  
+
   resources :activities
   resources :authentications do
     collection do
       post :add_provider
     end
   end
-  
+
   resources :surveys
-  
+
   resources :onetimers do
     collection do
       post :link_tag
     end
   end
-  
+
   resources :comments
-  
+
   resources :pages
   resources :posts
-  
+
+  resources :proposals, as: :ideas do
+    resources :comments
+    resources :pledges
+    resources :users do
+      resources :notifications
+    end
+
+    member do
+      get :original_proposal
+    end
+
+    collection do
+      get :archived
+      get :active
+    end
+  end
+
   resources :proposals do
     resources :comments
     resources :pledges
     resources :users do
       resources :notifications
     end
-    
+
     member do
       get :original_proposal
     end
-    
+
     collection do
       get :archived
       get :active
     end
   end
-  
-  
+
+  resources :meetings
   resources :roombookings do
     collection do
       get :calendar
     end
   end
-  
+
   resources :users do
     collection do
       get :mentions
@@ -123,18 +137,17 @@ Rails.application.routes.draw do
       get :buy_photoslot
     end
     resources :activities
-    resources :transfers  do
+    resources :transfers do
       collection do
         get :send_temps
         post :post_temps
       end
     end
-    resources :accounts do 
+    resources :accounts do
       member do
         get :set_as_primary
       end
     end
-        
   end
   get '/events/:id', to: 'events#redirect_event'
   get '/events/:event_id/:id', to: 'instances#show'

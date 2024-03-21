@@ -1,17 +1,17 @@
 class Post < ApplicationRecord
   belongs_to :user
-  translates :title, :body, :fallbacks_for_empty_translations => true
+  translates :title, :body
   extend FriendlyId
-  friendly_id :title_en , :use => [:slugged, :finders]
-  accepts_nested_attributes_for :translations, :reject_if => proc {|x| x['title'].blank? || x['body'].blank? }
+  friendly_id :title_en, use: %i[slugged finders]
+  accepts_nested_attributes_for :translations, reject_if: proc { |x| x['title'].blank? || x['body'].blank? }
   before_save :update_image_attributes
   before_save :check_published
   mount_uploader :image, ImageUploader
   has_many :activities, as: :item, dependent: :destroy
-  scope :published, -> () { where(published: true) }
-  scope :sticky, -> () { where(sticky: true) }
-  scope :not_sticky, -> () { where("sticky is not true") }
-  scope :by_era, ->(era_id) { where(era_id: era_id)}
+  scope :published, -> { where(published: true) }
+  scope :sticky, -> { where(sticky: true) }
+  scope :not_sticky, -> { where("sticky is not true") }
+  scope :by_era, ->(era_id) { where(era_id:) }
   belongs_to :postcategory
 
   def all_comments
@@ -34,18 +34,17 @@ class Post < ApplicationRecord
     comments
   end
 
-
   def title_en
-    self.title(:en)
+    title(:en)
   end
 
   def category_text
     'news'
   end
+
   def check_published
-    if self.published == true
-      self.published_at ||= Time.now
-    end
+    return unless published == true
+    self.published_at ||= Time.now
   end
 
   def feed_date
@@ -53,13 +52,11 @@ class Post < ApplicationRecord
   end
 
   def update_image_attributes
-    if image.present? && image_changed?
-      if image.file.exists?
-        self.image_content_type = image.file.content_type
-        self.image_size = image.file.size
-        self.image_width, self.image_height = `identify -format "%wx%h" #{image.file.path}`.split(/x/)
-      end
-    end
+    return unless image.present? && image_changed?
+    return unless image.file.exists?
+    self.image_content_type = image.file.content_type
+    self.image_size = image.file.size
+    self.image_width, self.image_height = %x(identify -format "%wx%h" #{image.file.path}).split(/x/)
   end
 
   private
@@ -67,5 +64,4 @@ class Post < ApplicationRecord
   def should_generate_new_friendly_id?
     changed?
   end
-
 end
