@@ -1,16 +1,12 @@
 class EmailsController < ApplicationController
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
-  
+  caches_page :show
 
-  
   def show
     @email = Email.friendly.find(params[:id])
-    if user_signed_in?
-      @user = current_user
-    end
+    @user = current_user if user_signed_in?
     @body = ERB.new(@email.body).result(binding).html_safe
-    set_meta_tags title: @email.subject
+    set_meta_tags(title: @email.subject)
   end
-  
 end
