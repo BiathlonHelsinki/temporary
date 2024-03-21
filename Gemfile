@@ -114,3 +114,4 @@ gem "haml-rails" #, "~> 0.9"
 gem 'jquery-rails'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
+gem 'uglifier'

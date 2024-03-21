@@ -532,6 +532,8 @@ GEM
     truncate_html (0.9.3)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    uglifier (4.2.0)
+      execjs (>= 0.3.0, < 3)
     unaccent (0.4.0)
     uniform_notifier (1.16.0)
     uri (0.13.0)
@@ -637,6 +639,7 @@ DEPENDENCIES
   thin
   truncate_html
   tzinfo-data
+  uglifier
   web-console
 
 RUBY VERSION
