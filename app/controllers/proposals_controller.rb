@@ -1,6 +1,6 @@
 class ProposalsController < ApplicationController
   before_action :authenticate_user!, only: %i[new create edit update destroy]
-
+  caches_page :archive, :show, :index
   def archived
     # @needs_support_count = Proposal.active.to_a.delete_if{|x| x.has_enough_cached == true }.size
     @scheduled_count = Instance.future.or(Instance.current).map(&:proposal).uniq.size

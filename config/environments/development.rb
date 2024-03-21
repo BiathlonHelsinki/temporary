@@ -12,14 +12,13 @@ Rails.application.configure do
   # Show full error reports.
   config.consider_all_requests_local = true
   # config.web_console.whitelisted_ips = '192.168.11.20'
-  
+
   # Enable/disable caching. By default caching is disabled.
   if Rails.root.join('tmp/caching-dev.txt').exist?
     config.action_controller.perform_caching = true
 
-    config.cache_store = :redis_store
     config.public_file_server.headers = {
-      'Cache-Control' => 'public, max-age=172800'
+      'Cache-Control' => 'public, max-age=#{1.year.to_i}'
     }
   else
     config.action_controller.perform_caching = false
@@ -29,7 +28,7 @@ Rails.application.configure do
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.default_url_options = { :host => '192.168.11.19:3000' }
+  config.action_mailer.default_url_options = { host: '192.168.11.19:3000' }
 
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :letter_opener
@@ -62,9 +61,9 @@ Rails.application.configure do
     # Bullet.add_footer = true
   end
 end
-BetterErrors::Middleware.allow_ip! '192.168.11.20'
-BetterErrors::Middleware.allow_ip! '192.168.11.194'
-BetterErrors::Middleware.allow_ip! '192.168.11.19'
+BetterErrors::Middleware.allow_ip!('192.168.11.20')
+BetterErrors::Middleware.allow_ip!('192.168.11.194')
+BetterErrors::Middleware.allow_ip!('192.168.11.19')
 
 # module ActionView
 #   module Helpers

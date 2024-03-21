@@ -1,4 +1,6 @@
 class ActivitiesController < ApplicationController
+  caches_page :index
+
   def index
     @filters = { "description" => ['pledged', 'spent', 'joined', 'linked an ID card', 'edited pledge', 'edited proposal', 'registered/RSVPd', 'withdrew a pledge', 'proposed', 'attended', 'booked the back room', 'commented'].sort }
     if params[:user_id]

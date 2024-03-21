@@ -38,6 +38,7 @@ group :development do
   gem 'thin'
 end
 
+gem "actionpack-page_caching"
 gem 'activemodel-serializers-xml'
 gem "audited" #, "~> 4.5"
 gem 'awesome_nested_set'

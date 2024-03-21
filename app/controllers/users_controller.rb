@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!, except: %i[show mentions]
-
+  caches_page :show
   def buy_photoslot
     @user = User.friendly.find(params[:id])
     if @user == current_user

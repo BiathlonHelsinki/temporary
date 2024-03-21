@@ -47,7 +47,7 @@ Rails.application.configure do
   config.log_level = :info
 
   # Prepend all log lines with the following tags.
-  config.log_tags = [ :request_id ]
+  config.log_tags = [:request_id]
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
@@ -55,19 +55,18 @@ Rails.application.configure do
   # Use a real queuing backend for Active Job (and separate queues per environment)
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "temporary_#{Rails.env}"
-  config.action_mailer.perform_caching = false
+  config.action_mailer.perform_caching = true
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
 
-
   config.action_mailer.perform_deliveries = true
   config.action_mailer.delivery_method = :sendmail
   config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.default_options = {from: 'admin@temporary.fi' , host: 'temporary.fi'}
-  
-  config.action_mailer.default_url_options = { :host => 'temporary.fi' , from: 'admin@temporary.fi'}
-  
+  config.action_mailer.default_options = { from: 'admin@temporary.fi', host: 'temporary.fi' }
+
+  config.action_mailer.default_url_options = { host: 'temporary.fi', from: 'admin@temporary.fi' }
+
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
 
@@ -77,7 +76,7 @@ Rails.application.configure do
   config.active_support.deprecation = :notify
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = ::Logger::Formatter.new
+  config.log_formatter = Logger::Formatter.new
 
   # Use a different logger for distributed setups.
   # require 'syslog/logger'
@@ -93,11 +92,11 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 end
 ActionMailer::Base.sendmail_settings = {
-        location: "/usr/sbin/sendmail",
-        arguments: '-i -t'
+  location: "/usr/sbin/sendmail",
+  arguments: '-i -t'
 }
 
 ActionMailer::Base.delivery_method = :sendmail
 ActionMailer::Base.perform_deliveries = true
 ActionMailer::Base.raise_delivery_errors = true
-ActionMailer::Base.default charset: "utf-8"
+ActionMailer::Base.default(charset: "utf-8")

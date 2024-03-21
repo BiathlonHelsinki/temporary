@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
   include ActionView::Helpers::SanitizeHelper
-
+  caches_page :index, :archive, :calendar, :show
   def archive
     @past = Instance.temporary.includes(%i[translations users onetimers]).published.order(start_at: :desc).uniq
     @experiments = @past
