@@ -491,7 +491,8 @@ fi:
   amount_available_to_pledge: 'Sinulla on %{number}Ŧ käytettävissäsi.'
   multiday_experiments: 'Tähän kokeiluun liittyen on ehdotettu useita tapaamisia. Temporaryllä usean päivän kokeilut maksavat Tempsejä jokainen tapaamispäivä siten, että seuraavat päivät saavat edeltävään verrattuna 10 % alennuksen (kunnes päästään 20Ŧ:hen joka on minimimaksu).'
   indefinite_proposal: 'Tässä ehdotuksessa ei ole määritetty kuinka monta tapaamista siihen liittyy, joten se jatkuu toistaiseksi.'
-  
+  temporary_one_year: 'Temporaryn toiminta kesti yhden vuoden, syyskuusta 2016 - 2017. Tämän jälkeen toimintaa jatkoi <a href="https://kuusipalaa.fi">Kuusi Palaa</a>, maaliskuu - toukokuu 2018.'
+  temporary_the_future: 'Tämä sivusto on arkisto Temporaryn toiminnasta.'
   # used in the phrase  'this experiment has happened 6 times'
   meeting_time_instance:
     zero: 'kertaa'
